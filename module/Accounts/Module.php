@@ -1,17 +1,15 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/Accounts for the canonical source repository
- * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 
 namespace Accounts;
 
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\TableGateway\TableGateway;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
+
+use Accounts\Model\User;
+use Accounts\Model\UserTable;
 
 class Module implements AutoloaderProviderInterface
 {
@@ -35,10 +33,31 @@ class Module implements AutoloaderProviderInterface
         return include __DIR__ . '/config/module.config.php';
     }
 
+    /**
+     * @return an array of factories that are all merged together by the 
+     *         ModuleManager before passing to the ServiceManager
+     */
+    public function getServiceConfig()
+    {
+        return array(
+            'factories' => array(
+                'Accounts\Model\UserTable' => function($sm) {
+                    $tableGateway = $sm->get('UserTableGateway');
+                    $table = new UserTable($tableGateway);
+                    return $table;
+                },
+                'UserTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new User());
+                    return new TableGateway('itp_users', $dbAdapter, null, $resultSetPrototype);
+                },
+            ),
+        );
+    }
+
     public function onBootstrap(MvcEvent $e)
     {
-        // You may not need to do this if you're doing it elsewhere in your
-        // application
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);

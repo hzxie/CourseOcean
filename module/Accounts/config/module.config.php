@@ -4,6 +4,7 @@ return array(
         'invokables' => array(
             'Accounts\Controller\Login'     => 'Accounts\Controller\LoginController',
             'Accounts\Controller\Register'  => 'Accounts\Controller\RegisterController',
+            'Accounts\Controller\Dashboard' => 'Accounts\Controller\DashboardController',
         ),
     ),
     'router' => array(

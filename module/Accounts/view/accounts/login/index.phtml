@@ -15,7 +15,7 @@
 			<div id="login-error" class="alert alert-error hide"></div>
 			<div id="username" class="field">
 				<label for="username">用户名或电子邮件地址</label>
-				<input type="text" name="username" maxlength="16" />
+				<input type="text" name="username" maxlength="48" />
 			</div> <!-- #username -->
 			<div id="password" class="field">
 				<label for="password">密码</label>
@@ -44,3 +44,66 @@
 		</div> <!-- #complementary -->
 	</div> <!-- #login-container -->
 </div> <!-- #content -->
+
+<?php $this->inlineScript()->captureStart(); ?>
+	$('#login').click(function() {
+		var username	= $('input[name=username]').val(),
+			password	= $('input[name=password]').val();
+
+		setButtonStyle(true);
+		doLoginAction(username, password);
+		setButtonStyle(false);
+	});
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+	function setButtonStyle(isLoading) {
+		var loginButtonObject = $('#login');
+		if ( isLoading ) {
+			loginButtonObject.html('正在登录...');
+			loginButtonObject.attr('disabled', 'disabled');
+		} else {
+			loginButtonObject.html('登录');
+			loginButtonObject.removeAttr('disabled');
+		}
+	}
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+	function doLoginAction(username, password) {
+		var postData = 'username=' + username + '&password=' + password;
+		$.ajax({
+			type: 'POST',
+            async: false,
+            url: '<?php echo $this->basePath(); ?>/accounts/login/process',
+            data: postData,
+            dataType: 'JSON',
+            success: function(result) {
+            	processResult(result);
+            },
+		});
+	}
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+	function processResult(result) {
+		if ( result['isSuccessful'] ) {
+			window.location.href='<?php echo $this->basePath(); ?>/accounts/dashboard';
+		} else {
+			if ( result['isUsernameEmpty'] && result['isPasswordEmpty'] ) {
+				displayErrorMessage('请填写用户名或电子邮件地址.<br />请输入密码.');
+			} else if ( result['isUsernameEmpty'] ) {
+				displayErrorMessage('请填写用户名或电子邮件地址.');
+			} else if ( result['isPasswordEmpty'] ) {
+				displayErrorMessage('请输入密码.');
+			} else if ( !result['isAccountValid'] ) {
+				displayErrorMessage('用户名或密码不正确.');
+			}
+			$('input[name=password]').val('');
+		}
+	}
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+	function displayErrorMessage(message) {
+		var errorMessageBox = $('#login-error');
+		errorMessageBox.html(message);
+		errorMessageBox.removeClass('hide');
+	}
+<?php $this->inlineScript()->captureEnd(); ?>
