@@ -1,0 +1,72 @@
+div#container div#content {
+	background-color: #fff;
+	margin: 0 auto;
+	width: 960px;
+}
+
+div#content div#introduction {
+	background: url('../img/banner-accounts.jpg');
+	border-bottom: 1px solid #8a8c8f;
+	height: 120px;
+}
+
+div#content div#introduction div#title {
+	padding-top: 30px;
+	padding-left: 50px;
+}
+
+div#content div#introduction div#title h1 {
+	color: #1790c7;
+}
+
+div#content div#introduction div#title h2 {
+	padding-left: 20px;
+}
+
+div#content div#register-container {
+	padding: 20px 20px 40px 20px;
+	overflow: auto;
+}
+
+div#register-container div#main {
+	float: left;
+	margin-top: 20px;
+	padding-right: 40px;
+	width: 560px;
+}
+
+div#register-container div#main div.field {
+	margin-bottom: 20px;
+}
+
+div#register-container div#main label {
+	font-weight: bold;
+}
+
+div#register-container div#main span {
+	color: #666;
+	font-size: 12px;
+}
+
+div#register-container div#main input[type="text"],
+div#register-container div#main input[type="password"] {
+	padding: 10px;
+	margin-bottom: 0px;
+	width: 540px;
+}
+
+div#register-container div#main select {
+	padding-top: 8px;
+	width: 562px;
+	height: 42px;
+}
+
+div#register-container div#complementary {
+	float: right;
+	margin-top: 20px;
+	width: 300px;
+}
+
+div#complementary div.section {
+	margin-bottom: 40px;
+}
