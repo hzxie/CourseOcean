@@ -1,0 +1,46 @@
+<?php 
+	echo $this->headTitle('登录 | ');
+	echo $this->headLink()->appendStylesheet($this->basePath().'/css/login.css');
+?>
+
+<div id="content">
+	<div id="introduction">
+		<div id="title">
+			<h1>用户登录</h1>
+			<h2>体验最及时最便捷的培训</h2>
+		</div> <!-- #title -->
+	</div> <!-- #introduction -->
+	<div id="login-container">
+		<div id="main">
+			<div id="login-error" class="alert alert-error hide"></div>
+			<div id="username" class="field">
+				<label for="username">用户名或电子邮件地址</label>
+				<input type="text" name="username" maxlength="16" />
+			</div> <!-- #username -->
+			<div id="password" class="field">
+				<label for="password">密码</label>
+				<span id="forgot-password"><a href="#">忘记密码?</a></span>
+				<input type="password" name="password" maxlength="16" />
+			</div> <!-- #password -->
+			<div class="field">
+				<div id="remember-me" class="field">
+					<span><input type="checkbox" name="remember-me" /></span>
+					<span>保持登录状态</span>
+				</div> <!-- #remember-me -->
+				<div id="login-control">
+					<button id="login" class="btn btn-primary">登录</button>
+				</div> <!-- #login-control -->
+			</div> <!-- .field -->
+		</div> <!-- #main -->
+		<div id="complementary">
+			<div id="register-now" class="section">
+				<h2>还没有账号?</h2>
+				<p><a href="<?php echo $this->basePath(); ?>/accounts/register">立即注册</a></p>
+			</div>
+			<div id="need-help" class="section">
+				<h2>需要帮助?</h2>
+				<p>若您在登录过程中遇到问题, 您可以<a href="#">单击此处</a>查看相关问题的文档.</p>
+			</div>
+		</div> <!-- #complementary -->
+	</div> <!-- #login-container -->
+</div> <!-- #content -->

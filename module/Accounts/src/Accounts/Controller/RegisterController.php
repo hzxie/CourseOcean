@@ -11,7 +11,7 @@ namespace Accounts\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 
-class IndexController extends AbstractActionController
+class RegisterController extends AbstractActionController
 {
     public function indexAction()
     {

@@ -1,0 +1,70 @@
+<?php 
+	echo $this->headTitle('注册 | ');
+	echo $this->headLink()->appendStylesheet($this->basePath().'/css/register.css');
+?>
+
+<div id="content">
+	<div id="introduction">
+		<div id="title">
+			<h1>欢迎</h1>
+			<h2>请填写如下表单以完成注册</h2>
+		</div> <!-- #title -->
+	</div> <!-- #introduction -->
+	<div id="register-container">
+		<div id="main">
+			<div id="register-error" class="alert alert-error hide"></div>
+			<div id="username" class="field">
+				<label for="username">用户名</label>
+				<input type="text" name="username" maxlength="16" />
+				<span class="tip">用户名只能由字母和数字组成, 长度在4~16个字符之间</span>
+			</div> <!-- #username -->
+			<div id="email" class="field">
+				<label for="email">电子邮件地址</label>
+				<input type="text" name="email" maxlength="48" />
+			</div> <!-- #email -->
+			<div id="password" class="field">
+				<label for="password">密码</label>
+				<input type="password" name="password" maxlength="16" />
+			</div> <!-- #password -->
+			<div id="user-group" class="field">
+				<label for="user-group">用户类型</label>
+				<select name="user-group" id="user-group-selector">
+					<option value="personal">个人</option>
+					<option value="teacher">讲师</option>
+					<option value="enterprise">企业</option>
+				</select>
+			</div> <!-- #user-group -->
+			<div id="for-personal" class="question-group">
+				Personal
+			</div> <!-- #for-personal -->
+			<div id="for-teacher" class="question-group" style="display: none;">
+				Teacher
+			</div> <!-- #for-teacher -->
+			<div id="for-enterprise" class="question-group" style="display: none;">
+				Enterprise
+			</div> <!-- #for-enterprise -->
+		</div> <!-- #main -->
+		<div id="complementary">
+			<div id="register-now" class="section">
+				<h2>已有账号?</h2>
+				<p><a href="<?php echo $this->basePath(); ?>/accounts/login">立即登录</a></p>
+			</div>
+			<div id="welcome" class="section">
+				<h2>欢迎使用</h2>
+				<p>欢迎使用IT自助培训平台, 我们将为您提供最及时最便捷的培训.</p>
+			</div>
+			<div id="need-help" class="section">
+				<h2>需要帮助?</h2>
+				<p>若您在注册过程中遇到问题, 您可以<a href="#">单击此处</a>查看相关问题的文档.</p>
+			</div>
+		</div> <!-- #complementary -->
+	</div> <!-- #login-container -->
+</div> <!-- #content -->
+
+<?php $this->inlineScript()->captureStart(); ?>
+	$('select#user-group-selector').change(function() {
+		var user_group = $(this).val();
+		$('.question-group').css('display', 'none');
+		$('#for-' + user_group).css('display', 'block');
+	});
+<?php $this->inlineScript()->captureEnd(); ?>

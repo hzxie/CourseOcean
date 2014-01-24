@@ -1,18 +1,18 @@
 <?php echo $this->doctype(); ?>
 <html>
 <head>
-    <meta charset="utf-8">
-    <?php echo $this->headTitle('IT Training Platform') ?>
+    <meta charset="utf-8" />
+    <?php echo $this->headTitle('IT自助培训平台') ?>
     <?php echo $this->headMeta()
         ->appendName('viewport', 'width=device-width, initial-scale=1.0')
         ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
     ?>
-    <!-- CSS -->
-    <?php echo $this->headLink(array('rel' => 'shortcut icon', 'href' => $this->basePath() . '/img/favicon.png'))
+    <!-- Le styles -->
+    <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
                     ->prependStylesheet($this->basePath() . '/css/common.css')
                     ->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
                     ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') ?>
-    <!-- JavaScript -->
+    <!-- Scripts -->
     <?php echo $this->headScript()
         ->prependFile($this->basePath() . '/js/bootstrap.min.js')
         ->prependFile($this->basePath() . '/js/jquery-1.10.2.min.js')
@@ -23,7 +23,9 @@
     <div id="header">
         <div id="header-container">
             <div id="logo">
-                <img src="img/logo.png" alt="Logo" />
+                <a href="<?php echo $this->basePath(); ?>" title="首页">
+                    <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+                </a>
             </div> <!-- #logo -->
             <div id="navigation">
                 <ul class="inline">
@@ -35,8 +37,8 @@
                 </ul>
             </div> <!-- navigation -->
             <div id="accounts">
-                <button class="btn" onclick="javascript:window.location.href='#register'">注册</button>
-                <button class="btn btn-primary" onclick="javascript:window.location.href='#login'">登录</button>
+                <button class="btn" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">注册</button>
+                <button class="btn btn-primary" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/login'">登录</button>
             </div> <!-- #accounts -->
         </div> <!-- #header-container -->
     </div> <!-- #header -->
@@ -56,8 +58,8 @@
                 </div> <!-- #nav-colophon -->
                 <div id="introduction">
                     <p>
-                        <img id="footer-logo" src="img/logo.png" alt="Logo in footer" />
-                        <img id="footer-divider" src="img/footer-divider.jpg" alt="footer divider" />
+                        <img id="footer-logo" src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo in footer" />
+                        <img id="footer-divider" src="<?php echo $this->basePath(); ?>/img/footer-divider.jpg" alt="footer divider" />
                         EdX offers interactive online classes and MOOCs from the world’s best universities. Online courses from MITx, HarvardX, BerkeleyX, UTx and many other universities. Topics include biology, business, chemistry, computer science, economics, finance, electronics, engineering, food and nutrition, history, humanities, law, literature, math, medicine, music, philosophy, physics, science, statistics and more. 
                     </p>
                 </div>
@@ -65,10 +67,10 @@
             <div id="reference">
                 <div id="social-icons">
                     <ul class="inline">
-                        <li><a href="#"><img class="social-icon" src="img/social-icons/sina.png" alt="Sina Icon"></a></li>
-                        <li><a href="#"><img class="social-icon" src="img/social-icons/wechat.png" alt="WeChat Icon"></a></li>
-                        <li><a href="#"><img class="social-icon" src="img/social-icons/laiwang.png" alt="LaiWang Icon"></a></li>
-                        <li><a href="#"><img class="social-icon" src="img/social-icons/google-plus.png" alt="Google+ Icon"></a></li>
+                        <li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/sina.png" alt="Sina Icon"></a></li>
+                        <li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/wechat.png" alt="WeChat Icon"></a></li>
+                        <li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/laiwang.png" alt="LaiWang Icon"></a></li>
+                        <li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/google-plus.png" alt="Google+ Icon"></a></li>
                     </ul>
                 </div> <!-- #social-icons -->
                 <p id="copyright">&copy;<?php echo date('Y'); ?> IT Training Platform. All rights reserved.</p>

@@ -2,7 +2,8 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            'Accounts\Controller\Index' => 'Accounts\Controller\IndexController',
+            'Accounts\Controller\Login'     => 'Accounts\Controller\LoginController',
+            'Accounts\Controller\Register'  => 'Accounts\Controller\RegisterController',
         ),
     ),
     'router' => array(
@@ -13,7 +14,7 @@ return array(
                     'route'    => '/accounts',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Accounts\Controller',
-                        'controller'    => 'Index',
+                        'controller'    => 'Login',
                         'action'        => 'index',
                     ),
                 ),
