@@ -7,6 +7,10 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
 use Zend\View\Helper\BasePath;
 
+/**
+ * 
+ * @author Xie Haozhe <zjhzxhz@gmail.com>
+ */
 class DashboardController extends AbstractActionController
 {
 	/**
@@ -22,7 +26,9 @@ class DashboardController extends AbstractActionController
     	if ( !$this->isAllowedToAccess() ) {
     		return $this->sendRedirect('login');
     	}
-        return array();
+        return array(
+        	'profile'	=> $this->getUserData(),
+        );
     }
 
     /**
@@ -48,5 +54,23 @@ class DashboardController extends AbstractActionController
                  ->addHeaderLine('Location', $redirectPath);
 
         return $response;
+	}
+
+	/**
+	 * Get user profile from the session.
+	 * @return an array which contains user's profile
+	 */
+	private function getUserData()
+	{
+		$session    = new Container('itp_session');
+
+		$userData = array(
+            'uid'               => $session->offsetGet('uid'),
+            'username'          => $session->offsetGet('username'),
+            'email'             => $session->offsetGet('email'),
+            'user_group_id'     => $session->offsetGet('user_group_id'),
+            'last_time_signin'  => $session->offsetGet('last_time_signin'),
+        );
+		return $userData;
 	}
 }

@@ -41,7 +41,8 @@ class LoginController extends AbstractActionController
     	);
 
     	if ( $result['isAccountValid'] ) {
-            $this->createSession(1);
+            $userData   = $this->parseUserData($result['isAccountValid']);
+            $this->createSession($userData);
             $result['isSuccessful'] = true;
         }
 
@@ -84,12 +85,38 @@ class LoginController extends AbstractActionController
     }
 
     /**
-     * Create a session for a logined user.
+     * Get user data from the login query result.
+     * @param  User $user - an object of User which contains user's
+     *         profile
+     * @return an array which is needed in the session.
      */
-    private function createSession($uid)
+    private function parseUserData($user)
+    {
+        $userData = array(
+            'uid'               => $user->uid,
+            'username'          => $user->username,
+            'email'             => $user->email,
+            'user_group_id'     => $user->user_group_id,
+            'last_time_signin'  => $user->last_time_signin,
+        );
+
+        return $userData;
+    }
+
+    /**
+     * Create a session for a logined user.
+     * @param  Array $userData - an array which contains user's profile
+     */
+    private function createSession($userData)
     {
         $session    = new Container('itp_session');
+        
         $session->offsetSet('isLogined', true);
+        $session->offsetSet('uid', $userData['uid']);
+        $session->offsetSet('username', $userData['username']);
+        $session->offsetSet('email', $userData['email']);
+        $session->offsetSet('user_group_id', $userData['user_group_id']);
+        $session->offsetSet('last_time_signin', $userData['last_time_signin']);
     }
 
     /**
