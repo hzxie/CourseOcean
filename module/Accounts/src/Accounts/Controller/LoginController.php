@@ -4,7 +4,7 @@ namespace Accounts\Controller;
 
 use Zend\Json\Json;
 use Zend\Mvc\Controller\AbstractActionController;
-	
+use Zend\Session\Container;
 
 /**
  * Handle requests on the login page.
@@ -15,9 +15,11 @@ class LoginController extends AbstractActionController
 {
 	/**
 	 * Default method to call in the controller.
+     * @return a ViewModel object which contains HTML content
 	 */
     public function indexAction()
     {
+        $this->destroySession();
         return array();
     }
 
@@ -37,9 +39,13 @@ class LoginController extends AbstractActionController
     		'isPasswordEmpty'	=> empty($password),
     		'isAccountValid'	=> $this->verifyAccount($username, $password),
     	);
-    	$result['isSuccessful']	= $result['isAccountValid'];
 
-    	$response 	= $this->getResponse();
+    	if ( $result['isAccountValid'] ) {
+            $this->createSession(1);
+            $result['isSuccessful'] = true;
+        }
+
+    	$response = $this->getResponse();
     	$response->setStatusCode(200);
     	$response->setContent( Json::encode($result) );
     	return $response;
@@ -75,5 +81,23 @@ class LoginController extends AbstractActionController
     private function isEmailAddress($username)
     {
     	return strpos($username, '@');
+    }
+
+    /**
+     * Create a session for a logined user.
+     */
+    private function createSession($uid)
+    {
+        $session    = new Container('itp_session');
+        $session->offsetSet('isLogined', true);
+    }
+
+    /**
+     * Destroy a session when the user reach the login page.
+     */
+    private function destroySession()
+    {
+        $session    = new Container('itp_session');
+        $session->getManager()->getStorage()->clear('itp_session');
     }
 }

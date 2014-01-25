@@ -1,90 +1,97 @@
 <?php echo $this->doctype(); ?>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <?php echo $this->headTitle('IT自助培训平台') ?>
-    <?php echo $this->headMeta()
-        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
-        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
-    ?>
-    <!-- Le styles -->
-    <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
-                    ->prependStylesheet($this->basePath() . '/css/common.css')
-                    ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
-                    ->prependStylesheet($this->basePath() . '/css/bootstrap-responsive.min.css') ?>
-    <!-- Scripts -->
-    <?php echo $this->headScript()
-        ->prependFile($this->basePath() . '/js/bootstrap.min.js')
-        ->prependFile($this->basePath() . '/js/jquery-1.10.2.min.js')
-    ; ?>
+	<meta charset="utf-8" />
+	<?php echo $this->headTitle('IT自助培训平台') ?>
+	<?php echo $this->headMeta()
+		->appendName('viewport', 'width=device-width, initial-scale=1.0')
+		->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+	?>
+	<!-- Le styles -->
+	<?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+					->prependStylesheet($this->basePath() . '/css/common.css')
+					->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
+					->prependStylesheet($this->basePath() . '/css/bootstrap-responsive.min.css') ?>
+	<!-- Scripts -->
+	<?php echo $this->headScript()
+		->prependFile($this->basePath() . '/js/bootstrap.min.js')
+		->prependFile($this->basePath() . '/js/jquery-1.10.2.min.js')
+	; ?>
 
 </head>
 <body>
-    <div id="header">
-        <div id="header-container">
-            <div id="logo">
-                <a href="<?php echo $this->basePath(); ?>" title="首页">
-                    <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
-                </a>
-            </div> <!-- #logo -->
-            <div id="navigation">
-                <ul class="inline">
-                    <li><a href="#">近期开课</a></li>
-                    <li><a href="#">培训动态</a></li>
-                    <li><a href="#">课程库</a></li>
-                    <li><a href="#">讲师</a></li>
-                    <li><a href="#">培训需求</a></li>
-                </ul>
-            </div> <!-- navigation -->
+	<div id="header">
+		<div id="header-container">
+			<div id="logo">
+				<a href="<?php echo $this->basePath(); ?>" title="首页">
+					<img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+				</a>
+			</div> <!-- #logo -->
+			<div id="navigation">
+				<ul class="inline">
+					<li><a href="#">近期开课</a></li>
+					<li><a href="#">培训动态</a></li>
+					<li><a href="#">课程库</a></li>
+					<li><a href="#">讲师</a></li>
+					<li><a href="#">培训需求</a></li>
+				</ul>
+			</div> <!-- navigation -->
             <div id="accounts">
-                <button class="btn" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">注册</button>
-                <button class="btn btn-primary" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/login'">登录</button>
+			<?php
+				$session    = new Zend\Session\Container('itp_session');
+				if ( !$session->offsetExists('isLogined') ) {
+			?>
+				<button class="btn" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">注册</button>
+				<button class="btn btn-primary" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/login'">登录</button>
+			<?php } else { ?>
+                
+            <?php } ?>
             </div> <!-- #accounts -->
-        </div> <!-- #header-container -->
-    </div> <!-- #header -->
-    <div id="container">
-        <?php echo $this->content; ?>
-    </div> <!-- #container -->
-    <div id="footer">
-        <div id="footer-container">
-            <div id="colophon">
-                <div id="nav-colophon">
-                    <ul class="inline">
-                        <li><a href="#">关于我们</a></li>
-                        <li><a href="#">合作信息</a></li>
-                        <li><a href="#">帮助信息</a></li>
-                        <li><a href="#">联系我们</a></li>
-                    </ul>
-                </div> <!-- #nav-colophon -->
-                <div id="introduction">
-                    <p>
-                        <img id="footer-logo" src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo in footer" />
-                        <img id="footer-divider" src="<?php echo $this->basePath(); ?>/img/footer-divider.jpg" alt="footer divider" />
-                        EdX offers interactive online classes and MOOCs from the world’s best universities. Online courses from MITx, HarvardX, BerkeleyX, UTx and many other universities. Topics include biology, business, chemistry, computer science, economics, finance, electronics, engineering, food and nutrition, history, humanities, law, literature, math, medicine, music, philosophy, physics, science, statistics and more. 
-                    </p>
-                </div>
-            </div> <!-- #colophon -->
-            <div id="reference">
-                <div id="social-icons">
-                    <ul class="inline">
-                        <li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/sina.png" alt="Sina Icon"></a></li>
-                        <li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/wechat.png" alt="WeChat Icon"></a></li>
-                        <li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/laiwang.png" alt="LaiWang Icon"></a></li>
-                        <li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/google-plus.png" alt="Google+ Icon"></a></li>
-                    </ul>
-                </div> <!-- #social-icons -->
-                <p id="copyright">&copy;<?php echo date('Y'); ?> IT Training Platform. All rights reserved.</p>
-                <div id="legal">
-                    <ul class="inline">
-                        <li><a href="#">服务条款</a></li>
-                        <li><a href="#">隐私政策</a></li>
-                    </ul>
-                </div> <!-- legal -->
-            </div> <!-- #reference -->
-        </div> <!-- #footer-container -->
-    </div> <!-- #footer -->
-    <!-- JavaScript -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <?php echo $this->inlineScript() ?>
+		</div> <!-- #header-container -->
+	</div> <!-- #header -->
+	<div id="container">
+		<?php echo $this->content; ?>
+	</div> <!-- #container -->
+	<div id="footer">
+		<div id="footer-container">
+			<div id="colophon">
+				<div id="nav-colophon">
+					<ul class="inline">
+						<li><a href="#">关于我们</a></li>
+						<li><a href="#">合作信息</a></li>
+						<li><a href="#">帮助信息</a></li>
+						<li><a href="#">联系我们</a></li>
+					</ul>
+				</div> <!-- #nav-colophon -->
+				<div id="introduction">
+					<p>
+						<img id="footer-logo" src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo in footer" />
+						<img id="footer-divider" src="<?php echo $this->basePath(); ?>/img/footer-divider.jpg" alt="footer divider" />
+						EdX offers interactive online classes and MOOCs from the world’s best universities. Online courses from MITx, HarvardX, BerkeleyX, UTx and many other universities. Topics include biology, business, chemistry, computer science, economics, finance, electronics, engineering, food and nutrition, history, humanities, law, literature, math, medicine, music, philosophy, physics, science, statistics and more. 
+					</p>
+				</div>
+			</div> <!-- #colophon -->
+			<div id="reference">
+				<div id="social-icons">
+					<ul class="inline">
+						<li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/sina.png" alt="Sina Icon"></a></li>
+						<li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/wechat.png" alt="WeChat Icon"></a></li>
+						<li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/laiwang.png" alt="LaiWang Icon"></a></li>
+						<li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/google-plus.png" alt="Google+ Icon"></a></li>
+					</ul>
+				</div> <!-- #social-icons -->
+				<p id="copyright">&copy;<?php echo date('Y'); ?> IT Training Platform. All rights reserved.</p>
+				<div id="legal">
+					<ul class="inline">
+						<li><a href="#">服务条款</a></li>
+						<li><a href="#">隐私政策</a></li>
+					</ul>
+				</div> <!-- legal -->
+			</div> <!-- #reference -->
+		</div> <!-- #footer-container -->
+	</div> <!-- #footer -->
+	<!-- JavaScript -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<?php echo $this->inlineScript() ?>
 </body>
 </html>
