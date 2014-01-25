@@ -1,4 +1,44 @@
 <?php 
 	echo $this->headLink()->appendStylesheet($this->basePath().'/css/homepage.css');
 ?>
-Home Page
+
+<div id="introduction">
+	<div id="banner">
+		<button id="courses" class="btn btn-primary">查看课程</button>
+	</div> <!-- #banner -->
+</div> <!-- #introduction -->
+<div id="region-container">
+	<div id="region">
+		Test
+	</div> <!-- #region -->
+</div> <!-- #region-container -->
+<div id="content">
+	<div id="courses" class="section">
+		<div class="left">
+			<img src="<?php echo $this->basePath(); ?>/img/courses.jpg" alt="Courses" />
+		</div> <!-- .left -->
+		<div class="right">
+			<div class="title">
+				<h1>课程库</h1>
+				<button class="btn btn-primary">查看所有课程</button>
+			</div> <!-- .title -->
+			<div class="content">
+				Courses are designed to be interesting, fun and rigorous. They are the best courses, from the best professors and the best schools, spanning dozens of subjects. Some edX courses now offer ID verified Certificates of Achievement. A new way to demonstrate your achievement and showcase your knowledge.
+			</div> <!-- .content -->
+		</div> <!-- .right -->
+	</div> <!-- #course -->
+	<div id="news" class="section">
+		<div class="left">
+			<img src="<?php echo $this->basePath(); ?>/img/news.jpg" alt="News" />
+		</div> <!-- .left -->
+		<div class="right">
+			<div class="title">
+				<h1>培训动态</h1>
+				<button class="btn btn-primary">查看培训动态</button>
+			</div> <!-- .title -->
+			<div class="content">
+				Stay informed about the latest stories being shared around the world on edX and the online learning movement. Read the most recent articles and announcements.
+			</div> <!-- .content -->
+		</div> <!-- .right -->
+	</div> <!-- #news -->
+</div> <!-- #content -->

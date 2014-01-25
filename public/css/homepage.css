@@ -1,0 +1,80 @@
+div#introduction {
+	background-color: #fff;
+	width: 100%;
+}
+
+div#introduction div#banner {
+	background: url('../img/banner-homepage.jpg') no-repeat;
+	margin: 0 auto;
+	height: 274px;
+	width: 960px;
+}
+
+div#introduction div#banner button#courses {
+	font-size: 16px;
+	margin-top: 180px;
+	height: 50px;
+	width: 200px;
+}
+
+div#region-container {
+	background-color: #f0efef;
+	border-top: 1px solid #8a8c8f;
+	border-bottom: 1px solid #8a8c8f;
+	padding: 16px 0 12px;
+	width: 100%;
+}
+
+div#region-container div#region {
+	margin: 0 auto;
+	overflow: hidden;
+	width: 960px;
+	height: 54px;
+}
+
+div#container div#content {
+	margin: 0 auto;
+	padding-top: 24px;
+	padding-bottom: 24px;
+	width: 960px;
+}
+
+div.section {
+	background-color: #fff;
+	border: 1px solid #565656;
+	color: #565656;
+	margin: 0 auto 24px auto;
+	overflow: auto;
+	height: 225px;
+	width: 960px;
+}
+
+div.section div.left {
+	float: left;
+	width: 380px;
+}
+
+div.section div.right {
+	float: left;
+	width: 532px;
+	padding: 20px 28px 22px 20px;
+}
+
+div.right div.title {
+	border-bottom: 1px solid #b1b2b4;
+	overflow: hidden;
+	width: 100%;
+}
+
+div.right div.title h1 {
+	float: left;
+}
+
+div.right div.title button {
+	float: right;
+}
+
+div.right div.content {
+	font-size: 16px;
+	margin-top: 16px;
+}

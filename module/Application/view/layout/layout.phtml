@@ -7,12 +7,12 @@
 		->appendName('viewport', 'width=device-width, initial-scale=1.0')
 		->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
 	?>
-	<!-- Le styles -->
+	<!-- CSS -->
 	<?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
 					->prependStylesheet($this->basePath() . '/css/common.css')
 					->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
 					->prependStylesheet($this->basePath() . '/css/bootstrap-responsive.min.css') ?>
-	<!-- Scripts -->
+	<!-- Java Script -->
 	<?php echo $this->headScript()
 		->prependFile($this->basePath() . '/js/bootstrap.min.js')
 		->prependFile($this->basePath() . '/js/jquery-1.10.2.min.js')
@@ -22,11 +22,15 @@
 <body>
 	<div id="header">
 		<div id="header-container">
+			<?php
+				if ( !(isset( $isHomePage ) && $isHomePage) ) {
+			?>
 			<div id="logo">
 				<a href="<?php echo $this->basePath(); ?>" title="首页">
 					<img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
 				</a>
 			</div> <!-- #logo -->
+			<?php } ?>
 			<div id="navigation">
 				<ul class="inline">
 					<li><a href="#">近期开课</a></li>

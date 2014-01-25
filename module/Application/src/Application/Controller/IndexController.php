@@ -9,6 +9,7 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
+    	$this->layout()->setVariable('isHomePage', true);
         return new ViewModel();
     }
 }
