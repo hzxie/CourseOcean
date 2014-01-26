@@ -842,8 +842,7 @@ ul.inline > li,
 ol.inline > li {
   display: inline-block;
   *display: inline;
-  padding-right: 5px;
-  padding-left: 5px;
+  padding-right: 10px;
   *zoom: 1;
 }
 

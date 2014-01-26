@@ -4,7 +4,7 @@ return array(
     'modules' => array(
         'Application',
         'Accounts',
-        // 'Courses',
+        'Courses',
         // 'Notification',
         // 'Requirements',
     ),
