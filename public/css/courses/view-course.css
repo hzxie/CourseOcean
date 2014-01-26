@@ -60,12 +60,6 @@ div#teacher div#avatar {
 	float: left;
 }
 
-div#teacher div#avatar img {
-	-webkit-border-radius: 50%;
-	   -moz-border-radius: 50%;
-			border-radius: 50%;
-}
-
 div#teacher div#introduction {
 	margin-left: 140px;
 }
