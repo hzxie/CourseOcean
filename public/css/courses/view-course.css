@@ -1,0 +1,136 @@
+div#content {
+	background-color: #fff;
+	margin: 0 auto;
+	padding: 20px;
+	overflow: auto;
+	width: 960px;
+}
+
+div#content div#detail {
+	float: left;
+	margin-right: 20px;
+	width: 620px;
+}
+
+div#detail div#banner {
+	margin-bottom: 20px;
+}
+
+div#detail div#main-content {
+	padding: 0 30px 0 15px;
+}
+
+div#main-content div#course-name {
+	border-bottom: 1px solid #b1b2b4;
+	font-size: 24px;
+	font-weight: bold;
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+}
+
+div#main-content div.section {
+	margin-bottom: 40px;
+}
+
+div#main-content div.section div.title {
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+div#main-content div.section div.content {
+	padding-left: 30px;
+	margin-bottom: 20px;
+}
+
+div#main-content div#brief {
+	font-size: 18px;
+	line-height: 144%;
+}
+
+div#main-content div#teacher {
+	background-color: #f7f7f7;
+	border-top: 5px solid #4db0dc;
+	min-height: 120px;
+	padding: 20px;
+	overflow: auto;
+}
+
+div#teacher div#avatar {
+	float: left;
+}
+
+div#teacher div#avatar img {
+	-webkit-border-radius: 50%;
+	   -moz-border-radius: 50%;
+			border-radius: 50%;
+}
+
+div#teacher div#introduction {
+	margin-left: 140px;
+}
+
+div#teacher div#introduction div#name {
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+div#content div#summary {
+	float: left;
+	width: 320px;
+}
+
+div#summary div#overview {
+	background-color: #f0efef;
+	padding: 10px;
+}
+
+div#overview div#info {
+	background-color: #faf9f9;
+	padding: 4px 10px 10px;
+	text-align: right;
+}
+
+div#info div.item {
+	border-bottom: 1px solid #d7d7d7;
+	padding: 8px 0;
+	overflow: hidden;
+}
+
+div#info div.item:last-child {
+	border-bottom: none;
+}
+
+div#info div.item div.title {
+	float: left;
+	font-weight: bold;
+}
+
+div#info div.item div.content {
+	float: right;
+	max-width: 200px;
+}
+
+div#summary div#lectures {
+	background-color: #e1e1e1;
+	padding: 10px;
+}
+
+div#summary div#lectures strong {
+	display: block;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+div#summary div#social {
+	background-color: #faf9f9;
+	text-align: center;
+	padding: 5px 10px 5px 10px;
+	overflow: auto;
+}
+
+div#social img.social-icon {
+	max-height: 32px;
+	max-width: 32px;
+}

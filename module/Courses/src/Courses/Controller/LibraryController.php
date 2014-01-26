@@ -20,4 +20,9 @@ class LibraryController extends AbstractActionController
     {
         return array();
     }
+
+    public function viewAction($course_id = 0)
+    {
+    	return array();
+    }
 }

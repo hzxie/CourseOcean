@@ -39,7 +39,7 @@ div#main-content div#courses div.section {
 	border: 1px solid #949494;
 	margin-bottom: 30px;
 	width: 910px;
-	height: 138px;
+	height: 136px;
 	overflow: hidden;
 }
 
@@ -57,6 +57,10 @@ div.section div.left div.brand {
 
 div.section div.left div.brand.brand-new {
 	background: url('../../img/brand-new.png') no-repeat;
+}
+
+div.section div.left div.brand.brand-hot {
+	background: url('../../img/brand-hot.png') no-repeat;
 }
 
 div.section div.left div.fieldset {
