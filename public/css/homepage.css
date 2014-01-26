@@ -44,7 +44,7 @@ div.section {
 	border: 1px solid #565656;
 	color: #565656;
 	margin: 0 auto 24px auto;
-	overflow: auto;
+	overflow: hidden;
 	height: 225px;
 	width: 960px;
 }
@@ -55,7 +55,7 @@ div.section div.left {
 }
 
 div.section div.right {
-	float: left;
+	float: right;
 	width: 532px;
 	padding: 20px 28px 22px 20px;
 }
