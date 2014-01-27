@@ -9,7 +9,7 @@ return array(
     ),
     'router' => array(
         'routes' => array(
-            'accounts' => array(
+            'login' => array(
                 'type'    => 'Literal',
                 'options' => array(
                     'route'    => '/accounts',
@@ -32,6 +32,17 @@ return array(
                             'defaults' => array(
                             ),
                         ),
+                    ),
+                ),
+            ),
+            'logout' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/accounts/logout',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Accounts\Controller',
+                        'controller'    => 'Login',
+                        'action'        => 'logout',
                     ),
                 ),
             ),

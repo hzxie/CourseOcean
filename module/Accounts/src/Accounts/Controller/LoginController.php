@@ -2,6 +2,7 @@
 
 namespace Accounts\Controller;
 
+use Zend\Http\PhpEnvironment\Response;
 use Zend\Json\Json;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
@@ -119,8 +120,23 @@ class LoginController extends AbstractActionController
         $session->offsetSet('last_time_signin', $userData['last_time_signin']);
     }
 
+
     /**
-     * Destroy a session when the user reach the login page.
+     * Handle asynchronous logout requests for the users.
+     * @return a ViewModel object which contains HTML content
+     */
+    public function logoutAction()
+    {
+        $this->destroySession();
+
+        $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
+        $url = $renderer->basePath();
+        $redirect = $this->plugin('redirect');
+        return $redirect->toUrl($url);
+    }
+
+    /**
+     * Destroy a session for logined user.
      */
     private function destroySession()
     {

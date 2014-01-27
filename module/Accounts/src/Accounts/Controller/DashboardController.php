@@ -5,7 +5,6 @@ namespace Accounts\Controller;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
-use Zend\View\Helper\BasePath;
 
 /**
  * 
