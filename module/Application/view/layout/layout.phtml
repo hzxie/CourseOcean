@@ -14,8 +14,8 @@
 					->prependStylesheet($this->basePath() . '/css/bootstrap-responsive.min.css') ?>
 	<!-- Java Script -->
 	<?php echo $this->headScript()
-		->prependFile($this->basePath() . '/js/bootstrap.min.js')
-		->prependFile($this->basePath() . '/js/jquery-1.10.2.min.js')
+		->appendFile($this->basePath() . '/js/jquery-1.10.2.min.js')
+		->appendFile($this->basePath() . '/js/bootstrap.min.js')
 	; ?>
 
 </head>
@@ -48,7 +48,21 @@
 				<button class="btn" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">注册</button>
 				<button class="btn btn-primary" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/login'">登录</button>
 			<?php } else { ?>
-                
+				<div class="btn-group">
+					<button class="btn" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/dashboard'">
+						<span><i class="icon-home"></i></span>
+						<span><?php echo $session->offsetGet('username'); ?></span>
+					</button>
+  					<button class="btn dropdown-toggle" data-toggle="dropdown">
+    					<span class="caret"></span>
+  					</button>
+  					<ul class="dropdown-menu">
+  						<li><a href="#">修改资料</a></li>
+  						<li><a href="#">帮助与支持</a></li>
+  						<li class="divider"></li>
+  						<li><a href="#">注销</a></li>
+  					</ul>
+				</div>
             <?php } ?>
             </div> <!-- #accounts -->
 		</div> <!-- #header-container -->
