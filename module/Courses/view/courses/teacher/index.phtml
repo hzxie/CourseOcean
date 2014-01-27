@@ -4,5 +4,33 @@
 ?>
 
 <div id="content">
-	讲师团队
+	<div id="banner">
+		<div id="title">
+			<h1>讲师团队</h1>
+			<h2>提供最适合您的讲师</h2>
+		</div> <!-- #title -->
+	</div> <!-- #banner -->
+	<div id="filter">
+		Filter Here...
+	</div> <!-- #filter -->
+	<div id="main-content">
+		<?php
+			$colors = array('#427fed', '#f4b400', '#53a93f', '#e94d20');
+			for ( $i = 0; $i < 16; ++ $i ) {
+		?>
+		<div class="block">
+			<div class="avatar" style="background: <?php echo $colors[rand(0, 3)]; ?>">
+				<img src="<?php echo $this->basePath(); ?>/img/silhouette.png" alt="Avatar">
+			</div>
+			<div class="content">
+				<div class="name">朱少民</div>
+				<div class="company">同济大学</div>
+				<div class="field">软件测试, 软件过程管理</div>
+				<div class="reserve">
+					<button class="btn btn-block">预约</button>
+				</div> <!-- .reserve -->
+			</div>
+		</div>
+		<?php } ?>
+	</div> <!-- #main-content -->
 </div> <!-- #content -->

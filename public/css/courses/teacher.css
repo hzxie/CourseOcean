@@ -1,0 +1,84 @@
+div#content {
+	margin: 0 auto;
+	width: 960px;
+}
+
+div#content div#banner {
+	background: url('../../img/banner-courses.jpg') no-repeat;
+	border-bottom: 1px solid #8a8c8f;
+	height: 120px;
+}
+
+div#content div#banner div#title {
+	padding-top: 30px;
+	padding-left: 50px;
+}
+
+div#content div#banner div#title h1 {
+	color: #1790c7;
+}
+
+div#content div#banner div#title h2 {
+	padding-left: 20px;
+}
+
+div#content div#filter {
+	background-color: #e6f4fB;
+	border-bottom: 1px solid #999;
+	padding: 20px 25px;
+	overflow: auto;
+	text-align: right;
+}
+
+div#content div#main-content {
+	background-color: #fff;
+	padding: 25px 25px;
+	overflow: hidden;
+}
+
+div#main-content div.block {
+	float: left;
+	border: 1px solid #d8d8d8;
+	border-bottom-width: 2px;
+	margin-right: 30px;
+	margin-bottom: 30px;
+	overflow: hidden;
+	height: 300px;
+	width: 150px;
+}
+
+div.block div.avatar {
+	max-width: 150px;
+	max-height: 150px;
+}
+
+div.block div.content {
+	background-color: #fff;
+	height: 150px;
+}
+
+div.content div.name {
+	color: #262626;
+	font-weight: bold;
+	margin: 10px 10px 2px 10px;
+}
+
+div.content div.company {
+	color: #999;
+	font-size: 12px;
+	margin: 0 10px 10px 10px;
+	overflow: hidden;
+	height: 20px;
+}
+
+div.content div.field {
+	color: #999;
+	font-size: 12px;
+	margin: 0 10px 10px 10px;
+	overflow: hidden;
+	height: 36px;
+}
+
+div.content div.reserve {
+	margin: 10px;
+}

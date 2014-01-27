@@ -20,4 +20,9 @@ class TeacherController extends AbstractActionController
     {
         return array();
     }
+
+    public function viewAction()
+    {
+    	return array();
+    }
 }
