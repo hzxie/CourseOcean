@@ -23,7 +23,7 @@ class DashboardController extends AbstractActionController
 	public function indexAction()
     {
     	if ( !$this->isAllowedToAccess() ) {
-    		return $this->sendRedirect('login');
+    		return $this->sendRedirect('accounts/login');
     	}
         return array(
         	'profile'	=> $this->getUserData(),
@@ -45,14 +45,13 @@ class DashboardController extends AbstractActionController
 	 * @param  String $redirectPath - the pasth to redirect
 	 * @return an HTTP redirect reponse object
 	 */
-	private function sendRedirect($redirectPath)
+	private function sendRedirect($redirectPath = '')
 	{
-		$response = new Response();
-        $response->setStatusCode(302);
-        $response->getHeaders()
-                 ->addHeaderLine('Location', $redirectPath);
+		$renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
+        $url = $renderer->basePath($redirectPath);
+        $redirect = $this->plugin('redirect');
 
-        return $response;
+        return $redirect->toUrl($url);
 	}
 
 	/**
@@ -67,8 +66,8 @@ class DashboardController extends AbstractActionController
             'uid'               => $session->offsetGet('uid'),
             'username'          => $session->offsetGet('username'),
             'email'             => $session->offsetGet('email'),
-            'user_group_id'     => $session->offsetGet('user_group_id'),
-            'last_time_signin'  => $session->offsetGet('last_time_signin'),
+            'userGroupID'     	=> $session->offsetGet('userGroupID'),
+            'lastTimeSignIn'  	=> $session->offsetGet('lastTimeSignIn'),
         );
 		return $userData;
 	}

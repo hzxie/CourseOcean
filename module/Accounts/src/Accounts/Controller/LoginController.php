@@ -20,19 +20,36 @@ class LoginController extends AbstractActionController
 	 */
     public function indexAction()
     {
+        if ( $this->isEnableAutoLogin() ) {
+            return $this->sendRedirect('accounts/dashboard');
+        }
+        
         $this->destroySession();
         return array();
     }
 
     /**
+     * Check if the user has enabled auto login.
+     * @return true if the user has enabled auto login
+     */
+    private function isEnableAutoLogin()
+    {
+        $session            = new Container('itp_session');
+
+        $isEnableAutoLogin  = $session->offsetGet('allowAutoLogin');
+        return $isEnableAutoLogin;
+    }
+
+    /**
      * Handle asynchronous login requests for the users.
-     * @return Response a HTTP response object which contains JSON data
+     * @return a HTTP response object which contains JSON data
      *         infers whether the login is successful
      */
     public function processAction()
     {
-    	$username	= $this->getRequest()->getPost('username');
-    	$password	= $this->getRequest()->getPost('password');
+    	$username	    = $this->getRequest()->getPost('username');
+    	$password	    = $this->getRequest()->getPost('password');
+        $allowAutoLogin = $this->getRequest()->getPost('remember_me');
 
     	$result 	= array(
     		'isSuccessful'		=> false,
@@ -43,7 +60,7 @@ class LoginController extends AbstractActionController
 
     	if ( $result['isAccountValid'] ) {
             $userData   = $this->parseUserData($result['isAccountValid']);
-            $this->createSession($userData);
+            $this->createSession($userData, $allowAutoLogin);
             $result['isSuccessful'] = true;
         }
 
@@ -108,16 +125,17 @@ class LoginController extends AbstractActionController
      * Create a session for a logined user.
      * @param  Array $userData - an array which contains user's profile
      */
-    private function createSession($userData)
+    private function createSession($userData, $allowAutoLogin)
     {
         $session    = new Container('itp_session');
         
         $session->offsetSet('isLogined', true);
+        $session->offsetSet('allowAutoLogin', $allowAutoLogin);
         $session->offsetSet('uid', $userData['uid']);
         $session->offsetSet('username', $userData['username']);
         $session->offsetSet('email', $userData['email']);
-        $session->offsetSet('user_group_id', $userData['user_group_id']);
-        $session->offsetSet('last_time_signin', $userData['last_time_signin']);
+        $session->offsetSet('userGroupID', $userData['user_group_id']);
+        $session->offsetSet('lastTimeSignIn', $userData['last_time_signin']);
     }
 
 
@@ -129,9 +147,20 @@ class LoginController extends AbstractActionController
     {
         $this->destroySession();
 
+        return $this->sendRedirect();
+    }
+
+    /**
+     * Send HTTP redirect reponse.
+     * @param  String $redirectPath - the pasth to redirect
+     * @return an HTTP redirect reponse object
+     */
+    private function sendRedirect($redirectPath = '')
+    {
         $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
-        $url = $renderer->basePath();
+        $url = $renderer->basePath($redirectPath);
         $redirect = $this->plugin('redirect');
+
         return $redirect->toUrl($url);
     }
 

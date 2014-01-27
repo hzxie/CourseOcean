@@ -48,7 +48,8 @@
 <?php $this->inlineScript()->captureStart(); ?>
 	$('#login').click(function() {
 		var username	= $('input[name=username]').val(),
-			password	= $('input[name=password]').val();
+			password	= $('input[name=password]').val(),
+			rememberMe  = $('input[name=remember-me]').val();
 
 		setButtonStyle(true);
 		doLoginAction(username, password);
@@ -68,8 +69,9 @@
 	}
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-	function doLoginAction(username, password) {
-		var postData = 'username=' + username + '&password=' + password;
+	function doLoginAction(username, password, rememberMe) {
+		var postData = 'username=' + username + '&password=' + password +
+					   '&remember_me=' + rememberMe;
 		$.ajax({
 			type: 'POST',
             async: false,
