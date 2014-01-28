@@ -56,31 +56,40 @@ div.section div.left div.brand {
 	position: absolute;
 }
 
-div.section div.left div.brand.brand-new {
+div.left div.brand.brand-new {
 	background: url('../../img/brand-new.png') no-repeat;
 }
 
-div.section div.left div.brand.brand-hot {
+div.left div.brand.brand-hot {
 	background: url('../../img/brand-hot.png') no-repeat;
 }
 
-div.section div.left div.fieldset {
+div.left div.fieldset {
 	min-height: 75px;
 	padding: 0 0 0 45px;
 	margin: 0;
 }
 
-div.section div.left div.fieldset div.title {
+div.left div.fieldset div.title {
 	font-size: 18px;
+	font-weight: bold;
 	padding-bottom: 10px;
 }
 
-div.section div.left div.fieldset div.brief {
+div.left div.fieldset div.title a {
+	color: #565656;
+}
+
+div.left div.fieldset div.title a:hover {
+	color: #2f73bc;
+}
+
+div.left div.fieldset div.brief {
 	color: #565656;
 	font-size: 12px;
 }
 
-div.section div.left div.details {
+div.left div.details {
 	background-color: #f2f2f2;
 	font-size: 13px;
 	margin-left: 30px;

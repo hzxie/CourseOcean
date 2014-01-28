@@ -10,6 +10,8 @@ use Zend\Mvc\MvcEvent;
 
 use Courses\Model\Course;
 use Courses\Model\CourseTable;
+use Courses\Model\CourseMeta;
+use Courses\Model\CourseMetaTable;
 
 class Module implements AutoloaderProviderInterface
 {
@@ -51,6 +53,17 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Course());
                     return new TableGateway('itp_courses', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Courses\Model\CourseMetaTable' => function($sm) {
+                    $tableGateway = $sm->get('CourseMetaTableGateway');
+                    $table = new CourseMetaTable($tableGateway);
+                    return $table;
+                },
+                'CourseMetaTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new CourseMeta());
+                    return new TableGateway('itp_course_meta', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );

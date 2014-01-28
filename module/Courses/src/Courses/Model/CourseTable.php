@@ -44,7 +44,23 @@ class CourseTable
                           'itp_courses.course_type_id = itp_course_types.course_type_id');
             $select->join('itp_teacher', 
                           'itp_courses.uid = itp_teacher.uid');
+            $select->order('course_id DESC');
         });
         return $resultSet;
+    }
+
+    /**
+     * Get general information of a certain course.
+     * @param  int $courseID - the unique id of the course
+     * @return an array which contains general information of a cerain course
+     */
+    public function getGeneralInfo($courseID)
+    {
+        $rowset     = $this->tableGateway->select(function (Select $select) use ($courseID) {
+            $select->join('itp_course_types', 
+                          'itp_courses.course_type_id = itp_course_types.course_type_id');
+            $select->where->equalTo('course_id', $courseID);
+        });
+        return $rowset->current();
     }
 }

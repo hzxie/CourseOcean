@@ -1,5 +1,5 @@
 <?php 
-	echo $this->headTitle('课程名称 | ');
+	echo $this->headTitle($course['course_name'].' | ');
 	echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/view-course.css');
 ?>
 
@@ -9,23 +9,19 @@
 			<img src="https://www.edx.org/sites/default/files/course/image/banner/collegewriting_608x211_0.jpg" alt="Banner" />
 		</div> <!-- #banner -->
 		<div id="main-content">
-			<div id="course-name">
-				HTML5、移动Web应用和云服务技术
-			</div> <!-- #course-name -->
-			<div id="brief" class="section">
-				本内容全面介绍了Web应用方面基础技术、扩展技术、未来的技术及技术之间的关系，并考虑技术在不同浏览器、不同平台的适应性。兼顾前端和后端的开发，兼顾不同PC平台的差异。从W3C标准基础出发，以实例化的方式介绍Web应用在HTML5新技术、云服务和移动互联网等新兴方面的应用。
-			</div> <!-- #brief -->
-			<div id="purpose" class="section">
+			<div id="course-name"><?php echo $course['course_name'] ?></div> <!-- #course-name -->
+			<div id="brief" class="section"><?php echo $course['brief']; ?></div> <!-- #brief -->
+			<div id="objective" class="section">
 				<div class="title">课程目标</div>
-				<div class="content"></div>
+				<div class="content"><?php echo $course['course_objective']; ?></div>
 			</div> <!-- #purpose -->
 			<div id="feature" class="section">
 				<div class="title">课程特点</div>
-				<div class="content"></div>
+				<div class="content"><?php echo $course['course_feature']; ?></div>
 			</div>
 			<div id="outline" class="section">
 				<div class="title">课程大纲</div>
-				<div class="content"></div>
+				<div class="content"><?php echo $course['course_outline']; ?></div>
 			</div>
 			<div id="teacher-introduction" class="section">
 				<div class="title">讲师介绍</div>
@@ -49,7 +45,7 @@
 			<div id="info">
 				<div class="item">
 					<div class="title">课程分类</div>
-					<div class="content">移动互联网</div>
+					<div class="content"><?php echo $course['course_type_name']; ?></div>
 				</div>
 				<div class="item">
 					<div class="title">讲师</div>
@@ -57,11 +53,11 @@
 				</div>
 				<div class="item">
 					<div class="title">培训周期</div>
-					<div class="content">1天</div>
+					<div class="content"><?php echo $course['cycle']; ?>天</div>
 				</div>
 				<div class="item">
 					<div class="title">听众范围</div>
-					<div class="content">软件工程师</div>
+					<div class="content"><?php echo $course['audience']; ?></div>
 				</div>
 			</div> <!-- #info -->
 			<div id="lectures">

@@ -26,7 +26,11 @@
 					<div class="brand brand-new"></div>
 					<?php } ?>
 					<div class="fieldset">
-						<div class="title"><?php echo $course->course_name; ?></div> <!-- .fieldset -->
+						<div class="title">
+							<a href="<?php echo $this->basePath('courses/library/detail/'); ?><?php echo $course->course_id; ?>">
+								<?php echo $course->course_name; ?>
+							</a>
+						</div> <!-- .fieldset -->
 						<div class="brief"><?php echo $course->brief; ?></div> <!-- .brief -->
 					</div> <!-- .fieldset -->
 					<div class="details">
