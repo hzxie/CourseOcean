@@ -14,27 +14,34 @@
 		Filter Here...
 	</div> <!-- #filter -->
 	<div id="main-content">
-		<h1>Courses: 1-15 of 145</h1>
 		<div id="courses">
+			<?php
+				foreach ( $courses as $course ) {
+			?>
 			<div class="section">
 				<div class="left">
-					<div class="brand brand-new"></div> <!-- .brand -->
+					<?php
+						if ( strtotime($course->create_time) > strtotime('-7 day', time()) ) {
+					?>
+					<div class="brand brand-new"></div>
+					<?php } ?>
 					<div class="fieldset">
-						<div class="title">软件测试分析与设计</div> <!-- .fieldset -->
-						<div class="brief">本课程可以帮助学员掌握系统化专业化的测试分析与设计思维过程、技术与方法; 掌握轻量级测试用例执行过程, 通过更新测试过程、测试文档、测试风险、缺陷管理、回归测试等关键域达到测试过程的敏捷化.</div> <!-- .brief -->
+						<div class="title"><?php echo $course->course_name; ?></div> <!-- .fieldset -->
+						<div class="brief"><?php echo $course->brief; ?></div> <!-- .brief -->
 					</div> <!-- .fieldset -->
 					<div class="details">
 						<ul class="inline">
-							<li><strong>培训周期:</strong>1天</li>
-							<li><strong>讲师:</strong>朱少民</li>
-							<li><strong>听众范围:</strong>软件工程师</li>
+							<li><strong>培训周期: </strong><?php echo $course->cycle; ?>天</li>
+							<li><strong>讲师: </strong><?php echo $course->real_name; ?></li>
+							<li><strong>听众范围: </strong><?php echo $course->audience; ?></li>
 						</ul>
 					</div> <!-- details -->
 				</div> <!-- .left -->
 				<div class="right">
-					<img src="https://www.edx.org/sites/default/files/course/image/tile/louvainx1_262x136.jpg" alt="Demo" />
+					<img src="<?php echo $course->thumbnail; ?>" alt="Demo" />
 				</div> <!-- .right -->
 			</div> <!-- .section -->
+			<?php } ?>
 		</div> <!-- #courses -->
 		<div id="page-navigation">
 			<ul class="inline">

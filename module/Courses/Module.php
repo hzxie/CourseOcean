@@ -8,6 +8,9 @@ use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
+use Courses\Model\Course;
+use Courses\Model\CourseTable;
+
 class Module implements AutoloaderProviderInterface
 {
     public function getAutoloaderConfig()
@@ -36,7 +39,21 @@ class Module implements AutoloaderProviderInterface
      */
     public function getServiceConfig()
     {
-        return array();
+        return array(
+            'factories' => array(
+                'Courses\Model\CourseTable' => function($sm) {
+                    $tableGateway = $sm->get('CourseTableGateway');
+                    $table = new CourseTable($tableGateway);
+                    return $table;
+                },
+                'CourseTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Course());
+                    return new TableGateway('itp_courses', $dbAdapter, null, $resultSetPrototype);
+                },
+            ),
+        );
     }
 
     public function onBootstrap(MvcEvent $e)

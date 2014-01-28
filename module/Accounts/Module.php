@@ -52,6 +52,17 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype->setArrayObjectPrototype(new User());
                     return new TableGateway('itp_users', $dbAdapter, null, $resultSetPrototype);
                 },
+                'Courses\Model\CourseTable' => function($sm) {
+                    $tableGateway = $sm->get('CourseTableGateway');
+                    $table = new CourseTable($tableGateway);
+                    return $table;
+                },
+                'CourseTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Course());
+                    return new TableGateway('itp_courses', $dbAdapter, null, $resultSetPrototype);
+                },
             ),
         );
     }

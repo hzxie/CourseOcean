@@ -6,6 +6,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Helper\BasePath;
 
 /**
+ * The controller of the library of the courses.
  * 
  * @author Xie Haozhe <zjhzxhz@gmail.com>
  */
@@ -18,7 +19,17 @@ class LibraryController extends AbstractActionController
 	 */
 	public function indexAction()
     {
-        return array();
+        return array(
+            'courses'   => $this->getAllCourses()
+        );
+    }
+
+    private function getAllCourses()
+    {
+        $sm             = $this->getServiceLocator();
+        $courseTable    = $sm->get('Courses\Model\CourseTable');
+
+        return $courseTable->fetchAll();
     }
 
     public function detailAction($course_id = 0)
