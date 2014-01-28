@@ -147,7 +147,7 @@ class LibraryController extends AbstractActionController
     private function getTeacherInfo($uid)
     {
         $sm                 = $this->getServiceLocator();
-        $teacherTable       = $sm->get('Courses\Model\TeacherTable');
+        $teacherTable       = $sm->get('Accounts\Model\TeacherTable');
         $teacherInfo        = $teacherTable->getTeacherInfo($uid);
 
         return $this->getTeacherInfoArray($teacherInfo);

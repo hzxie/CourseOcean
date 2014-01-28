@@ -30,8 +30,8 @@
 						<img class="img-circle" src="<?php echo $this->basePath(); ?>/img/avatar.png" alt="Avatar" />
 					</div> <!-- #avatar -->
 					<div id="introduction">
-						<div id="name">朱少民</div>
-						<div>从事教育、研发和技术管理近二十年，其中从事软件测试已有十多年，参与多项重大科研项目的研究和几十个软件项目的产品开发，获得多项省、市科技进步奖，发表多部著作，其中有六本大学教材。并且具有丰富的软件开发、测试的工程实践经验，包括在海外工作和国际性一流软件企业的工作经历，以及具有良好的教学和培训经验。</div>
+						<div id="name"><?php echo $teacher['real_name']; ?></div>
+						<div><?php echo $teacher['introduction']; ?></div>
 					</div> <!-- #introduction -->
 				</div> <!-- #teacher -->
 			</div> <!-- #teacher-introduction -->
@@ -49,7 +49,7 @@
 				</div>
 				<div class="item">
 					<div class="title">讲师</div>
-					<div class="content">朱少民</div>
+					<div class="content"><?php echo $teacher['real_name']; ?></div>
 				</div>
 				<div class="item">
 					<div class="title">培训周期</div>
