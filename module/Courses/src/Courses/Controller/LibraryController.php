@@ -144,6 +144,12 @@ class LibraryController extends AbstractActionController
         return $metaInfoArray;
     }
 
+    /**
+     * Get information of a teacher of a course.
+     * @param  int $uid - the unique id of the user
+     * @return an object of Teacher which contains information of a 
+     *         certain teacher
+     */
     private function getTeacherInfo($uid)
     {
         $sm                 = $this->getServiceLocator();
@@ -153,6 +159,12 @@ class LibraryController extends AbstractActionController
         return $this->getTeacherInfoArray($teacherInfo);
     }
 
+    /**
+     * Get information of a teacher of a course within an array.
+     * @param  Teacher $resultSet - an object of Teacher which contains 
+     *         information of a certain teacher
+     * @return an array which contains information of a certain teacher
+     */
     private function getTeacherInfoArray($resultSet)
     {
         $teacherInfoArray   = array();

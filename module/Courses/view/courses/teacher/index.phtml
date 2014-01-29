@@ -11,21 +11,34 @@
 		</div> <!-- #title -->
 	</div> <!-- #banner -->
 	<div id="filter">
-		Filter Here...
+		<select name="course-types">
+			<option value="">所有课程类别</option>
+			<?php foreach ( $courseTypes as $courseType ) { ?>
+			<option value="<?php echo $courseType->course_type_slug; ?>"><?php echo $courseType->course_type_name; ?></option>
+			<?php } ?>
+		</select>
+		<input name="keyword" type="text" />
+		<input type="submit" class="btn" value="搜索" />
 	</div> <!-- #filter -->
 	<div id="main-content">
 		<?php
 			$colors = array('#427fed', '#f4b400', '#53a93f', '#e94d20');
-			for ( $i = 0; $i < 16; ++ $i ) {
+			foreach ( $teachers as $teacher ) {
 		?>
 		<div class="block">
+			<?php if ( $teacher->avatar == null ) { ?>	
 			<div class="avatar" style="background: <?php echo $colors[rand(0, 3)]; ?>">
 				<img src="<?php echo $this->basePath(); ?>/img/silhouette.png" alt="Avatar">
 			</div>
+			<?php } else { ?>
+			<div class="avatar">
+				<img src="<?php echo $this->basePath($teacher->avatar); ?>" alt="Avatar">
+			</div>
+			<?php } ?>
 			<div class="content">
-				<div class="name">朱少民</div>
-				<div class="company">同济大学</div>
-				<div class="field">软件测试, 软件过程管理</div>
+				<div class="name"><?php echo $teacher->real_name; ?></div>
+				<div class="company"><?php echo $teacher->company;?></div>
+				<div class="field"><?php echo $teacher->field;?></div>
 				<div class="reserve">
 					<button class="btn btn-block">预约</button>
 				</div> <!-- .reserve -->

@@ -12,6 +12,8 @@ use Courses\Model\Course;
 use Courses\Model\CourseTable;
 use Courses\Model\CourseMeta;
 use Courses\Model\CourseMetaTable;
+use Courses\Model\CourseType;
+use Courses\Model\CourseTypeTable;
 use Accounts\Model\Teacher;
 use Accounts\Model\TeacherTable;
 
@@ -66,6 +68,17 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new CourseMeta());
                     return new TableGateway('itp_course_meta', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Courses\Model\CourseTypeTable' => function($sm) {
+                    $tableGateway = $sm->get('CourseTypeTableGateway');
+                    $table = new CourseTypeTable($tableGateway);
+                    return $table;
+                },
+                'CourseTypeTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new CourseType());
+                    return new TableGateway('itp_course_types', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Accounts\Model\TeacherTable' => function($sm) {
                     $tableGateway = $sm->get('TeacherTableGateway');

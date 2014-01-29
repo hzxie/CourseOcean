@@ -21,6 +21,7 @@ class Teacher {
 		$this->real_name	= (!empty($data['real_name'])) 		? $data['real_name'] 	: null;
 		$this->introduction	= (!empty($data['introduction'])) 	? $data['introduction'] : null;
 		$this->avatar		= (!empty($data['avatar'])) 		? $data['avatar'] 		: null;
+		$this->field		= (!empty($data['field'])) 			? $data['field'] 		: null;
 		$this->company		= (!empty($data['company'])) 		? $data['company'] 		: null;
 		$this->phone		= (!empty($data['phone'])) 			? $data['phone'] 		: null;
 		$this->wechat		= (!empty($data['wechat'])) 		? $data['wechat'] 		: null;
@@ -50,6 +51,12 @@ class Teacher {
 	 * @var String
 	 */
 	public $avatar;
+
+	/**
+	 * The field of research of the teacher.
+	 * @var String
+	 */
+	public $field;
 
 	/**
 	 * The company name of the user.

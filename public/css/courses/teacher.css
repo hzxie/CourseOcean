@@ -25,7 +25,7 @@ div#content div#banner div#title h2 {
 div#content div#filter {
 	background-color: #e6f4fB;
 	border-bottom: 1px solid #999;
-	padding: 20px 25px;
+	padding: 15px 25px;
 	overflow: auto;
 	text-align: right;
 }
@@ -48,8 +48,15 @@ div#main-content div.block {
 }
 
 div.block div.avatar {
-	max-width: 150px;
 	max-height: 150px;
+	max-width: 150px;
+}
+
+div.block div.avatar img {
+	height: 150px;
+	max-height: 150px;
+	width: 150px;
+	max-width: 150px;	
 }
 
 div.block div.content {

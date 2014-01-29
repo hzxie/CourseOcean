@@ -87,6 +87,8 @@ div.left div.fieldset div.title a:hover {
 div.left div.fieldset div.brief {
 	color: #565656;
 	font-size: 12px;
+	max-height: 40px;
+	overflow: hidden;
 }
 
 div.left div.details {

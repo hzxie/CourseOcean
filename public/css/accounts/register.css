@@ -51,7 +51,6 @@ div#register-container div#main span {
 div#register-container div#main input[type="text"],
 div#register-container div#main input[type="password"] {
 	padding: 10px;
-	margin-bottom: 0px;
 	width: 540px;
 }
 
