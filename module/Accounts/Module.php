@@ -10,6 +10,14 @@ use Zend\Mvc\MvcEvent;
 
 use Accounts\Model\User;
 use Accounts\Model\UserTable;
+use Accounts\Model\UserGroup;
+use Accounts\Model\UserGroupTable;
+use Accounts\Model\Person;
+use Accounts\Model\PersonTable;
+use Accounts\Model\Teacher;
+use Accounts\Model\TeacherTable;
+use Accounts\Model\Enterprise;
+use Accounts\Model\EnterpriseTable;
 
 class Module implements AutoloaderProviderInterface
 {
@@ -52,16 +60,49 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype->setArrayObjectPrototype(new User());
                     return new TableGateway('itp_users', $dbAdapter, null, $resultSetPrototype);
                 },
-                'Courses\Model\CourseTable' => function($sm) {
-                    $tableGateway = $sm->get('CourseTableGateway');
-                    $table = new CourseTable($tableGateway);
+                'Accounts\Model\UserGroupTable' => function($sm) {
+                    $tableGateway = $sm->get('UserGroupTableGateway');
+                    $table = new UserGroupTable($tableGateway);
                     return $table;
                 },
-                'CourseTableGateway' => function ($sm) {
+                'UserGroupTableGateway' => function ($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Course());
-                    return new TableGateway('itp_courses', $dbAdapter, null, $resultSetPrototype);
+                    $resultSetPrototype->setArrayObjectPrototype(new UserGroup());
+                    return new TableGateway('itp_user_groups', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Accounts\Model\PersonTable' => function($sm) {
+                    $tableGateway = $sm->get('PersonTableGateway');
+                    $table = new PersonTable($tableGateway);
+                    return $table;
+                },
+                'PersonTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Person());
+                    return new TableGateway('itp_person', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Accounts\Model\TeacherTable' => function($sm) {
+                    $tableGateway = $sm->get('TeacherTableGateway');
+                    $table = new TeacherTable($tableGateway);
+                    return $table;
+                },
+                'TeacherTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Teacher());
+                    return new TableGateway('itp_teacher', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Accounts\Model\EnterpriseTable' => function($sm) {
+                    $tableGateway = $sm->get('EnterpriseTableGateway');
+                    $table = new EnterpriseTable($tableGateway);
+                    return $table;
+                },
+                'EnterpriseTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Enterprise());
+                    return new TableGateway('itp_enterprise', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );

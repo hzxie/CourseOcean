@@ -109,4 +109,61 @@ class UserTable
         $currentTime = new \DateTime('now', new \DateTimeZone('Asia/Shanghai'));
         return $currentTime->format('Y-m-d H:i:s');
     }
+
+    /**
+     * Verify if the username has existed.
+     * @param  String  $username - the username of the user
+     * @return true if the username has existed
+     */
+    public function isUsernameExists($username)
+    {
+        $rowset     = $this->tableGateway->select(
+            array( 
+                'username'  => $username,
+            )
+        );
+        return ( $rowset->current() != null );
+    }
+
+    /**
+     * Verify if the email address has existed.
+     * @param  String  $email - the email address of the user
+     * @return true if the email has existed
+     */
+    public function isEmailExists($email)
+    {
+        $rowset     = $this->tableGateway->select(
+            array( 
+                'email'     => $email,
+            )
+        );
+        return ( $rowset->current() != null );
+    }
+
+    /**
+     * Handle asynchronous register requests for the users.
+     * @return the unique id of the user
+     */
+    public function createNewUser($basicInfo)
+    {
+        $this->tableGateway->insert($basicInfo);
+        $userData   = $this->getUidByUsername($basicInfo['username']);
+
+        return $userData->uid;
+    }
+
+    /**
+     * Get the unique id of the user by his username
+     * @param  String  $username - the username of the user
+     * @return the unique id of the user
+     */
+    private function getUidByUsername($username)
+    {
+        $rowset     = $this->tableGateway->select(
+            array( 
+                'username'  => $username,
+            )
+        );
+        return $rowset->current();
+    }
 }
