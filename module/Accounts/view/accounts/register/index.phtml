@@ -132,7 +132,7 @@
 		}
 	});
 <?php $this->inlineScript()->captureEnd(); ?>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureStart(); ?>
 	$('#submit').click(function() {
 		if ( !isAgree() ) {
 			alert('请先同意服务条款');
@@ -142,13 +142,13 @@
 		var postData = getPostData();
 		return doRegisterAction(postData);
 	});
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
 	function isAgree() {
 		return $('input[name=agree]').is(':checked');
 	}
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
 	function getPostData() {
 		var postData 	= '';
 		$(':input').each(function() {
@@ -161,9 +161,14 @@
 
 		return postData;
 	}
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
 	function doRegisterAction(postData) {
+		var userGroup 	= $('select#user-group-selector').val();
+		if ( userGroup == '' ) {
+			return;
+		}
+
 		$.ajax({
 			type: 'POST',
             async: false,
@@ -171,8 +176,145 @@
             data: postData,
             dataType: 'JSON',
             success: function(result) {
-            	
+            	processResult(result, userGroup);
             },
 		});
 	}
-</script>
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+	function processResult(result, userGroup) {
+		if ( result['isSuccessful'] ) {
+			var username = $('input[name=username]').val(),
+			    password = $('input[name=password]').val();
+			alert(username + ' ' + password);
+			doLoginAction(username, password);
+		}
+
+		var errorMessage = '';
+		errorMessage     = onErrorHandler(result, userGroup);
+
+		$('#register-error').html(errorMessage);
+		$('#register-error').fadeIn();
+		$('html, body').animate({ scrollTop: 0 }, 'slow');
+	}
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+	function doLoginAction(username, password) {
+		var postData = 'username=' + username + '&password=' + password;
+		$.ajax({
+			type: 'POST',
+            async: false,
+            url: '<?php echo $this->basePath(); ?>/accounts/login/process',
+            data: postData,
+            dataType: 'JSON',
+            success: function(result) {
+            	if ( result['isSuccessful'] ) {
+            		window.location.href = '<?php echo $this->basePath(); ?>/accounts/dashboard';
+            	} else {
+            		window.location.href = '<?php echo $this->basePath(); ?>/accounts/login';
+            	}
+            },
+		});
+	}
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+	function onErrorHandler(result, userGroup) {
+		var errorMessage  = getCommonErrorMessage(result);
+
+		if ( userGroup == 'person' ) {
+			errorMessage += getPersonErrorMessage(result);
+		} else if ( userGroup == 'teacher' ) {
+			errorMessage += getTeacherErrorMessage(result);
+		} else if ( userGroup == 'enterprise' ) {
+			errorMessage += getEnterpriseErrorMessage(result);
+		}
+		return errorMessage;
+	}
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+	function getCommonErrorMessage(result) {
+		var errorMessage  = '';
+		if ( result['isUsernameEmpty'] ) {
+			errorMessage += '用户名为必填字段<br />';
+		} else if ( !result['isUsernameLegal'] ) {
+			errorMessage += '用户名必须以字母开头, 长度须在6-16个字符之间<br />';
+		} else if ( result['isUsernameExists'] ) {
+			errorMessage += '用户名已被他人占用, 请使用其他用户名<br />';
+		}
+		if ( result['isEmailEmpty'] ) {
+			errorMessage += '电子邮件地址为必填字段<br />';
+		} else if ( !result['isEmailLegal'] ) {
+			errorMessage += '请填写合法的电子邮件地址<br />';
+		} else if ( result['isEmailExists'] ) {
+			errorMessage += '该电子邮件地址已被使用, 请使用其他电子邮件地址<br />';
+		}
+		if ( result['isPasswordEmpty'] ) {
+			errorMessage += '请填写您的密码<br />';
+		} else if ( !result['isPasswordLegal'] ) {
+			errorMessage += '密码必须在6-16个字符之间<br />';
+		}
+		if ( result['isConfirmPasswordEmpty'] ) {
+			errorMessage += '请确认您的密码<br />';
+		} else if ( !result['isConfirmPasswordMatched'] ) {
+			errorMessage += '密码与确认密码输入不一致<br />';
+		}
+
+		return errorMessage;
+	}
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+	function getPersonErrorMessage(result) {
+		var errorMessage  = '';
+		if ( result['isRealNameEmpty'] ) {
+			errorMessage += '请填写您的真实姓名<br />';
+		} else if ( !result['isRealNameLegal'] ) {
+			errorMessage += '真实姓名的长度不能超过32个字符<br />';
+		}
+		if ( result['isPhoneNumberEmpty'] ) {
+			errorMessage += '请填写您的联系电话<br />';
+		} else if ( !result['isPhoneNumberLegal'] ) {
+			errorMessage += '联系电话必须由数字和-组成, 且不超过24个字符<br />';
+		}
+
+		return errorMessage;
+	}
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+	function getTeacherErrorMessage(result) {
+		var errorMessage = getPersonErrorMessage(result);
+		if ( result['isCompanyEmpty'] ) {
+			errorMessage += '请填写您的所在的公司名称<br />';
+		} else if ( !result['isCompanyLegal'] ) {
+			errorMessage += '所在的公司名称的长度不能超过64个字符<br />';
+		}
+		if ( result['isFieldEmpty'] ) {
+			errorMessage += '请填写您的擅长领域<br />';
+		} else if ( !result['isFieldLegal'] ) {
+			errorMessage += '擅长领域不超过128个字符<br />';
+		}
+
+		return errorMessage;
+	}
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+	function getEnterpriseErrorMessage(result) {
+		var errorMessage  = '';
+		if ( result['isCompanyEmpty'] ) {
+			errorMessage += '请填写您公司的名称<br />';
+		} else if ( !result['isCompanyLegal'] ) {
+			errorMessage += '公司名称的长度不能超过64个字符<br />';
+		}
+		if ( result['isAddressEmpty'] ) {
+			errorMessage += '请填写您公司的地址<br />';
+		} else if ( !result['isAddressLegal'] ) {
+			errorMessage += '公司地址的长度不能超过256个字符<br />';
+		}
+		if ( result['isPhoneNumberEmpty'] ) {
+			errorMessage += '请填写您的联系电话<br />';
+		} else if ( !result['isPhoneNumberLegal'] ) {
+			errorMessage += '联系电话必须由数字和-组成, 且不超过24个字符<br />';
+		}
+
+		return errorMessage;
+	}
+<?php $this->inlineScript()->captureEnd(); ?>

@@ -443,6 +443,9 @@ class RegisterController extends AbstractActionController
 
     /**
      * Verify if the address of the company is legal.
+     * Rule: the length of the address should no more than 256
+     *       characters.
+     * 
      * @param  String  $address - the address of the company
      * @return true if the address of the company is legal
      */
