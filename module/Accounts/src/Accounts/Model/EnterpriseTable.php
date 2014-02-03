@@ -7,11 +7,11 @@ use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 
 /**
- * The table gateway of the teacher table.
+ * The table gateway of the enterprise table.
  * 
  * @author Xie Haozhe <zjhzxhz@gmail.com>
  */
-class TeacherTable
+class EnterpriseTable
 {
 	/**
 	 * The Table Gateway object is intended to provide an object that 
@@ -23,7 +23,7 @@ class TeacherTable
 	protected $tableGateway;
 
 	/**
-	 * The contructor of the TeacherTable class.
+	 * The contructor of the PersonTable class.
 	 * @param TableGateway $tableGateway 
 	 */
 	public function __construct(TableGateway $tableGateway)
@@ -32,9 +32,9 @@ class TeacherTable
 	}
 
 	/**
-	 * Get all records from the teacher table.
+	 * Get all records from the users table.
 	 * @return an object which is an instance of ResultSet, which contains
-	 *         data of all teachers.
+	 *         data of all users.
 	 */
 	public function fetchAll()
 	{
@@ -43,28 +43,12 @@ class TeacherTable
 	}
 
     /**
-     * Get detail information of the teacher.
-     * @param  int $uid - the unique id of the user
-     * @return an object of Teacher which contains all information of the 
-     *         teacher
-     */
-    public function getTeacherInfo($uid)
-    {
-        $rowset     = $this->tableGateway->select(
-            array(
-                'uid'   => $uid,
-            )
-        );
-        return $rowset->current();
-    }
-
-    /**
-     * Handle asynchronous register requests for a teacher.
+     * Handle asynchronous register requests for an enterprise.
      * @return true if the query is successful
      */
-    public function createNewTeacher($teacherInfo)
+    public function createNewEnterprise($enterpriseInfo)
     {
-        $this->tableGateway->insert($teacherInfo);
+        $this->tableGateway->insert($enterpriseInfo);
         return true;
     }
 }

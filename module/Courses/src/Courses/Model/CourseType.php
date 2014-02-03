@@ -36,7 +36,7 @@ class CourseType {
 	public $course_type_slug;
 
 	/**
-	 * The display name of the course type.
+	 * The name to display of the course type.
 	 * @var String
 	 */
 	public $course_type_name;
