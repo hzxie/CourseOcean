@@ -33,20 +33,35 @@ class CourseTable
     }
 
     /**
-     * Get all records from the courses table.
+     * Get all records from the courses table by pagination.
+     * @param  int $pageNumber - current number of the page
+     * @param  int $limit - max number of courses in a page
      * @return an object which is an instance of ResultSet, which contains
      *         data of all courses.
      */
-    public function fetchAll()
+    public function fetchAll($pageNumber, $limit)
     {
-        $resultSet  = $this->tableGateway->select(function (Select $select) {
+        $offset     = ( $pageNumber - 1 ) * $limit;
+        $resultSet  = $this->tableGateway->select(function (Select $select) use ($offset, $limit) {
             $select->join('itp_course_types', 
                           'itp_courses.course_type_id = itp_course_types.course_type_id');
             $select->join('itp_teacher', 
                           'itp_courses.uid = itp_teacher.uid');
             $select->order('course_id DESC');
+            $select->offset($offset);
+            $select->limit($limit);
         });
         return $resultSet;
+    }
+
+    /**
+     * Get number of records in the courses table.
+     * @return an integer which stands for the number of records in the course
+     *         table
+     */
+    public function getNumberOfCourses()
+    {
+        return $this->tableGateway->select()->count();
     }
 
     /**

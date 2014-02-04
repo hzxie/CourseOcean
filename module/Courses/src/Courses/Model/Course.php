@@ -20,6 +20,7 @@ class Course {
 		$this->course_id			= (!empty($data['course_id'])) 			? $data['course_id'] 		: null;
 		$this->course_name 			= (!empty($data['course_name'])) 		? $data['course_name'] 		: null;
 		$this->course_type_id		= (!empty($data['course_type_id'])) 	? $data['course_type_id'] 	: null;
+		$this->course_type_slug 	= (!empty($data['course_type_slug'])) 	? $data['course_type_slug'] : null;
 		$this->course_type_name		= (!empty($data['course_type_name'])) 	? $data['course_type_name'] : null;
 		$this->uid 					= (!empty($data['uid'])) 				? $data['uid'] 				: null;
 		$this->real_name 			= (!empty($data['real_name'])) 			? $data['real_name'] 		: null;
@@ -27,7 +28,6 @@ class Course {
 		$this->brief 				= (!empty($data['brief'])) 				? $data['brief'] 			: null;
 		$this->cycle 				= (!empty($data['cycle'])) 				? $data['cycle'] 			: null;
 		$this->audience 			= (!empty($data['audience'])) 			? $data['audience'] 		: null;
-		$this->thumbnail 			= (!empty($data['thumbnail'])) 			? $data['thumbnail'] 		: null;
 	}
 
 	/**
@@ -49,7 +49,13 @@ class Course {
 	public $course_type_id;
 
 	/**
-	 * The name of the course name.
+	 * The slug name of the course type.
+	 * @var String
+	 */
+	public $course_type_slug;
+
+	/**
+	 * The name of the course type.
 	 * @var String
 	 */
 	public $course_type_name;
@@ -89,10 +95,4 @@ class Course {
 	 * @var String
 	 */
 	public $audience;
-
-	/**
-	 * The relative path of a thumbnail of the course.
-	 * @var String
-	 */
-	public $thumbnail;
 }

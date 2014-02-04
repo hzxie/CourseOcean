@@ -16,7 +16,7 @@ class RecentlyController extends AbstractActionController
 	 * 
 	 * @return a ViewModel object which contains HTML content
 	 */
-	public function indexAction()
+	public function pageAction()
     {
         return array();
     }

@@ -18,24 +18,45 @@ class LibraryController extends AbstractActionController
 	 * 
 	 * @return a ViewModel object which contains HTML content
 	 */
-	public function indexAction()
+	public function pageAction()
     {
+        $NUMBER_OF_COURSES_PER_PAGE = 10;
+        $pageNumber                 = $this->params()->fromRoute('id', 1);
         return array(
-            'courses'   => $this->getAllCourses()
+            'courses'           => $this->getAllCourses($pageNumber, $NUMBER_OF_COURSES_PER_PAGE),
+            'currentPageNumber' => $pageNumber,
+            'numberOfPages'     => $this->getNumberOfPages($NUMBER_OF_COURSES_PER_PAGE),
         );
     }
 
     /**
      * Get all courses in the database.
+     * @param  int $pageNumber - current number of the page
+     * @param  int $limit - max number of courses in a page
      * @return an array which contains all general information 
      *         of the courses
      */
-    private function getAllCourses()
+    private function getAllCourses($pageNumber, $limit)
     {
         $sm             = $this->getServiceLocator();
         $courseTable    = $sm->get('Courses\Model\CourseTable');
 
-        return $courseTable->fetchAll();
+        return $courseTable->fetchAll($pageNumber, $limit);
+    }
+
+    /**
+     * Get total number of pages for the courses.
+     * @param  int $limit - max number of courses in a page
+     * @return an integer which stands for the total number of pages for 
+     *         the courses
+     */
+    private function getNumberOfPages($limit)
+    {
+        $sm                 = $this->getServiceLocator();
+        $courseTable        = $sm->get('Courses\Model\CourseTable');
+        $numberOfCourses    = $courseTable->getNumberOfCourses();
+
+        return ceil( $numberOfCourses / $limit );
     }
 
     /**

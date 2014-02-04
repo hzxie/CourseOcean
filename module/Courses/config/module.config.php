@@ -17,7 +17,7 @@ return array(
                     'defaults' => array(
                         '__NAMESPACE__' => 'Courses\Controller',
                         'controller'    => 'Library',
-                        'action'        => 'index',
+                        'action'        => 'page',
                     ),
                 ),
                 'may_terminate' => true,
