@@ -6,6 +6,7 @@ return array(
             'Courses\Controller\News'         => 'Courses\Controller\NewsController',
             'Courses\Controller\Library'      => 'Courses\Controller\LibraryController',
             'Courses\Controller\Teacher'      => 'Courses\Controller\TeacherController',
+            'Courses\Controller\Requirement'  => 'Courses\Controller\RequirementController',
         ),
     ),
     'router' => array(

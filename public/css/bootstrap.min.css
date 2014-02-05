@@ -1715,7 +1715,6 @@ select:focus:invalid:focus {
 .input-append,
 .input-prepend {
   display: inline-block;
-  margin-bottom: 10px;
   font-size: 0;
   white-space: nowrap;
   vertical-align: middle;
@@ -1744,9 +1743,9 @@ select:focus:invalid:focus {
   margin-bottom: 0;
   *margin-left: 0;
   vertical-align: top;
-  -webkit-border-radius: 0 4px 4px 0;
+/*-webkit-border-radius: 0 4px 4px 0;
      -moz-border-radius: 0 4px 4px 0;
-          border-radius: 0 4px 4px 0;
+          border-radius: 0 4px 4px 0;*/
 }
 
 .input-append input:focus,
@@ -1807,9 +1806,9 @@ select:focus:invalid:focus {
 .input-append input,
 .input-append select,
 .input-append .uneditable-input {
-  -webkit-border-radius: 4px 0 0 4px;
+/*-webkit-border-radius: 4px 0 0 4px;
      -moz-border-radius: 4px 0 0 4px;
-          border-radius: 4px 0 0 4px;
+          border-radius: 4px 0 0 4px; */
 }
 
 .input-append input + .btn-group .btn:last-child,
@@ -1829,9 +1828,9 @@ select:focus:invalid:focus {
 .input-append .add-on:last-child,
 .input-append .btn:last-child,
 .input-append .btn-group:last-child > .dropdown-toggle {
-  -webkit-border-radius: 0 4px 4px 0;
+/*-webkit-border-radius: 0 4px 4px 0;
      -moz-border-radius: 0 4px 4px 0;
-          border-radius: 0 4px 4px 0;
+          border-radius: 0 4px 4px 0;*/
 }
 
 .input-prepend.input-append input,

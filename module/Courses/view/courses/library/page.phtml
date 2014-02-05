@@ -11,7 +11,14 @@
 		</div> <!-- #title -->
 	</div> <!-- #banner -->
 	<div id="filter">
-		Filter Here...
+		<select name="course-types">
+			<option value="">所有课程类别</option>
+			<?php foreach ( $courseTypes as $courseType ) { ?>
+			<option value="<?php echo $courseType->course_type_slug; ?>"><?php echo $courseType->course_type_name; ?></option>
+			<?php } ?>
+		</select>
+		<input name="keyword" type="text" />
+		<input type="submit" class="btn" value="搜索" />
 	</div> <!-- #filter -->
 	<div id="main-content">
 		<div id="courses">

@@ -1,8 +1,111 @@
 <?php 
-	echo $this->headTitle('近期开课 | ');
-	echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/recently.css');
+    echo $this->headTitle('近期开课 | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/datepicker.css')
+                          ->appendStylesheet($this->basePath().'/css/courses/recently.css');
+    echo $this->headScript()->appendFile($this->basePath().'/js/stick-up.min.js')
+                            ->appendFile($this->basePath().'/js/datepicker.min.js')
+                            ->appendFile($this->basePath().'/js/citypicker.js');
 ?>
 
 <div id="content">
-	近期开课
+    <div id="banner">
+        <div id="title">
+            <h1>近期开课</h1>
+            <h2>提供最适合您的培训</h2>
+        </div> <!-- #title -->
+    </div> <!-- #banner -->
+    <div id="main-content">
+        <div id="sidebar">
+            <div id="search">
+                <h2>查找适合您的课程</h2>
+                <div class="field">
+                    <label for="keyword">关键词</label>
+                    <input type="text" name="keyword" />
+                </div> <!-- .field -->
+                <div class="field">
+                    <label for="course-types">课程类型</label>
+                    <select name="course-types">
+                        <option value="">所有课程类型</option>
+                        <?php foreach ( $courseTypes as $courseType ) { ?>
+                        <option value="<?php echo $courseType->course_type_slug; ?>"><?php echo $courseType->course_type_name; ?></option>
+                        <?php } ?>
+                    </select>
+                </div> <!-- .field -->
+                <div class="field">
+                    <label for="time">开课时间</label>
+                    <div class="input-append date" id="datepicker" data-date-format="yyyy-mm-dd">
+                        <input size="16" type="text" value="任意时间" style="width: 179px;" disabled="disabled"/>
+                        <span class="add-on"><i class="icon-th"></i></span>
+                    </div>
+                </div> <!-- .field -->
+                <form class="field">
+                    <label for="place">开课地点</label>
+                    <select class="place" name="region" onchange="setProvince(this, province, city)">
+                        <option value="" selected>任意地区</option>
+                        <script type="text/javascript">
+                            setRegions();
+                        </script>
+                    </select>
+                    <select class="place" name="province" disabled="disabled" onchange="setCity(this, city)">
+                    </select>
+                    <select class="place" name="city" disabled="disabled">
+                    </select>
+                </form> <!-- .field -->
+                <div class="field">
+                    <button class="btn">搜索</button>
+                </div> <!-- .field -->
+            </div> <!-- #search -->
+        </div> <!-- #sidebar -->
+        <div id="recently">
+        <?php 
+            for ( $i = 0; $i < 4; ++ $i ) {
+        ?>
+            <div class="section">
+                <h2>通往卓越管理的阶梯</h2>
+                <div class="meta">
+                    <span><i class="icon-th-list"></i> 课程分类</span>
+                    <span><i class="icon-calendar"></i> 2014年3月28日~2014年4月1日</span>
+                    <span><i class="icon-user"></i> 朱少民</span>
+                    <span><i class="icon-tag"></i> 5800元</span>
+                </div> <!-- .meta -->
+                <div class="introduction">
+                    从一名出色的技术人员成长为一名管理者并不是简单的资历积累的结果，这中间伴随着思维视角、技能转换、个人成熟度等多重磨练。做技术和管理人有着截然不同的要求，本次课程从管理者如何提高自己、以及管理者如何管理员工两方面入手，深度分享世界顶级公司优秀经理们的成长规律。
+                </div> <!-- .introduction -->
+                <div class="detail">
+                    <ul class="inline">
+                        <li><strong>听众范围: </strong>软件工程师</li>
+                        <li><strong>标签: </strong>标签1 标签2 标签3 标签4</li>
+                    </ul>
+                </div> <!-- .detail -->
+            </div> <!-- .section -->
+        <?php } ?>
+        </div> <!-- #recently -->
+    </div> <!-- #main-content -->
 </div> <!-- #content -->
+
+<script type="text/javascript">
+    jQuery(function($) {
+        $(document).ready( function() {
+            $('#search').stickUp();
+            $('#datepicker').datepicker();
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(window).scroll(function() {
+        $('#datepicker').datepicker('hide');
+        setSearchVisibility();
+    });
+</script>
+<script type="text/javascript">
+    function setSearchVisibility() {
+        var searchBoxHeight = $('#search').outerHeight(),
+            footerOffsetTop = $('#footer').offset().top - $(window).scrollTop(),
+            offset          = footerOffsetTop - searchBoxHeight;
+        if ( footerOffsetTop < searchBoxHeight ) {
+            $('#search').css('top', offset);
+        } else {
+            $('#search').css('top', 0);
+        }
+    }
+</script>

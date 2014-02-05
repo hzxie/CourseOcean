@@ -14,8 +14,8 @@
 					->prependStylesheet($this->basePath() . '/css/bootstrap-responsive.min.css') ?>
 	<!-- Java Script -->
 	<?php echo $this->headScript()
-		->appendFile($this->basePath() . '/js/jquery-1.11.0.min.js')
-		->appendFile($this->basePath() . '/js/bootstrap.min.js')
+		->prependFile($this->basePath() . '/js/bootstrap.min.js')
+		->prependFile($this->basePath() . '/js/jquery-1.11.0.min.js')
 	; ?>
 
 </head>
@@ -37,7 +37,7 @@
 					<li><a href="<?php echo $this->basePath(); ?>/courses/news">培训动态</a></li>
 					<li><a href="<?php echo $this->basePath(); ?>/courses/library">课程库</a></li>
 					<li><a href="<?php echo $this->basePath(); ?>/courses/teacher">讲师团队</a></li>
-					<li><a href="#">培训需求</a></li>
+					<li><a href="<?php echo $this->basePath(); ?>/courses/requirement">培训需求</a></li>
 				</ul>
 			</div> <!-- navigation -->
             <div id="accounts">

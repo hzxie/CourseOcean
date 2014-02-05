@@ -32,45 +32,66 @@ div#content div#main-content {
 div#main-content div#sidebar {
 	background-color: #e6f4fb;
 	position: absolute;
-	height:100%;
+	height: 100%;
 	min-height: 500px;
 	width: 260px;
 }
 
-div#main-content div#sidebar ul {
-	margin: 50px 0 0 75px;
+div#sidebar div#search {
+	padding: 20px 20px 0 20px;
+	width: 220px;
+	top: 0;
 }
 
-div#main-content div#sidebar li {
-	color: #565656;
-	list-style: none;
-	font-weight: bold;
-	font-size: 16px;
-	line-height: 50px;
+div#search div.field,
+div#search form.field {
+	margin-bottom: 20px;
 }
 
-div#main-content div#news {
+form.field select.place {
+	margin-bottom: 10px;
+}
+
+div#main-content div#recently {
 	margin-left: 260px;
 	width: 670px;
 	padding: 15px;
 }
 
-div#main-content div.section {
+div#recently div.section {
 	border-bottom: 1px dotted #aeaeae;
-	margin-bottom: 15px;
+	margin-bottom: 20px;
 	overflow: hidden;
 }
 
-div.section div.avatar {
-	float: left;
-	width: 100px;
-}
-
-div.section div.content {
-	margin-left: 120px;
-}
-
-div.section div.content p {
+div.section div.meta {
 	color: #565656;
 	font-size: 12px;
+	margin-bottom: 10px;
+}
+
+div.section div.meta span {
+	margin-right: 10px;
+}
+
+div.section div.meta i {
+	opacity: .6;
+}
+
+div.section div.introduction {
+	color: #565656;
+	font-size: 13px;
+	margin-bottom: 10px;
+}
+
+div.section div.detail {
+	background-color: #f2f2f2;
+	color: #000;
+	font-size: 13px;
+	margin-bottom: 10px;
+	padding: 5px;
+}
+
+div.section div.detail ul {
+	margin: 0;
 }
