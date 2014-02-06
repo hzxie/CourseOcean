@@ -26,6 +26,7 @@ class LibraryController extends AbstractActionController
             'courses'           => $this->getAllCourses($pageNumber, $NUMBER_OF_COURSES_PER_PAGE),
             'currentPageNumber' => $pageNumber,
             'numberOfPages'     => $this->getNumberOfPages($NUMBER_OF_COURSES_PER_PAGE),
+            'courseTypes'       => $this->getAllCourseTypes(),
         );
     }
 
@@ -57,6 +58,19 @@ class LibraryController extends AbstractActionController
         $numberOfCourses    = $courseTable->getNumberOfCourses();
 
         return ceil( $numberOfCourses / $limit );
+    }
+
+    /**
+     * Get all information of course types in the database.
+     * @return an array of objects of CourseType which contains 
+     *         informtaion of course type in the database
+     */
+    private function getAllCourseTypes()
+    {
+        $sm                 = $this->getServiceLocator();
+        $courseTypeTable    = $sm->get('Courses\Model\CourseTypeTable');
+
+        return $courseTypeTable->fetchAll();
     }
 
     /**

@@ -6,23 +6,29 @@
 <div id="content">
 	<div id="detail">
 		<div id="banner">
-			<img src="https://www.edx.org/sites/default/files/course/image/banner/collegewriting_608x211_0.jpg" alt="Banner" />
+			<img src="<?php echo $this->basePath('img/courses/'.$course['course_type_slug'].'-large.jpg'); ?>" alt="Banner" />
 		</div> <!-- #banner -->
 		<div id="main-content">
 			<div id="course-name"><?php echo $course['course_name'] ?></div> <!-- #course-name -->
 			<div id="brief" class="section"><?php echo $course['brief']; ?></div> <!-- #brief -->
-			<div id="objective" class="section">
-				<div class="title">课程目标</div>
-				<div class="content"><?php echo $course['course_objective']; ?></div>
-			</div> <!-- #purpose -->
-			<div id="feature" class="section">
-				<div class="title">课程特点</div>
-				<div class="content"><?php echo $course['course_feature']; ?></div>
-			</div>
-			<div id="outline" class="section">
-				<div class="title">课程大纲</div>
-				<div class="content"><?php echo $course['course_outline']; ?></div>
-			</div>
+			<?php if ( isset($course['course_objective']) ): ?>
+				<div id="objective" class="section">
+					<div class="title">课程目标</div>
+					<div class="content"><?php echo $course['course_objective']; ?></div>
+				</div> <!-- #purpose -->
+			<?php endif; ?>
+			<?php if ( isset($course['course_feature']) ): ?>
+				<div id="feature" class="section">
+					<div class="title">课程特点</div>
+					<div class="content"><?php echo $course['course_feature']; ?></div>
+				</div> <!-- #feature -->
+			<?php endif; ?>
+			<?php if ( isset($course['course_outline']) ): ?>
+				<div id="outline" class="section">
+					<div class="title">课程大纲</div>
+					<div class="content"><?php echo $course['course_outline']; ?></div>
+				</div> <!-- #outline -->
+			<?php endif; ?>
 			<div id="teacher-introduction" class="section">
 				<div class="title">讲师介绍</div>
 				<div id="teacher">

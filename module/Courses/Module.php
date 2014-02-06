@@ -14,6 +14,8 @@ use Courses\Model\CourseMeta;
 use Courses\Model\CourseMetaTable;
 use Courses\Model\CourseType;
 use Courses\Model\CourseTypeTable;
+use Courses\Model\Lecture;
+use Courses\Model\LectureTable;
 use Accounts\Model\Teacher;
 use Accounts\Model\TeacherTable;
 
