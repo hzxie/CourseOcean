@@ -82,6 +82,17 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype->setArrayObjectPrototype(new CourseType());
                     return new TableGateway('itp_course_types', $dbAdapter, null, $resultSetPrototype);
                 },
+                'Courses\Model\LectureTable' => function($sm) {
+                    $tableGateway = $sm->get('LectureTableGateway');
+                    $table = new LectureTable($tableGateway);
+                    return $table;
+                },
+                'LectureTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Lecture());
+                    return new TableGateway('itp_lectures', $dbAdapter, null, $resultSetPrototype);
+                },
                 'Accounts\Model\TeacherTable' => function($sm) {
                     $tableGateway = $sm->get('TeacherTableGateway');
                     $table = new TeacherTable($tableGateway);
