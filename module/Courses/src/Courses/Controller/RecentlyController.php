@@ -97,12 +97,15 @@ class RecentlyController extends AbstractActionController
         $generalInfo        = $this->getGeneralInfo($lectureID);
         $lectureMetaInfo    = $this->getLectureMetaInfo($lectureID);
 
+        if ( $generalInfo == null ) {
+            return $lectureInfo;
+        }
         $courseID           = $generalInfo->course_id;
         $courseMetaInfo     = $this->getCourseMetaInfo($courseID);
 
-        $lectureInfo   += $this->getGeneralInfoArray($generalInfo);
-        $lectureInfo   += $this->getMetaInfoArray($lectureMetaInfo);
-        $lectureInfo   += $this->getMetaInfoArray($courseMetaInfo);
+        $lectureInfo       += $this->getGeneralInfoArray($generalInfo);
+        $lectureInfo       += $this->getMetaInfoArray($lectureMetaInfo);
+        $lectureInfo       += $this->getMetaInfoArray($courseMetaInfo);
 
         return $lectureInfo;
     }
