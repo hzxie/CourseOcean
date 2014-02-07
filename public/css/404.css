@@ -1,4 +1,23 @@
 div#content {
+	background-color: #fff;
 	margin: 0 auto;
+	padding: 20px;
 	width: 960px;
+}
+
+div#content div#error {
+	overflow: hidden;
+}
+
+div#error div.left {
+	background: url('../img/404.jpg') no-repeat;
+	float: left;
+	width: 512px;
+	height: 512px;
+}
+
+div#error div.right {
+	float: left;
+	padding-top: 200px;
+	width: 448px;
 }
