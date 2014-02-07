@@ -19,6 +19,12 @@ class Lecture {
 	{
 		$this->lecture_id		= (!empty($data['lecture_id'])) 		? $data['lecture_id'] 		: null;
 		$this->course_id		= (!empty($data['course_id'])) 			? $data['course_id'] 		: null;
+		$this->course_name		= (!empty($data['course_name'])) 		? $data['course_name'] 		: null;
+		$this->brief			= (!empty($data['brief'])) 				? $data['brief'] 			: null;
+		$this->course_type_slug	= (!empty($data['course_type_slug'])) 	? $data['course_type_slug'] : null;
+		$this->course_type_name	= (!empty($data['course_type_name'])) 	? $data['course_type_name'] : null;
+		$this->real_name		= (!empty($data['real_name'])) 			? $data['real_name'] 		: null;
+		$this->audience			= (!empty($data['audience'])) 			? $data['audience'] 		: null;
 		$this->start_time		= (!empty($data['start_time'])) 		? $data['start_time'] 		: null;
 		$this->end_time			= (!empty($data['end_time'])) 			? $data['end_time'] 		: null;
 		$this->place_region		= (!empty($data['place_region'])) 		? $data['place_region'] 	: null;
@@ -39,6 +45,18 @@ class Lecture {
 	 * @var int
 	 */
 	public $course_id;
+
+	public $course_name;
+
+	public $brief;
+
+	public $course_type_slug;
+
+	public $course_type_name;
+
+	public $real_name;
+
+	public $audience;
 
 	/**
 	 * The date when the lecture start.

@@ -58,28 +58,60 @@
         </div> <!-- #sidebar -->
         <div id="recently">
         <?php 
-            for ( $i = 0; $i < 4; ++ $i ) {
+            foreach ( $lectures as $lecture ) {
         ?>
             <div class="section">
-                <h2>通往卓越管理的阶梯</h2>
+                <a href="<?php echo $this->basePath("courses/recently/detail/$lecture->lecture_id"); ?>">
+                    <h2><?php echo $lecture->course_name; ?></h2>
+                </a>
                 <div class="meta">
-                    <span><i class="icon-th-list"></i> 课程分类</span>
-                    <span><i class="icon-calendar"></i> 2014年3月28日~2014年4月1日</span>
-                    <span><i class="icon-user"></i> 朱少民</span>
-                    <span><i class="icon-tag"></i> 5800元</span>
+                    <span><i class="icon-th-list"></i> <?php echo $lecture->course_type_name; ?></span>
+                    <span><i class="icon-calendar"></i> <?php echo date('Y年m月d日', strtotime($lecture->start_time)); ?>~<?php echo date('Y年m月d日', strtotime($lecture->end_time)); ?></span>
+                    <span><i class="icon-user"></i> <?php echo $lecture->real_name; ?></span>
+                    <span><i class="icon-tag"></i> <?php echo $lecture->expense; ?>元</span>
                 </div> <!-- .meta -->
                 <div class="introduction">
-                    从一名出色的技术人员成长为一名管理者并不是简单的资历积累的结果，这中间伴随着思维视角、技能转换、个人成熟度等多重磨练。做技术和管理人有着截然不同的要求，本次课程从管理者如何提高自己、以及管理者如何管理员工两方面入手，深度分享世界顶级公司优秀经理们的成长规律。
+                    <?php echo $lecture->brief; ?>
                 </div> <!-- .introduction -->
                 <div class="detail">
                     <ul class="inline">
-                        <li><strong>听众范围: </strong>软件工程师</li>
-                        <li><strong>地点: </strong>上海市 同济大学</li>
+                        <li><strong>听众范围: </strong><?php echo $lecture->audience; ?></li>
+                        <li><strong>地点: </strong>
+                            <?php echo $lecture->place_province; ?>
+                            <?php echo $lecture->place_city; ?>
+                        </li>
                     </ul>
                 </div> <!-- .detail -->
             </div> <!-- .section -->
         <?php } ?>
         </div> <!-- #recently -->
+        <div id="page-navigation">
+            <ul class="inline">
+            <?php
+                $basePath = $this->basePath().'/courses/recently/page/';
+            ?>
+            <?php if ( $currentPageNumber > 1 ): ?>
+                <li><a href="<?php echo $basePath.($currentPageNumber - 1); ?>">上一页</a></li>
+            <?php endif; ?>
+            <?php
+                $lowerBound = $currentPageNumber - 5;
+                $lowerBound = ( $lowerBound > 0 ) ? $lowerBound : 1;
+                $upperBound = $currentPageNumber + 4;
+                $upperBound = ( $upperBound <= $numberOfPages ) ? $upperBound : $numberOfPages;
+
+                for ( $i = $lowerBound; $i <= $upperBound; ++ $i ) {
+                    if ( $i == $currentPageNumber ) {
+                        echo "<li>$i</li>";
+                    } else {
+                        echo "<li><a href=\"$basePath$i\">$i</a></li>";
+                    }
+                }
+            ?>
+            <?php if ( $currentPageNumber < $numberOfPages ): ?>
+                <li><a href="<?php echo $basePath.($currentPageNumber + 1); ?>">下一页</a></li>
+            <?php endif; ?>
+            </ul>
+        </div> <!-- page-navigation-->
     </div> <!-- #main-content -->
 </div> <!-- #content -->
 
