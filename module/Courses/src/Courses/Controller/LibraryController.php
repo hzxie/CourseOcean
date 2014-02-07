@@ -84,9 +84,7 @@ class LibraryController extends AbstractActionController
         $courseInfo     = $this->getCourseDetailInfo($courseID);
 
         if ( $courseInfo == null ) {
-            $response   = $this->getResponse();
-            $response->setStatusCode(404);
-            return $response;
+            return $this->notFoundAction();
         }
     	return array(
             'course'    => $courseInfo,
@@ -100,7 +98,7 @@ class LibraryController extends AbstractActionController
      * @return an array which contains all information of a certain 
      *         course
      */
-    private function getCourseDetailInfo($courseID)
+    public function getCourseDetailInfo($courseID)
     {
         $courseInfo     = array();
         $generalInfo    = $this->getGeneralInfo($courseID);

@@ -27,11 +27,9 @@
 			?>
 			<div class="section">
 				<div class="left">
-					<?php
-						if ( strtotime($course->create_time) > strtotime('-7 day', time()) ) {
-					?>
+					<?php if ( strtotime($course->create_time) > strtotime('-7 day', time()) ):?>
 					<div class="brand brand-new"></div>
-					<?php } ?>
+					<?php endif ?>
 					<div class="fieldset">
 						<div class="title">
 							<a href="<?php echo $this->basePath("courses/library/detail/$course->course_id"); ?>">

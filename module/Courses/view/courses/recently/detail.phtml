@@ -1,0 +1,101 @@
+<?php 
+    echo $this->headTitle($lecture['course_name'].' | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/view.css');
+?>
+
+<div id="content">
+    <div id="detail">
+        <div id="banner">
+            <img src="<?php echo $this->basePath('img/courses/'.$lecture['course_type_slug'].'-large.jpg'); ?>" alt="Banner" />
+        </div> <!-- #banner -->
+        <div id="main-content">
+            <div id="course-name"><?php echo $lecture['course_name'] ?></div> <!-- #course-name -->
+            <div id="brief" class="section"><?php echo $lecture['brief']; ?></div> <!-- #brief -->
+            <?php if ( isset($lecture['course_objective']) ): ?>
+                <div id="objective" class="section">
+                    <div class="title">课程目标</div>
+                    <div class="content"><?php echo $lecture['course_objective']; ?></div>
+                </div> <!-- #purpose -->
+            <?php endif; ?>
+            <?php if ( isset($lecture['course_feature']) ): ?>
+                <div id="feature" class="section">
+                    <div class="title">课程特点</div>
+                    <div class="content"><?php echo $lecture['course_feature']; ?></div>
+                </div> <!-- #feature -->
+            <?php endif; ?>
+            <?php if ( isset($lecture['course_outline']) ): ?>
+                <div id="outline" class="section">
+                    <div class="title">课程大纲</div>
+                    <div class="content"><?php echo $lecture['course_outline']; ?></div>
+                </div> <!-- #outline -->
+            <?php endif; ?>
+            <?php if ( isset($lecture['lecture_guideline']) ): ?>
+                <div id="outline" class="section">
+                    <div class="title">注意事项</div>
+                    <div class="content"><?php echo $lecture['lecture_guideline']; ?></div>
+                </div> <!-- #guideline -->
+            <?php endif; ?>
+            <div id="teacher-introduction" class="section">
+                <div class="title">讲师介绍</div>
+                <div id="teacher">
+                    <div id="avatar">
+                        <img class="img-circle" src="<?php echo $this->basePath('/img/avatar.png'); ?>" alt="avatar" />
+                    </div> <!-- #avatar -->
+                    <div id="introduction">
+                        <div id="name"><?php echo $teacher['real_name']; ?></div>
+                        <div><?php echo $teacher['introduction']; ?></div>
+                    </div> <!-- #introduction -->
+                </div> <!-- #teacher -->
+            </div> <!-- #teacher-introduction -->
+        </div> <!-- #main-content -->
+    </div> <!-- #detail -->
+    <div id="summary">
+        <div id="company">
+            <img src="https://www.edx.org/sites/default/files/course/image/video/berkeley_no_video_320x211.png" alt="Company Logo">
+        </div> <!-- company -->
+        <div id="overview">
+            <div id="info">
+                <div class="item">
+                    <div class="title">课程分类</div>
+                    <div class="content"><?php echo $lecture['course_type_name']; ?></div>
+                </div>
+                <div class="item">
+                    <div class="title">讲师</div>
+                    <div class="content"><?php echo $teacher['real_name']; ?></div>
+                </div>
+                <div class="item">
+                    <div class="title">培训时间</div>
+                    <div class="content">
+                        <strong>从 </strong><?php echo date('Y年m月d日', strtotime($lecture['start_time'])); ?><br />
+                        <strong>至 </strong><?php echo date('Y年m月d日', strtotime($lecture['end_time'])); ?>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="title">培训地点</div>
+                    <div class="content">(报名后查看详细地址)</div>
+                </div>
+                <div class="item">
+                    <div class="title">培训费用</div>
+                    <div class="content"><?php echo $lecture['expense']; ?> 元</div>
+                </div>
+                <div class="item">
+                    <div class="title">听众范围</div>
+                    <div class="content"><?php echo $lecture['audience']; ?></div>
+                </div>
+            </div> <!-- #info -->
+            <div id="lectures">
+                <strong>开课记录</strong>
+                <ol>
+                    <li></li>
+                </ol>
+            </div> <!-- #lectures -->
+        </div> <!-- #overview -->
+        <div id="social">
+            <ul class="inline">
+                <li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/sina.png" alt="Sina"></a></li>
+                <li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/wechat.png" alt="WeChat"></a></li>
+                <li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/laiwang.png" alt="LaiWang"></a></li>
+            </ul>
+        </div> <!-- #social -->
+    </div> <!-- #summary -->
+</div> <!-- #conetnt -->

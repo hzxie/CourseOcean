@@ -64,6 +64,31 @@ div#recently div.section {
 	overflow: hidden;
 }
 
+div.section div.title {
+	font-size: 16px;
+	font-weight: bold;
+	margin: 10px 0 10px 0;
+	overflow: hidden;
+}
+
+div.section div.title span {
+	float: left;
+	margin-right: 10px;
+}
+
+div.section div.brand {
+	height: 29px;
+	width: 30px;
+}
+
+div.section div.brand.brand-new {
+	background: url('../../img/brand-new.png') no-repeat;
+}
+
+div.section div.brand.brand-hot {
+	background: url('../../img/brand-hot.png') no-repeat;
+}
+
 div.section div.meta {
 	color: #565656;
 	font-size: 12px;

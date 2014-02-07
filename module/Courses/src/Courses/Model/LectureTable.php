@@ -58,7 +58,7 @@ class LectureTable
 
     /**
      * Get number of records in the courses table.
-     * @return an integer which stands for the number of records in the course
+     * @return an integer which stands for the number of records in the lecture
      *         table
      */
     public function getNumberOfLectures()
@@ -67,16 +67,18 @@ class LectureTable
     }
 
     /**
-     * Get general information of a certain course.
-     * @param  int $courseID - the unique id of the course
-     * @return an array which contains general information of a cerain course
+     * Get general information of a certain lecture.
+     * @param  int $lectureID - the unique id of the lecture
+     * @return an array which contains general information of a cerain lecture
      */
-    public function getGeneralInfo($courseID)
+    public function getGeneralInfo($lectureID)
     {
-        $rowset     = $this->tableGateway->select(function (Select $select) use ($courseID) {
-            $select->join('itp_course_types', 
+        $rowset     = $this->tableGateway->select(function (Select $select) use ($lectureID) {
+            $select->join('itp_courses',
+                          'itp_lectures.course_id = itp_courses.course_id');
+            $select->join('itp_course_types',
                           'itp_courses.course_type_id = itp_course_types.course_type_id');
-            $select->where->equalTo('course_id', $courseID);
+            $select->where->equalTo('lecture_id', $lectureID);
         });
         return $rowset->current();
     }
