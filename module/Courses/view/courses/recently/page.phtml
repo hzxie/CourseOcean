@@ -61,9 +61,11 @@
             foreach ( $lectures as $lecture ) {
         ?>
             <div class="section">
-                <a href="<?php echo $this->basePath("courses/recently/detail/$lecture->lecture_id"); ?>">
-                    <h2><?php echo $lecture->course_name; ?></h2>
-                </a>
+                <div class="title">
+                    <a href="<?php echo $this->basePath("courses/recently/detail/$lecture->lecture_id"); ?>">
+                        <span><?php echo $lecture->course_name; ?></span>
+                    </a>
+                </div> <!-- #title -->
                 <div class="meta">
                     <span><i class="icon-th-list"></i> <?php echo $lecture->course_type_name; ?></span>
                     <span><i class="icon-calendar"></i> <?php echo date('Y年m月d日', strtotime($lecture->start_time)); ?>~<?php echo date('Y年m月d日', strtotime($lecture->end_time)); ?></span>
@@ -115,21 +117,21 @@
     </div> <!-- #main-content -->
 </div> <!-- #content -->
 
-<script type="text/javascript">
+<?php $this->inlineScript()->captureStart(); ?>
     jQuery(function($) {
         $(document).ready( function() {
             $('#search').stickUp();
             $('#datepicker').datepicker();
         });
     });
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     $(window).scroll(function() {
         $('#datepicker').datepicker('hide');
         setSearchVisibility();
     });
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function setSearchVisibility() {
         var searchBoxHeight = $('#search').outerHeight(),
             footerOffsetTop = $('#footer').offset().top - $(window).scrollTop(),
@@ -140,4 +142,4 @@
             $('#search').css('top', 0);
         }
     }
-</script>
+<?php $this->inlineScript()->captureEnd(); ?>

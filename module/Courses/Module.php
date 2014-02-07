@@ -9,13 +9,15 @@ use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
 use Courses\Model\Course;
+use Courses\Model\CourseType;
+use Courses\Model\CourseTypeTable;
 use Courses\Model\CourseTable;
 use Courses\Model\CourseMeta;
 use Courses\Model\CourseMetaTable;
-use Courses\Model\CourseType;
-use Courses\Model\CourseTypeTable;
 use Courses\Model\Lecture;
 use Courses\Model\LectureTable;
+use Courses\Model\LectureMeta;
+use Courses\Model\LectureMetaTable;
 use Accounts\Model\Teacher;
 use Accounts\Model\TeacherTable;
 
@@ -29,7 +31,6 @@ class Module implements AutoloaderProviderInterface
             ),
             'Zend\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
-		    // if we're in a namespace deeper than one level we need to fix the \ in the path
                     __NAMESPACE__ => __DIR__ . '/src/' . str_replace('\\', '/' , __NAMESPACE__),
                 ),
             ),
@@ -92,6 +93,17 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Lecture());
                     return new TableGateway('itp_lectures', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Courses\Model\LectureMetaTable' => function($sm) {
+                    $tableGateway = $sm->get('LectureMetaTableGateway');
+                    $table = new LectureMetaTable($tableGateway);
+                    return $table;
+                },
+                'LectureMetaTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new LectureMeta());
+                    return new TableGateway('itp_lecture_meta', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Accounts\Model\TeacherTable' => function($sm) {
                     $tableGateway = $sm->get('TeacherTableGateway');
