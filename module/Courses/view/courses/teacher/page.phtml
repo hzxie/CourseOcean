@@ -21,29 +21,60 @@
         <input type="submit" class="btn" value="搜索" />
     </div> <!-- #filter -->
     <div id="main-content">
-        <?php
-            $colors = array('#427fed', '#f4b400', '#53a93f', '#e94d20');
-            foreach ( $teachers as $teacher ) {
-        ?>
-        <div class="block">
-            <?php if ( $teacher->avatar == null ) { ?>  
-            <div class="avatar" style="background: <?php echo $colors[rand(0, 3)]; ?>">
-                <img src="<?php echo $this->basePath(); ?>/img/silhouette.png" alt="Avatar">
-            </div>
-            <?php } else { ?>
-            <div class="avatar">
-                <img src="<?php echo $this->basePath($teacher->avatar); ?>" alt="Avatar">
+        <div id="teachers">
+            <?php
+                $colors = array('#427fed', '#f4b400', '#53a93f', '#e94d20');
+                foreach ( $teachers as $teacher ) {
+            ?>
+            <div class="block">
+                <?php if ( $teacher->avatar == null ) { ?>  
+                <div class="avatar" style="background: <?php echo $colors[rand(0, 3)]; ?>">
+                    <img src="<?php echo $this->basePath('/img/silhouette.png'); ?>" alt="Avatar">
+                </div>
+                <?php } else { ?>
+                <div class="avatar">
+                    <img src="<?php echo $this->basePath($teacher->avatar); ?>" alt="Avatar">
+                </div>
+                <?php } ?>
+                <div class="content">
+                    <div class="name">
+                        <a href="<?php echo $this->basePath("/teacher/detail/$teacher->uid"); ?>"><?php echo $teacher->real_name; ?></a>
+                    </div> <!-- .name -->
+                    <div class="company"><?php echo $teacher->company;?></div>
+                    <div class="field"><?php echo $teacher->field;?></div>
+                    <div class="reserve">
+                        <button class="btn btn-block">预约</button>
+                    </div> <!-- .reserve -->
+                </div> <!-- .content -->
             </div>
             <?php } ?>
-            <div class="content">
-                <div class="name"><?php echo $teacher->real_name; ?></div>
-                <div class="company"><?php echo $teacher->company;?></div>
-                <div class="field"><?php echo $teacher->field;?></div>
-                <div class="reserve">
-                    <button class="btn btn-block">预约</button>
-                </div> <!-- .reserve -->
-            </div>
-        </div>
-        <?php } ?>
+        </div> <!-- #teachers -->
+        <div id="page-navigation">
+            <ul class="inline">
+            <?php
+                $basePath = $this->basePath().'/courses/teacher/page/';
+            ?>
+            <?php if ( $currentPageNumber > 1 ): ?>
+                <li><a href="<?php echo $basePath.($currentPageNumber - 1); ?>">上一页</a></li>
+            <?php endif; ?>
+            <?php
+                $lowerBound = $currentPageNumber - 5;
+                $lowerBound = ( $lowerBound > 0 ) ? $lowerBound : 1;
+                $upperBound = $currentPageNumber + 4;
+                $upperBound = ( $upperBound <= $numberOfPages ) ? $upperBound : $numberOfPages;
+
+                for ( $i = $lowerBound; $i <= $upperBound; ++ $i ) {
+                    if ( $i == $currentPageNumber ) {
+                        echo "<li>$i</li>";
+                    } else {
+                        echo "<li><a href=\"$basePath$i\">$i</a></li>";
+                    }
+                }
+            ?>
+            <?php if ( $currentPageNumber < $numberOfPages ): ?>
+                <li><a href="<?php echo $basePath.($currentPageNumber + 1); ?>">下一页</a></li>
+            <?php endif; ?>
+            </ul>
+        </div> <!-- page-navigation-->
     </div> <!-- #main-content -->
 </div> <!-- #content -->

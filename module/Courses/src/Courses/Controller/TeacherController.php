@@ -11,16 +11,20 @@ use Zend\View\Helper\BasePath;
  */
 class TeacherController extends AbstractActionController
 {
-	/**
-	 * Default method to call in the controller.
-	 * 
-	 * @return a ViewModel object which contains HTML content
-	 */
-	public function pageAction()
+    /**
+     * Default method to call in the controller.
+     * 
+     * @return a ViewModel object which contains HTML content
+     */
+    public function pageAction()
     {
+        $NUMBER_OF_TEACHERS_PER_PAGE = 15;
+        $pageNumber                  = $this->params()->fromRoute('id', 1);
         return array(
-            'teachers'      => $this->getAllTeachers(),
-            'courseTypes'   => $this->getAllCourseTypes(),
+            'teachers'          => $this->getAllTeachers($pageNumber, $NUMBER_OF_TEACHERS_PER_PAGE),
+            'currentPageNumber' => $pageNumber,
+            'numberOfPages'     => $this->getNumberOfPages($NUMBER_OF_TEACHERS_PER_PAGE),
+            'courseTypes'       => $this->getAllCourseTypes(),
         );
     }
 
@@ -29,12 +33,27 @@ class TeacherController extends AbstractActionController
      * @return an array which contains general information of the
      *         teachers
      */
-    private function getAllTeachers()
+    private function getAllTeachers($pageNumber, $limit)
     {
         $sm                 = $this->getServiceLocator();
         $teacherTable       = $sm->get('Accounts\Model\TeacherTable');
 
-        return $teacherTable->fetchAll();
+        return $teacherTable->fetchAll($pageNumber, $limit);
+    }
+
+    /**
+     * Get total number of pages for the teachers.
+     * @param  int $limit - max number of teachers in a page
+     * @return an integer which stands for the total number of pages for 
+     *         the teachers
+     */
+    private function getNumberOfPages($limit)
+    {
+        $sm                 = $this->getServiceLocator();
+        $teacherTable       = $sm->get('Accounts\Model\TeacherTable');
+        $numberOfTeachers   = $teacherTable->getNumberOfTeachers();
+
+        return ceil( $numberOfTeachers / $limit );
     }
 
     /**
@@ -52,6 +71,6 @@ class TeacherController extends AbstractActionController
 
     public function detailAction()
     {
-    	return array();
+        return array();
     }
 }

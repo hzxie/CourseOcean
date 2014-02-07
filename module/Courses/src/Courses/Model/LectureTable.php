@@ -33,11 +33,11 @@ class LectureTable
     }
 
     /**
-     * Get all records from the courses table by pagination.
+     * Get all records from the lectures table by pagination.
      * @param  int $pageNumber - current number of the page
-     * @param  int $limit - max number of courses in a page
+     * @param  int $limit - max number of lectures in a page
      * @return an object which is an instance of ResultSet, which contains
-     *         data of all courses.
+     *         data of all lectures.
      */
     public function fetchAll($pageNumber, $limit)
     {
@@ -57,7 +57,7 @@ class LectureTable
     }
 
     /**
-     * Get number of records in the courses table.
+     * Get number of records in the lectures table.
      * @return an integer which stands for the number of records in the lecture
      *         table
      */

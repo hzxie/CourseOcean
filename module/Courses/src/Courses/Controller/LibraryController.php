@@ -7,7 +7,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Helper\BasePath;
 
 /**
- * The controller of the library of the courses.
  * 
  * @author Xie Haozhe <zjhzxhz@gmail.com>
  */
@@ -94,7 +93,7 @@ class LibraryController extends AbstractActionController
 
     /**
      * Get detail information of a certain course.
-     * @param  int $courseID - the unique id of a certain couese
+     * @param  int $courseID - the unique id of a certain course
      * @return an array which contains all information of a certain 
      *         course
      */
