@@ -86,12 +86,12 @@ class RegisterController extends AbstractActionController
         $userGroupSlug          = $this->getRequest()->getPost('user-group');
 
         return array(
-            'username'          => $username,
-            'email'             => $email,
-            'password'          => $password,
-            'confirmPassword'   => $confirmPassword,
-            'userGroupSlug'     => ucfirst($userGroupSlug),
-            'userGroupID'       => $this->getUserGroupID($userGroupSlug),
+            'username'          => strip_tags($username),
+            'email'             => strip_tags($email),
+            'password'          => strip_tags($password),
+            'confirmPassword'   => strip_tags($confirmPassword),
+            'userGroupSlug'     => ucfirst(strip_tags($userGroupSlug)),
+            'userGroupID'       => strip_tags($this->getUserGroupID($userGroupSlug)),
         );
     }
 
@@ -202,6 +202,9 @@ class RegisterController extends AbstractActionController
         $userGroupTable     = $sm->get('Accounts\Model\UserGroupTable');
         $userGroupData      = $userGroupTable->getUserGroupID($userGroupSlug);
 
+        if ( $userGroupData == null ) {
+            return null;
+        }
         return $userGroupData->user_group_id;
     }
 
@@ -236,8 +239,8 @@ class RegisterController extends AbstractActionController
         $phone              = $this->getRequest()->getPost('phone');
 
         return array(
-            'realName'      => $realName,
-            'phone'         => $phone,
+            'realName'      => strip_tags($realName),
+            'phone'         => strip_tags($phone),
         );
     }
 
@@ -319,10 +322,10 @@ class RegisterController extends AbstractActionController
         $phone              = $this->getRequest()->getPost('phone');
 
         return array(
-            'realName'      => $realName,
-            'company'       => $company,
-            'field'         => $field,
-            'phone'         => $phone,
+            'realName'      => strip_tags($realName),
+            'company'       => strip_tags($company),
+            'field'         => strip_tags($field),
+            'phone'         => strip_tags($phone),
         );
     }
 
@@ -412,9 +415,9 @@ class RegisterController extends AbstractActionController
         $phone              = $this->getRequest()->getPost('phone');
 
         return array(
-            'companyName'   => $companyName,
-            'address'       => $address,
-            'phone'         => $phone,
+            'companyName'   => strip_tags($companyName),
+            'address'       => strip_tags($address),
+            'phone'         => strip_tags($phone),
         );
     }
 
