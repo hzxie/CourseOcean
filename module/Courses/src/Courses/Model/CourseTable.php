@@ -67,7 +67,8 @@ class CourseTable
     /**
      * Get general information of a certain course.
      * @param  int $courseID - the unique id of the course
-     * @return an array which contains general information of a cerain course
+     * @return an object of Course which contains general information of a cerain 
+     *         course
      */
     public function getGeneralInfo($courseID)
     {
@@ -79,6 +80,12 @@ class CourseTable
         return $rowset->current();
     }
 
+    /**
+     * Get a list of courses which are powered by the teacher.
+     * @param  int $uid - the unique id of the user
+     * @return an array of objects of Course which contains general information of
+     *         the teacher
+     */
     public function getCourseOfTeacher($uid)
     {
         $resultSet  = $this->tableGateway->select(

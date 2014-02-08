@@ -82,4 +82,18 @@ class LectureTable
         });
         return $rowset->current();
     }
+
+    /**
+     * Get a list of lectures of a certain course.
+     * @param  int $courseID - the unique id of the course
+     * @return an array of objects of Lecture which contains general information of
+     *         lectures
+     */
+    public function getLectureOfCourse($courseID)
+    {
+        $resultSet  = $this->tableGateway->select(
+            array( 'course_id'  => $courseID )
+        );
+        return $resultSet;
+    }
 }

@@ -72,9 +72,15 @@
 			</div> <!-- #info -->
 			<div id="lectures">
 				<strong>开课记录</strong>
-				<ol>
-					<li></li>
-				</ol>
+				<?php if ( $lectures == null ): ?>
+					<p>暂无开课记录</p>
+				<?php else: ?>
+					<ol>
+						<?php foreach ( $lectures as $lecture ) { ?>
+						<li><a href="<?php echo $this->basePath('/courses/recently/detail/'.$lecture['lecture_id']); ?>" target="_blank"><?php echo date('Y年m月d日', strtotime($lecture['start_time'])); ?></a></li>
+						<? } ?>
+					</ol>
+				<?php endif; ?>
 			</div> <!-- #lectures -->
 		</div> <!-- #overview -->
 		<div id="social">

@@ -88,6 +88,7 @@ class LibraryController extends AbstractActionController
     	return array(
             'course'    => $courseInfo,
             'teacher'   => $this->getTeacherInfo($courseInfo['uid']),
+            'lectures'  => $this->getLectureInfo($courseInfo['course_id']),
         );
     }
 
@@ -207,5 +208,41 @@ class LibraryController extends AbstractActionController
             }
         }
         return $teacherInfoArray;
+    }
+
+    /**
+     * Get a list of lectures of a certain course.
+     * @param  int $courseID - the unique id of the course
+     * @return 
+     */
+    private function getLectureInfo($courseID)
+    {
+        $sm                 = $this->getServiceLocator();
+        $LectureTable       = $sm->get('Courses\Model\LectureTable');
+        $lectureInfo        = $LectureTable->getLectureOfCourse($courseID);
+
+        return $this->getLectureInfoArray($lectureInfo);
+    }
+
+    /**
+     * Get a list of lectures of a certain course within an array.
+     * @param  ResultSet $resultSet - an array of objects of Lecture which 
+     *         contains general information of the lectures of the course
+     * @return an array which contains general information of the lectures 
+     *         of the lectures of the course
+     */
+    private function getLectureInfoArray($resultSet)
+    {
+        $lectureInfoArray   = array();
+
+        if ( $resultSet != null ) {
+            foreach ( $resultSet as $lecture ) {
+                array_push($lectureInfoArray, array(
+                    'lecture_id'    => $lecture->lecture_id,
+                    'start_time'    => $lecture->start_time,
+                ));
+            }
+        }
+        return $lectureInfoArray;
     }
 }

@@ -69,6 +69,10 @@ class TeacherController extends AbstractActionController
         return $courseTypeTable->fetchAll();
     }
 
+    /**
+     * Get detail information of a teacher.
+     * @return a ViewModel object which contains HTML content
+     */
     public function detailAction()
     {
         $uid                = $this->params()->fromRoute('param');
@@ -119,7 +123,8 @@ class TeacherController extends AbstractActionController
     /**
      * Get a list of courses which are powered by the teacher.
      * @param  int $uid - the unique id of the teacher
-     * @return an array which contains courses powered by the teacher
+     * @return an array which contains general information of the courses 
+     *         which are powered by the teacher
      */
     private function getCourseInfo($uid)
     {
@@ -130,6 +135,13 @@ class TeacherController extends AbstractActionController
         return $this->getCourseInfoArray($courseInfo);
     }
 
+    /**
+     * Get a list of courses which are powered by the teacher within an array.
+     * @param  ResultSet $resultSet - an array of objects of Course which contains 
+     *         general information of the courses which are powered by the teacher
+     * @return an array which contains general information of the courses 
+     *         which are powered by the teacher
+     */
     private function getCourseInfoArray($resultSet)
     {
         $courseInfoArray    = array();

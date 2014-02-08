@@ -178,8 +178,9 @@ class RecentlyController extends AbstractActionController
 
     /**
      * Get detail information of a certain lecture in an array.
-     * @param  Array $resultSet - an array of an object of CourseMeta which 
-     *         contains detail information of a certain lecture
+     * @param  ResultSet $resultSet - an array of an object of CourseMeta/
+     *         LectureMeta which contains detail information of a certain 
+     *         course/lecture
      * @return an array which contains detail information of a certain
      *         lecture
      */

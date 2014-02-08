@@ -34,7 +34,8 @@ class LectureMetaTable
     /**
      * Get meta data of a certain course.
      * @param  int $lectureID - the unique id of the lecture
-     * @return an array which contains all meta data of the course.
+     * @return an array of objects of LectureMeta which contains all meta 
+     *         data of the course.
      */
     public function getMetaData($lectureID)
     {
