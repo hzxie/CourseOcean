@@ -1,1 +1,41 @@
-<h1>Teacher</h1>
+<?php 
+    echo $this->headTitle($teacher['real_name'].' | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/profile.css');
+?>
+
+<div id="content">
+	<div id="introduction">
+		<div class="section">
+			<div id="avatar">
+				<?php if ( $teacher['avatar'] == null ): ?>
+					<img class="img-circle" src="<?php echo $this->basePath(); ?>/img/avatar.png" alt="Avatar" />
+				<?php else: ?>
+					<img class="img-circle" src="<?php echo $this->basePath($teacher['avatar']); ?>" alt="Avatar" />
+				<?php endif; ?>
+			</div> <!-- #avatr -->
+			<div id="brief">
+				<div id="name"><?php echo $teacher['real_name']; ?></div>
+				<div id="company"><?php echo $teacher['company']; ?></div>
+			</div> <!-- #brief -->
+			<div id="reserve">
+				<button class="btn btn-danger">预约讲师</button>
+			</div> <!-- #reserve -->
+		</div> <!-- .section -->
+		<div class="section">
+			<h2>讲师简介</h2>
+			<p><?php echo $teacher['introduction']; ?></p>
+		</div> <!-- .section -->
+		<div class="section">
+			<h2>擅长领域</h2>
+			<p><?php echo $teacher['field']; ?></p>
+		</div> <!-- .section -->
+		<div class="section">
+			<h2>开设课程</h2>
+			<ul>
+				<?php foreach ( $courses as $course ) { ?>
+				<li><a href="<?php echo $this->basePath('/courses/library/detail/'.$course['course_id']); ?>" target="_blank"><?php echo $course['course_name']; ?></a></li>
+				<?php } ?>
+			</ul>
+		</div> <!-- .section -->
+	</div> <!-- .section -->
+</div> <!-- #content -->

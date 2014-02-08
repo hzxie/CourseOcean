@@ -20,7 +20,7 @@ class LibraryController extends AbstractActionController
 	public function pageAction()
     {
         $NUMBER_OF_COURSES_PER_PAGE = 10;
-        $pageNumber                 = $this->params()->fromRoute('id', 1);
+        $pageNumber                 = $this->params()->fromRoute('param', 1);
         return array(
             'courses'           => $this->getAllCourses($pageNumber, $NUMBER_OF_COURSES_PER_PAGE),
             'currentPageNumber' => $pageNumber,
@@ -79,7 +79,7 @@ class LibraryController extends AbstractActionController
      */
     public function detailAction()
     {
-        $courseID       = $this->params()->fromRoute('id');
+        $courseID       = $this->params()->fromRoute('param');
         $courseInfo     = $this->getCourseDetailInfo($courseID);
 
         if ( $courseInfo == null ) {

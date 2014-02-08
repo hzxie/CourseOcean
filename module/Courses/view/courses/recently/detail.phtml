@@ -1,6 +1,6 @@
 <?php 
     echo $this->headTitle($lecture['course_name'].' | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/view.css');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/detail.css');
 ?>
 
 <div id="content">
@@ -39,7 +39,11 @@
                 <div class="title">讲师介绍</div>
                 <div id="teacher">
                     <div id="avatar">
-                        <img class="img-circle" src="<?php echo $this->basePath('/img/avatar.png'); ?>" alt="avatar" />
+                        <?php if ( $teacher['avatar'] == null ): ?>
+                            <img class="img-circle" src="<?php echo $this->basePath(); ?>/img/avatar.png" alt="Avatar" />
+                        <?php else: ?>
+                            <img class="img-circle" src="<?php echo $this->basePath($teacher['avatar']); ?>" alt="Avatar" />
+                        <?php endif; ?>
                     </div> <!-- #avatar -->
                     <div id="introduction">
                         <div id="name"><?php echo $teacher['real_name']; ?></div>
@@ -83,12 +87,9 @@
                     <div class="content"><?php echo $lecture['audience']; ?></div>
                 </div>
             </div> <!-- #info -->
-            <div id="lectures">
-                <strong>开课记录</strong>
-                <ol>
-                    <li></li>
-                </ol>
-            </div> <!-- #lectures -->
+            <div id="attend-lecture">
+                <button class="btn btn-danger">我要报名</button>
+            </div> <!-- #attend-lecture -->
         </div> <!-- #overview -->
         <div id="social">
             <ul class="inline">

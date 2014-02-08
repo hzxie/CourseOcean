@@ -1,6 +1,6 @@
 <?php 
 	echo $this->headTitle($course['course_name'].' | ');
-	echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/view.css');
+	echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/detail.css');
 ?>
 
 <div id="content">
@@ -33,7 +33,11 @@
 				<div class="title">讲师介绍</div>
 				<div id="teacher">
 					<div id="avatar">
-						<img class="img-circle" src="<?php echo $this->basePath(); ?>/img/avatar.png" alt="Avatar" />
+						<?php if ( $teacher['avatar'] == null ): ?>
+							<img class="img-circle" src="<?php echo $this->basePath(); ?>/img/avatar.png" alt="Avatar" />
+						<?php else: ?>
+							<img class="img-circle" src="<?php echo $this->basePath($teacher['avatar']); ?>" alt="Avatar" />
+						<?php endif; ?>
 					</div> <!-- #avatar -->
 					<div id="introduction">
 						<div id="name"><?php echo $teacher['real_name']; ?></div>

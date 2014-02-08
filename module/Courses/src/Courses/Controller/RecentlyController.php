@@ -19,7 +19,7 @@ class RecentlyController extends AbstractActionController
     public function pageAction()
     {
         $NUMBER_OF_LECTURES_PER_PAGE = 10;
-        $pageNumber                  = $this->params()->fromRoute('id', 1);
+        $pageNumber                  = $this->params()->fromRoute('param', 1);
         return array(
             'lectures'          => $this->getAllLectures($pageNumber, $NUMBER_OF_LECTURES_PER_PAGE),
             'currentPageNumber' => $pageNumber,
@@ -78,7 +78,7 @@ class RecentlyController extends AbstractActionController
      */
     public function detailAction()
     {
-        $lectureID      = $this->params()->fromRoute('id');
+        $lectureID      = $this->params()->fromRoute('param');
         $lectureInfo    = $this->getLectureDetailInfo($lectureID);
 
         if ( $lectureInfo == null ) {

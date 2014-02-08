@@ -19,7 +19,7 @@ class TeacherController extends AbstractActionController
     public function pageAction()
     {
         $NUMBER_OF_TEACHERS_PER_PAGE = 15;
-        $pageNumber                  = $this->params()->fromRoute('id', 1);
+        $pageNumber                  = $this->params()->fromRoute('param', 1);
         return array(
             'teachers'          => $this->getAllTeachers($pageNumber, $NUMBER_OF_TEACHERS_PER_PAGE),
             'currentPageNumber' => $pageNumber,
@@ -71,6 +71,77 @@ class TeacherController extends AbstractActionController
 
     public function detailAction()
     {
-        return array();
+        $uid                = $this->params()->fromRoute('param');
+        $teacherInfo        = $this->getTeacherInfo($uid);
+
+        if ( $teacherInfo == null ) {
+            return $this->notFoundAction();
+        }
+        return array(
+            'teacher'       => $teacherInfo,
+            'courses'       => $this->getCourseInfo($uid),
+        );
+    }
+
+    /**
+     * Get information of a teacher.
+     * @param  int $uid - the unique id of the user
+     * @return an object of Teacher which contains information of a 
+     *         certain teacher
+     */
+    private function getTeacherInfo($uid)
+    {
+        $sm                 = $this->getServiceLocator();
+        $teacherTable       = $sm->get('Accounts\Model\TeacherTable');
+        $teacherInfo        = $teacherTable->getTeacherInfo($uid);
+
+        return $this->getTeacherInfoArray($teacherInfo);
+    }
+
+    /**
+     * Get information of a teacher of a course within an array.
+     * @param  Teacher $resultSet - an object of Teacher which contains 
+     *         information of a certain teacher
+     * @return an array which contains information of a certain teacher
+     */
+    private function getTeacherInfoArray($resultSet)
+    {
+        $teacherInfoArray   = array();
+
+        if ( $resultSet != null ) {
+            foreach ( $resultSet as $key => $value ) {
+                $teacherInfoArray[ $key ] = $value;
+            }
+        }
+        return $teacherInfoArray;
+    }
+
+    /**
+     * Get a list of courses which are powered by the teacher.
+     * @param  int $uid - the unique id of the teacher
+     * @return an array which contains courses powered by the teacher
+     */
+    private function getCourseInfo($uid)
+    {
+        $sm                 = $this->getServiceLocator();
+        $courseTable        = $sm->get('Courses\Model\CourseTable');
+        $courseInfo         = $courseTable->getCourseOfTeacher($uid);
+
+        return $this->getCourseInfoArray($courseInfo);
+    }
+
+    private function getCourseInfoArray($resultSet)
+    {
+        $courseInfoArray    = array();
+
+        if ( $resultSet != null ) {
+            foreach ( $resultSet as $course ) {
+                array_push($courseInfoArray, array(
+                    'course_id'     => $course->course_id,
+                    'course_name'   => $course->course_name,
+                ));
+            }
+        }
+        return $courseInfoArray;
     }
 }

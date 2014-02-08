@@ -78,4 +78,12 @@ class CourseTable
         });
         return $rowset->current();
     }
+
+    public function getCourseOfTeacher($uid)
+    {
+        $resultSet  = $this->tableGateway->select(
+            array( 'uid' => $uid )
+        );
+        return $resultSet;
+    }
 }
