@@ -110,24 +110,24 @@
     </div> <!-- #password-dialog -->
 </div> <!-- #dialog-container -->
 
-<script type="text/javascript">
+<?php $this->inlineScript()->captureStart(); ?>
     $('#tab a').click(function (e) {
         e.preventDefault();
         $(this).tab('show');
     })
-</script>
+<?php $this->inlineScript()->captureEnd(); ?>
 
-<script type="text/javascript">
+<?php $this->inlineScript()->captureStart(); ?>
     function openProfileDialog() {
         setProfileDialogVisibility(true);
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function closeProfileDialog() {
         setProfileDialogVisibility(false);
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function setProfileDialogVisibility(isVisible) {
         if ( isVisible ) {
             $('#mask').css('display', 'block');
@@ -137,8 +137,8 @@
             $('#profile-dialog').css('display', 'none');
         }
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function editProfile() {
         var email = $('input[name=email]').val(),
             phone = $('input[name=phone]').val();
@@ -147,8 +147,8 @@
         doEditProfileAction(email, phone);
         setInputStyle(false);
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function doEditProfileAction(email, phone) {
         var postData = 'email=' + email + '&phone=' + phone;
         $.ajax({
@@ -162,8 +162,8 @@
             }
         });
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function processProfileResult(result) {
         if ( result['isSuccessful'] ) {
             window.location.reload();
@@ -188,19 +188,19 @@
             $('#profile-error').fadeIn();
         }
     }
-</script>
+<?php $this->inlineScript()->captureEnd(); ?>
 
-<script type="text/javascript">
+<?php $this->inlineScript()->captureStart(); ?>
     function openPasswordDialog() {
         setPasswordDialogVisibility(true);
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function closePasswordDialog() {
         setPasswordDialogVisibility(false);
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function setPasswordDialogVisibility(isVisible) {
         if ( isVisible ) {
             $('#mask').css('display', 'block');
@@ -210,8 +210,8 @@
             $('#password-dialog').css('display', 'none');
         }
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function changePassword() {
         var oldPassword     = $('input[name=old-password]').val(),
             newPassword     = $('input[name=new-password]').val(),
@@ -221,8 +221,8 @@
         doChangePasswordAction(oldPassword, newPassword, confirmPassword);
         setInputStyle(false);
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function doChangePasswordAction(oldPassword, newPassword, confirmPassword) {
         var postData = 'old-password=' + oldPassword + '&new-password=' + newPassword +
                        '&password-again=' + confirmPassword;
@@ -237,8 +237,8 @@
             }
         });
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function processPasswordResult(result) {
         if ( result['isSuccessful'] ) {
             closePasswordDialog();
@@ -264,9 +264,9 @@
             $('#password-error').fadeIn();
         }
     }
-</script>
+<?php $this->inlineScript()->captureEnd(); ?>
 
-<script type="text/javascript">
+<?php $this->inlineScript()->captureStart(); ?>
     function setInputStyle(isLoading) {
         var processButtonObject = $('.btn-primary');
         if ( isLoading ) {
@@ -279,4 +279,4 @@
             $('button').removeAttr('disabled');
         }
     }
-</script>
+<?php $this->inlineScript()->captureEnd(); ?>
