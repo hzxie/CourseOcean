@@ -87,13 +87,15 @@
             </div> <!-- .section -->
         <?php } ?>
         </div> <!-- #recently -->
-        <div id="page-navigation">
-            <ul class="inline">
+        <div id="pagination" class="pagination pagination-centered">
+            <ul>
             <?php
                 $basePath = $this->basePath().'/courses/recently/page/';
             ?>
             <?php if ( $currentPageNumber > 1 ): ?>
-                <li><a href="<?php echo $basePath.($currentPageNumber - 1); ?>">上一页</a></li>
+                <li><a href="<?php echo $basePath.($currentPageNumber - 1); ?>">&lt;</a></li>
+            <?php else: ?>
+                <li class="disabled"><a>&lt;</a></li>
             <?php endif; ?>
             <?php
                 $lowerBound = $currentPageNumber - 5;
@@ -103,17 +105,19 @@
 
                 for ( $i = $lowerBound; $i <= $upperBound; ++ $i ) {
                     if ( $i == $currentPageNumber ) {
-                        echo "<li>$i</li>";
+                        echo "<li class=\"active\"><a>$i</a></li>";
                     } else {
                         echo "<li><a href=\"$basePath$i\">$i</a></li>";
                     }
                 }
             ?>
             <?php if ( $currentPageNumber < $numberOfPages ): ?>
-                <li><a href="<?php echo $basePath.($currentPageNumber + 1); ?>">下一页</a></li>
+                <li><a href="<?php echo $basePath.($currentPageNumber + 1); ?>">&gt;</a></li>
+            <?php else: ?>
+                <li class="disabled"><a>&gt;</a></li>
             <?php endif; ?>
             </ul>
-        </div> <!-- page-navigation-->
+        </div> <!-- #pagination-->
     </div> <!-- #main-content -->
 </div> <!-- #content -->
 

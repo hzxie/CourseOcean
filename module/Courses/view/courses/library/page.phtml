@@ -52,32 +52,36 @@
 			</div> <!-- .section -->
 			<?php } ?>
 		</div> <!-- #courses -->
-		<div id="page-navigation">
-			<ul class="inline">
+		<div id="pagination" class="pagination pagination-centered">
+			<ul>
 			<?php
 				$basePath = $this->basePath().'/courses/library/page/';
 			?>
 			<?php if ( $currentPageNumber > 1 ): ?>
-				<li><a href="<?php echo $basePath.($currentPageNumber - 1); ?>">上一页</a></li>
-			<?php endif; ?>
-			<?php
-				$lowerBound = $currentPageNumber - 5;
-				$lowerBound = ( $lowerBound > 0 ) ? $lowerBound : 1;
-				$upperBound = $currentPageNumber + 4;
-				$upperBound = ( $upperBound <= $numberOfPages ) ? $upperBound : $numberOfPages;
+                <li><a href="<?php echo $basePath.($currentPageNumber - 1); ?>">&lt;</a></li>
+            <?php else: ?>
+                <li class="disabled"><a>&lt;</a></li>
+            <?php endif; ?>
+            <?php
+                $lowerBound = $currentPageNumber - 5;
+                $lowerBound = ( $lowerBound > 0 ) ? $lowerBound : 1;
+                $upperBound = $currentPageNumber + 4;
+                $upperBound = ( $upperBound <= $numberOfPages ) ? $upperBound : $numberOfPages;
 
-				for ( $i = $lowerBound; $i <= $upperBound; ++ $i ) {
-					if ( $i == $currentPageNumber ) {
-						echo "<li>$i</li>";
-					} else {
-						echo "<li><a href=\"$basePath$i\">$i</a></li>";
-					}
-				}
-			?>
-			<?php if ( $currentPageNumber < $numberOfPages ): ?>
-				<li><a href="<?php echo $basePath.($currentPageNumber + 1); ?>">下一页</a></li>
-			<?php endif; ?>
+                for ( $i = $lowerBound; $i <= $upperBound; ++ $i ) {
+                    if ( $i == $currentPageNumber ) {
+                        echo "<li class=\"active\"><a>$i</a></li>";
+                    } else {
+                        echo "<li><a href=\"$basePath$i\">$i</a></li>";
+                    }
+                }
+            ?>
+            <?php if ( $currentPageNumber < $numberOfPages ): ?>
+                <li><a href="<?php echo $basePath.($currentPageNumber + 1); ?>">&gt;</a></li>
+            <?php else: ?>
+                <li class="disabled"><a>&gt;</a></li>
+            <?php endif; ?>
 			</ul>
-		</div> <!-- page-navigation-->
+		</div> <!-- #pagination-->
 	</div> <!-- #main-content -->
 </div> <!-- #content -->

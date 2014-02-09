@@ -31,11 +31,15 @@
 		</div> <!-- .section -->
 		<div class="section">
 			<h2>开设课程</h2>
+			<?php if ( $courses == null ): ?>
+				<p>暂无开设课程</p>
+			<?php else: ?>
 			<ul>
 				<?php foreach ( $courses as $course ) { ?>
 				<li><a href="<?php echo $this->basePath('/courses/library/detail/'.$course['course_id']); ?>" target="_blank"><?php echo $course['course_name']; ?></a></li>
 				<?php } ?>
 			</ul>
+			<?php endif; ?>
 		</div> <!-- .section -->
 	</div> <!-- .section -->
 </div> <!-- #content -->
