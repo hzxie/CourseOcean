@@ -42,6 +42,21 @@ class EnterpriseTable
 		return $resultSet;
 	}
 
+	/**
+	 * Get profile of a user.
+	 * @param  int $uid - the unique id of the user
+	 * @return an Object of Person which contains information of the person
+	 */
+	public function getEnterpriseInfo($uid)
+	{
+		$rowset     	= $this->tableGateway->select(
+            array( 
+                'uid'  	=> $uid,
+            )
+        );
+        return $rowset->current();
+	}
+
     /**
      * Handle asynchronous register requests for an enterprise.
      * @return true if the query is successful

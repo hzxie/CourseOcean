@@ -14,10 +14,10 @@ use Zend\Session\Container;
  */
 class LoginController extends AbstractActionController
 {
-	/**
-	 * Default method to call in the controller.
+    /**
+     * Default method to call in the controller.
      * @return a ViewModel object which contains HTML content
-	 */
+     */
     public function indexAction()
     {
         if ( $this->isEnableAutoLogin() ) {
@@ -47,27 +47,27 @@ class LoginController extends AbstractActionController
      */
     public function processAction()
     {
-    	$username	    = $this->getRequest()->getPost('username');
-    	$password	    = $this->getRequest()->getPost('password');
+        $username       = $this->getRequest()->getPost('username');
+        $password       = $this->getRequest()->getPost('password');
         $allowAutoLogin = $this->getRequest()->getPost('remember_me');
 
-    	$result 	= array(
-    		'isSuccessful'		=> false,
-    		'isUsernameEmpty'	=> empty($username),
-    		'isPasswordEmpty'	=> empty($password),
-    		'isAccountValid'	=> $this->verifyAccount($username, $password),
-    	);
+        $result     = array(
+            'isSuccessful'      => false,
+            'isUsernameEmpty'   => empty($username),
+            'isPasswordEmpty'   => empty($password),
+            'isAccountValid'    => $this->verifyAccount($username, $password),
+        );
 
-    	if ( $result['isAccountValid'] ) {
+        if ( $result['isAccountValid'] ) {
             $userData   = $this->parseUserData($result['isAccountValid']);
             $this->createSession($userData, $allowAutoLogin);
             $result['isSuccessful'] = true;
         }
 
-    	$response = $this->getResponse();
-    	$response->setStatusCode(200);
-    	$response->setContent( Json::encode($result) );
-    	return $response;
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
     }
 
     /**
@@ -78,18 +78,18 @@ class LoginController extends AbstractActionController
      */
     private function verifyAccount($username, $password)
     {
-    	if ( empty($username) || empty($password) ) {
-    		return false;
-    	}
+        if ( empty($username) || empty($password) ) {
+            return false;
+        }
 
-    	$sm 				= $this->getServiceLocator();
-		$userTable 			= $sm->get('Accounts\Model\UserTable');
+        $sm                 = $this->getServiceLocator();
+        $userTable          = $sm->get('Accounts\Model\UserTable');
 
-    	if ( !$this->isEmailAddress($username) ) {
-    		return $userTable->verifyAccountByUsername($username, md5($password));
-    	} else {
-    		return $userTable->verifyAccountByEmail($username, md5($password));
-    	}
+        if ( !$this->isEmailAddress($username) ) {
+            return $userTable->verifyAccountByUsername($username, md5($password));
+        } else {
+            return $userTable->verifyAccountByEmail($username, md5($password));
+        }
     }
 
     /**
@@ -99,7 +99,7 @@ class LoginController extends AbstractActionController
      */
     private function isEmailAddress($username)
     {
-    	return strpos($username, '@');
+        return strpos($username, '@');
     }
 
     /**

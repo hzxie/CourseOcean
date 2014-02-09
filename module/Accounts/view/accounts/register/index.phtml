@@ -1,319 +1,316 @@
 <?php 
-	echo $this->headTitle('注册 | ');
-	echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/register.css');
+    echo $this->headTitle('注册 | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/register.css');
 ?>
 
 <div id="content">
-	<div id="introduction">
-		<div id="title">
-			<h1>欢迎</h1>
-			<h2>请填写如下表单以完成注册</h2>
-		</div> <!-- #title -->
-	</div> <!-- #introduction -->
-	<div id="register-container">
-		<div id="main">
-			<div id="register-error" class="alert alert-error hide"></div>
-			<div id="username" class="field">
-				<label for="username">用户名</label>
-				<input type="text" name="username" maxlength="16" />
-				<span class="tip">6~18个字符, 可使用字母、数字、下划线，需以字母开头</span>
-			</div> <!-- #username -->
-			<div id="email" class="field">
-				<label for="email">电子邮件地址</label>
-				<input type="text" name="email" maxlength="48" />
-				<span class="tip">请填写有效的电子邮件地址, 以便用于找回密码</span>
-			</div> <!-- #email -->
-			<div id="password" class="field">
-				<label for="password">密码</label>
-				<input type="password" name="password" maxlength="16" />
-				<span class="tip">建议采用密码强度高的密码, 长度在6~16个字符之间</span>
-			</div> <!-- #password -->
-			<div id="password-again" class="field">
-				<label for="password-again">确认密码</label>
-				<input type="password" name="password-again" maxlength="16" />
-				<span class="tip">请确认您所使用的密码</span>
-			</div> <!-- #password-again -->
-			<div id="user-group" class="field">
-				<label for="user-group">用户类型</label>
-				<select name="user-group" id="user-group-selector">
-					<option value="person">个人</option>
-					<option value="teacher">讲师</option>
-					<option value="enterprise">企业</option>
-				</select>
-			</div> <!-- #user-group -->
-			<div id="for-person" class="question-group">
-				<div id="real-name" class="field">
-					<label for="real-name">真实姓名</label>
-					<input type="text" name="real-name" maxlength="32" />
-					<span class="tip"></span>
-				</div> <!-- #real-name -->
-				<div id="phone" class="field">
-					<label for="phone">联系电话</label>
-					<input type="text" name="phone" maxlength="24" />
-					<span class="tip">请填写您的联系方式, 以便我们与您取得联系</span>
-				</div> <!-- #phone -->
-			</div> <!-- #for-person -->
-			<div id="for-teacher" class="question-group" style="display: none;">
-				<div id="real-name" class="field">
-					<label for="real-name">真实姓名</label>
-					<input type="text" name="real-name" maxlength="32" />
-					<span class="tip"></span>
-				</div> <!-- #real-name -->
-				<div id="company" class="field">
-					<label for="company">所在单位</label>
-					<input type="text" name="company" maxlength="64" />
-					<span class="tip"></span>
-				</div> <!-- #company -->
-				<div id="field" class="field">
-					<label for="field">擅长领域</label>
-					<input type="text" name="field" maxlength="128" />
-					<span class="tip">填写您所擅长的领域, 用分号(;)分割</span>
-				</div> <!-- #company -->
-				<div id="phone" class="field">
-					<label for="phone">联系电话</label>
-					<input type="text" name="phone" maxlength="24" />
-					<span class="tip">请填写您的联系方式, 以便我们与您取得联系</span>
-				</div> <!-- #phone -->
-			</div> <!-- #for-teacher -->
-			<div id="for-enterprise" class="question-group" style="display: none;">
-				<div id="company-name" class="field">
-					<label for="company-name">公司名称</label>
-					<input type="text" name="company-name" maxlength="64" />
-					<span class="tip"></span>
-				</div> <!-- #company-name -->
-				<div id="address" class="field">
-					<label for="address">公司地址</label>
-					<input type="text" name="address" maxlength="256" />
-					<span class="tip"></span>
-				</div> <!-- #address -->
-				<div id="phone" class="field">
-					<label for="phone">联系电话</label>
-					<input type="text" name="phone" maxlength="24" />
-					<span class="tip">请填写您的联系方式, 以便我们与您取得联系</span>
-				</div> <!-- #phone -->
-			</div> <!-- #for-enterprise -->
-			<div id="agreement" class="field">
-				<input type="checkbox" name="agree" />
-				<span>同意"服务条款"和"用户须知"、"隐私权相关政策"</span>
-			</div> <!-- #agreement -->
-			<div id="controls">
-				<button id="submit" class="btn btn-primary">提交</button>
-				<button id="cancel" class="btn">重置</button>
-			</div> <!-- #controls -->
-		</div> <!-- #main -->
-		<div id="complementary">
-			<div id="register-now" class="section">
-				<h2>已有账号?</h2>
-				<p><a href="<?php echo $this->basePath(); ?>/accounts/login">立即登录</a></p>
-			</div>
-			<div id="welcome" class="section">
-				<h2>欢迎使用</h2>
-				<p>欢迎使用IT自助培训平台, 我们将为您提供最及时最便捷的培训.</p>
-			</div>
-			<div id="need-help" class="section">
-				<h2>需要帮助?</h2>
-				<p>若您在注册过程中遇到问题, 您可以<a href="#">单击此处</a>查看相关问题的文档.</p>
-			</div>
-		</div> <!-- #complementary -->
-	</div> <!-- #login-container -->
+    <div id="introduction">
+        <div id="title">
+            <h1>欢迎</h1>
+            <h2>请填写如下表单以完成注册</h2>
+        </div> <!-- #title -->
+    </div> <!-- #introduction -->
+    <div id="register-container">
+        <div id="main">
+            <div id="register-error" class="alert alert-error hide"></div>
+            <div id="username" class="field">
+                <label for="username">用户名</label>
+                <input type="text" name="username" maxlength="16" />
+                <span class="tip">6~18个字符, 可使用字母、数字、下划线，需以字母开头</span>
+            </div> <!-- #username -->
+            <div id="email" class="field">
+                <label for="email">电子邮件地址</label>
+                <input type="text" name="email" maxlength="48" />
+                <span class="tip">请填写有效的电子邮件地址, 以便用于找回密码</span>
+            </div> <!-- #email -->
+            <div id="password" class="field">
+                <label for="password">密码</label>
+                <input type="password" name="password" maxlength="16" />
+                <span class="tip">建议采用密码强度高的密码, 长度在6~16个字符之间</span>
+            </div> <!-- #password -->
+            <div id="password-again" class="field">
+                <label for="password-again">确认密码</label>
+                <input type="password" name="password-again" maxlength="16" />
+                <span class="tip">请确认您所使用的密码</span>
+            </div> <!-- #password-again -->
+            <div id="user-group" class="field">
+                <label for="user-group">用户类型</label>
+                <select name="user-group" id="user-group-selector">
+                    <option value="person">个人</option>
+                    <option value="teacher">讲师</option>
+                    <option value="enterprise">企业</option>
+                </select>
+            </div> <!-- #user-group -->
+            <div id="for-person" class="question-group">
+                <div id="real-name" class="field">
+                    <label for="real-name">真实姓名</label>
+                    <input type="text" name="real-name" maxlength="32" />
+                    <span class="tip"></span>
+                </div> <!-- #real-name -->
+                <div id="phone" class="field">
+                    <label for="phone">联系电话</label>
+                    <input type="text" name="phone" maxlength="24" />
+                    <span class="tip">请填写您的联系方式, 以便我们与您取得联系</span>
+                </div> <!-- #phone -->
+            </div> <!-- #for-person -->
+            <div id="for-teacher" class="question-group" style="display: none;">
+                <div id="real-name" class="field">
+                    <label for="real-name">真实姓名</label>
+                    <input type="text" name="real-name" maxlength="32" />
+                    <span class="tip"></span>
+                </div> <!-- #real-name -->
+                <div id="phone" class="field">
+                    <label for="phone">联系电话</label>
+                    <input type="text" name="phone" maxlength="24" />
+                    <span class="tip">请填写您的联系方式, 以便我们与您取得联系</span>
+                </div> <!-- #phone -->
+            </div> <!-- #for-teacher -->
+            <div id="for-enterprise" class="question-group" style="display: none;">
+                <div id="company-name" class="field">
+                    <label for="company-name">公司名称</label>
+                    <input type="text" name="company-name" maxlength="64" />
+                    <span class="tip"></span>
+                </div> <!-- #company-name -->
+                <div id="address" class="field">
+                    <label for="address">公司地址</label>
+                    <input type="text" name="address" maxlength="256" />
+                    <span class="tip"></span>
+                </div> <!-- #address -->
+                <div id="phone" class="field">
+                    <label for="phone">联系电话</label>
+                    <input type="text" name="phone" maxlength="24" />
+                    <span class="tip">请填写您的联系方式, 以便我们与您取得联系</span>
+                </div> <!-- #phone -->
+            </div> <!-- #for-enterprise -->
+            <div id="agreement" class="field">
+                <input type="checkbox" name="agree" />
+                <span>同意"服务条款"和"用户须知"、"隐私权相关政策"</span>
+            </div> <!-- #agreement -->
+            <div id="controls">
+                <button id="register" class="btn btn-primary">提交</button>
+                <button id="cancel" class="btn">重置</button>
+            </div> <!-- #controls -->
+        </div> <!-- #main -->
+        <div id="complementary">
+            <div id="login-now" class="section">
+                <h2>已有账号?</h2>
+                <p><a href="<?php echo $this->basePath(); ?>/accounts/login">立即登录</a></p>
+            </div>
+            <div id="welcome" class="section">
+                <h2>欢迎使用</h2>
+                <p>欢迎使用IT自助培训平台, 我们将为您提供最及时最便捷的培训.</p>
+            </div>
+            <div id="need-help" class="section">
+                <h2>需要帮助?</h2>
+                <p>若您在注册过程中遇到问题, 您可以<a href="#">单击此处</a>查看相关问题的文档.</p>
+            </div>
+        </div> <!-- #complementary -->
+    </div> <!-- #login-container -->
 </div> <!-- #content -->
 
 <?php $this->inlineScript()->captureStart(); ?>
-	$('select#user-group-selector').change(function() {
-		var user_group = $(this).val();
-		$('.question-group').css('display', 'none');
-		$('#for-' + user_group).css('display', 'block');
-	});
+    $('select#user-group-selector').change(function() {
+        var user_group = $(this).val();
+        $('.question-group').css('display', 'none');
+        $('#for-' + user_group).css('display', 'block');
+    });
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-	$('#cancel').click(function() {
-		if ( confirm('你确定要重置吗?') ) {
-			$(':input').val('');
-		}
-	});
+    $('#cancel').click(function() {
+        if ( confirm('你确定要重置吗?') ) {
+            $(':input').val('');
+        }
+    });
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-	$('#submit').click(function() {
-		if ( !isAgree() ) {
-			alert('请先同意服务条款');
-			return;	
-		}
-		
-		var postData = getPostData();
-		return doRegisterAction(postData);
-	});
+    $('#register').click(function() {
+        if ( !isAgree() ) {
+            alert('请先同意服务条款');
+            return; 
+        }
+        
+        var postData = getPostData();
+        setInputStyle(true);
+        doRegisterAction(postData);
+        setInputStyle(false);
+    });
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-	function isAgree() {
-		return $('input[name=agree]').is(':checked');
-	}
+    function isAgree() {
+        return $('input[name=agree]').is(':checked');
+    }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-	function getPostData() {
-		var postData 	= '';
-		$(':input').each(function() {
-			var key 	= $(this).attr('name'),
-				value	= $(this).val();
-			if ( typeof key != 'undefined' && value != '' ) {
-				postData += '&' + key + '=' + value;
-			}
-		});
+    function setInputStyle(isLoading) {
+        var registerButtonObject = $('#register');
+        if ( isLoading ) {
+            registerButtonObject.html('正在处理...');
+            $('input').attr('disabled', 'disabled');
+            $('select').attr('disabled', 'disabled');
+            $('button').attr('disabled', 'disabled');
+        } else {
+            registerButtonObject.html('登录');
+            $('input').removeAttr('disabled');
+            $('select').removeAttr('disabled');
+            $('button').removeAttr('disabled');
+        }
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function getPostData() {
+        var postData    = '';
+        $(':input').each(function() {
+            var key     = $(this).attr('name'),
+                value   = $(this).val();
+            if ( typeof key != 'undefined' && value != '' ) {
+                postData += '&' + key + '=' + value;
+            }
+        });
 
-		return postData;
-	}
+        return postData;
+    }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-	function doRegisterAction(postData) {
-		var userGroup 	= $('select#user-group-selector').val();
-		if ( userGroup == '' ) {
-			return;
-		}
+    function doRegisterAction(postData) {
+        var userGroup   = $('select#user-group-selector').val();
+        if ( userGroup == '' ) {
+            return;
+        }
 
-		$.ajax({
-			type: 'POST',
+        $.ajax({
+            type: 'POST',
             async: false,
             url: '<?php echo $this->basePath(); ?>/accounts/register/process',
             data: postData,
             dataType: 'JSON',
             success: function(result) {
-            	processResult(result, userGroup);
-            },
-		});
-	}
+                processResult(result, userGroup);
+            }
+        });
+    }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-	function processResult(result, userGroup) {
-		if ( result['isSuccessful'] ) {
-			var username = $('input[name=username]').val(),
-			    password = $('input[name=password]').val();
-			doLoginAction(username, password);
-		}
+    function processResult(result, userGroup) {
+        if ( result['isSuccessful'] ) {
+            var username = $('input[name=username]').val(),
+                password = $('input[name=password]').val();
+            doLoginAction(username, password);
+        }
 
-		var errorMessage = '';
-		errorMessage     = onErrorHandler(result, userGroup);
+        var errorMessage = '';
+        errorMessage     = onErrorHandler(result, userGroup);
 
-		$('#register-error').html(errorMessage);
-		$('#register-error').fadeIn();
-		$('html, body').animate({ scrollTop: 0 }, 'slow');
-	}
+        $('#register-error').html(errorMessage);
+        $('#register-error').fadeIn();
+        $('html, body').animate({ scrollTop: 0 }, 'slow');
+    }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-	function doLoginAction(username, password) {
-		var postData = 'username=' + username + '&password=' + password;
-		$.ajax({
-			type: 'POST',
+    function doLoginAction(username, password) {
+        var postData = 'username=' + username + '&password=' + password;
+        $.ajax({
+            type: 'POST',
             async: false,
             url: '<?php echo $this->basePath(); ?>/accounts/login/process',
             data: postData,
             dataType: 'JSON',
             success: function(result) {
-            	if ( result['isSuccessful'] ) {
-            		window.location.href = '<?php echo $this->basePath(); ?>/accounts/dashboard';
-            	} else {
-            		window.location.href = '<?php echo $this->basePath(); ?>/accounts/login';
-            	}
-            },
-		});
-	}
+                if ( result['isSuccessful'] ) {
+                    window.location.href = '<?php echo $this->basePath(); ?>/accounts/dashboard';
+                } else {
+                    window.location.href = '<?php echo $this->basePath(); ?>/accounts/login';
+                }
+            }
+        });
+    }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-	function onErrorHandler(result, userGroup) {
-		var errorMessage  = getCommonErrorMessage(result);
+    function onErrorHandler(result, userGroup) {
+        var errorMessage  = getCommonErrorMessage(result);
 
-		if ( userGroup == 'person' ) {
-			errorMessage += getPersonErrorMessage(result);
-		} else if ( userGroup == 'teacher' ) {
-			errorMessage += getTeacherErrorMessage(result);
-		} else if ( userGroup == 'enterprise' ) {
-			errorMessage += getEnterpriseErrorMessage(result);
-		}
-		return errorMessage;
-	}
+        if ( userGroup == 'person' ) {
+            errorMessage += getPersonErrorMessage(result);
+        } else if ( userGroup == 'teacher' ) {
+            errorMessage += getTeacherErrorMessage(result);
+        } else if ( userGroup == 'enterprise' ) {
+            errorMessage += getEnterpriseErrorMessage(result);
+        }
+        return errorMessage;
+    }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-	function getCommonErrorMessage(result) {
-		var errorMessage  = '';
-		if ( result['isUsernameEmpty'] ) {
-			errorMessage += '用户名为必填字段<br />';
-		} else if ( !result['isUsernameLegal'] ) {
-			errorMessage += '用户名必须以字母开头, 长度须在6-16个字符之间<br />';
-		} else if ( result['isUsernameExists'] ) {
-			errorMessage += '用户名已被他人占用, 请使用其他用户名<br />';
-		}
-		if ( result['isEmailEmpty'] ) {
-			errorMessage += '电子邮件地址为必填字段<br />';
-		} else if ( !result['isEmailLegal'] ) {
-			errorMessage += '请填写合法的电子邮件地址<br />';
-		} else if ( result['isEmailExists'] ) {
-			errorMessage += '该电子邮件地址已被使用, 请使用其他电子邮件地址<br />';
-		}
-		if ( result['isPasswordEmpty'] ) {
-			errorMessage += '请填写您的密码<br />';
-		} else if ( !result['isPasswordLegal'] ) {
-			errorMessage += '密码必须在6-16个字符之间<br />';
-		}
-		if ( result['isConfirmPasswordEmpty'] ) {
-			errorMessage += '请确认您的密码<br />';
-		} else if ( !result['isConfirmPasswordMatched'] ) {
-			errorMessage += '密码与确认密码输入不一致<br />';
-		}
+    function getCommonErrorMessage(result) {
+        var errorMessage  = '';
+        if ( result['isUsernameEmpty'] ) {
+            errorMessage += '用户名为必填字段<br />';
+        } else if ( !result['isUsernameLegal'] ) {
+            errorMessage += '用户名必须以字母开头, 长度须在6-16个字符之间<br />';
+        } else if ( result['isUsernameExists'] ) {
+            errorMessage += '用户名已被他人占用, 请使用其他用户名<br />';
+        }
+        if ( result['isEmailEmpty'] ) {
+            errorMessage += '电子邮件地址为必填字段<br />';
+        } else if ( !result['isEmailLegal'] ) {
+            errorMessage += '请填写合法的电子邮件地址<br />';
+        } else if ( result['isEmailExists'] ) {
+            errorMessage += '该电子邮件地址已被使用, 请使用其他电子邮件地址<br />';
+        }
+        if ( result['isPasswordEmpty'] ) {
+            errorMessage += '请填写您的密码<br />';
+        } else if ( !result['isPasswordLegal'] ) {
+            errorMessage += '密码必须在6-16个字符之间<br />';
+        }
+        if ( result['isConfirmPasswordEmpty'] ) {
+            errorMessage += '请确认您的密码<br />';
+        } else if ( !result['isConfirmPasswordMatched'] ) {
+            errorMessage += '密码与确认密码输入不一致<br />';
+        }
 
-		return errorMessage;
-	}
+        return errorMessage;
+    }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-	function getPersonErrorMessage(result) {
-		var errorMessage  = '';
-		if ( result['isRealNameEmpty'] ) {
-			errorMessage += '请填写您的真实姓名<br />';
-		} else if ( !result['isRealNameLegal'] ) {
-			errorMessage += '真实姓名的长度不能超过32个字符<br />';
-		}
-		if ( result['isPhoneNumberEmpty'] ) {
-			errorMessage += '请填写您的联系电话<br />';
-		} else if ( !result['isPhoneNumberLegal'] ) {
-			errorMessage += '联系电话必须由数字和-组成, 且不超过24个字符<br />';
-		}
+    function getPersonErrorMessage(result) {
+        var errorMessage  = '';
+        if ( result['isRealNameEmpty'] ) {
+            errorMessage += '请填写您的真实姓名<br />';
+        } else if ( !result['isRealNameLegal'] ) {
+            errorMessage += '真实姓名的长度不能超过32个字符<br />';
+        }
+        if ( result['isPhoneNumberEmpty'] ) {
+            errorMessage += '请填写您的联系电话<br />';
+        } else if ( !result['isPhoneNumberLegal'] ) {
+            errorMessage += '联系电话必须由数字和-组成, 且长度在7~24个字符之间<br />';
+        }
 
-		return errorMessage;
-	}
+        return errorMessage;
+    }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-	function getTeacherErrorMessage(result) {
-		var errorMessage = getPersonErrorMessage(result);
-		if ( result['isCompanyEmpty'] ) {
-			errorMessage += '请填写您的所在的公司名称<br />';
-		} else if ( !result['isCompanyLegal'] ) {
-			errorMessage += '所在的公司名称的长度不能超过64个字符<br />';
-		}
-		if ( result['isFieldEmpty'] ) {
-			errorMessage += '请填写您的擅长领域<br />';
-		} else if ( !result['isFieldLegal'] ) {
-			errorMessage += '擅长领域不超过128个字符<br />';
-		}
-
-		return errorMessage;
-	}
+    function getTeacherErrorMessage(result) {
+        var errorMessage = getPersonErrorMessage(result);
+        return errorMessage;
+    }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-	function getEnterpriseErrorMessage(result) {
-		var errorMessage  = '';
-		if ( result['isCompanyEmpty'] ) {
-			errorMessage += '请填写您公司的名称<br />';
-		} else if ( !result['isCompanyLegal'] ) {
-			errorMessage += '公司名称的长度不能超过64个字符<br />';
-		}
-		if ( result['isAddressEmpty'] ) {
-			errorMessage += '请填写您公司的地址<br />';
-		} else if ( !result['isAddressLegal'] ) {
-			errorMessage += '公司地址的长度不能超过256个字符<br />';
-		}
-		if ( result['isPhoneNumberEmpty'] ) {
-			errorMessage += '请填写您的联系电话<br />';
-		} else if ( !result['isPhoneNumberLegal'] ) {
-			errorMessage += '联系电话必须由数字和-组成, 且不超过24个字符<br />';
-		}
+    function getEnterpriseErrorMessage(result) {
+        var errorMessage  = '';
+        if ( result['isCompanyEmpty'] ) {
+            errorMessage += '请填写您公司的名称<br />';
+        } else if ( !result['isCompanyLegal'] ) {
+            errorMessage += '公司名称的长度不能超过64个字符<br />';
+        }
+        if ( result['isAddressEmpty'] ) {
+            errorMessage += '请填写您公司的地址<br />';
+        } else if ( !result['isAddressLegal'] ) {
+            errorMessage += '公司地址的长度不能超过256个字符<br />';
+        }
+        if ( result['isPhoneNumberEmpty'] ) {
+            errorMessage += '请填写您的联系电话<br />';
+        } else if ( !result['isPhoneNumberLegal'] ) {
+            errorMessage += '联系电话必须由数字和-组成, 且不超过24个字符<br />';
+        }
 
-		return errorMessage;
-	}
+        return errorMessage;
+    }
 <?php $this->inlineScript()->captureEnd(); ?>

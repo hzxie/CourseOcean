@@ -38,8 +38,23 @@ class PersonTable
 	 */
 	public function fetchAll()
 	{
-		$resultSet 	= $this->tableGateway->select();
+		$resultSet 		= $this->tableGateway->select();
 		return $resultSet;
+	}
+
+	/**
+	 * Get profile of a user.
+	 * @param  int $uid - the unique id of the user
+	 * @return an Object of Person which contains information of the person
+	 */
+	public function getPersonInfo($uid)
+	{
+		$rowset     	= $this->tableGateway->select(
+            array( 
+                'uid'  	=> $uid,
+            )
+        );
+        return $rowset->current();
 	}
 
     /**
@@ -50,5 +65,18 @@ class PersonTable
     {
         $this->tableGateway->insert($personInfo);
         return true;
+    }
+
+    /**
+     * Handle asynchronous editing profile requests for a person.
+     * @param  Array $personInfo - the profile of the person
+     * @return true if the query is successful
+     */
+    public function editProfile($personInfo)
+    {
+    	$this->tableGateway->update($personInfo, array(
+    		'uid'	=> $personInfo['uid'],
+    	));
+    	return true;
     }
 }
