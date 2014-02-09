@@ -42,11 +42,31 @@ class UserGroupTable
 		return $resultSet;
 	}
 
+	/**
+     * Get the unique id of the user group by its slug.
+     * @param  String $userGroupSlug - the unique slug of the user group
+     * @return the unique id of the user group
+     */
     public function getUserGroupID($userGroupSlug)
     {
         $rowset     = $this->tableGateway->select(
             array( 
                 'user_group_slug'  => $userGroupSlug,
+            )
+        );
+        return $rowset->current();
+    }
+
+    /**
+     * Get the unique slug of the user group by its id.
+     * @param  int $userGroupID - the unique id of the user group
+     * @return the unique slug of the user group
+     */
+    public function getUserGroupSlug($userGroupID)
+    {
+    	$rowset     = $this->tableGateway->select(
+            array( 
+                'user_group_id'  => $userGroupID,
             )
         );
         return $rowset->current();

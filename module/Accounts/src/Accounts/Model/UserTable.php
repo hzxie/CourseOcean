@@ -128,7 +128,7 @@ class UserTable
     /**
      * Verify if the email address has existed.
      * @param  String  $email - the email address of the user
-     * @return true if the email has existed
+     * @return an Object of User if the email exists
      */
     public function isEmailExists($email)
     {
@@ -137,19 +137,7 @@ class UserTable
                 'email'     => $email,
             )
         );
-        return ( $rowset->current() != null );
-    }
-
-    /**
-     * Handle asynchronous register requests for the users.
-     * @return the unique id of the user
-     */
-    public function createNewUser($basicInfo)
-    {
-        $this->tableGateway->insert($basicInfo);
-        $userData   = $this->getUidByUsername($basicInfo['username']);
-
-        return $userData->uid;
+        return $rowset->current();
     }
 
     /**
@@ -165,5 +153,65 @@ class UserTable
             )
         );
         return $rowset->current();
+    }
+
+    /**
+     * Handle asynchronous register requests for the users.
+     * @return the unique id of the user
+     */
+    public function createNewUser($basicInfo)
+    {
+        $this->tableGateway->insert($basicInfo);
+        $userData   = $this->getUidByUsername($basicInfo['username']);
+
+        return $userData->uid;
+    }
+
+    /**
+     * Handle asynchronous editing email requests for a user.
+     * @param  Array $userInfo
+     * @return true if the query is successful
+     */
+    public function editProfile($userInfo)
+    {
+        $this->tableGateway->update($userInfo, array(
+            'uid'   => $userInfo['uid'],
+        ));
+        return true;
+    }
+
+    /**
+     * Verify if the old password is correct.
+     * @param  Array $passport - an array which contains the uid and current
+     *         password of the user
+     * @return true if the old password is correct
+     */
+    public function isPasswordCorrect($passport)
+    {
+        $rowset     = $this->tableGateway->select(
+            array( 
+                'uid'       => $passport['uid'],
+                'password'  => $passport['password'],
+            )
+        );
+        return ( $rowset->current() != null );
+    }
+
+    /**
+     * Handle asynchronous changing password requests for a user.
+     * @param  Array $passport - an array which contains the uid and new 
+     *         password of the user
+     * @return true if the query is successful
+     */
+    public function changePassword($passport)
+    {
+        $passport  += array(
+            'last_time_change_password' => $this->getCurrentTimeStamp(),
+        );
+        
+        $this->tableGateway->update($passport, array(
+            'uid'   => $passport['uid'],
+        ));
+        return true;
     }
 }
