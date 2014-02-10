@@ -18,6 +18,7 @@ class LectureAttendance {
     public function exchangeArray($data)
     {
         $this->lecture_id       = (!empty($data['lecture_id']))         ? $data['lecture_id']       : null;
+        $this->uid              = (!empty($data['uid']))                ? $data['uid']              : null;
         $this->course_name      = (!empty($data['course_name']))        ? $data['course_name']      : null;
         $this->course_type_slug = (!empty($data['course_type_slug']))   ? $data['course_type_slug'] : null;
         $this->start_time       = (!empty($data['start_time']))         ? $data['start_time']       : null;
@@ -38,19 +39,53 @@ class LectureAttendance {
      * The unique id of the user.
      * @var int
      */
+    public $uid;
+
+    /**
+     * The name of the course.
+     * @var String
+     */
     public $course_name;
 
+    /**
+     * The slug name of the course type.
+     * @var String
+     */
     public $course_type_slug;
 
+    /**
+     * The date when the lecture start.
+     * @var Date
+     */
     public $start_time;
 
+    /**
+     * The date when the lecture end.
+     * @var Date
+     */
     public $end_time;
 
+    /**
+     * The real name of the teacher.
+     * @var String
+     */
     public $real_name;
 
+    /**
+     * The province where the lecture is held.
+     * @var String
+     */
     public $place_province;
 
+    /**
+     * The city where the lecture is held.
+     * @var String
+     */
     public $place_city;
 
+    /**
+     * The address where the lecture is held.
+     * @var String
+     */
     public $place_address;
 }

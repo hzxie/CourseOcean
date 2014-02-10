@@ -205,7 +205,7 @@ class DashboardController extends AbstractActionController
 
     /**
      * Handle asynchronous changing password requests for a user.
-     * @return an array which contains query result
+     * @return an HTTP reponse with contains JSON array object
      */
     public function changePasswordAction()
     {
@@ -293,7 +293,7 @@ class DashboardController extends AbstractActionController
 
     /**
      * Handle asynchronous editing profile requests for a person.
-     * @return an array which contains query result
+     * @return an HTTP reponse with contains JSON array object
      */
     public function editPersonProfileAction()
     {
@@ -471,6 +471,11 @@ class DashboardController extends AbstractActionController
         return ( strlen($field) <= $MAX_LENGTH_OF_FIELD );
     }
 
+    /**
+     * Handle asynchronous getting attendance record of lectures for a 
+     * user.
+     * @return an HTTP reponse with contains JSON array object
+     */
     public function getLectureAttendanceAction()
     {
         $offset                         = $this->getRequest()->getQuery('offset', 0);
@@ -490,6 +495,13 @@ class DashboardController extends AbstractActionController
         return $response;
     }
 
+    /**
+     * Convert ResultSet which contains attendance records of lectures object 
+     * to an array.
+     * @param  ResultSet $attendanceRecords - an ResultSet object which contains
+     *          attendance records of lectures
+     * @return an array which contains attendance records of lectures
+     */
     private function getLectureAttendanceArray($attendanceRecords)
     {
         $lectureAttendanceArray = array();

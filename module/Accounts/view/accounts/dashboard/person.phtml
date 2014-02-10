@@ -51,7 +51,7 @@
             <div class="tab-pane active" id="lectures">
                 <p id="no-attendance-records">暂无培训课记录</p>
                 <ul></ul>
-                <button id="load-attendance-records" class="btn btn-block" onclick="javascript:getAttendanceRecord()">获取更多...</button>
+                <button id="load-attendance-records" class="btn btn-block" onclick="javascript:getAttendanceRecord()">加载更多...</button>
             </div> <!-- #lectures -->
             <div class="tab-pane" id="requirements">
                 Requirements
@@ -82,7 +82,7 @@
                 <div class="value"><input type="text" name="phone" value="<?php echo $profile['phone']; ?>" /></div>
             </div> <!-- .field -->
             <div class="field">
-                <button class="btn btn-primary" onclick="javascript:editProfile()">确认</button>
+                <button id="edit-profile-button" class="btn btn-primary" onclick="javascript:editProfile()">确认</button>
                 <button class="btn btn-cancel"  onclick="javascript:closeProfileDialog()">取消</button>
             </div> <!-- .field -->
         </div> <!-- .dialog-content -->
@@ -106,7 +106,7 @@
                 <div class="value"><input type="password" name="password-again" maxlength="16" /></div>
             </div> <!-- .field -->
             <div class="field">
-                <button class="btn btn-primary" onclick="javascript:changePassword()">确认</button>
+                <button id="change-password-button" class="btn btn-primary" onclick="javascript:changePassword()">确认</button>
                 <button class="btn btn-cancel"  onclick="javascript:closePasswordDialog()">取消</button>
             </div> <!-- .field -->
         </div> <!-- .dialog-content -->
@@ -143,12 +143,13 @@
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
     function editProfile() {
-        var email = $('input[name=email]').val(),
-            phone = $('input[name=phone]').val();
+        var processButtonObject = $('#edit-profile-button');
+            email               = $('input[name=email]').val(),
+            phone               = $('input[name=phone]').val();
 
-        setInputStyle(true);
+        setInputStyle(processButtonObject, true);
         doEditProfileAction(email, phone);
-        setInputStyle(false);
+        setInputStyle(processButtonObject, false);
     }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
@@ -216,13 +217,14 @@
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
     function changePassword() {
-        var oldPassword     = $('input[name=old-password]').val(),
-            newPassword     = $('input[name=new-password]').val(),
-            confirmPassword = $('input[name=password-again]').val();
+        var processButtonObject = $('#change-password-button');
+            oldPassword         = $('input[name=old-password]').val(),
+            newPassword         = $('input[name=new-password]').val(),
+            confirmPassword     = $('input[name=password-again]').val();
         
-        setInputStyle(true);
+        setInputStyle(processButtonObject, true);
         doChangePasswordAction(oldPassword, newPassword, confirmPassword);
-        setInputStyle(false);
+        setInputStyle(processButtonObject, false);
     }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
@@ -270,8 +272,7 @@
 <?php $this->inlineScript()->captureEnd(); ?>
 
 <?php $this->inlineScript()->captureStart(); ?>
-    function setInputStyle(isLoading) {
-        var processButtonObject = $('.btn-primary');
+    function setInputStyle(processButtonObject, isLoading) {
         if ( isLoading ) {
             processButtonObject.html('正在处理...');
             $('input').attr('disabled', 'disabled');
@@ -305,16 +306,16 @@
 </script>
 <script type="text/javascript">
     function processAttendanceResult(result, offset) {
+        var NUMBER_OF_RECORDS_PER_QUERY = 10;
         if ( result.length != 0 ) {
             $('#no-attendance-records').css('display', 'none');
             for (var i in result) {
                 appendAttendanceRecord(result[i]);
             }
-        } else {
-            if ( offset != 0 ) {
-                $('#load-attendance-records').html('已加载全部记录');
-                $('#load-attendance-records').attr('disabled', 'disabled');
-            }
+        } 
+        if ( offset != 0 || result.length < NUMBER_OF_RECORDS_PER_QUERY ) {
+            $('#load-attendance-records').html('已加载全部记录');
+            $('#load-attendance-records').attr('disabled', 'disabled');
         }
     }
 </script>
