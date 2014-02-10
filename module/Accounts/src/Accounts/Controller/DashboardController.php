@@ -35,10 +35,13 @@ class DashboardController extends AbstractActionController
         }
         
         $this->profile  = $this->getUserData();
+        $uid            = $this->profile['uid'];
         $userGroupSlug  = $this->profile['userGroupSlug'];
 
         $view = new ViewModel(
-            array( 'profile' => $this->profile )
+            array( 
+                'profile'       => $this->profile,
+            )
         );
         $view->setTemplate("accounts/dashboard/$userGroupSlug.phtml");
         return $view;
@@ -202,7 +205,7 @@ class DashboardController extends AbstractActionController
 
     /**
      * Handle asynchronous changing password requests for a user.
-     * @return an array which contains query result
+     * @return an HTTP reponse with contains JSON array object
      */
     public function changePasswordAction()
     {
@@ -290,7 +293,7 @@ class DashboardController extends AbstractActionController
 
     /**
      * Handle asynchronous editing profile requests for a person.
-     * @return an array which contains query result
+     * @return an HTTP reponse with contains JSON array object
      */
     public function editPersonProfileAction()
     {
@@ -466,5 +469,50 @@ class DashboardController extends AbstractActionController
     {
         $MAX_LENGTH_OF_FIELD        = 128;
         return ( strlen($field) <= $MAX_LENGTH_OF_FIELD );
+    }
+
+    /**
+     * Handle asynchronous getting attendance record of lectures for a 
+     * user.
+     * @return an HTTP reponse with contains JSON array object
+     */
+    public function getLectureAttendanceAction()
+    {
+        $offset                         = $this->getRequest()->getQuery('offset', 0);
+        $NUMBER_OF_RECORDS_PER_QUERY    = 10;
+
+        $this->profile          = $this->getUserData();
+        $uid                    = $this->profile['uid'];
+        $sm                     = $this->getServiceLocator();
+        $lectureAttendanceTable = $sm->get('Courses\Model\LectureAttendanceTable');
+        $resultSet              = $lectureAttendanceTable->
+                                    getAttendaceRecordsOfUser($uid, $offset, $NUMBER_OF_RECORDS_PER_QUERY);
+        $result                 = $this->getLectureAttendanceArray($resultSet);
+
+        $response   = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * Convert ResultSet which contains attendance records of lectures object 
+     * to an array.
+     * @param  ResultSet $attendanceRecords - an ResultSet object which contains
+     *          attendance records of lectures
+     * @return an array which contains attendance records of lectures
+     */
+    private function getLectureAttendanceArray($attendanceRecords)
+    {
+        $lectureAttendanceArray = array();
+
+        foreach ( $attendanceRecords as $attendanceRecord ) {
+            $lectureAttendanceRecordArray = array();
+            foreach ( $attendanceRecord as $key => $value) {
+                $lectureAttendanceRecordArray[$key] = $value;
+            }
+            array_push($lectureAttendanceArray, $lectureAttendanceRecordArray);
+        }
+        return $lectureAttendanceArray;
     }
 }
