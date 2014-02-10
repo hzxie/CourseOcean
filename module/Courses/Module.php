@@ -18,6 +18,8 @@ use Courses\Model\Lecture;
 use Courses\Model\LectureTable;
 use Courses\Model\LectureMeta;
 use Courses\Model\LectureMetaTable;
+use Courses\Model\LectureAttendance;
+use Courses\Model\LectureAttendanceTable;
 use Accounts\Model\Teacher;
 use Accounts\Model\TeacherTable;
 
@@ -104,6 +106,17 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new LectureMeta());
                     return new TableGateway('itp_lecture_meta', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Courses\Model\LectureAttendanceTable' => function($sm) {
+                    $tableGateway = $sm->get('LectureAttendanceTableGateway');
+                    $table = new LectureAttendanceTable($tableGateway);
+                    return $table;
+                },
+                'LectureAttendanceTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new LectureAttendance());
+                    return new TableGateway('itp_lecture_attendance', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Accounts\Model\TeacherTable' => function($sm) {
                     $tableGateway = $sm->get('TeacherTableGateway');

@@ -35,10 +35,13 @@ class DashboardController extends AbstractActionController
         }
         
         $this->profile  = $this->getUserData();
+        $uid            = $this->profile['uid'];
         $userGroupSlug  = $this->profile['userGroupSlug'];
 
         $view = new ViewModel(
-            array( 'profile' => $this->profile )
+            array( 
+                'profile'       => $this->profile,
+            )
         );
         $view->setTemplate("accounts/dashboard/$userGroupSlug.phtml");
         return $view;
@@ -466,5 +469,38 @@ class DashboardController extends AbstractActionController
     {
         $MAX_LENGTH_OF_FIELD        = 128;
         return ( strlen($field) <= $MAX_LENGTH_OF_FIELD );
+    }
+
+    public function getLectureAttendanceAction()
+    {
+        $offset                         = $this->getRequest()->getQuery('offset', 0);
+        $NUMBER_OF_RECORDS_PER_QUERY    = 10;
+
+        $this->profile          = $this->getUserData();
+        $uid                    = $this->profile['uid'];
+        $sm                     = $this->getServiceLocator();
+        $lectureAttendanceTable = $sm->get('Courses\Model\LectureAttendanceTable');
+        $resultSet              = $lectureAttendanceTable->
+                                    getAttendaceRecordsOfUser($uid, $offset, $NUMBER_OF_RECORDS_PER_QUERY);
+        $result                 = $this->getLectureAttendanceArray($resultSet);
+
+        $response   = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    private function getLectureAttendanceArray($attendanceRecords)
+    {
+        $lectureAttendanceArray = array();
+
+        foreach ( $attendanceRecords as $attendanceRecord ) {
+            $lectureAttendanceRecordArray = array();
+            foreach ( $attendanceRecord as $key => $value) {
+                $lectureAttendanceRecordArray[$key] = $value;
+            }
+            array_push($lectureAttendanceArray, $lectureAttendanceRecordArray);
+        }
+        return $lectureAttendanceArray;
     }
 }

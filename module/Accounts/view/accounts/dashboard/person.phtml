@@ -49,6 +49,9 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="lectures">
+                <p id="no-attendance-records">暂无培训课记录</p>
+                <ul></ul>
+                <button id="load-attendance-records" class="btn btn-block" onclick="javascript:getAttendanceRecord()">获取更多...</button>
             </div> <!-- #lectures -->
             <div class="tab-pane" id="requirements">
                 Requirements
@@ -280,3 +283,99 @@
         }
     }
 <?php $this->inlineScript()->captureEnd(); ?>
+
+<script type="text/javascript">
+    function getAttendanceRecord() {
+        var offset = $('li.lecture').length;
+        return doGetAttendanceRecordAction(offset);
+    }
+</script>
+<script type="text/javascript">
+    function doGetAttendanceRecordAction(offset) {
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?php echo $this->basePath(); ?>/accounts/dashboard/getLectureAttendance?offset=' + offset,
+            dataType: 'JSON',
+            success: function(result) {
+                return processAttendanceResult(result, offset);
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function processAttendanceResult(result, offset) {
+        if ( result.length != 0 ) {
+            $('#no-attendance-records').css('display', 'none');
+            for (var i in result) {
+                appendAttendanceRecord(result[i]);
+            }
+        } else {
+            if ( offset != 0 ) {
+                $('#load-attendance-records').html('已加载全部记录');
+                $('#load-attendance-records').attr('disabled', 'disabled');
+            }
+        }
+    }
+</script>
+<script type="text/javascript">
+    function appendAttendanceRecord(attendanceRecord) {
+        $("#lectures ul").append(
+            '<li class="lecture">' +
+                '<div class="left">' +
+                    '<img src="<?php echo $this->basePath(); ?>/img/courses/' + attendanceRecord['course_type_slug'] + '-small.jpg" alt="Thumbnail" />' +
+                '</div>' +
+                '<div class="right">' + 
+                    '<div class="title">' + attendanceRecord['course_name'] + '</div>' +
+                    '<div class="detail">' +
+                        '<span><i class="icon-calendar"></i>' + getFormattedDateSection(attendanceRecord['start_time'], attendanceRecord['end_time']) + '</span>' +
+                        '<span><i class="icon-user"></i>' + attendanceRecord['real_name'] + '</span><br />' +
+                        '<span><i class="icon-map-marker"></i>' + getFormattedPlace(attendanceRecord) + '</span>' +
+                    '</div>' +
+                    '<div class="view">' +
+                        '<button class="btn btn-primary" onclick="window.open(\'<?php echo $this->basePath(); ?>/courses/lecture/detail/' + attendanceRecord['lecture_id'] + '\')">查看课程</button>' +
+                    '</div>' +
+                '</div>' +
+            '</li>'
+        );
+    }
+</script>
+<script type="text/javascript">
+    function getFormattedPlace(attendanceRecord) {
+        var places = [
+            attendanceRecord['place_province'], 
+            attendanceRecord['place_city'], 
+            attendanceRecord['place_address']
+        ],  place = '';
+
+        for (var i in places) {
+            if ( places[i] != null ) {
+                place += places[i] + ' ';
+            }
+        }
+        return place;
+    }
+</script>
+<script type="text/javascript">
+    function getFormattedDateSection(startTimeString, endTimeString) {
+        var startTime   = getFormattedDate(startTimeString),
+            endTime     = getFormattedDate(endTimeString);
+
+        return startTime + '-' + endTime;
+    }
+</script>
+<script type="text/javascript">
+    function getFormattedDate(dateString) {
+        var dateElement = dateString.split('-'),
+            year        = dateElement[0],
+            month       = dateElement[1],
+            day         = dateElement[2];
+        return year + '年' + month + '月' + day + '日';
+    }
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        getAttendanceRecord();
+    });
+</script>
