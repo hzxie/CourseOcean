@@ -1,6 +1,6 @@
 <?php 
 	echo $this->headTitle('课程库 | ');
-	echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/library.css');
+	echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/course.css');
 ?>
 
 <div id="content">
@@ -32,7 +32,7 @@
 					<?php endif ?>
 					<div class="fieldset">
 						<div class="title">
-							<a href="<?php echo $this->basePath("courses/library/detail/$course->course_id"); ?>">
+							<a href="<?php echo $this->basePath("courses/course/detail/$course->course_id"); ?>">
 								<?php echo $course->course_name; ?>
 							</a>
 						</div> <!-- .fieldset -->
@@ -55,7 +55,7 @@
 		<div id="pagination" class="pagination pagination-centered">
 			<ul>
 			<?php
-				$basePath = $this->basePath().'/courses/library/page/';
+				$basePath = $this->basePath().'/courses/course/page/';
 			?>
 			<?php if ( $currentPageNumber > 1 ): ?>
                 <li><a href="<?php echo $basePath.($currentPageNumber - 1); ?>">&lt;</a></li>

@@ -9,7 +9,7 @@ use Zend\View\Helper\BasePath;
  * 
  * @author Xie Haozhe <zjhzxhz@gmail.com>
  */
-class RecentlyController extends AbstractActionController
+class LectureController extends AbstractActionController
 {
     /**
      * Default method to call in the controller.

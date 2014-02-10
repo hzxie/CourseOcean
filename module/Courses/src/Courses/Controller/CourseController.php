@@ -10,7 +10,7 @@ use Zend\View\Helper\BasePath;
  * 
  * @author Xie Haozhe <zjhzxhz@gmail.com>
  */
-class LibraryController extends AbstractActionController
+class CourseController extends AbstractActionController
 {
 	/**
 	 * Default method to call in the controller.

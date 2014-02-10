@@ -1,7 +1,7 @@
 <?php 
     echo $this->headTitle('近期开课 | ');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/datepicker.css')
-                          ->appendStylesheet($this->basePath().'/css/courses/recently.css');
+                          ->appendStylesheet($this->basePath().'/css/courses/lecture.css');
     echo $this->headScript()->appendFile($this->basePath().'/js/stick-up.min.js')
                             ->appendFile($this->basePath().'/js/datepicker.min.js')
                             ->appendFile($this->basePath().'/js/citypicker.js');
@@ -56,13 +56,13 @@
                 </div> <!-- .field -->
             </div> <!-- #search -->
         </div> <!-- #sidebar -->
-        <div id="recently">
+        <div id="lectures">
         <?php 
             foreach ( $lectures as $lecture ) {
         ?>
             <div class="section">
                 <div class="title">
-                    <a href="<?php echo $this->basePath("courses/recently/detail/$lecture->lecture_id"); ?>">
+                    <a href="<?php echo $this->basePath("courses/lecture/detail/$lecture->lecture_id"); ?>">
                         <span><?php echo $lecture->course_name; ?></span>
                     </a>
                 </div> <!-- #title -->
@@ -86,11 +86,11 @@
                 </div> <!-- .detail -->
             </div> <!-- .section -->
         <?php } ?>
-        </div> <!-- #recently -->
+        </div> <!-- #lectures -->
         <div id="pagination" class="pagination pagination-centered">
             <ul>
             <?php
-                $basePath = $this->basePath().'/courses/recently/page/';
+                $basePath = $this->basePath().'/courses/lecture/page/';
             ?>
             <?php if ( $currentPageNumber > 1 ): ?>
                 <li><a href="<?php echo $basePath.($currentPageNumber - 1); ?>">&lt;</a></li>

@@ -2,9 +2,9 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            'Courses\Controller\Recently'     => 'Courses\Controller\RecentlyController',
+            'Courses\Controller\Lecture'      => 'Courses\Controller\LectureController',
             'Courses\Controller\News'         => 'Courses\Controller\NewsController',
-            'Courses\Controller\Library'      => 'Courses\Controller\LibraryController',
+            'Courses\Controller\Course'       => 'Courses\Controller\CourseController',
             'Courses\Controller\Teacher'      => 'Courses\Controller\TeacherController',
             'Courses\Controller\Requirement'  => 'Courses\Controller\RequirementController',
         ),

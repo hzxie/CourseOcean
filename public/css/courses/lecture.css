@@ -54,13 +54,13 @@ form.field select.place {
 	margin-bottom: 10px;
 }
 
-div#main-content div#recently {
+div#main-content div#lectures {
 	margin-left: 260px;
 	width: 660px;
 	padding: 20px 20px 10px 20px;
 }
 
-div#recently div.section {
+div#lectures div.section {
 	border-bottom: 1px dotted #aeaeae;
 	margin-bottom: 20px;
 	overflow: hidden;
