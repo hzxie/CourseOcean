@@ -16,8 +16,8 @@ use Accounts\Model\Person;
 use Accounts\Model\PersonTable;
 use Accounts\Model\Teacher;
 use Accounts\Model\TeacherTable;
-use Accounts\Model\Enterprise;
-use Accounts\Model\EnterpriseTable;
+use Accounts\Model\Company;
+use Accounts\Model\CompanyTable;
 
 class Module implements AutoloaderProviderInterface
 {
@@ -80,7 +80,7 @@ class Module implements AutoloaderProviderInterface
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Person());
-                    return new TableGateway('itp_person', $dbAdapter, null, $resultSetPrototype);
+                    return new TableGateway('itp_people', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Accounts\Model\TeacherTable' => function($sm) {
                     $tableGateway = $sm->get('TeacherTableGateway');
@@ -91,18 +91,18 @@ class Module implements AutoloaderProviderInterface
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Teacher());
-                    return new TableGateway('itp_teacher', $dbAdapter, null, $resultSetPrototype);
+                    return new TableGateway('itp_teachers', $dbAdapter, null, $resultSetPrototype);
                 },
-                'Accounts\Model\EnterpriseTable' => function($sm) {
-                    $tableGateway = $sm->get('EnterpriseTableGateway');
-                    $table = new EnterpriseTable($tableGateway);
+                'Accounts\Model\CompanyTable' => function($sm) {
+                    $tableGateway = $sm->get('CompanyTableGateway');
+                    $table = new CompanyTable($tableGateway);
                     return $table;
                 },
-                'EnterpriseTableGateway' => function ($sm) {
+                'CompanyTableGateway' => function ($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Enterprise());
-                    return new TableGateway('itp_enterprise', $dbAdapter, null, $resultSetPrototype);
+                    $resultSetPrototype->setArrayObjectPrototype(new Company());
+                    return new TableGateway('itp_companies', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );

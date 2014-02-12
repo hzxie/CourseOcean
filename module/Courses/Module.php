@@ -127,7 +127,7 @@ class Module implements AutoloaderProviderInterface
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Teacher());
-                    return new TableGateway('itp_teacher', $dbAdapter, null, $resultSetPrototype);
+                    return new TableGateway('itp_teachers', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );

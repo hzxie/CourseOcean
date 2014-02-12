@@ -1,6 +1,7 @@
 <?php 
     echo $this->headTitle('注册 | ');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/register.css');
+    echo $this->headScript()->appendFile($this->basePath().'/js/citypicker.js');
 ?>
 
 <div id="content">
@@ -35,53 +36,53 @@
             </div> <!-- #password-again -->
             <div id="user-group" class="field">
                 <label for="user-group">用户类型</label>
-                <select name="user-group" id="user-group-selector">
+                <select name="user-group" id="user-group-selector" class="full-width">
                     <option value="person">个人</option>
                     <option value="teacher">讲师</option>
-                    <option value="enterprise">企业</option>
+                    <option value="company">企业</option>
                 </select>
             </div> <!-- #user-group -->
             <div id="for-person" class="question-group">
-                <div id="real-name" class="field">
-                    <label for="real-name">真实姓名</label>
-                    <input type="text" name="real-name" maxlength="32" />
-                    <span class="tip"></span>
-                </div> <!-- #real-name -->
-                <div id="phone" class="field">
-                    <label for="phone">联系电话</label>
-                    <input type="text" name="phone" maxlength="24" />
+                <div id="person-name" class="field">
+                    <label for="person-name">真实姓名</label>
+                    <input type="text" name="person-name" maxlength="32" />
+                    <span class="tip">请填写您的真实姓名, 以便我们与您取得联系</span>
+                </div> <!-- #person-name -->
+                <div id="person-phone" class="field">
+                    <label for="person-phone">联系电话</label>
+                    <input type="text" name="person-phone" maxlength="24" />
                     <span class="tip">请填写您的联系方式, 以便我们与您取得联系</span>
-                </div> <!-- #phone -->
+                </div> <!-- #person-phone -->
             </div> <!-- #for-person -->
             <div id="for-teacher" class="question-group" style="display: none;">
-                <div id="real-name" class="field">
-                    <label for="real-name">真实姓名</label>
-                    <input type="text" name="real-name" maxlength="32" />
+                <div id="teacher-name" class="field">
+                    <label for="teacher-name">真实姓名</label>
+                    <input type="text" name="teacher-name" maxlength="32" />
                     <span class="tip"></span>
-                </div> <!-- #real-name -->
-                <div id="phone" class="field">
-                    <label for="phone">联系电话</label>
-                    <input type="text" name="phone" maxlength="24" />
+                </div> <!-- #teacher-name -->
+                <div id="teacher-phone" class="field">
+                    <label for="teacher-phone">联系电话</label>
+                    <input type="text" name="teacher-phone" maxlength="24" />
                     <span class="tip">请填写您的联系方式, 以便我们与您取得联系</span>
-                </div> <!-- #phone -->
+                </div> <!-- #teacher-phone -->
             </div> <!-- #for-teacher -->
-            <div id="for-enterprise" class="question-group" style="display: none;">
+            <div id="for-company" class="question-group" style="display: none;">
                 <div id="company-name" class="field">
                     <label for="company-name">公司名称</label>
                     <input type="text" name="company-name" maxlength="64" />
                     <span class="tip"></span>
                 </div> <!-- #company-name -->
-                <div id="address" class="field">
-                    <label for="address">公司地址</label>
-                    <input type="text" name="address" maxlength="256" />
+                <div id="company-address" class="field">
+                    <label for="company-address">公司地址</label>
+                    <input type="text" name="company-address" maxlength="256" />
                     <span class="tip"></span>
                 </div> <!-- #address -->
-                <div id="phone" class="field">
-                    <label for="phone">联系电话</label>
-                    <input type="text" name="phone" maxlength="24" />
+                <div id="company-phone" class="field">
+                    <label for="company-phone">联系电话</label>
+                    <input type="text" name="company-phone" maxlength="24" />
                     <span class="tip">请填写您的联系方式, 以便我们与您取得联系</span>
                 </div> <!-- #phone -->
-            </div> <!-- #for-enterprise -->
+            </div> <!-- #for-company -->
             <div id="agreement" class="field">
                 <input type="checkbox" name="agree" />
                 <span>同意"服务条款"和"用户须知"、"隐私权相关政策"</span>
@@ -232,8 +233,8 @@
             errorMessage += getPersonErrorMessage(result);
         } else if ( userGroup == 'teacher' ) {
             errorMessage += getTeacherErrorMessage(result);
-        } else if ( userGroup == 'enterprise' ) {
-            errorMessage += getEnterpriseErrorMessage(result);
+        } else if ( userGroup == 'company' ) {
+            errorMessage += getCompanyErrorMessage(result);
         }
         return errorMessage;
     }
@@ -272,14 +273,14 @@
 <?php $this->inlineScript()->captureStart(); ?>
     function getPersonErrorMessage(result) {
         var errorMessage  = '';
-        if ( result['isRealNameEmpty'] ) {
+        if ( result['isPersonNameEmpty'] ) {
             errorMessage += '请填写您的真实姓名<br />';
-        } else if ( !result['isRealNameLegal'] ) {
+        } else if ( !result['isPersonNameLegal'] ) {
             errorMessage += '真实姓名的长度不能超过32个字符<br />';
         }
-        if ( result['isPhoneNumberEmpty'] ) {
+        if ( result['isPersonPhoneEmpty'] ) {
             errorMessage += '请填写您的联系电话<br />';
-        } else if ( !result['isPhoneNumberLegal'] ) {
+        } else if ( !result['isPersonPhoneLegal'] ) {
             errorMessage += '联系电话必须由数字和-组成, 且长度在7~24个字符之间<br />';
         }
 
@@ -288,26 +289,37 @@
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
     function getTeacherErrorMessage(result) {
-        var errorMessage = getPersonErrorMessage(result);
+        var errorMessage  = '';
+        if ( result['isTeacherNameEmpty'] ) {
+            errorMessage += '请填写您的真实姓名<br />';
+        } else if ( !result['isTeacherNameLegal'] ) {
+            errorMessage += '真实姓名的长度不能超过32个字符<br />';
+        }
+        if ( result['isTeacherPhoneEmpty'] ) {
+            errorMessage += '请填写您的联系电话<br />';
+        } else if ( !result['isTeacherPhoneLegal'] ) {
+            errorMessage += '联系电话必须由数字和-组成, 且长度在7~24个字符之间<br />';
+        }
+
         return errorMessage;
     }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-    function getEnterpriseErrorMessage(result) {
+    function getCompanyErrorMessage(result) {
         var errorMessage  = '';
-        if ( result['isCompanyEmpty'] ) {
+        if ( result['isCompanyNameEmpty'] ) {
             errorMessage += '请填写您公司的名称<br />';
-        } else if ( !result['isCompanyLegal'] ) {
+        } else if ( !result['isCompanyNameLegal'] ) {
             errorMessage += '公司名称的长度不能超过64个字符<br />';
         }
-        if ( result['isAddressEmpty'] ) {
+        if ( result['isCompanyAddressEmpty'] ) {
             errorMessage += '请填写您公司的地址<br />';
-        } else if ( !result['isAddressLegal'] ) {
+        } else if ( !result['isCompanyAddressLegal'] ) {
             errorMessage += '公司地址的长度不能超过256个字符<br />';
         }
-        if ( result['isPhoneNumberEmpty'] ) {
+        if ( result['isCompanyPhoneEmpty'] ) {
             errorMessage += '请填写您的联系电话<br />';
-        } else if ( !result['isPhoneNumberLegal'] ) {
+        } else if ( !result['isCompanyPhoneLegal'] ) {
             errorMessage += '联系电话必须由数字和-组成, 且不超过24个字符<br />';
         }
 

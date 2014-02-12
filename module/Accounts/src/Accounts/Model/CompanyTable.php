@@ -7,11 +7,11 @@ use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 
 /**
- * The table gateway of the enterprise table.
+ * The table gateway of the company table.
  * 
  * @author Xie Haozhe <zjhzxhz@gmail.com>
  */
-class EnterpriseTable
+class CompanyTable
 {
 	/**
 	 * The Table Gateway object is intended to provide an object that 
@@ -43,11 +43,11 @@ class EnterpriseTable
 	}
 
 	/**
-	 * Get profile of a user.
+	 * Get profile of a company user.
 	 * @param  int $uid - the unique id of the user
-	 * @return an Object of Person which contains information of the person
+	 * @return an Object of Person which contains information of the company
 	 */
-	public function getEnterpriseInfo($uid)
+	public function getCompanyInfo($uid)
 	{
 		$rowset     	= $this->tableGateway->select(
             array( 
@@ -58,12 +58,12 @@ class EnterpriseTable
 	}
 
     /**
-     * Handle asynchronous register requests for an enterprise.
+     * Handle asynchronous register requests for a company.
      * @return true if the query is successful
      */
-    public function createNewEnterprise($enterpriseInfo)
+    public function createNewCompany($companyInfo)
     {
-        $this->tableGateway->insert($enterpriseInfo);
+        $this->tableGateway->insert($companyInfo);
         return true;
     }
 }

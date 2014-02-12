@@ -145,7 +145,7 @@ class DashboardController extends AbstractActionController
         $personTable        = $sm->get('Accounts\Model\PersonTable');
         $person             = $personTable->getPersonInfo($uid);
 
-        $personInfo     += $this->getProfileArray($person);
+        $personInfo        += $this->getProfileArray($person);
         return $personInfo;
     }
 
@@ -169,27 +169,27 @@ class DashboardController extends AbstractActionController
     }
 
     /**
-     * Get profile of an enterprise.
+     * Get profile of a company.
      * @param  int $uid - the unique id of the user
-     * @return an array which contains profile of an enterprise
+     * @return an array which contains profile of a company
      */
-    private function getEnterpriseInfo($uid)
+    private function getCompanyInfo($uid)
     {
-        $enterpriseInfo  = array(
-            'userGroupSlug' => 'enterprise',
+        $companyInfo  = array(
+            'userGroupSlug' => 'company',
         );
 
         $sm                 = $this->getServiceLocator();
-        $enterpriseTable    = $sm->get('Accounts\Model\EnterpriseTable');
-        $enterprise         = $enterpriseTable->getEnterpriseInfo($uid);
+        $companyTable       = $sm->get('Accounts\Model\CompanyTable');
+        $company            = $companyTable->getCompanyInfo($uid);
 
-        $enterpriseInfo    += $this->getProfileArray($enterprise);
-        return $enterpriseInfo;
+        $companyInfo       += $this->getProfileArray($company);
+        return $companyInfo;
     }
 
     /**
      * Get profile within an array.
-     * @param  Object $profileInfo - an object of (Person/ Teacher/ Enterprise)
+     * @param  Object $profileInfo - an object of (Person/ Teacher/ Company)
      *         which contains profile of the user
      * @return an array which contains profile of the user
      */

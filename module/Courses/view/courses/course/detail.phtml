@@ -10,7 +10,7 @@
 		</div> <!-- #banner -->
 		<div id="main-content">
 			<div id="course-name"><?php echo $course['course_name'] ?></div> <!-- #course-name -->
-			<div id="brief" class="section"><?php echo $course['brief']; ?></div> <!-- #brief -->
+			<div id="brief" class="section"><?php echo $course['course_brief']; ?></div> <!-- #brief -->
 			<?php if ( isset($course['course_objective']) ): ?>
 				<div id="objective" class="section">
 					<div class="title">课程目标</div>
@@ -33,15 +33,15 @@
 				<div class="title">讲师介绍</div>
 				<div id="teacher">
 					<div id="avatar">
-						<?php if ( $teacher['avatar'] == null ): ?>
+						<?php if ( $teacher['teacher_avatar'] == null ): ?>
 							<img class="img-circle" src="<?php echo $this->basePath(); ?>/img/avatar.png" alt="Avatar" />
 						<?php else: ?>
 							<img class="img-circle" src="<?php echo $this->basePath($teacher['avatar']); ?>" alt="Avatar" />
 						<?php endif; ?>
 					</div> <!-- #avatar -->
 					<div id="introduction">
-						<div id="name"><?php echo $teacher['real_name']; ?></div>
-						<div><?php echo $teacher['introduction']; ?></div>
+						<div id="name"><?php echo $teacher['teacher_name']; ?></div>
+						<div><?php echo $teacher['teacher_brief']; ?></div>
 					</div> <!-- #introduction -->
 				</div> <!-- #teacher -->
 			</div> <!-- #teacher-introduction -->
@@ -59,15 +59,15 @@
 				</div>
 				<div class="item">
 					<div class="title">讲师</div>
-					<div class="content"><?php echo $teacher['real_name']; ?></div>
+					<div class="content"><?php echo $teacher['teacher_name']; ?></div>
 				</div>
 				<div class="item">
 					<div class="title">培训周期</div>
-					<div class="content"><?php echo $course['cycle']; ?>天</div>
+					<div class="content"><?php echo $course['course_cycle']; ?>天</div>
 				</div>
 				<div class="item">
 					<div class="title">听众范围</div>
-					<div class="content"><?php echo $course['audience']; ?></div>
+					<div class="content"><?php echo $course['course_audience']; ?></div>
 				</div>
 			</div> <!-- #info -->
 			<div id="lectures">
@@ -77,7 +77,7 @@
 				<?php else: ?>
 					<ol>
 						<?php foreach ( $lectures as $lecture ) { ?>
-						<li><a href="<?php echo $this->basePath('/courses/recently/detail/'.$lecture['lecture_id']); ?>" target="_blank"><?php echo date('Y年m月d日', strtotime($lecture['start_time'])); ?></a></li>
+						<li><a href="<?php echo $this->basePath('/courses/lecture/detail/'.$lecture['lecture_id']); ?>" target="_blank"><?php echo date('Y年m月d日', strtotime($lecture['lecture_start_time'])); ?></a></li>
 						<? } ?>
 					</ol>
 				<?php endif; ?>

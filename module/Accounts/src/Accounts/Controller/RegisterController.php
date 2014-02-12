@@ -19,7 +19,10 @@ class RegisterController extends AbstractActionController
      */
     public function indexAction()
     {
-        return array();
+        return array(
+            // 'courseTypes'   => ,
+            // 'positions'     => ,
+        );
     }
 
     /**
@@ -88,7 +91,7 @@ class RegisterController extends AbstractActionController
         return array(
             'username'          => strip_tags($username),
             'email'             => strip_tags($email),
-            'password'          => strip_tags($password),
+            'password'          => $password,
             'confirmPassword'   => strip_tags($confirmPassword),
             'userGroupSlug'     => ucfirst(strip_tags($userGroupSlug)),
             'userGroupID'       => strip_tags($this->getUserGroupID($userGroupSlug)),
@@ -222,8 +225,8 @@ class RegisterController extends AbstractActionController
 
         $personInfo         = array(
             'uid'           => $uid,
-            'real_name'     => $personInfoArray['realName'],
-            'phone'         => $personInfoArray['phone'],
+            'person_name'   => $personInfoArray['personName'],
+            'person_phone'  => $personInfoArray['personPhone'],
         );
 
         return $personTable->createNewPerson($personInfo);
@@ -235,12 +238,12 @@ class RegisterController extends AbstractActionController
      */
     private function getPersonInfoArray()
     {
-        $realName           = $this->getRequest()->getPost('real-name');
-        $phone              = $this->getRequest()->getPost('phone');
+        $personName         = $this->getRequest()->getPost('person-name');
+        $personPhone        = $this->getRequest()->getPost('person-phone');
 
         return array(
-            'realName'      => strip_tags($realName),
-            'phone'         => strip_tags($phone),
+            'personName'    => strip_tags($personName),
+            'personPhone'   => strip_tags($personPhone),
         );
     }
 
@@ -254,13 +257,13 @@ class RegisterController extends AbstractActionController
     {
         $result = array(
             'isDetailSuccessful'        => false,
-            'isRealNameEmpty'           => empty($personInfo['realName']),
-            'isRealNameLegal'           => $this->isRealNameLegal($personInfo['realName']),
-            'isPhoneNumberEmpty'        => empty($personInfo['phone']),
-            'isPhoneNumberLegal'        => $this->isPhoneNumberLegal($personInfo['phone']),
+            'isPersonNameEmpty'         => empty($personInfo['personName']),
+            'isPersonNameLegal'         => $this->isNameLegal($personInfo['personName']),
+            'isPersonPhoneEmpty'        => empty($personInfo['personPhone']),
+            'isPersonPhoneLegal'        => $this->isPhoneNumberLegal($personInfo['personPhone']),
         );
-        $result['isDetailSuccessful']   = !$result['isRealNameEmpty']    && $result['isRealNameLegal'] &&
-                                          !$result['isPhoneNumberEmpty'] && $result['isPhoneNumberLegal'];
+        $result['isDetailSuccessful']   = !$result['isPersonNameEmpty']  && $result['isPersonNameLegal'] &&
+                                          !$result['isPersonPhoneEmpty'] && $result['isPersonPhoneLegal'];
         return $result;
     }
 
@@ -268,13 +271,13 @@ class RegisterController extends AbstractActionController
      * Verify if the real name of the user is legal.
      * Rule: the max length of the real name should less than 32 characters.
      * 
-     * @param  String  $realName - the real name of the user
+     * @param  String  $name - the real name of the user
      * @return true if the real name of the user is legal
      */
-    private function isRealNameLegal($realName)
+    private function isNameLegal($name)
     {
-        $MAX_LENGTH_OF_REAL_NAME    = 32;
-        return ( strlen($realName) <= $MAX_LENGTH_OF_REAL_NAME );
+        $MAX_LENGTH_OF_NAME    = 32;
+        return ( strlen($name) <= $MAX_LENGTH_OF_NAME );
     }
 
     /**
@@ -301,8 +304,8 @@ class RegisterController extends AbstractActionController
 
         $teacherInfo        = array(
             'uid'           => $uid,
-            'real_name'     => $teacherInfoArray['realName'],
-            'phone'         => $teacherInfoArray['phone'],
+            'teacher_name'  => $teacherInfoArray['teacherName'],
+            'teacher_phone' => $teacherInfoArray['teacherPhone'],
         );
 
         return $teacherTable->createNewTeacher($teacherInfo);
@@ -314,12 +317,12 @@ class RegisterController extends AbstractActionController
      */
     private function getTeacherInfoArray()
     {
-        $realName           = $this->getRequest()->getPost('real-name');
-        $phone              = $this->getRequest()->getPost('phone');
+        $teacherName        = $this->getRequest()->getPost('teacher-name');
+        $teacherPhone       = $this->getRequest()->getPost('teacher-phone');
 
         return array(
-            'realName'      => strip_tags($realName),
-            'phone'         => strip_tags($phone),
+            'teacherName'   => strip_tags($teacherName),
+            'teacherPhone'  => strip_tags($teacherPhone),
         );
     }
 
@@ -333,13 +336,13 @@ class RegisterController extends AbstractActionController
     {
         $result = array(
             'isDetailSuccessful'        => false,
-            'isRealNameEmpty'           => empty($teacherInfo['realName']),
-            'isRealNameLegal'           => $this->isRealNameLegal($teacherInfo['realName']),
-            'isPhoneNumberEmpty'        => empty($teacherInfo['phone']),
-            'isPhoneNumberLegal'        => $this->isPhoneNumberLegal($teacherInfo['phone']),
+            'isTeacherNameEmpty'        => empty($teacherInfo['teacherName']),
+            'isTeacherNameLegal'        => $this->isNameLegal($teacherInfo['teacherName']),
+            'isTeacherPhoneEmpty'       => empty($teacherInfo['teacherPhone']),
+            'isTeacherPhoneLegal'       => $this->isPhoneNumberLegal($teacherInfo['teacherPhone']),
         );
-        $result['isDetailSuccessful']   = !$result['isRealNameEmpty']    && $result['isRealNameLegal'] &&
-                                          !$result['isPhoneNumberEmpty'] && $result['isPhoneNumberLegal'];
+        $result['isDetailSuccessful']   = !$result['isTeacherNameEmpty']  && $result['isTeacherNameLegal'] &&
+                                          !$result['isTeacherPhoneEmpty'] && $result['isTeacherPhoneLegal'];
         return $result;
     }
 
@@ -350,35 +353,35 @@ class RegisterController extends AbstractActionController
      *         information of a teacher
      * @return true if the query is successful
      */
-    private function processEnterpriseAction($uid, $enterpriseInfoArray)
+    private function processCompanyAction($uid, $companyInfoArray)
     {
         $sm                 = $this->getServiceLocator();
-        $enterpriseTable    = $sm->get('Accounts\Model\EnterpriseTable');
+        $companyTable       = $sm->get('Accounts\Model\CompanyTable');
 
-        $enterpriseInfo     = array(
-            'uid'           => $uid,
-            'company_name'  => $enterpriseInfoArray['companyName'],
-            'address'       => $enterpriseInfoArray['address'],
-            'phone'         => $enterpriseInfoArray['phone'],
+        $companyInfo     = array(
+            'uid'               => $uid,
+            'company_name'      => $companyInfoArray['companyName'],
+            'company_address'   => $companyInfoArray['companyAddress'],
+            'company_phone'     => $companyInfoArray['companyPhone'],
         );
 
-        return $enterpriseTable->createNewEnterprise($enterpriseInfo);
+        return $companyTable->createNewCompany($companyInfo);
     }
 
     /**
      * Get essential information of an enterprise within an array.
      * @return an array which contains essential information of an enterprise
      */
-    private function getEnterpriseInfoArray()
+    private function getCompanyInfoArray()
     {
         $companyName        = $this->getRequest()->getPost('company-name');
-        $address            = $this->getRequest()->getPost('address');
-        $phone              = $this->getRequest()->getPost('phone');
+        $companyAddress     = $this->getRequest()->getPost('company-address');
+        $companyPhone       = $this->getRequest()->getPost('company-phone');
 
         return array(
-            'companyName'   => strip_tags($companyName),
-            'address'       => strip_tags($address),
-            'phone'         => strip_tags($phone),
+            'companyName'       => strip_tags($companyName),
+            'companyAddress'    => strip_tags($companyAddress),
+            'companyPhone'      => strip_tags($companyPhone),
         );
     }
 
@@ -388,21 +391,27 @@ class RegisterController extends AbstractActionController
      *         enterprise
      * @return an array which contains query result
      */
-    private function verifyEnterpriseInfo($enterpriseInfo)
+    private function verifyCompanyInfo($companyInfo)
     {
         $result = array(
             'isDetailSuccessful'        => false,
-            'isCompanyEmpty'            => empty($enterpriseInfo['companyName']),
-            'isCompanyLegal'            => $this->isCompanyLegal($enterpriseInfo['companyName']),
-            'isAddressEmpty'            => empty($enterpriseInfo['address']),
-            'isAddressLegal'            => $this->isAddressLegal($enterpriseInfo['address']),
-            'isPhoneNumberEmpty'        => empty($enterpriseInfo['phone']),
-            'isPhoneNumberLegal'        => $this->isPhoneNumberLegal($enterpriseInfo['phone']),
+            'isCompanyNameEmpty'        => empty($companyInfo['companyName']),
+            'isCompanyNameLegal'        => $this->isCompanyNameLegal($companyInfo['companyName']),
+            'isCompanyAddressEmpty'     => empty($companyInfo['companyAddress']),
+            'isCompanyAddressLegal'     => $this->isAddressLegal($companyInfo['companyAddress']),
+            'isCompanyPhoneEmpty'       => empty($companyInfo['companyPhone']),
+            'isCompanyPhoneLegal'       => $this->isPhoneNumberLegal($companyInfo['companyPhone']),
         );
-        $result['isDetailSuccessful']   = !$result['isCompanyEmpty']     && $result['isCompanyLegal'] &&
-                                          !$result['isAddressEmpty']     && $result['isAddressLegal'] &&
-                                          !$result['isPhoneNumberEmpty'] && $result['isPhoneNumberLegal'];
+        $result['isDetailSuccessful']   = !$result['isCompanyNameEmpty']    && $result['isCompanyNameLegal'] &&
+                                          !$result['isCompanyAddressEmpty'] && $result['isCompanyAddressLegal'] &&
+                                          !$result['isCompanyPhoneEmpty']   && $result['isCompanyPhoneLegal'];
         return $result;
+    }
+
+    private function isCompanyNameLegal($companyName)
+    {
+        $MAX_LENGTH_OF_COMPANY_BANE = 64;
+        return ( strlen($companyName) < $MAX_LENGTH_OF_COMPANY_BANE );
     }
 
     /**

@@ -51,13 +51,20 @@ div#register-container div#main span {
 div#register-container div#main input[type="text"],
 div#register-container div#main input[type="password"] {
 	padding: 10px;
-	width: 540px;
+	width: 538px;
 }
 
 div#register-container div#main select {
 	padding-top: 8px;
-	width: 562px;
 	height: 42px;
+}
+
+div#register-container div#main select.full-width {
+	width: 560px;
+}
+
+div#register-container div.place select {
+	width: 184px;
 }
 
 div#register-container div#complementary {

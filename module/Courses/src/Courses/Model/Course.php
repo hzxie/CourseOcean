@@ -23,11 +23,11 @@ class Course {
         $this->course_type_slug     = (!empty($data['course_type_slug']))   ? $data['course_type_slug'] : null;
         $this->course_type_name     = (!empty($data['course_type_name']))   ? $data['course_type_name'] : null;
         $this->uid                  = (!empty($data['uid']))                ? $data['uid']              : null;
-        $this->real_name            = (!empty($data['real_name']))          ? $data['real_name']        : null;
+        $this->teacher_name         = (!empty($data['teacher_name']))       ? $data['teacher_name']     : null;
         $this->create_time          = (!empty($data['create_time']))        ? $data['create_time']      : null;
-        $this->brief                = (!empty($data['brief']))              ? $data['brief']            : null;
-        $this->cycle                = (!empty($data['cycle']))              ? $data['cycle']            : null;
-        $this->audience             = (!empty($data['audience']))           ? $data['audience']         : null;
+        $this->course_brief         = (!empty($data['course_brief']))       ? $data['course_brief']     : null;
+        $this->course_cycle         = (!empty($data['course_cycle']))       ? $data['course_cycle']     : null;
+        $this->course_audience      = (!empty($data['course_audience']))    ? $data['course_audience']  : null;
     }
 
     /**
@@ -70,7 +70,7 @@ class Course {
      * The real name of the teacher.
      * @var String
      */
-    public $real_name;
+    public $teacher_name;
 
     /**
      * The time when the course has been created.
@@ -82,17 +82,17 @@ class Course {
      * The brief introduction of the course.
      * @var String
      */
-    public $brief;
+    public $course_brief;
 
     /**
      * The time required of the course.
      * @var int
      */
-    public $cycle;
+    public $course_cycle;
 
     /**
      * The audience who are suitable for the course.
      * @var String
      */
-    public $audience;
+    public $course_audience;
 }

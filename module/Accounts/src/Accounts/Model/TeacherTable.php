@@ -44,7 +44,7 @@ class TeacherTable
 	{
 		$offset     = ( $pageNumber - 1 ) * $limit;
         $resultSet  = $this->tableGateway->select(function (Select $select) use ($offset, $limit) {
-            $select->order(new Expression('CONVERT(real_name USING GBK)'));
+            $select->order(new Expression('CONVERT(teacher_name USING GBK)'));
             $select->offset($offset);
             $select->limit($limit);
         });
@@ -62,7 +62,7 @@ class TeacherTable
     }
 
     /**
-     * Get detail information of the teacher.
+     * Get detail information of the teacher user.
      * @param  int $uid - the unique id of the user
      * @return an object of Teacher which contains all information of the 
      *         teacher

@@ -27,21 +27,21 @@
                 foreach ( $teachers as $teacher ) {
             ?>
             <div class="block">
-                <?php if ( $teacher->avatar == null ) { ?>  
+                <?php if ( $teacher->teacher_avatar == null ) { ?>  
                 <div class="avatar" style="background: <?php echo $colors[rand(0, 3)]; ?>">
                     <img src="<?php echo $this->basePath('/img/silhouette.png'); ?>" alt="Avatar">
                 </div>
                 <?php } else { ?>
                 <div class="avatar">
-                    <img src="<?php echo $this->basePath($teacher->avatar); ?>" alt="Avatar">
+                    <img src="<?php echo $this->basePath($teacher->teacher_avatar); ?>" alt="Avatar">
                 </div>
                 <?php } ?>
                 <div class="content">
                     <div class="name">
-                        <a href="<?php echo $this->basePath("/courses/teacher/detail/$teacher->uid"); ?>"><?php echo $teacher->real_name; ?></a>
+                        <a href="<?php echo $this->basePath("/courses/teacher/detail/$teacher->uid"); ?>"><?php echo $teacher->teacher_name; ?></a>
                     </div> <!-- .name -->
-                    <div class="company"><?php echo $teacher->company;?></div>
-                    <div class="field"><?php echo $teacher->field;?></div>
+                    <div class="company"><?php echo $teacher->teacher_company;?></div>
+                    <div class="field"><?php echo $teacher->teacher_field;?></div>
                     <div class="reserve">
                         <button class="btn btn-block">预约</button>
                     </div> <!-- .reserve -->

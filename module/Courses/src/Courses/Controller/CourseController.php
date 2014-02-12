@@ -238,8 +238,8 @@ class CourseController extends AbstractActionController
         if ( $resultSet != null ) {
             foreach ( $resultSet as $lecture ) {
                 array_push($lectureInfoArray, array(
-                    'lecture_id'    => $lecture->lecture_id,
-                    'start_time'    => $lecture->start_time,
+                    'lecture_id'            => $lecture->lecture_id,
+                    'lecture_start_time'    => $lecture->lecture_start_time,
                 ));
             }
         }

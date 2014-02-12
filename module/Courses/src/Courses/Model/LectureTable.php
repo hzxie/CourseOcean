@@ -47,8 +47,8 @@ class LectureTable
                           'itp_lectures.course_id = itp_courses.course_id');
             $select->join('itp_course_types',
                           'itp_courses.course_type_id = itp_course_types.course_type_id');
-            $select->join('itp_teacher', 
-                          'itp_courses.uid = itp_teacher.uid');
+            $select->join('itp_teachers', 
+                          'itp_courses.uid = itp_teachers.uid');
             $select->order('lecture_id DESC');
             $select->offset($offset);
             $select->limit($limit);

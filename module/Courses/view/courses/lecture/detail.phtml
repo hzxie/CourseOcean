@@ -10,7 +10,7 @@
         </div> <!-- #banner -->
         <div id="main-content">
             <div id="course-name"><?php echo $lecture['course_name'] ?></div> <!-- #course-name -->
-            <div id="brief" class="section"><?php echo $lecture['brief']; ?></div> <!-- #brief -->
+            <div id="brief" class="section"><?php echo $lecture['course_brief']; ?></div> <!-- #brief -->
             <?php if ( isset($lecture['course_objective']) ): ?>
                 <div id="objective" class="section">
                     <div class="title">课程目标</div>
@@ -39,15 +39,15 @@
                 <div class="title">讲师介绍</div>
                 <div id="teacher">
                     <div id="avatar">
-                        <?php if ( $teacher['avatar'] == null ): ?>
+                        <?php if ( $teacher['teacher_avatar'] == null ): ?>
                             <img class="img-circle" src="<?php echo $this->basePath(); ?>/img/avatar.png" alt="Avatar" />
                         <?php else: ?>
-                            <img class="img-circle" src="<?php echo $this->basePath($teacher['avatar']); ?>" alt="Avatar" />
+                            <img class="img-circle" src="<?php echo $this->basePath($teacher['teacher_avatar']); ?>" alt="Avatar" />
                         <?php endif; ?>
                     </div> <!-- #avatar -->
                     <div id="introduction">
-                        <div id="name"><?php echo $teacher['real_name']; ?></div>
-                        <div><?php echo $teacher['introduction']; ?></div>
+                        <div id="name"><?php echo $teacher['teacher_name']; ?></div>
+                        <div><?php echo $teacher['teacher_brief']; ?></div>
                     </div> <!-- #introduction -->
                 </div> <!-- #teacher -->
             </div> <!-- #teacher-introduction -->
@@ -65,13 +65,13 @@
                 </div>
                 <div class="item">
                     <div class="title">讲师</div>
-                    <div class="content"><?php echo $teacher['real_name']; ?></div>
+                    <div class="content"><?php echo $teacher['teacher_name']; ?></div>
                 </div>
                 <div class="item">
                     <div class="title">培训时间</div>
                     <div class="content">
-                        <strong>从 </strong><?php echo date('Y年m月d日', strtotime($lecture['start_time'])); ?><br />
-                        <strong>至 </strong><?php echo date('Y年m月d日', strtotime($lecture['end_time'])); ?>
+                        <strong>从 </strong><?php echo date('Y年m月d日', strtotime($lecture['lecture_start_time'])); ?><br />
+                        <strong>至 </strong><?php echo date('Y年m月d日', strtotime($lecture['lecture_end_time'])); ?>
                     </div>
                 </div>
                 <div class="item">
@@ -80,11 +80,11 @@
                 </div>
                 <div class="item">
                     <div class="title">培训费用</div>
-                    <div class="content"><?php echo $lecture['expense']; ?> 元</div>
+                    <div class="content"><?php echo $lecture['lecture_expense']; ?> 元</div>
                 </div>
                 <div class="item">
                     <div class="title">听众范围</div>
-                    <div class="content"><?php echo $lecture['audience']; ?></div>
+                    <div class="content"><?php echo $lecture['course_audience']; ?></div>
                 </div>
             </div> <!-- #info -->
             <div id="attend-lecture">
