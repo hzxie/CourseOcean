@@ -17,16 +17,16 @@ class LectureAttendance {
      */
     public function exchangeArray($data)
     {
-        $this->lecture_id       = (!empty($data['lecture_id']))         ? $data['lecture_id']       : null;
-        $this->uid              = (!empty($data['uid']))                ? $data['uid']              : null;
-        $this->course_name      = (!empty($data['course_name']))        ? $data['course_name']      : null;
-        $this->course_type_slug = (!empty($data['course_type_slug']))   ? $data['course_type_slug'] : null;
-        $this->start_time       = (!empty($data['start_time']))         ? $data['start_time']       : null;
-        $this->end_time         = (!empty($data['end_time']))           ? $data['end_time']         : null;
-        $this->real_name        = (!empty($data['real_name']))          ? $data['real_name']        : null;
-        $this->place_province   = (!empty($data['place_province']))     ? $data['place_province']   : null;
-        $this->place_city       = (!empty($data['place_city']))         ? $data['place_city']       : null;
-        $this->place_address    = (!empty($data['place_address']))      ? $data['place_address']    : null;
+        $this->lecture_id           = (!empty($data['lecture_id']))         ? $data['lecture_id']           : null;
+        $this->uid                  = (!empty($data['uid']))                ? $data['uid']                  : null;
+        $this->course_name          = (!empty($data['course_name']))        ? $data['course_name']          : null;
+        $this->course_type_slug     = (!empty($data['course_type_slug']))   ? $data['course_type_slug']     : null;
+        $this->lecture_start_time   = (!empty($data['lecture_start_time'])) ? $data['lecture_start_time']   : null;
+        $this->lecture_end_time     = (!empty($data['lecture_end_time']))   ? $data['lecture_end_time']     : null;
+        $this->teacher_name         = (!empty($data['teacher_name']))       ? $data['teacher_name']         : null;
+        $this->lecture_province     = (!empty($data['lecture_province']))   ? $data['lecture_province']     : null;
+        $this->lecture_city         = (!empty($data['lecture_city']))       ? $data['lecture_city']         : null;
+        $this->lecture_address      = (!empty($data['lecture_address']))    ? $data['lecture_address']      : null;
     }
 
     /**
@@ -57,35 +57,35 @@ class LectureAttendance {
      * The date when the lecture start.
      * @var Date
      */
-    public $start_time;
+    public $lecture_start_time;
 
     /**
      * The date when the lecture end.
      * @var Date
      */
-    public $end_time;
+    public $lecture_end_time;
 
     /**
      * The real name of the teacher.
      * @var String
      */
-    public $real_name;
+    public $teacher_name;
 
     /**
      * The province where the lecture is held.
      * @var String
      */
-    public $place_province;
+    public $lecture_province;
 
     /**
      * The city where the lecture is held.
      * @var String
      */
-    public $place_city;
+    public $lecture_city;
 
     /**
      * The address where the lecture is held.
      * @var String
      */
-    public $place_address;
+    public $lecture_address;
 }

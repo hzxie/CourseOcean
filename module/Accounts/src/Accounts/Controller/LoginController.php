@@ -23,9 +23,12 @@ class LoginController extends AbstractActionController
         if ( $this->isEnableAutoLogin() ) {
             return $this->sendRedirect('accounts/dashboard');
         }
-        
+
         $this->destroySession();
-        return array();
+        $param  = $this->params()->fromQuery();
+        return array(
+            'redirectUrl'   => $this->getRedirectUrl($param),
+        );
     }
 
     /**
@@ -38,6 +41,41 @@ class LoginController extends AbstractActionController
 
         $isEnableAutoLogin  = $session->offsetGet('allowAutoLogin');
         return $isEnableAutoLogin;
+    }
+
+    /**
+     * Get the redirect url after login.
+     * @param  Array $param - an array which contains information of 
+     *         previous page
+     * @return a string which stand for the redirect url
+     */
+    private function getRedirectUrl($param)
+    {
+        $basePath   = $this->basePath('');
+        foreach ( $param as $key => $value ) {
+            if ( $key == 'lectureId' ) {
+                return $basePath.'/courses/lecture/detail/'.$value;
+            } else if ( $key == 'newsId' ) {
+                return $basePath.'/courses/news/detail/'.$value;
+            } else if ( $key == 'courseId' ) {
+                return $basePath.'/courses/course/detail/'.$value;
+            } else if ( $key == 'RequirementId' ) {
+                return $basePath.'/courses/requirement/detail/'.$value;
+            } else {
+                return $basePath.'/accounts/dashboard';
+            }
+        }
+    }
+
+    /**
+     * Get the base path of the website.
+     * @return a string which stand for the base path of the website
+     */
+    private function basePath()
+    {
+        $renderer   = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
+        $url        = $renderer->basePath();
+        return $url;
     }
 
     /**

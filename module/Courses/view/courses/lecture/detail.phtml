@@ -76,7 +76,15 @@
                 </div>
                 <div class="item">
                     <div class="title">培训地点</div>
-                    <div class="content">(报名后查看详细地址)</div>
+                    <div class="content">
+                        <?php if ( !$isAttended ): ?>
+                        (报名后查看详细地址)
+                        <?php else: ?>
+                        <span><?php echo $lecture['lecture_province']; ?></span>
+                        <span><?php echo $lecture['lecture_city']; ?></span>
+                        <span><?php echo $lecture['lecture_address']; ?></span>
+                        <?php endif; ?>
+                    </div>
                 </div>
                 <div class="item">
                     <div class="title">培训费用</div>
@@ -88,7 +96,11 @@
                 </div>
             </div> <!-- #info -->
             <div id="attend-lecture">
-                <button class="btn btn-danger">我要报名</button>
+                <?php if ( !$isAttended ): ?>
+                <button id="attend-lecture" class="btn btn-danger" onclick="javascript:attendLecture()">我要报名</button>
+                <?php else: ?>
+                <button class="btn btn-danger" disabled="disabled">您已报名</button>
+                <?php endif; ?>
             </div> <!-- #attend-lecture -->
         </div> <!-- #overview -->
         <div id="social">
@@ -100,3 +112,53 @@
         </div> <!-- #social -->
     </div> <!-- #summary -->
 </div> <!-- #conetnt -->
+
+<?php $this->inlineScript()->captureStart(); ?>
+    function attendLecture() {
+    <?php if ( isset($isLogined)  && $isLogined ): ?>
+        var lectureID   = <?php echo $lecture['lecture_id']; ?>;
+        setButtonStyle(true);
+        doAttendLectureAction(lectureID);
+        setButtonStyle(false);
+    <?php else: ?>
+        alert('您还没有登录!\n单击确定后将为您跳转至登录页面.');
+        window.location.href="<?php echo $this->basePath('/accounts/login?lectureId='.$lecture['lecture_id']); ?>";
+    <?php endif; ?>
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function doAttendLectureAction(lectureID) {
+        var postData = 'lectureID=' + lectureID;
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: '<?php echo $this->basePath(); ?>/courses/lecture/attendLecture',
+            data: postData,
+            dataType: 'JSON',
+            success: function(result) {
+                processResult(result);
+            }
+        });
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function processResult(result) {
+        if ( result['isSuccessful'] ) {
+            window.location.reload();
+        } else {
+            alert("对不起, 报名未能成功.\n请稍候再试.");
+        }
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function setButtonStyle(isLoading) {
+        var attendButtonObject = $('#attend-lecture');
+        if ( isLoading ) {
+            attendButtonObject.html('正在处理...');
+            attendButtonObject.attr('disabled', 'disabled');
+        } else {
+            attendButtonObject.html('我要报名');
+            attendButtonObject.removeAttr('disabled');
+        }
+    }
+<?php $this->inlineScript()->captureEnd(); ?>

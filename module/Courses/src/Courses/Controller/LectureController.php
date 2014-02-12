@@ -2,7 +2,10 @@
 
 namespace Courses\Controller;
 
+use Zend\Http\PhpEnvironment\Response;
+use Zend\Json\Json;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Session\Container;
 use Zend\View\Helper\BasePath;
 
 /**
@@ -80,13 +83,16 @@ class LectureController extends AbstractActionController
     {
         $lectureID      = $this->params()->fromRoute('param');
         $lectureInfo    = $this->getLectureDetailInfo($lectureID);
+        $uid            = $this->isLogined();
 
         if ( $lectureInfo == null ) {
             return $this->notFoundAction();
         }
         return array(
-            'lecture'   => $lectureInfo,
-            'teacher'   => $this->getTeacherInfo($lectureInfo['uid']),
+            'lecture'       => $lectureInfo,
+            'isLogined'     => $uid,
+            'isAttended'    => $this->isAttended($uid, $lectureInfo['lecture_id']),
+            'teacher'       => $this->getTeacherInfo($lectureInfo['uid']),
         );
     }
 
@@ -228,5 +234,70 @@ class LectureController extends AbstractActionController
             }
         }
         return $teacherInfoArray;
+    }
+
+    /**
+     * Check if the user has logined.
+     * @return true if the user has logined
+     */
+    private function isLogined()
+    {
+        $session    = new Container('itp_session');
+        return $session->offsetGet('uid');
+    }
+
+    /**
+     * Check if the user has attended a lecture.
+     * @param  int $uid - the unique id of the user
+     * @param  int $lectureID - the unique id of the lecture
+     * @return true if the user has attended the lecture
+     */
+    private function isAttended($uid, $lectureID)
+    {
+        $sm                 = $this->getServiceLocator();
+        $attendanceTable    = $sm->get('Courses\Model\LectureAttendanceTable');
+        
+        return $attendanceTable->isAttended($uid, $lectureID);
+    }
+
+    /**
+     * Handle asynchronous attending lecture requests for the users.
+     * @return a HTTP response object which contains JSON data infers
+     *         whether the attendance operation is successful
+     */
+    public function attendLectureAction()
+    {
+        $lectureID  = $this->getRequest()->getPost('lectureID');
+        $uid        = $this->isLogined();
+
+        $result     = array(
+            'isSuccessful'  => $this->attendLecture($uid, $lectureID),
+        );
+
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * Handle asynchronous attending lecture requests for the users.
+     * @param  int $uid - the unique id of the user
+     * @param  int $lectureID - the unique id of the lecture
+     * @return true if the operation is successful
+     */
+    private function attendLecture($uid, $lectureID)
+    {
+        if ( $uid == 0 || $lectureID == 0 ) {
+            return false;
+        }
+        $sm                 = $this->getServiceLocator();
+        $attendanceTable    = $sm->get('Courses\Model\LectureAttendanceTable');
+        $attendanceRecord  = array(
+            'uid'           => $uid,
+            'lecture_id'    => $lectureID,
+        );
+        
+        return $attendanceTable->attendLecture($attendanceRecord);
     }
 }

@@ -58,4 +58,33 @@ class LectureAttendanceTable
         });
         return $resultSet;
     }
+
+    /**
+     * Check if the user has attended the lecture.
+     * @param  int $uid - the unique id of the user
+     * @param  int $lectureID - the unique id of the lecture
+     * @return true if the user has attended the lecture
+     */
+    public function isAttended($uid, $lectureID)
+    {
+        $rowset     = $this->tableGateway->select(
+            array(
+                'uid'           => $uid,
+                'lecture_id'    => $lectureID,
+            )
+        );
+        return $rowset->current();
+    }
+
+    /**
+     * Handle asynchronous attending lecture requests for the users.
+     * @param  Array $attendanceRecord - an array contains ensential data 
+     *         as a lecture attendance record
+     * @return true if the attendance operation is successful
+     */
+    public function attendLecture($attendanceRecord)
+    {
+        $this->tableGateway->insert($attendanceRecord);
+        return true;
+    }
 }
