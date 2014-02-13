@@ -1,80 +1,121 @@
-div#introduction {
-	background-color: #fff;
-	width: 100%;
+div#header {
+    background-color: transparent;
 }
 
-div#introduction div#banner {
-	background: url('../img/banner-homepage.jpg') no-repeat;
-	margin: 0 auto;
-	height: 274px;
-	width: 960px;
+div#slider {
+    text-align: center;
+    overflow: hidden;
+    width: 100%;
 }
 
-div#introduction div#banner button#courses {
-	font-size: 16px;
-	margin-top: 180px;
-	height: 50px;
-	width: 200px;
+div#slider img {
+    max-height: 100%;
+    max-width: 100%;
 }
 
-div#region-container {
-	background-color: #f0efef;
-	border-top: 1px solid #8a8c8f;
-	border-bottom: 1px solid #8a8c8f;
-	padding: 16px 0 12px;
-	width: 100%;
+div#quotes {
+    background-color: #161f2a;
+    color: #d8d8d8;
+    padding: 4px;
 }
 
-div#region-container div#region {
-	margin: 0 auto;
-	overflow: hidden;
-	width: 960px;
-	height: 54px;
+div#search-box {
+    margin: 0 auto;
+    position: relative;
+    top: -30px;
+    left: 0px;
+    width: 480px;
 }
 
-div#container div#content {
-	margin: 0 auto;
-	padding-top: 24px;
-	padding-bottom: 24px;
-	width: 960px;
+div#search-box input {
+    height: 40px;
+}
+
+div#search-box button {
+    height: 50px;   
+}
+
+div#quotes-content {
+    margin: 20px auto;
+    padding-bottom: 30px;
+    width: 960px;
+}
+
+div#quotes-content div.avatar {
+    float: left;
+    max-height: 80px;
+    max-width: 80px;
+}
+
+div#quotes-content div.quote {
+    margin-left: 120px;
+}
+
+div#quotes-content div.quote p.blockquote {
+    color: #6d8089;
+    font-size: 20px;
+    line-height: 28px;
+}
+
+div#quotes-content div.quote p.introduction {
+    color: #d8d8d8;
+    font-size: 14px;
 }
 
 div.section {
-	background-color: #fff;
-	border: 1px solid #565656;
-	color: #565656;
-	margin: 0 auto 24px auto;
-	overflow: hidden;
-	height: 225px;
-	width: 960px;
+    margin: 0 auto;
+    padding: 20px 0 20px 0;
+    width: 960px;
 }
 
-div.section div.left {
-	float: left;
-	width: 380px;
+div.section h3 {
+    text-align: center;
+    margin-bottom: 40px;
 }
 
-div.section div.right {
-	float: right;
-	width: 532px;
-	padding: 20px 28px 22px 20px;
+div.section div.block {
+    border: 1px solid #ebeef1;
+    margin-bottom: 20px;
+    padding: 8px;
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
 }
 
-div.right div.title {
-	border-bottom: 1px solid #b1b2b4;
-	overflow: hidden;
-	width: 100%;
+div.section div.block div.icon {
+    float: left;
+    padding: 8px 0 0 4px;
 }
 
-div.right div.title h1 {
-	float: left;
+div.section div.block div.content {
+    color: #8e959b;
+    font-size: 13px;
+    margin-left: 50px;
 }
 
-div.right div.title button {
-	float: right;
+div.section div.block div.content h4 {
+    color: #2f3536;
 }
 
-div.right div.content {
-	font-size: 16px;
-	margin-top: 16px;
+div.section div.block div.content i {
+    opacity: .6;
+}
+
+div#news {
+    background-color: #dce1e6;
+}
+
+div#partners-content {
+    margin: 0 auto;
+    padding: 20px 0 20px 0;
+    text-align: center;
+    width: 960px;
+}
+
+div#partners-content ul.inline {
+    margin: 20px 0 20px 0;
+}
+
+div#partners-content ul.inline li {
+    margin-right: 40px;
 }

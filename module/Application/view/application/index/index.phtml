@@ -1,45 +1,134 @@
 <?php 
-	echo $this->headTitle('首页 | ');
-	echo $this->headLink()->appendStylesheet($this->basePath().'/css/homepage.css');
+    echo $this->headTitle('首页 | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/homepage.css');
 ?>
 
-<div id="introduction">
-	<div id="banner">
-		<button id="courses" class="btn btn-primary">查看课程</button>
-	</div> <!-- #banner -->
-</div> <!-- #introduction -->
-<div id="region-container">
-	<div id="region">
-		Test
-	</div> <!-- #region -->
-</div> <!-- #region-container -->
 <div id="content">
-	<div id="courses" class="section">
-		<div class="left">
-			<img src="<?php echo $this->basePath(); ?>/img/courses.jpg" alt="Courses" />
-		</div> <!-- .left -->
-		<div class="right">
-			<div class="title">
-				<h1>课程库</h1>
-				<button class="btn btn-primary">查看所有课程</button>
-			</div> <!-- .title -->
-			<div class="content">
-				Courses are designed to be interesting, fun and rigorous. They are the best courses, from the best professors and the best schools, spanning dozens of subjects. Some edX courses now offer ID verified Certificates of Achievement. A new way to demonstrate your achievement and showcase your knowledge.
-			</div> <!-- .content -->
-		</div> <!-- .right -->
-	</div> <!-- #course -->
-	<div id="news" class="section">
-		<div class="left">
-			<img src="<?php echo $this->basePath(); ?>/img/news.jpg" alt="News" />
-		</div> <!-- .left -->
-		<div class="right">
-			<div class="title">
-				<h1>培训动态</h1>
-				<button class="btn btn-primary">查看培训动态</button>
-			</div> <!-- .title -->
-			<div class="content">
-				Stay informed about the latest stories being shared around the world on edX and the online learning movement. Read the most recent articles and announcements.
-			</div> <!-- .content -->
-		</div> <!-- .right -->
-	</div> <!-- #news -->
+    <div id="slider" class="carousel slide">
+        <div class="carousel-inner">
+            <div class="active item" style="background-color: #3eafe8;">
+                <img src="<?php echo $this->basePath(); ?>/img/sliders/home-world.png" alt="Slider Image">
+            </div>
+            <div class="item" style="background-color: #4db66b;">
+                <img src="<?php echo $this->basePath(); ?>/img/sliders/home-world.png" alt="Slider Image">
+            </div>
+            <div class="item" style="background-color: #7774bc;">
+                <img src="<?php echo $this->basePath(); ?>/img/sliders/home-world.png" alt="Slider Image">
+            </div>
+        </div>
+        <ol class="carousel-indicators">
+            <li data-target="#slider" data-slide-to="0" class="active"></li>
+            <li data-target="#slider" data-slide-to="1"></li>
+            <li data-target="#slider" data-slide-to="2"></li>
+        </ol>
+    </div> <!-- slider -->
+    <div id="quotes">
+        <div id="search-box">
+            <div class="input-append">
+                  <input class="span5" id="appendedInputButton" type="text" placeholder="搜索适合您的课程与讲师">
+                  <button class="btn btn-success" type="button">搜索</button>
+            </div>
+        </div> <!-- #search-box -->
+        <div id="quotes-content">
+            <div class="row">
+                <div class="span6">
+                    <div class="avatar">
+                        <img src="<?php echo $this->basePath(); ?>/img/avatars/avatar.png" alt="Avatar" class="img-circle" />
+                    </div> <!-- .avatar -->
+                    <div class="quote">
+                        <p class="blockquote">IT培训平台为我们提供最及时、最优质的培训!</p>
+                        <p class="introduction"></p>
+                    </div> <!-- .quote -->
+                </div> <!-- .span6 -->
+                <div class="span6">
+                    <div class="avatar">
+                        <img src="<?php echo $this->basePath(); ?>/img/avatars/kerry.png" alt="Avatar" class="img-circle" />
+                    </div> <!-- .avatar -->
+                    <div class="quote">
+                        <p class="blockquote">IT培训平台为我们提供最及时、最优质的培训!</p>
+                        <p class="introduction">朱少民, 曾任思科—网迅软件有限公司资深QA总监</p>
+                    </div> <!-- .quote -->
+                </div> <!-- .span6 -->
+            </div> <!-- .row -->
+        </div> <!-- quotes-content -->
+    </div> <!-- #quote -->
+    <div id="lectures">
+        <div id="lectures-content" class="row section">
+            <h3>我们推荐的课程</h3>
+            <div class="span6">
+                <div class="block">
+                    <div class="icon">
+                        <span class="label label-important">HOT</span>
+                    </div> <!-- .icon -->
+                    <div class="content">
+                        <h4>缔造高效团队与有效沟通</h4>
+                        <span><i class="icon-calendar"></i> 2014年02月28日~2014年03月02日</span>
+                        <span><i class="icon-user"></i> 张浩然</span>
+                        <p>项目领导力和沟通技巧旨在使您对主要领导能力有一个更好的了解，让您获得全然不同的领导体验。作为学习者，您需完成一项自我领导技巧测试，然…</p>
+                    </div> <!-- .content -->
+                </div> <!-- .block -->
+                <div class="block">
+                    <div class="icon">
+                        <span class="label label-success">NEW</span>
+                    </div> <!-- .icon -->
+                    <div class="content">
+                        <h4>互联网产品策划与用户体验设计</h4>
+                        <span><i class="icon-calendar"></i> 2014年03月28日~2014年03月31日</span>
+                        <span><i class="icon-user"></i> 光耀</span>
+                        <p>介绍产品经理尤其是互联网产品经理的职责；跨界，从产品之外的“社会学、心理学”等挖掘需求分析之道；核心围绕产品与需求，其次在运营、市场方面，提出…</p>
+                    </div> <!-- .content -->
+                </div> <!-- .block -->
+                <div class="block">
+                    <div class="icon">
+                        <span class="label label-important">HOT</span>
+                    </div> <!-- .icon -->
+                    <div class="content">
+                        <h4>软件测试技术及其自动化高级培训</h4>
+                        <span><i class="icon-calendar"></i> 2014年02月24日~2014年02月28日</span>
+                        <span><i class="icon-user"></i> 朱少民</span>
+                        <p>通过具体的案例来讨论相关主题，采用讨论＋实践相结合的方式，深入浅出讲解自动化测试精髓部分，从理念和实践两个层次解决学员所面临的问题，使培训内容能够真正落实到学员的日常工作中 强调与学员互…</p>
+                    </div> <!-- .content -->
+                </div> <!-- .block -->
+            </div> <!-- .span6 -->
+            <div class="span6">
+                <img src="<?php echo $this->basePath(); ?>/img/lectures.png" alt="Lectures" />
+            </div> <!-- .span6 -->
+        </div> <!-- #lectures-content -->
+    </div> <!-- #lectures -->
+    <div id="news">
+        <div id="news-content" class="row section">
+            <h3>培训动态</h3>
+            <div class="span6">
+                <img src="<?php echo $this->basePath(); ?>/img/news.png" alt="News" />
+            </div> <!-- .span6 -->
+            <div class="span6"></div> <!-- .span6 -->
+        </div> <!-- #news-content -->
+    </div> <!-- #news -->
+    <div id="partners">
+        <div id="partners-content">
+            <h3>我们的合作伙伴</h3>
+            <ul class="inline">
+                <li><img src="<?php echo $this->basePath(); ?>/img/partners/cisco.png" alt="Cisco" /></li>
+                <li><img src="<?php echo $this->basePath(); ?>/img/partners/webex.png" alt="WebEx" /></li>
+                <li><img src="<?php echo $this->basePath(); ?>/img/partners/taobao.png" alt="TaoBao" /></li>
+                <li><img src="<?php echo $this->basePath(); ?>/img/partners/sea-skylight.png" alt="Sea Skylight" /></li>
+                <li><img src="<?php echo $this->basePath(); ?>/img/partners/jielan.png" alt="JieLan" /></li>
+            </ul>
+        </div> <!-- #partners-content -->
+    </div> <!-- #partners -->
 </div> <!-- #content -->
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.carousel').carousel('cycle');
+    });
+</script>
+<script type="text/javascript">
+    $(window).scroll(function() {
+        if ( $(window).scrollTop() >= 260 ) {
+            $('#header').css('background-color', '#3eafe8');
+        } else {
+            $('#header').css('background-color', 'transparent');
+        }
+    });
+</script>

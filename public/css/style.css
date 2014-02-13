@@ -1,130 +1,99 @@
 html, body {
-	background-color: #f5f5f5;
-	margin: 0 auto;
-	padding: 0;
+    background-color: #f5f5f5;
+    margin: 0 auto;
+    padding: 0;
 }
 
 div#header {
-	border-bottom: 1px solid #8a8c8f;
-	box-shadow: 0 1px 5px 0 rgba(0,0,0,0.1);
-	background: #fff;
-	padding: 16px 0;
-	position: relative;
-	width: 100%;
-	z-index: 32;
+    background-color: #3eafe8;
+    font-size: 16px;
+    padding: 16px 0;
+    position: fixed;
+    top: 0;
+    overflow: hidden;
+    width: 100%;
+    z-index: 32767;
 }
 
 div#header-container {
-	font-size: 16px;
-	margin: 0 auto;
-	height: 48px;
-	width: 960px;
+    margin-left: 32px;
+    margin-right: 32px;
 }
 
 div#header div#logo {
-	float: left;
-	margin-right: 48px;
+    float: left;
+    margin-top: 8px;
+    margin-right: 16px;
 }
 
 div#header div#navigation {
-	float: left;
-	padding-top: 12px;
-	overflow: hidden;
+    float: left;
+    padding-top: 12px;
+    overflow: hidden;
 }
 
 div#header div#accounts {
-	float: right;
-	padding-top: 8px;
-}
-
-div#header div#navigation li {
-	margin-right: 16px;
+    float: right;
+    padding-top: 8px;
 }
 
 div#header div#navigation a {
-	color: #565656;
-	font-weight: 600;
-	text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+    padding: 10px 15px;
+    text-decoration: none;
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
 }
 
-div#header div#navigation a:hover {
-	color: #1790c7;
+div#header div#navigation a.active {
+    background-color: rgba(22,31,42,0.3);
+}
+
+div#header div#navigation a:hover,
+div#header div#navigation a.active:hover {
+    background-color: #182630;
 }
 
 div#container {
-	background-color: #f5f5f5;
+    background-color: #f5f5f5;
 }
 
 div#footer {
-	box-shadow: 0 -1px 5px 0 rgba(0,0,0,0.1);
-	border-top: 1px solid #c4c5c7;
-	padding: 25px 10px 30px 10px;
-	background: #fff;
+    background-color: #121418;
+    color: #6d8089;
+    padding: 20px 0 20px;
 }
 
 div#footer-container {
-	margin: 0 auto;
-	overflow: auto;
-	width: 960px;
+    margin: 0 auto;
+    overflow: hidden;
+    width: 960px;
 }
 
-div#footer div#colophon {
-	float: left;
-	width: 66%;
+div#footer-container a {
+    color: #6d8089;
+    text-decoration: none;
 }
 
-div#footer div#colophon ul {
-	margin: 5px 0 30px 0;
+div#footer-container h5 {
+    color: #d1dbe7;
+    margin-bottom: 20px;
 }
 
-div#footer div#nav-colophon a {
-	color: #333;
-	text-decoration: none;
+div#footer-container ul {
+    list-style: none;
+    margin: 0;
 }
 
-div#footer div#nav-colophon a:hover {
-	color: #1d9dd9;
+div#copyright {
+    border-top: 1px solid #565656;
+    font-size: 12px;
+    margin-top: 40px;
+    padding-top: 10px;
 }
 
-div#footer div#introduction {
-	color: #888;
-	font-size: 12px;
-}
-
-div#footer div#introduction img#footer-logo {
-	float: left;
-	padding-right: 24px;
-	max-width: 93px;
-	max-height: 34px;
-}
-
-div#footer div#introduction img#footer-divider {
-	float: left;
-	padding-right: 24px;
-}
-
-div#footer div#reference {
-	float: right;
-	width: 33%;
-}
-
-div#footer div#reference div#social-icons {
-	text-align: right;
-}
-
-div#footer div#reference img.social-icon {
-	max-width: 36px;
-	max-height: 36px;
-}
-
-div#footer div#reference p#copyright {
-	margin-bottom: 8px;
-	font-size: 13px;
-	color: #c4c5c7;
-	text-align: right;
-}
-
-div#footer div#reference div#legal {
-	font-size: 12px;
-	text-align: right;
+div#copyright div.span4 {
+    text-align: right;
 }

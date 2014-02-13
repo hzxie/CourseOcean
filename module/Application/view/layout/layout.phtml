@@ -1,114 +1,105 @@
 <?php echo $this->doctype(); ?>
 <html>
 <head>
-	<meta charset="utf-8" />
-	<?php echo $this->headTitle('IT自助培训平台') ?>
-	<?php echo $this->headMeta()
-		->appendName('viewport', 'width=device-width, initial-scale=1.0')
-		->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
-	?>
-	<!-- CSS -->
-	<?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
-					->prependStylesheet($this->basePath() . '/css/style.css')
-					->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
-					->prependStylesheet($this->basePath() . '/css/bootstrap-responsive.min.css') ?>
-	<!-- Java Script -->
-	<?php echo $this->headScript()
-		->prependFile($this->basePath() . '/js/bootstrap.min.js')
-		->prependFile($this->basePath() . '/js/jquery-1.11.0.min.js')
-	; ?>
+    <meta charset="utf-8" />
+    <?php echo $this->headTitle('IT自助培训平台') ?>
+    <?php echo $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
+    <!-- CSS -->
+    <?php echo $this->headLink(array('rel' => 'shortcut icon', 'href' => $this->basePath('/img/favicon.png')))
+                    ->appendStylesheet($this->basePath() . '/css/style.css')
+                    ->appendStylesheet($this->basePath() . '/css/bootstrap.min.css')
+    ; ?>
+    <!-- Java Script -->
+    <?php echo $this->headScript()
+        ->prependFile($this->basePath() . '/js/bootstrap.min.js')
+        ->prependFile($this->basePath() . '/js/jquery-1.11.0.min.js')
+    ; ?>
 
 </head>
 <body>
-	<div id="header">
-		<div id="header-container">
-			<?php
-				if ( !(isset( $isHomePage ) && $isHomePage) ) {
-			?>
-			<div id="logo">
-				<a href="<?php echo $this->basePath(); ?>" title="首页">
-					<img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
-				</a>
-			</div> <!-- #logo -->
-			<?php } ?>
-			<div id="navigation">
-				<ul class="inline">
-					<li><a href="<?php echo $this->basePath(); ?>/courses/lecture">近期开课</a></li>
-					<li><a href="<?php echo $this->basePath(); ?>/courses/news">培训动态</a></li>
-					<li><a href="<?php echo $this->basePath(); ?>/courses/course">课程库</a></li>
-					<li><a href="<?php echo $this->basePath(); ?>/courses/teacher">讲师团队</a></li>
-					<li><a href="<?php echo $this->basePath(); ?>/courses/requirement">需求定制</a></li>
-				</ul>
-			</div> <!-- navigation -->
+    <div id="header">
+        <div id="header-container">
+            <div id="logo">
+                <a href="<?php echo $this->basePath(); ?>" title="首页">
+                    <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+                </a>
+            </div> <!-- #logo -->
+            <div id="navigation">
+                <ul class="inline">
+                    <li><a href="<?php echo $this->basePath(); ?>/courses/lecture">近期开课</a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/courses/news">培训动态</a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/courses/course">课程库</a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/courses/teacher">讲师团队</a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/courses/requirement">需求定制</a></li>
+                </ul>
+            </div> <!-- navigation -->
             <div id="accounts">
-			<?php
-				$session    = new Zend\Session\Container('itp_session');
-				if ( !$session->offsetExists('isLogined') ) {
-			?>
-				<button class="btn" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">注册</button>
-				<button class="btn btn-primary" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/login'">登录</button>
-			<?php } else { ?>
-				<div class="btn-group">
-					<button class="btn" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/dashboard'">
-						<span><i class="icon-home"></i></span>
-						<span><?php echo $session->offsetGet('username'); ?></span>
-					</button>
-  					<button class="btn dropdown-toggle" data-toggle="dropdown">
-    					<span class="caret"></span>
-  					</button>
-  					<ul class="dropdown-menu">
-  						<li><a href="#">帮助与支持</a></li>
-  						<li class="divider"></li>
-  						<li><a href="<?php echo $this->basePath(); ?>/accounts/logout">注销</a></li>
-  					</ul>
-				</div>
-            <?php } ?>
+            <?php
+                $session    = new Zend\Session\Container('itp_session');
+                if ( !$session->offsetExists('isLogined') ):
+            ?>
+                <button class="btn" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">注册</button>
+                <button class="btn btn-primary" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/login'">登录</button>
+            <?php else: ?>
+                <button class="btn" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/dashboard'">
+                    <span><i class="icon-home"></i></span>
+                    <span><?php echo $session->offsetGet('username'); ?></span>
+                </button>
+            <?php endif; ?>
             </div> <!-- #accounts -->
-		</div> <!-- #header-container -->
-	</div> <!-- #header -->
-	<div id="container">
-		<?php echo $this->content; ?>
-	</div> <!-- #container -->
-	<div id="footer">
-		<div id="footer-container">
-			<div id="colophon">
-				<div id="nav-colophon">
-					<ul class="inline">
-						<li><a href="#">关于我们</a></li>
-						<li><a href="#">合作信息</a></li>
-						<li><a href="#">帮助信息</a></li>
-						<li><a href="#">联系我们</a></li>
-					</ul>
-				</div> <!-- #nav-colophon -->
-				<div id="introduction">
-					<p>
-						<img id="footer-logo" src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo in footer" />
-						<img id="footer-divider" src="<?php echo $this->basePath(); ?>/img/footer-divider.jpg" alt="footer divider" />
-						EdX offers interactive online classes and MOOCs from the world’s best universities. Online courses from MITx, HarvardX, BerkeleyX, UTx and many other universities. Topics include biology, business, chemistry, computer science, economics, finance, electronics, engineering, food and nutrition, history, humanities, law, literature, math, medicine, music, philosophy, physics, science, statistics and more. 
-					</p>
-				</div>
-			</div> <!-- #colophon -->
-			<div id="reference">
-				<div id="social-icons">
-					<ul class="inline">
-						<li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/sina.png" alt="Sina Icon"></a></li>
-						<li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/wechat.png" alt="WeChat Icon"></a></li>
-						<li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/laiwang.png" alt="LaiWang Icon"></a></li>
-						<li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/google-plus.png" alt="Google+ Icon"></a></li>
-					</ul>
-				</div> <!-- #social-icons -->
-				<p id="copyright">&copy;<?php echo date('Y'); ?> IT Training Platform. All rights reserved.</p>
-				<div id="legal">
-					<ul class="inline">
-						<li><a href="#">服务条款</a></li>
-						<li><a href="#">隐私政策</a></li>
-					</ul>
-				</div> <!-- legal -->
-			</div> <!-- #reference -->
-		</div> <!-- #footer-container -->
-	</div> <!-- #footer -->
-	<!-- JavaScript -->
-	<!-- Placed at the end of the document so the pages load faster -->
-	<?php echo $this->inlineScript() ?>
+        </div> <!-- #header-container -->
+    </div> <!-- #header -->
+    <div id="container">
+        <?php echo $this->content; ?>
+    </div> <!-- #container -->
+    <div id="footer">
+        <div id="footer-container">
+            <div class="row">
+                <div class="span4">
+                    <h5>关注我们</h5>
+                    <ul class="inline">
+                        <li><a href="#" title="新浪微博"><img src="<?php echo $this->basePath(); ?>/img/socials/weibo.png" alt="WeiBo"></a></li>
+                        <li><a href="#" title="微信"><img src="<?php echo $this->basePath(); ?>/img/socials/wechat.png" alt="WeChat"></a></li>
+                        <li><a href="#" title="腾讯微博"><img src="<?php echo $this->basePath(); ?>/img/socials/tencent.png" alt="tencent"></a></li>
+                        <li><a href="#" title="来往"><img src="<?php echo $this->basePath(); ?>/img/socials/laiwang.png" alt="LaiWang"></a></li>
+                    </ul>
+                </div> <!-- .span4 -->
+                <div class="span4">
+                    <h5>联系我们</h5>
+                    <p>
+                        <span>地址: </span><br />
+                        <span>电话: </span>
+                    </p>
+                </div> <!-- .span4 -->
+                <div class="span4">
+                    <h5>帮助与支持</h5>
+                    <ul>
+                        <li><a href="#">帮助中心</a></li>
+                        <li><a href="#">服务条款</a></li>
+                        <li><a href="#">关于我们</a></li>
+                    </ul>
+                </div> <!-- .span4 -->
+            </div> <!-- .row -->
+            <div id="copyright" class="row">
+                <div class="span8">
+                    Copyright&copy; <?php echo date('Y'); ?> IT Training Platform. All rights reserved.
+                </div> <!-- .span8 -->
+                <div class="span4">
+                    <a href="javascript:scrollToTop();">返回页首</a>
+                </div> <!-- .span4 -->
+            </div> <!-- .row -->
+        </div> <!-- #footer-container -->
+    </div> <!-- #footer -->
+    <!-- JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript">
+        function scrollToTop() {
+            $('html, body').animate({ scrollTop: 0 }, 'slow');
+        }
+    </script>
+    <?php echo $this->inlineScript() ?>
 </body>
 </html>
