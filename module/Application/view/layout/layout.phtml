@@ -29,11 +29,19 @@
             </div> <!-- #logo -->
             <div id="navigation">
                 <ul class="inline">
-                    <li><a href="<?php echo $this->basePath(); ?>/courses/lecture">近期开课</a></li>
-                    <li><a href="<?php echo $this->basePath(); ?>/courses/news">培训动态</a></li>
-                    <li><a href="<?php echo $this->basePath(); ?>/courses/course">课程库</a></li>
-                    <li><a href="<?php echo $this->basePath(); ?>/courses/teacher">讲师团队</a></li>
-                    <li><a href="<?php echo $this->basePath(); ?>/courses/requirement">需求定制</a></li>
+                <?php
+                    $navItemArray   = array(
+                        'lecture'       => '近期开课',
+                        'news'          => '培训动态',
+                        'course'        => '课程库',
+                        'teacher'       => '讲师团队',
+                        'requirement'   => '需求定制',
+                    );
+                    foreach ( $navItemArray as $key => $value ) { 
+                        $navUrl     = $this->basePath("/courses/$key");
+                ?>
+                        <li><a href="<?php echo $navUrl; ?>"><?php echo $value; ?></a></li>
+                <?php } ?>
                 </ul>
             </div> <!-- navigation -->
             <div id="accounts">
@@ -44,10 +52,20 @@
                 <button class="btn" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">注册</button>
                 <button class="btn btn-primary" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/login'">登录</button>
             <?php else: ?>
+            <div class="btn-group">
                 <button class="btn" onclick="javascript:window.location.href='<?php echo $this->basePath(); ?>/accounts/dashboard'">
                     <span><i class="icon-home"></i></span>
                     <span><?php echo $session->offsetGet('username'); ?></span>
                 </button>
+                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#">帮助与支持</a></li>
+                    <li class="divider"></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/logout">注销</a></li>
+                </ul>
+            </div>
             <?php endif; ?>
             </div> <!-- #accounts -->
         </div> <!-- #header-container -->

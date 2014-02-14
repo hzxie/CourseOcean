@@ -1,34 +1,113 @@
 <?php 
-	echo $this->headTitle('培训动态 | ');
-	echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/news.css');
+    echo $this->headTitle('培训动态 | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/news.css');
+    echo $this->headScript()->appendFile($this->basePath().'/js/stick-up.min.js');
 ?>
 
 <div id="content">
-	<div id="banner">
-		<div id="title">
-			<h1>培训动态</h1>
-			<h2>掌握培训的风向标</h2>
-		</div> <!-- #title -->
-	</div> <!-- #banner -->
-	<div id="main-content">
-		<div id="sidebar">
-			<ul>
-				<li>分类名称1</li>
-				<li>分类名称2</li>
-				<li>分类名称3</li>
-			</ul>
-		</div> <!-- #sidebar -->
-		<div id="news">
-			<div class="section">
-				<div class="avatar">
-					<img src="" alt="" />
-				</div> <!-- .avatar -->
-				<div class="content">
-					<h2><a href="#">World Economic Forum Launches "Forum Academy" MOOC Portal Using edX Platform</a></h2>
-					<p class="meta">2014年2月3日</p>
-					<p>For decades, the World Economic Forum has enabled leaders in business, policy and academia to meet and learn from one another at events held in Davos, Switzerland and many other locations around the world. These gatherings have provided the setting for an exchange of ideas that have helped set the direction for solutions to critical global problems. Now, with the creation of Forum Academy, the World Economic Forum (WEF) will provide a much wider audience with the opportunity to participate in a discussion addressing global, regional and industry challenges through courses created using the cutting-edge platform and tools innovated by edX.</p>
-				</div> <!-- .content -->
-			</div> <!-- .section -->
-		</div> <!-- #news -->
-	</div> <!-- #main-content -->
+    <div id="banner">
+        <div id="banner-content">
+            <div id="slogan">
+                <h2>培训动态</h2>
+                <h4>查看培训的风向标</h4>
+            </div> <!-- #slogan -->
+            <form id="search" class="navbar-search pull-right">
+                <input type="text" class="search-query" />
+                <button type="submit" class="btn btn-success">搜索</button>
+            </form>
+        </div> <!-- #banner-content -->
+    </div> <!-- #banner -->
+    <div id="main-container">
+        <div id="main-content">
+            <div id="sidebar">
+                <h4>分类目录</h4>
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="#">未分类</a></li>
+                </ul>
+            </div> <!-- #sidebar -->
+            <div id="news-content">
+            <?php for ( $i = 0; $i < 10; ++ $i ) { ?>
+                <div class="section">
+                    <div class="icon">
+                        <img src="<?php echo $this->basePath(); ?>/img/icons/post.png" alt="Post">
+                    </div>
+                    <div class="news">
+                        <a href="#" target="_blank">
+                            <h4>See when recipients open your Gmail attachments with docTrackr</h4>
+                            <div class="meta">
+                                <span><i class="icon-th-list"></i> 培训通知</span>
+                                <span><i class="icon-calendar"></i> <?php echo date('Y年m月d日'); ?></span>
+                            </div> <!-- .meta -->
+                            <p>DocTrackr is a security layer that sits on top of file sharing services such as Box and Microsoft Sharepoint. Once you sent a document out of your system, it was truly out of your hands, until now.</p>
+                        </a>
+                    </div>
+                </div>
+            <?php } ?>
+                <div id="pagination" class="pagination pagination-centered">
+                    <ul>
+                    <?php
+                        $basePath = $this->basePath().'/courses/news/page/';
+                        $currentPageNumber = 10;
+                        $numberOfPages     = 20;
+                    ?>
+                    <?php if ( $currentPageNumber > 1 ): ?>
+                        <li><a href="<?php echo $basePath.($currentPageNumber - 1); ?>">&lt;</a></li>
+                    <?php else: ?>
+                        <li class="disabled"><a>&lt;</a></li>
+                    <?php endif; ?>
+                    <?php
+                        $lowerBound = $currentPageNumber - 5;
+                        $lowerBound = ( $lowerBound > 0 ) ? $lowerBound : 1;
+                        $upperBound = $currentPageNumber + 4;
+                        $upperBound = ( $upperBound <= $numberOfPages ) ? $upperBound : $numberOfPages;
+
+                        for ( $i = $lowerBound; $i <= $upperBound; ++ $i ) {
+                            if ( $i == $currentPageNumber ) {
+                                echo "<li class=\"active\"><a>$i</a></li>";
+                            } else {
+                                echo "<li><a href=\"$basePath$i\">$i</a></li>";
+                            }
+                        }
+                    ?>
+                    <?php if ( $currentPageNumber < $numberOfPages ): ?>
+                        <li><a href="<?php echo $basePath.($currentPageNumber + 1); ?>">&gt;</a></li>
+                    <?php else: ?>
+                        <li class="disabled"><a>&gt;</a></li>
+                    <?php endif; ?>
+                    </ul>
+                </div> <!-- #pagination-->
+            </div> <!-- #news-content -->
+        </div> <!-- #main-content -->
+    </div> <!-- #main-container -->
 </div> <!-- #content -->
+
+<?php $this->inlineScript()->captureStart(); ?>
+    jQuery(function($) {
+        $(document).ready( function() {
+            $('#sidebar').stickUp();
+        });
+    });
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    $(window).scroll(function() {
+        setSidebarVisibility();
+    });
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function setSidebarVisibility() {
+        var sidebarHeight   = $('#sidebar').outerHeight(),
+            headerHeight    = $('#header').outerHeight(),
+            footerOffsetTop = $('#footer').offset().top - $(window).scrollTop() - headerHeight,
+            offset          = footerOffsetTop - sidebarHeight - headerHeight;
+        console.log( 'OffsetTop = ' + footerOffsetTop + "\n" + 'sidebarHeight = ' + sidebarHeight );
+        if ( footerOffsetTop < sidebarHeight ) {
+            $('#sidebar').css('top', offset);
+        } else {
+            if ( $('#sidebar').hasClass('isStuck') ) {
+                $('#sidebar').css('top', 96);
+            } else {
+                $('#sidebar').css('top', 0);
+            }
+        }
+    }
+<?php $this->inlineScript()->captureEnd(); ?>

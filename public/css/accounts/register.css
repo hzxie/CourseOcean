@@ -23,13 +23,11 @@ div#content div#main-container {
 
 div#main-container div#introduction {
 	margin-top: 60px;
-	margin-left: 0;
-	margin-right: 20px;
 }
 
 div#introduction div#features div.feature {
 	overflow: hidden;
-	margin-bottom: 60px;
+	margin: 0 60px 60px 0;
 }
 
 div.feature div.icon {
