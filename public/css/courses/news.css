@@ -1,78 +1,70 @@
 div#content {
-	background-color: #fff;
-	margin: 0 auto;
-	width: 960px;
+	padding-top: 74px;
 }
 
 div#content div#banner {
-	background: url('../../img/banner-courses.jpg') no-repeat;
-	border-bottom: 1px solid #8a8c8f;
-	height: 120px;
+	background-color: #3995c4;
+	color: #fff;
+	padding-top: 25px;
+	padding-bottom: 25px;
 }
 
-div#content div#banner div#title {
-	padding-top: 30px;
-	padding-left: 50px;
-}
-
-div#content div#banner div#title h1 {
-	color: #1790c7;
-}
-
-div#content div#banner div#title h2 {
-	padding-left: 20px;
-}
-
-div#content div#main-content {
-	position: relative;
-	height: auto;
+div#banner div#banner-content {
+	margin: 0 auto;
 	overflow: hidden;
+	width: 960px;
 }
 
-div#main-content div#sidebar {
-	background-color: #e6f4fb;
-	position: absolute;
-	top: 0;
-	left: 0;
-	height:100%;
-	min-height: 500px;
-	width: 260px;
+div#banner-content div#slogan {
+	float: left;
 }
 
-div#main-content div#sidebar ul {
-	margin: 50px 0 0 75px;
+div#banner-content form#search {
+	margin-top: 50px;
 }
 
-div#main-content div#sidebar li {
-	color: #565656;
-	list-style: none;
-	font-weight: bold;
-	font-size: 16px;
-	line-height: 50px;
-}
-
-div#main-content div#news {
-	margin-left: 260px;
-	width: 670px;
-	padding: 15px;
+div#content div#main-container {
+	margin: 0 auto;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	width: 960px;
 }
 
 div#main-content div.section {
-	border-bottom: 1px dotted #aeaeae;
-	margin-bottom: 15px;
+	border: 1px solid #ebeef1;
+	color: #8e959b;
+	font-size: 16px;
+	margin-bottom: 20px;
+	padding-bottom: 20px;
 	overflow: hidden;
+	-webkit-border-radius: 4px;
+	   -moz-border-radius: 4px;
+			border-radius: 4px;
 }
 
-div.section div.avatar {
+div.section div.icon {
 	float: left;
-	width: 100px;
+	margin: 4px;
 }
 
-div.section div.content {
-	margin-left: 120px;
+div.section div.news {
+	margin-left: 80px;
 }
 
-div.section div.content p {
-	color: #565656;
+div.section a {
+	color: #8e959b;
+	text-decoration: none;
+}
+
+div.section div.news h4 {
+	color: #2f3536;
+}
+
+div.section div.news div.meta {
 	font-size: 12px;
+	margin-bottom: 10px;
+}
+
+div.section div.news div.meta span {
+	margin-right: 20px;
 }
