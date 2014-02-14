@@ -33,10 +33,17 @@ class DashboardController extends AbstractActionController
         if ( !$this->isAllowedToAccess() ) {
             return $this->sendRedirect('accounts/login');
         }
+        if ( !$this->isActivated() ) {
+            return $this->sendRedirect('accounts/register/verifyEmail');   
+        }
         
         $this->profile  = $this->getUserData();
         $uid            = $this->profile['uid'];
         $userGroupSlug  = $this->profile['userGroupSlug'];
+
+        if ( true ) {
+            return $this->sendRedirect('accounts/register/completeProfile');
+        }
 
         $view = new ViewModel(
             array( 
@@ -55,6 +62,16 @@ class DashboardController extends AbstractActionController
     {
         $session    = new Container('itp_session');
         return $session->offsetExists('isLogined');
+    }
+
+    /**
+     * Check if the user has verified email.
+     * @return true if the user's email has been verified
+     */
+    private function isActivated()
+    {
+        $session    = new Container('itp_session');
+        return $session->offsetExists('isActivated');
     }
 
     /**

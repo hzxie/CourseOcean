@@ -5923,6 +5923,7 @@ a.badge:focus {
 .carousel-inner > .item > img,
 .carousel-inner > .item > a > img {
 	display: block;
+	margin: 0 auto;
 	line-height: 1;
 }
 

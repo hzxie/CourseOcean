@@ -51,7 +51,8 @@ class LoginController extends AbstractActionController
      */
     private function getRedirectUrl($param)
     {
-        $basePath   = $this->basePath('');
+        $basePath       = $this->basePath('');
+
         foreach ( $param as $key => $value ) {
             if ( $key == 'lectureId' ) {
                 return $basePath.'/courses/lecture/detail/'.$value;
@@ -152,8 +153,9 @@ class LoginController extends AbstractActionController
             'uid'               => $user->uid,
             'username'          => $user->username,
             'email'             => $user->email,
-            'user_group_id'     => $user->user_group_id,
-            'last_time_signin'  => $user->last_time_signin,
+            'isActivated'       => $user->is_activated,
+            'userGroupID'       => $user->user_group_id,
+            'lastTimeSignIn'    => $user->last_time_signin,
         );
 
         return $userData;
@@ -172,8 +174,9 @@ class LoginController extends AbstractActionController
         $session->offsetSet('uid', $userData['uid']);
         $session->offsetSet('username', $userData['username']);
         $session->offsetSet('email', $userData['email']);
-        $session->offsetSet('userGroupID', $userData['user_group_id']);
-        $session->offsetSet('lastTimeSignIn', $userData['last_time_signin']);
+        $session->offsetSet('isActivated', $userData['isActivated']);
+        $session->offsetSet('userGroupID', $userData['userGroupID']);
+        $session->offsetSet('lastTimeSignIn', $userData['lastTimeSignIn']);
     }
 
 

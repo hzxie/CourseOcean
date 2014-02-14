@@ -4,7 +4,10 @@ namespace Accounts\Controller;
 
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Json\Json;
+use Zend\Mail;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Session\Container;
+use Zend\View\Model\ViewModel;
 
 /**
  * Handle requests on the register page.
@@ -19,10 +22,7 @@ class RegisterController extends AbstractActionController
      */
     public function indexAction()
     {
-        return array(
-            // 'courseTypes'   => ,
-            // 'positions'     => ,
-        );
+        return array();
     }
 
     /**
@@ -35,18 +35,8 @@ class RegisterController extends AbstractActionController
         $basicInfoArray             = $this->getBasicInfoArray();
         $result                     = $this->verifyBasicInfo($basicInfoArray);
         
-        $userGroupSlug              = $basicInfoArray['userGroupSlug'];
-        $getExtraInfoFunction       = 'get'.    $userGroupSlug.'InfoArray';
-        $verifyExtraInfoFunction    = 'verify'. $userGroupSlug.'Info';
-        $processExtraInfoFunction   = 'process'.$userGroupSlug.'Action';
-
-        $extraInfoArray             = $this->$getExtraInfoFunction();
-        $result                    += $this->$verifyExtraInfoFunction($extraInfoArray);
-
-        $result['isSuccessful']     = false;
-        if ( $result['isBasicSuccessful'] && $result['isDetailSuccessful'] ) {
-            $uid                    = $this->processBasicAction($basicInfoArray);
-            $result['isSuccessful'] = $this->$processExtraInfoFunction($uid, $extraInfoArray);
+        if ( $result['isSuccessful'] ) {
+            $result['isSuccessful'] = $this->processBasicAction($basicInfoArray);
         }
 
         $response = $this->getResponse();
@@ -63,6 +53,8 @@ class RegisterController extends AbstractActionController
      */
     private function processBasicAction($basicInfoArray)
     {
+        $this->createSession($basicInfoArray);
+
         $sm                 = $this->getServiceLocator();
         $userTable          = $sm->get('Accounts\Model\UserTable');
 
@@ -118,12 +110,14 @@ class RegisterController extends AbstractActionController
             'isPasswordLegal'           => $this->isPasswordLegal($basicInfo['password']),
             'isConfirmPasswordEmpty'    => empty($basicInfo['confirmPassword']),
             'isConfirmPasswordMatched'  => ($basicInfo['password'] == $basicInfo['confirmPassword']),
+            'isUserGroupLegal'          => ($basicInfo['userGroupID'] != 0),
         );
-        $result['isBasicSuccessful']    = !$result['isUsernameEmpty']        &&  $result['isUsernameLegal'] &&
-                                          !$result['isUsernameExists']       && !$result['isEmailEmpty']    && 
-                                           $result['isEmailLegal']           && !$result['isEmailExists']   &&
-                                          !$result['isPasswordEmpty']        &&  $result['isPasswordLegal'] &&
-                                          !$result['isConfirmPasswordEmpty'] &&  $result['isConfirmPasswordMatched'];
+        $result['isSuccessful']         = !$result['isUsernameEmpty']        &&  $result['isUsernameLegal']          &&
+                                          !$result['isUsernameExists']       && !$result['isEmailEmpty']             && 
+                                           $result['isEmailLegal']           && !$result['isEmailExists']            &&
+                                          !$result['isPasswordEmpty']        &&  $result['isPasswordLegal']          &&
+                                          !$result['isConfirmPasswordEmpty'] &&  $result['isConfirmPasswordMatched'] &&
+                                           $result['isUserGroupLegal'];
         return $result;
     }
 
@@ -209,6 +203,105 @@ class RegisterController extends AbstractActionController
             return null;
         }
         return $userGroup->user_group_id;
+    }
+
+    /**
+     * Create a session for a registering user.
+     * @param  Array $basicInfoArray - an array which contains user's profile
+     */
+    private function createSession($basicInfoArray)
+    {
+        $session    = new Container('itp_session');
+        
+        $session->offsetSet('isLogined', true);
+        $session->offsetSet('username', $basicInfoArray['username']);
+        $session->offsetSet('email', $basicInfoArray['email']);
+        $session->offsetSet('isActivated', false);
+        $session->offsetSet('userGroupID', $basicInfoArray['userGroupID']);
+    }
+
+    /**
+     * Send HTTP redirect reponse.
+     * @param  String $redirectPath - the pasth to redirect
+     * @return an HTTP redirect reponse object
+     */
+    private function sendRedirect($redirectPath = '')
+    {
+        $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
+        $url = $renderer->basePath($redirectPath);
+        $redirect = $this->plugin('redirect');
+
+        return $redirect->toUrl($url);
+    }
+
+    /**
+     * [verifyEmailAction description]
+     * @return a ViewModel object which contains HTML content
+     */
+    public function verifyEmailAction()
+    {
+        if ( !$this->isAllowedToAccess() ) {
+            return $this->sendRedirect('accounts/register');
+        }
+
+        $email = $this->getEmailAddress();
+        $this->sendValidationEmail($email);
+        return array(
+            'email'     => $email,
+        );
+    }
+
+    /**
+     * Check if the user has logined.
+     * @return true if the user has logined
+     */
+    private function isAllowedToAccess()
+    {
+        $session    = new Container('itp_session');
+        return $session->offsetExists('isLogined');
+    }
+
+    private function getEmailAddress()
+    {
+        $session    = new Container('itp_session');
+        return $session->offsetGet('email');
+    }
+
+    private function sendValidationEmail($email)
+    {
+        $mail   = new Mail\Message();
+        $mail->setBody($this->getMailContent())
+             ->setFrom('noreply@zjhzxhz.com', 'IT培训平台')
+             ->addTo($email, $email)
+             ->setSubject('欢迎使用IT培训平台');
+    }
+
+    private function getMailContent()
+    {
+        return 'Mail from XieHaozhe-Thinkpad.';
+    }
+
+    /**
+     * [completeProfileAction description]
+     * @return a ViewModel object which contains HTML content
+     */
+    public function completeProfileAction()
+    {
+        if ( !$this->isActivated() ) {
+            return $this->sendRedirect('accounts/register/verifyEmail');
+        }
+
+        return array(
+            'username'      => 'zjhzxhz',
+            'email'         => 'zjhzxhz@gmail.com',
+            'userGroupSlug' => 'person',
+        );
+    }
+
+    private function isActivated()
+    {
+        $session    = new Container('itp_session');
+        return $session->offsetGet('isActivated');
     }
 
     /**

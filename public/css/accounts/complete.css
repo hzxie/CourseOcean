@@ -1,0 +1,26 @@
+div#content {
+	padding-top: 74px;
+}
+
+div#content div#banner {
+	background-color: #3995c4;
+	color: #fff;
+	padding-top: 25px;
+	padding-bottom: 25px;
+}
+
+div#banner div#banner-content {
+	margin: 0 auto;
+	width: 960px;
+}
+
+div#content div#main-container {
+	margin: 0 auto;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	width: 960px;
+}
+
+div#main-container div.span8 {
+	margin-left: 0;
+}

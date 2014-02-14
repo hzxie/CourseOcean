@@ -7,18 +7,18 @@
     <div id="error">
         <div class="left"></div> <!-- .left -->
         <div class="right">
-            <h1>页面未找到</h1>
+            <h4>页面未找到</h4>
             <p>很抱歉, 我们无法为您加载您所请求的页面.</p>
         </div> <!-- .right -->
     </div> <!-- #error -->
     <?php if (isset($this->display_exceptions) && $this->display_exceptions): ?>
     <div id="debug">
-        <h1><?php echo $this->translate('An error occurred') ?></h1>
-        <h2><?php echo $this->message ?></h2>
+        <h4><?php echo $this->translate('An error occurred') ?></h4>
+        <h5><?php echo $this->message ?></h5>
         <?php if(isset($this->exception) && $this->exception instanceof Exception): ?>
             <hr/>
-            <h2><?php echo $this->translate('Additional information') ?>:</h2>
-            <h3><?php echo get_class($this->exception); ?></h3>
+            <h5><?php echo $this->translate('Additional information') ?>:</h5>
+            <h6><?php echo get_class($this->exception); ?></h6>
             <dl>
                 <dt><?php echo $this->translate('File') ?>:</dt>
                 <dd>
@@ -38,11 +38,11 @@
                 if ($e) :
             ?>
                 <hr/>
-                <h2><?php echo $this->translate('Previous exceptions') ?>:</h2>
+                <h5><?php echo $this->translate('Previous exceptions') ?>:</h5>
                 <ul class="unstyled">
                     <?php while($e) : ?>
                     <li>
-                        <h3><?php echo get_class($e); ?></h3>
+                        <h6><?php echo get_class($e); ?></h6>
                         <dl>
                             <dt><?php echo $this->translate('File') ?>:</dt>
                             <dd>
@@ -65,7 +65,7 @@
                 </ul>
             <?php endif; ?>
         <?php else: ?>
-            <h3><?php echo $this->translate('No Exception available') ?></h3>
+            <h6><?php echo $this->translate('No Exception available') ?></h6>
         <?php endif ?>
     </div> <!-- #debug -->
     <?php endif ?>
