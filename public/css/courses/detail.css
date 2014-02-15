@@ -31,6 +31,15 @@ div#main-container div#sidebar {
     margin-left: 660px;
 }
 
+div#sidebar div.section {
+    margin-bottom: 40px;
+}
+
+div#sidebar div.section ul.inline img {
+    max-height: 32px;
+    max-width: 32px;
+}
+
 div#main-container div#main-content {
     float: left;
     width: 640px;
