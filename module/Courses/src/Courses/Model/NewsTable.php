@@ -68,7 +68,7 @@ class NewsTable
      * @return an object of News which contains information of a cerain post of 
      *         news
      */
-    public function getNews($newsID)
+    public function getNewsContent($newsID)
     {
         $rowset     = $this->tableGateway->select(function (Select $select) use ($courseID) {
             $select->join('itp_news_categories', 

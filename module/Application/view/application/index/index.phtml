@@ -33,11 +33,11 @@
             <div class="row">
                 <div class="span6">
                     <div class="avatar">
-                        <img src="<?php echo $this->basePath(); ?>/img/avatars/avatar.png" alt="Avatar" class="img-circle" />
+                        <img src="<?php echo $this->basePath(); ?>/img/avatars/ning-an.png" alt="Avatar" class="img-circle" />
                     </div> <!-- .avatar -->
                     <div class="quote">
-                        <p class="blockquote">IT培训平台为我们提供最及时、最优质的培训!</p>
-                        <p class="introduction"></p>
+                        <p class="blockquote">IT培训平台让我们不断学习, 推进卓越开发团队迈向巅峰!</p>
+                        <p class="introduction">安宁, 曾任美国甲骨文公司空间数据部主任工程师</p>
                     </div> <!-- .quote -->
                 </div> <!-- .span6 -->
                 <div class="span6">
@@ -56,39 +56,27 @@
         <div id="lectures-content" class="row section">
             <h3>我们推荐的课程</h3>
             <div class="span6">
+            <?php if ( isset( $lectures ) && $lectures ): ?>
+            <?php foreach ( $lectures as $lecture ) { ?>
                 <div class="block">
                     <div class="icon">
+                    <?php if ( rand() % 3 == 0 ): ?>
                         <span class="label label-important">HOT</span>
-                    </div> <!-- .icon -->
-                    <div class="content">
-                        <h4>缔造高效团队与有效沟通</h4>
-                        <span><i class="icon-calendar"></i> 2014年02月28日~2014年03月02日</span>
-                        <span><i class="icon-user"></i> 张浩然</span>
-                        <p>项目领导力和沟通技巧旨在使您对主要领导能力有一个更好的了解，让您获得全然不同的领导体验。作为学习者，您需完成一项自我领导技巧测试，然…</p>
-                    </div> <!-- .content -->
-                </div> <!-- .block -->
-                <div class="block">
-                    <div class="icon">
+                    <?php elseif ( rand() % 3 == 1 ): ?>
                         <span class="label label-success">NEW</span>
+                    <?php endif; ?>
                     </div> <!-- .icon -->
-                    <div class="content">
-                        <h4>互联网产品策划与用户体验设计</h4>
-                        <span><i class="icon-calendar"></i> 2014年03月28日~2014年03月31日</span>
-                        <span><i class="icon-user"></i> 光耀</span>
-                        <p>介绍产品经理尤其是互联网产品经理的职责；跨界，从产品之外的“社会学、心理学”等挖掘需求分析之道；核心围绕产品与需求，其次在运营、市场方面，提出…</p>
-                    </div> <!-- .content -->
+                    <a href="<?php echo $this->basePath(); ?>/courses/lecture/detail/<?php echo $lecture->lecture_id; ?>">
+                        <div class="content">
+                            <h4><?php echo $lecture->course_name; ?></h4>
+                            <span><i class="icon-calendar"></i> <?php echo date('Y年m月d日', strtotime($lecture->lecture_start_time)); ?>~<?php echo date('Y年m月d日', strtotime($lecture->lecture_end_time)); ?></span>
+                            <span><i class="icon-user"></i> <?php echo $lecture->teacher_name; ?></span>
+                            <p><?php echo mb_substr( $lecture->course_brief, 0, 80, "utf-8" ); ?>...</p>
+                        </div> <!-- .content -->
+                    </a>
                 </div> <!-- .block -->
-                <div class="block">
-                    <div class="icon">
-                        <span class="label label-important">HOT</span>
-                    </div> <!-- .icon -->
-                    <div class="content">
-                        <h4>软件测试技术及其自动化高级培训</h4>
-                        <span><i class="icon-calendar"></i> 2014年02月24日~2014年02月28日</span>
-                        <span><i class="icon-user"></i> 朱少民</span>
-                        <p>通过具体的案例来讨论相关主题，采用讨论＋实践相结合的方式，深入浅出讲解自动化测试精髓部分，从理念和实践两个层次解决学员所面临的问题，使培训内容能够真正落实到学员的日常工作中 强调与学员互…</p>
-                    </div> <!-- .content -->
-                </div> <!-- .block -->
+            <?php } ?>
+            <?php endif; ?>
             </div> <!-- .span6 -->
             <div class="span6">
                 <img src="<?php echo $this->basePath(); ?>/img/lectures.png" alt="Lectures" />
@@ -102,16 +90,23 @@
                 <img src="<?php echo $this->basePath(); ?>/img/news.png" alt="News" />
             </div> <!-- .span6 -->
             <div class="span6">
+            <?php if ( isset( $news ) && $news ): ?>
+            <?php foreach ( $news as $newsPost ) { ?>
                 <div class="block">
                     <div class="icon">
                         <img src="<?php echo $this->basePath(); ?>/img/icons/post.png" alt="Post">
                     </div> <!-- .icon -->
-                    <div class="content">
-                        <h4>软件测试技术及其自动化高级培训</h4>
-                        <span><i class="icon-calendar"></i> 2014年02月24日</span>
-                        <p>通过具体的案例来讨论相关主题，采用讨论＋实践相结合的方式，深入浅出讲解自动化测试精髓部分，从理念和实践两个层次解决学员所面临的问题，使培训内容能够真正落实到学员的日常工作中 强调与学员互…</p>
-                    </div> <!-- .content -->
+                    <a href="<?php echo $this->basePath(); ?>/courses/news/detail/<?php echo $newsPost->news_id; ?>">
+                        <div class="content">
+                            <h4><?php echo $newsPost->news_title; ?></h4>
+                            <span><i class="icon-th-list"></i> <?php echo $newsPost->news_category_name; ?></span>
+                            <span><i class="icon-calendar"></i> <?php echo date('Y年m月d日', strtotime($newsPost->publish_date)); ?></span>
+                            <p><?php echo mb_substr( $newsPost->news_content, 0, 150, "utf-8" ); ?></p>
+                        </div> <!-- .content -->
+                    </a>
                 </div> <!-- .block -->
+            <?php } ?>
+            <?php endif; ?>
             </div> <!-- .span6 -->
         </div> <!-- #news-content -->
     </div> <!-- #news -->

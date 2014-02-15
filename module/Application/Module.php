@@ -36,4 +36,38 @@ class Module
             ),
         );
     }
+
+    /**
+     * @return an array of factories that are all merged together by the 
+     *         ModuleManager before passing to the ServiceManager
+     */
+    public function getServiceConfig()
+    {
+        return array(
+            'factories' => array(
+                'Courses\Model\LectureTable' => function($sm) {
+                    $tableGateway = $sm->get('LectureTableGateway');
+                    $table = new LectureTable($tableGateway);
+                    return $table;
+                },
+                'LectureTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Lecture());
+                    return new TableGateway('itp_lectures', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Courses\Model\NewsTable' => function($sm) {
+                    $tableGateway = $sm->get('NewsTableGateway');
+                    $table = new NewsTable($tableGateway);
+                    return $table;
+                },
+                'NewsTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new News());
+                    return new TableGateway('itp_news', $dbAdapter, null, $resultSetPrototype);
+                },
+            ),
+        );
+    }
 }

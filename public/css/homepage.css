@@ -82,6 +82,10 @@ div.section div.block {
             border-radius: 4px;
 }
 
+div.section div.block a {
+    text-decoration: none;
+}
+
 div.section div.block div.icon {
     float: left;
 }
@@ -94,6 +98,10 @@ div.section div.block div.content {
 
 div.section div.block div.content h4 {
     color: #2f3536;
+}
+
+div.section div.block div.content span {
+    margin-right: 20px;
 }
 
 div.section div.block div.content i {
