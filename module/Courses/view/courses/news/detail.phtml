@@ -1,0 +1,34 @@
+<?php 
+    echo $this->headTitle("$news->news_title | ");
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/detail.css');
+?>
+
+<div id="content">
+    <div id="banner">
+        <div id="banner-content">
+            <h3><?php echo $news->news_title; ?></h3>
+            <span><i class="icon-th-list icon-white"></i> <?php echo $news->news_category_name; ?></span>
+            <span><i class="icon-calendar icon-white"></i> <?php echo date('Y年m月d日', strtotime($news->publish_date)); ?></span>
+        </div> <!-- #banner-content -->
+    </div> <!-- #banner -->
+    <div id="main-container">
+        <div id="main-content">
+            <ul class="breadcrumb">
+                <li><a href="<?php echo $this->basePath(); ?>">首页</a> <span class="divider">/</span></li>
+                <li><a href="<?php echo $this->basePath('/courses/news'); ?>">培训动态</a> <span class="divider">/</span></li>
+                <li class="active"><?php echo $news->news_title; ?></li>
+            </ul>
+            <div id="detail-content">
+                <?php echo $news->news_content; ?>
+            </div> <!-- #detail-content -->
+            <div id="comments">
+                <h4>评论</h4>
+                <p>您没有添加评论的权限</p>
+            </div>
+        </div> <!-- #main-content -->
+        <div id="sidebar">
+            <h4>相关动态</h4>
+            <p>暂无相关动态</p>
+        </div> <!-- #sidebar -->
+    </div> <!-- #main-container -->
+</div> <!-- #content -->

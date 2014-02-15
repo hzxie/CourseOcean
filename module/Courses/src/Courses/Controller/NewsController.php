@@ -77,18 +77,22 @@ class NewsController extends AbstractActionController
      */
     public function detailAction()
     {
-        /*$lectureID      = $this->params()->fromRoute('param');
-        $lectureInfo    = $this->getLectureDetailInfo($lectureID);
-        $uid            = $this->isLogined();
+        $newsID     = $this->params()->fromRoute('param');
+        $newsInfo   = $this->getNewsContent($newsID);
 
-        if ( $lectureInfo == null ) {
+        if ( $newsInfo == null ) {
             return $this->notFoundAction();
         }
         return array(
-            'lecture'       => $lectureInfo,
-            'isLogined'     => $uid,
-            'isAttended'    => $this->isAttended($uid, $lectureInfo['lecture_id']),
-            'teacher'       => $this->getTeacherInfo($lectureInfo['uid']),
-        );*/
+            'news'  => $newsInfo,
+        );
+    }
+
+    private function getNewsContent($newsID)
+    {
+        $sm                 = $this->getServiceLocator();
+        $newsTable          = $sm->get('Courses\Model\NewsTable');
+
+        return $newsTable->getNewsContent($newsID);
     }
 }

@@ -70,7 +70,7 @@ class NewsTable
      */
     public function getNewsContent($newsID)
     {
-        $rowset     = $this->tableGateway->select(function (Select $select) use ($courseID) {
+        $rowset     = $this->tableGateway->select(function (Select $select) use ($newsID) {
             $select->join('itp_news_categories', 
                           'itp_news.news_category_id = itp_news_categories.news_category_id');
             $select->where->equalTo('news_id', $newsID);
