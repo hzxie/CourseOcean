@@ -20,6 +20,10 @@ use Courses\Model\LectureMeta;
 use Courses\Model\LectureMetaTable;
 use Courses\Model\LectureAttendance;
 use Courses\Model\LectureAttendanceTable;
+use Courses\Model\News;
+use Courses\Model\NewsTable;
+use Courses\Model\NewsCategory;
+use Courses\Model\NewsCategoryTable;
 use Accounts\Model\Teacher;
 use Accounts\Model\TeacherTable;
 
@@ -117,6 +121,28 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new LectureAttendance());
                     return new TableGateway('itp_lecture_attendance', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Courses\Model\NewsTable' => function($sm) {
+                    $tableGateway = $sm->get('NewsTableGateway');
+                    $table = new NewsTable($tableGateway);
+                    return $table;
+                },
+                'NewsTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new News());
+                    return new TableGateway('itp_news', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Courses\Model\NewsCategoryTable' => function($sm) {
+                    $tableGateway = $sm->get('NewsCategoryTableGateway');
+                    $table = new NewsCategoryTable($tableGateway);
+                    return $table;
+                },
+                'NewsCategoryTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new NewsCategory());
+                    return new TableGateway('itp_news_categories', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Accounts\Model\TeacherTable' => function($sm) {
                     $tableGateway = $sm->get('TeacherTableGateway');

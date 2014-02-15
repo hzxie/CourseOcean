@@ -84,7 +84,6 @@ div.section div.block {
 
 div.section div.block div.icon {
     float: left;
-    padding: 8px 0 0 4px;
 }
 
 div.section div.block div.content {
@@ -101,8 +100,16 @@ div.section div.block div.content i {
     opacity: .6;
 }
 
+div#lectures div.block div.icon {
+    padding: 8px 0 0 4px;
+}
+
 div#news {
     background-color: #dce1e6;
+}
+
+div#news div.block div.content {
+    color: #565656;
 }
 
 div#partners-content {

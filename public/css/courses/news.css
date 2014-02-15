@@ -1,75 +1,5 @@
 div#content {
-<<<<<<< HEAD
 	padding-top: 74px;
-}
-
-div#content div#banner {
-	background-color: #3995c4;
-	color: #fff;
-	padding-top: 25px;
-	padding-bottom: 25px;
-}
-
-div#banner div#banner-content {
-	margin: 0 auto;
-	overflow: hidden;
-	width: 960px;
-}
-
-div#banner-content div#slogan {
-	float: left;
-}
-
-div#banner-content form#search {
-	margin-top: 50px;
-}
-
-div#content div#main-container {
-	margin: 0 auto;
-	padding-top: 20px;
-	padding-bottom: 20px;
-	width: 960px;
-}
-
-div#main-content div.section {
-	border: 1px solid #ebeef1;
-	color: #8e959b;
-	font-size: 16px;
-	margin-bottom: 20px;
-	padding-bottom: 20px;
-	overflow: hidden;
-	-webkit-border-radius: 4px;
-	   -moz-border-radius: 4px;
-			border-radius: 4px;
-}
-
-div.section div.icon {
-	float: left;
-	margin: 4px;
-}
-
-div.section div.news {
-	margin-left: 80px;
-}
-
-div.section a {
-	color: #8e959b;
-	text-decoration: none;
-}
-
-div.section div.news h4 {
-	color: #2f3536;
-}
-
-div.section div.news div.meta {
-	font-size: 12px;
-	margin-bottom: 10px;
-}
-
-div.section div.news div.meta span {
-	margin-right: 20px;
-=======
-    padding-top: 74px;
 }
 
 div#content div#banner {
@@ -145,5 +75,4 @@ div.section div.news div.meta {
 
 div.section div.news div.meta span {
     margin-right: 20px;
->>>>>>> develop/frontend
 }

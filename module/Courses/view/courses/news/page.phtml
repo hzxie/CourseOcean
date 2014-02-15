@@ -22,23 +22,25 @@
             <div id="sidebar">
                 <h4>分类目录</h4>
                 <ul class="nav nav-pills nav-stacked">
-                    <li><a href="#">未分类</a></li>
+                <?php foreach ( $newsCategories as $newsCategory ) { ?>
+                    <li><a href="#"><?php echo $newsCategory->news_category_name; ?></a></li>
+                <?php } ?>
                 </ul>
             </div> <!-- #sidebar -->
             <div id="news-content">
-            <?php for ( $i = 0; $i < 10; ++ $i ) { ?>
+            <?php foreach ( $news as $newsPost ) { ?>
                 <div class="section">
                     <div class="icon">
                         <img src="<?php echo $this->basePath(); ?>/img/icons/post.png" alt="Post">
                     </div>
                     <div class="news">
-                        <a href="#" target="_blank">
-                            <h4>See when recipients open your Gmail attachments with docTrackr</h4>
+                        <a href="<?php echo $this->basePath("/courses/news/detail/$newsPost->news_id"); ?>" target="_blank">
+                            <h4><?php echo $newsPost->news_title; ?></h4>
                             <div class="meta">
-                                <span><i class="icon-th-list"></i> 培训通知</span>
-                                <span><i class="icon-calendar"></i> <?php echo date('Y年m月d日'); ?></span>
+                                <span><i class="icon-th-list"></i> <?php echo $newsPost->news_category_name; ?></span>
+                                <span><i class="icon-calendar"></i> <?php echo date('Y年m月d日', strtotime($newsPost->publish_date)); ?></span>
                             </div> <!-- .meta -->
-                            <p>DocTrackr is a security layer that sits on top of file sharing services such as Box and Microsoft Sharepoint. Once you sent a document out of your system, it was truly out of your hands, until now.</p>
+                            <p><?php echo mb_substr( $newsPost->news_content, 0, 150, "utf-8" ); ?></p>
                         </a>
                     </div>
                 </div>
@@ -47,8 +49,6 @@
                     <ul>
                     <?php
                         $basePath = $this->basePath().'/courses/news/page/';
-                        $currentPageNumber = 10;
-                        $numberOfPages     = 20;
                     ?>
                     <?php if ( $currentPageNumber > 1 ): ?>
                         <li><a href="<?php echo $basePath.($currentPageNumber - 1); ?>">&lt;</a></li>

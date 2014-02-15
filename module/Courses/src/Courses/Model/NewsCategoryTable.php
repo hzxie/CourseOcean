@@ -8,11 +8,11 @@ use Zend\Db\Sql\Select;
 use Zend\Db\TableGateway\TableGateway;
 
 /**
- * The table gateway of the course types table.
+ * The table gateway of the news categories table.
  * 
  * @author Xie Haozhe <zjhzxhz@gmail.com>
  */
-class CourseTypeTable
+class NewsCategoryTable
 {
     /**
      * The Table Gateway object is intended to provide an object that 
