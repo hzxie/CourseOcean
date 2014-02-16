@@ -1,6 +1,7 @@
 <?php 
 	echo $this->headTitle('课程库 | ');
 	echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/course.css');
+    echo $this->headScript()->appendFile($this->basePath().'/js/stick-up.min.js');
 ?>
 
 <div id="content">
@@ -94,3 +95,34 @@
         </div> <!-- #main-content -->
     </div> <!-- #main-container -->
 </div> <!-- #content -->
+
+<?php $this->inlineScript()->captureStart(); ?>
+    jQuery(function($) {
+        $(document).ready( function() {
+            $('#sidebar').stickUp();
+        });
+    });
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    $(window).scroll(function() {
+        setSidebarVisibility();
+    });
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function setSidebarVisibility() {
+        var sidebarHeight   = $('#sidebar').outerHeight(),
+            headerHeight    = $('#header').outerHeight(),
+            footerOffsetTop = $('#footer').offset().top - $(window).scrollTop() - headerHeight,
+            offset          = footerOffsetTop - sidebarHeight - headerHeight;
+        console.log( 'OffsetTop = ' + footerOffsetTop + "\n" + 'sidebarHeight = ' + sidebarHeight );
+        if ( footerOffsetTop < sidebarHeight ) {
+            $('#sidebar').css('top', offset);
+        } else {
+            if ( $('#sidebar').hasClass('isStuck') ) {
+                $('#sidebar').css('top', 96);
+            } else {
+                $('#sidebar').css('top', 0);
+            }
+        }
+    }
+<?php $this->inlineScript()->captureEnd(); ?>

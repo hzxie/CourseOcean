@@ -1,94 +1,84 @@
 <?php 
-	echo $this->headTitle($course['course_name'].' | ');
-	echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/detail.css');
+    echo $this->headTitle($course['course_name'].' | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/courses/detail.css');
 ?>
 
 <div id="content">
-	<div id="detail">
-		<div id="banner">
-			<img src="<?php echo $this->basePath('img/courses/'.$course['course_type_slug'].'-large.jpg'); ?>" alt="Banner" />
-		</div> <!-- #banner -->
-		<div id="main-content">
-			<div id="course-name"><?php echo $course['course_name'] ?></div> <!-- #course-name -->
-			<div id="brief" class="section"><?php echo $course['course_brief']; ?></div> <!-- #brief -->
-			<?php if ( isset($course['course_objective']) ): ?>
-				<div id="objective" class="section">
-					<div class="title">课程目标</div>
-					<div class="content"><?php echo $course['course_objective']; ?></div>
-				</div> <!-- #purpose -->
-			<?php endif; ?>
-			<?php if ( isset($course['course_feature']) ): ?>
-				<div id="feature" class="section">
-					<div class="title">课程特点</div>
-					<div class="content"><?php echo $course['course_feature']; ?></div>
-				</div> <!-- #feature -->
-			<?php endif; ?>
-			<?php if ( isset($course['course_outline']) ): ?>
-				<div id="outline" class="section">
-					<div class="title">课程大纲</div>
-					<div class="content"><?php echo $course['course_outline']; ?></div>
-				</div> <!-- #outline -->
-			<?php endif; ?>
-			<div id="teacher-introduction" class="section">
-				<div class="title">讲师介绍</div>
-				<div id="teacher">
-					<div id="avatar">
-						<?php if ( $teacher['teacher_avatar'] == null ): ?>
-							<img class="img-circle" src="<?php echo $this->basePath(); ?>/img/avatar.png" alt="Avatar" />
-						<?php else: ?>
-							<img class="img-circle" src="<?php echo $this->basePath($teacher['avatar']); ?>" alt="Avatar" />
-						<?php endif; ?>
-					</div> <!-- #avatar -->
-					<div id="introduction">
-						<div id="name"><?php echo $teacher['teacher_name']; ?></div>
-						<div><?php echo $teacher['teacher_brief']; ?></div>
-					</div> <!-- #introduction -->
-				</div> <!-- #teacher -->
-			</div> <!-- #teacher-introduction -->
-		</div> <!-- #main-content -->
-	</div> <!-- #detail -->
-	<div id="summary">
-		<div id="company">
-			<img src="https://www.edx.org/sites/default/files/course/image/video/berkeley_no_video_320x211.png" alt="Company Logo">
-		</div> <!-- company -->
-		<div id="overview">
-			<div id="info">
-				<div class="item">
-					<div class="title">课程分类</div>
-					<div class="content"><?php echo $course['course_type_name']; ?></div>
-				</div>
-				<div class="item">
-					<div class="title">讲师</div>
-					<div class="content"><?php echo $teacher['teacher_name']; ?></div>
-				</div>
-				<div class="item">
-					<div class="title">培训周期</div>
-					<div class="content"><?php echo $course['course_cycle']; ?>天</div>
-				</div>
-				<div class="item">
-					<div class="title">听众范围</div>
-					<div class="content"><?php echo $course['course_audience']; ?></div>
-				</div>
-			</div> <!-- #info -->
-			<div id="lectures">
-				<strong>开课记录</strong>
-				<?php if ( $lectures == null ): ?>
-					<p>暂无开课记录</p>
-				<?php else: ?>
-					<ol>
-						<?php foreach ( $lectures as $lecture ) { ?>
-						<li><a href="<?php echo $this->basePath('/courses/lecture/detail/'.$lecture['lecture_id']); ?>" target="_blank"><?php echo date('Y年m月d日', strtotime($lecture['lecture_start_time'])); ?></a></li>
-						<? } ?>
-					</ol>
-				<?php endif; ?>
-			</div> <!-- #lectures -->
-		</div> <!-- #overview -->
-		<div id="social">
-			<ul class="inline">
-				<li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/sina.png" alt="Sina"></a></li>
-				<li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/wechat.png" alt="WeChat"></a></li>
-				<li><a href="#"><img class="social-icon" src="<?php echo $this->basePath(); ?>/img/social-icons/laiwang.png" alt="LaiWang"></a></li>
-			</ul>
-		</div> <!-- #social -->
-	</div> <!-- #summary -->
-</div> <!-- #conetnt -->
+    <div id="banner">
+        <div id="banner-content">
+            <h3><?php echo $course['course_name']; ?></h3>
+            <span><i class="icon-white icon-th-list"></i><strong>课程类别: </strong><?php echo $course['course_type_name']; ?></span>
+            <span><i class="icon-white icon-time"></i><strong>培训周期: </strong><?php echo $course['course_cycle']; ?>天</span>
+            <span><i class="icon-white icon-user"></i><strong>讲师: </strong><?php echo $teacher['teacher_name']; ?></span><br />
+            <span><i class="icon-white icon-eye-open"></i><strong>听众范围: </strong><?php echo $course['course_audience']; ?></span>
+        </div> <!-- #banner-content -->
+    </div> <!-- #banner -->
+    <div id="main-container">
+        <div id="main-content">
+            <div id="detail-container">
+            	<div id="brief" class="section">
+            		<h4>课程概述</h4>
+            		<div class="content"><?php echo $course['course_brief']; ?></div>
+            	</div> <!-- #brief -->
+            	<?php if ( isset($course['course_objective']) ): ?>
+	                <div id="objective" class="section">
+	                    <h4>课程目标</h4>
+	                    <div class="content"><?php echo $course['course_objective']; ?></div>
+	                </div> <!-- #purpose -->
+	            <?php endif; ?>
+	            <?php if ( isset($course['course_feature']) ): ?>
+	                <div id="feature" class="section">
+	                    <h4>课程特点</h4>
+	                    <div class="content"><?php echo $course['course_feature']; ?></div>
+	                </div> <!-- #feature -->
+	            <?php endif; ?>
+	            <?php if ( isset($course['course_outline']) ): ?>
+	                <div id="outline" class="section">
+	                    <h4>课程大纲</h4>
+	                    <div class="content"><?php echo $course['course_outline']; ?></div>
+	                </div> <!-- #outline -->
+	            <?php endif; ?>
+	            <div id="teacher-introduction" class="section">
+	            	<h4>讲师简介</h4>
+	            	<div id="avatar">
+            		<?php if ( $teacher['teacher_avatar'] == null ): ?>
+                        <img class="img-circle" src="<?php echo $this->basePath(); ?>/img/avatars/avatar.png" alt="Avatar" />
+                    <?php else: ?>
+                        <img class="img-circle" src="<?php echo $this->basePath($teacher['avatar']); ?>" alt="Avatar" />
+                    <?php endif; ?>
+	            	</div> <!-- #avatar -->
+                    <div class="content">
+                        <h4><?php echo $teacher['teacher_name']; ?></h4>
+                        <div><?php echo $teacher['teacher_brief']; ?></div>
+                    </div> <!-- .content -->
+	            </div>
+            </div> <!-- #detail-container -->
+        </div> <!-- #main-content -->
+        <div id="sidebar">
+            <div class="section">
+                <h4>开课记录</h4>
+                <?php if ( $lectures == null ): ?>
+                    <p>暂无开课记录</p>
+                <?php else: ?>
+                    <ol>
+                        <?php foreach ( $lectures as $lecture ) { ?>
+                        <li><a href="<?php echo $this->basePath('/courses/lecture/detail/'.$lecture['lecture_id']); ?>" target="_blank"><?php echo date('Y年m月d日', strtotime($lecture['lecture_start_time'])); ?></a></li>
+                        <? } ?>
+                    </ol>
+                <?php endif; ?>
+            </div> <!-- .section -->
+            <div class="section">
+                <h4>相关课程</h4>
+                <p>暂无相关课程</p>
+            </div> <!-- .section -->
+            <div class="section">
+                <h4>分享</h4>
+                <ul class="inline">
+                    <li><a href="#" title="新浪微博"><img src="<?php echo $this->basePath(); ?>/img/socials/weibo.png" alt="Weibo"></a></li>
+                    <li><a href="#" title="微信"><img src="<?php echo $this->basePath(); ?>/img/socials/wechat.png" alt="Wechat"></a></li>
+                    <li><a href="#" title="来往"><img src="<?php echo $this->basePath(); ?>/img/socials/laiwang.png" alt="Laiwang"></a></li>
+                </ul>
+            </div> <!-- .section -->
+        </div> <!-- #sidebar -->
+    </div> <!-- #main-container -->
+</div> <!-- #content -->

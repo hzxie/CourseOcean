@@ -84,3 +84,22 @@ div#overview div#overview-content {
     margin-top: 20px;
     margin-left: 120px;
 }
+
+/* Style for Course Detail */
+div#detail-container div.section div.content {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+div#detail-container div#teacher-introduction {
+    overflow: hidden;
+}
+
+div#detail-container div#teacher-introduction div#avatar {
+    float: left;
+}
+
+div#detail-container div#teacher-introduction div.content {
+    margin-top: 20px;
+    margin-left: 120px;
+}
