@@ -1,109 +1,96 @@
 div#content {
-	margin: 0 auto;
-	width: 960px;
+	padding-top: 74px;
 }
 
 div#content div#banner {
-	background: url('../../img/banner-courses.jpg') no-repeat;
-	border-bottom: 1px solid #8a8c8f;
-	height: 120px;
+    background-color: #3995c4;
+    color: #fff;
+    padding-top: 25px;
+    padding-bottom: 25px;
 }
 
-div#content div#banner div#title {
-	padding-top: 30px;
-	padding-left: 50px;
+div#banner div#banner-content {
+    margin: 0 auto;
+    overflow: hidden;
+    width: 960px;
 }
 
-div#content div#banner div#title h1 {
-	color: #1790c7;
+div#banner-content div#slogan {
+    float: left;
 }
 
-div#content div#banner div#title h2 {
-	padding-left: 20px;
+div#banner-content form#search {
+    margin-top: 50px;
 }
 
-div#content div#filter {
-	background-color: #e6f4fB;
-	border-bottom: 1px solid #999;
-	padding: 20px 25px;
-	overflow: auto;
-	text-align: right;
+div#content div#main-container {
+    margin: 0 auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 960px;
 }
 
-div#content div#main-content {
-	background-color: #fff;
-	padding: 25px 25px;
+div#main-container div#main-content {
+    overflow: hidden;
 }
 
-div#main-content div#courses div.section {
-	background-color: #fff;
-	border: 1px solid #949494;
-	margin-bottom: 30px;
-	width: 910px;
-	height: 136px;
-	overflow: hidden;
+div#main-content div#sidebar {
+    float: left;
+    width: 300px;
 }
 
-div.section div.left {
-	float: left;
-	padding: 15px;
-	width: 600px;
+div#sidebar div.section {
+    margin-bottom: 10px;
 }
 
-div.section div.left div.brand {
-	height: 29px;
-	width: 30px;
-	position: absolute;
+div#sidebar div.section input[type=submit] {
+    margin-left: 168px;
 }
 
-div.left div.brand.brand-new {
-	background: url('../../img/brand-new.png') no-repeat;
+div#main-content div#course-content {
+    margin-left: 320px;
 }
 
-div.left div.brand.brand-hot {
-	background: url('../../img/brand-hot.png') no-repeat;
+div#course-content div.block {
+    border: 1px solid #ebeef1;
+    margin-bottom: 20px;
+    padding: 8px;
+    overflow: hidden;
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
 }
 
-div.left div.fieldset {
-	min-height: 75px;
-	padding: 0 0 0 45px;
-	margin: 0;
+div#course-content div.block a {
+    text-decoration: none;
 }
 
-div.left div.fieldset div.title {
-	font-size: 18px;
-	font-weight: bold;
-	padding-bottom: 10px;
+div#course-content div.block div.icon {
+    float: left;
 }
 
-div.left div.fieldset div.title a {
-	color: #565656;
+div#course-content div.block div.content {
+    color: #8e959b;
+    font-size: 13px;
+    margin-left: 50px;
 }
 
-div.left div.fieldset div.title a:hover {
-	color: #2f73bc;
+div#course-content div.block div.content h4 {
+    color: #2f3536;
 }
 
-div.left div.fieldset div.brief {
-	color: #565656;
-	font-size: 12px;
-	max-height: 40px;
-	overflow: hidden;
+div#course-content div.block div.content span {
+    margin-right: 20px;
 }
 
-div.left div.details {
-	background-color: #f2f2f2;
-	font-size: 13px;
-	margin-left: 30px;
-	padding-left: 15px;
-	line-height: 30px;
-	overflow: hidden;
-	height: 30px;
+div#course-content div.block div.content i {
+    opacity: .6;
 }
 
-div.section div.right {
-	float: right;
-	border-left: 1px solid #949494;
-	height: 136px;
-	width: 263px;
+div#course-content div.block div.icon {
+    padding: 8px 0 0 4px;
+}
+
+div#course-content div.block div.meta {
+    margin-bottom: 10px;
 }
