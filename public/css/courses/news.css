@@ -30,6 +30,10 @@ div#content div#main-container {
     width: 960px;
 }
 
+div#main-container div#main-content {
+    overflow: hidden;
+}
+
 div#main-content div#sidebar {
     float: left;
     width: 300px;

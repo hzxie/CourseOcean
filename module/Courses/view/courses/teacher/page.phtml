@@ -5,80 +5,88 @@
 
 <div id="content">
     <div id="banner">
-        <div id="title">
-            <h1>讲师团队</h1>
-            <h2>提供最适合您的讲师</h2>
-        </div> <!-- #title -->
+        <div id="banner-content">
+            <div id="slogan">
+                <h2>讲师团队</h2>
+                <h4>选择最适合您的讲师</h4>
+            </div> <!-- #slogan -->
+            <form id="search" class="navbar-search pull-right">
+                <input type="text" class="search-query" />
+                <button type="submit" class="btn btn-success">搜索</button>
+            </form>
+        </div> <!-- #banner-content -->
     </div> <!-- #banner -->
-    <div id="filter">
-        <select name="course-types">
-            <option value="">所有课程类型</option>
-            <?php foreach ( $courseTypes as $courseType ) { ?>
-            <option value="<?php echo $courseType->course_type_slug; ?>"><?php echo $courseType->course_type_name; ?></option>
-            <?php } ?>
-        </select>
-        <input name="keyword" type="text" />
-        <input type="submit" class="btn" value="搜索" />
-    </div> <!-- #filter -->
-    <div id="main-content">
-        <div id="teachers">
-            <?php
-                $colors = array('#427fed', '#f4b400', '#53a93f', '#e94d20');
-                foreach ( $teachers as $teacher ) {
-            ?>
-            <div class="block">
-                <?php if ( $teacher->teacher_avatar == null ) { ?>  
-                <div class="avatar" style="background: <?php echo $colors[rand(0, 3)]; ?>">
-                    <img src="<?php echo $this->basePath('/img/silhouette.png'); ?>" alt="Avatar">
-                </div>
-                <?php } else { ?>
-                <div class="avatar">
-                    <img src="<?php echo $this->basePath($teacher->teacher_avatar); ?>" alt="Avatar">
-                </div>
+    <div id="main-container">
+        <div id="main-content">
+            <div id="sidebar">
+                <h4>课程类别</h4>
+                <ul class="nav nav-pills nav-stacked">
+                <?php foreach ( $courseTypes as $courseType ) { ?>
+                    <li>
+                        <a href="#"><?php echo $courseType->course_type_name; ?></a>
+                    </li>
                 <?php } ?>
-                <div class="content">
-                    <div class="name">
-                        <a href="<?php echo $this->basePath("/courses/teacher/detail/$teacher->uid"); ?>"><?php echo $teacher->teacher_name; ?></a>
-                    </div> <!-- .name -->
-                    <div class="company"><?php echo $teacher->teacher_company;?></div>
-                    <div class="field"><?php echo $teacher->teacher_field;?></div>
-                    <div class="reserve">
-                        <button class="btn btn-block">预约</button>
-                    </div> <!-- .reserve -->
-                </div> <!-- .content -->
-            </div>
-            <?php } ?>
-        </div> <!-- #teachers -->
-        <div id="pagination" class="pagination pagination-centered">
-            <ul>
-            <?php
-                $basePath = $this->basePath().'/courses/teacher/page/';
-            ?>
-            <?php if ( $currentPageNumber > 1 ): ?>
-                <li><a href="<?php echo $basePath.($currentPageNumber - 1); ?>">&lt;</a></li>
-            <?php else: ?>
-                <li class="disabled"><a>&lt;</a></li>
-            <?php endif; ?>
-            <?php
-                $lowerBound = $currentPageNumber - 5;
-                $lowerBound = ( $lowerBound > 0 ) ? $lowerBound : 1;
-                $upperBound = $currentPageNumber + 4;
-                $upperBound = ( $upperBound <= $numberOfPages ) ? $upperBound : $numberOfPages;
+                </ul>
+            </div> <!-- #sidebar -->
+            <div id="teacher-content">
+                <ul class="thumbnails">
+                <?php
+                    $colors = array('#427fed', '#f4b400', '#53a93f', '#e94d20');
+                    foreach ( $teachers as $teacher ) {
+                ?>
+                    <li class="span2">
+                        <div class="thumbnail">
+                            <?php if ( $teacher->teacher_avatar == null ): ?>  
+                            <div class="avatar" style="background: <?php echo $colors[rand(0, 3)]; ?>">
+                                <img data-src="holder.js/150x150" src="<?php echo $this->basePath('/img/avatars/silhouette.png'); ?>" alt="Avatar" />
+                            </div>
+                            <?php else: ?>
+                            <div class="avatar">
+                                <img data-src="holder.js/150x150" src="<?php echo $this->basePath($teacher->teacher_avatar); ?>" alt="Avatar" />
+                            </div>
+                            <?php endif; ?>
+                            <a href="<?php echo $this->basePath("/courses/teacher/detail/$teacher->uid"); ?>">
+                                <h5><?php echo $teacher->teacher_name; ?></h5>
+                            </a>
+                            <div class="company"><?php echo $teacher->teacher_company;?></div>
+                            <div class="field"><?php echo $teacher->teacher_field;?></div>
+                            <div class="reserve"><button class="btn btn-info btn-block">预约</button></div>
+                        </div> <!-- .thumbnail -->
+                    </li> <!-- .span2 -->
+                <?php } ?>
+                </ul> <!-- .thumbnails -->
+                <div id="pagination" class="pagination pagination-centered">
+                    <ul>
+                    <?php
+                        $basePath = $this->basePath().'/courses/teacher/page/';
+                    ?>
+                    <?php if ( $currentPageNumber > 1 ): ?>
+                        <li><a href="<?php echo $basePath.($currentPageNumber - 1); ?>">&lt;</a></li>
+                    <?php else: ?>
+                        <li class="disabled"><a>&lt;</a></li>
+                    <?php endif; ?>
+                    <?php
+                        $lowerBound = $currentPageNumber - 5;
+                        $lowerBound = ( $lowerBound > 0 ) ? $lowerBound : 1;
+                        $upperBound = $currentPageNumber + 4;
+                        $upperBound = ( $upperBound <= $numberOfPages ) ? $upperBound : $numberOfPages;
 
-                for ( $i = $lowerBound; $i <= $upperBound; ++ $i ) {
-                    if ( $i == $currentPageNumber ) {
-                        echo "<li class=\"active\"><a>$i</a></li>";
-                    } else {
-                        echo "<li><a href=\"$basePath$i\">$i</a></li>";
-                    }
-                }
-            ?>
-            <?php if ( $currentPageNumber < $numberOfPages ): ?>
-                <li><a href="<?php echo $basePath.($currentPageNumber + 1); ?>">&gt;</a></li>
-            <?php else: ?>
-                <li class="disabled"><a>&gt;</a></li>
-            <?php endif; ?>
-            </ul>
-        </div> <!-- #pagination-->
-    </div> <!-- #main-content -->
+                        for ( $i = $lowerBound; $i <= $upperBound; ++ $i ) {
+                            if ( $i == $currentPageNumber ) {
+                                echo "<li class=\"active\"><a>$i</a></li>";
+                            } else {
+                                echo "<li><a href=\"$basePath$i\">$i</a></li>";
+                            }
+                        }
+                    ?>
+                    <?php if ( $currentPageNumber < $numberOfPages ): ?>
+                        <li><a href="<?php echo $basePath.($currentPageNumber + 1); ?>">&gt;</a></li>
+                    <?php else: ?>
+                        <li class="disabled"><a>&gt;</a></li>
+                    <?php endif; ?>
+                    </ul>
+                </div> <!-- #pagination-->
+            </div> <!-- #teacher-content -->
+        </div> <!-- #main-content -->
+    </div> <!-- #main-container -->
 </div> <!-- #content -->

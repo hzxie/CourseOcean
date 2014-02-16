@@ -8,6 +8,8 @@ html, body {
 div#header {
     background-color: #3eafe8;
     font-size: 16px;
+    max-height: 74px;
+    min-width: 960px;
     padding: 16px 0;
     position: fixed;
     top: 0;

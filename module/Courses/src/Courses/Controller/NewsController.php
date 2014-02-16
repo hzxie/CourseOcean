@@ -72,7 +72,6 @@ class NewsController extends AbstractActionController
 
     /**
      * Display detail information of a certain lecture.
-     * @param  int $courseID - the unique id of the course.
      * @return a ViewModel object which contains HTML content
      */
     public function detailAction()
@@ -88,6 +87,11 @@ class NewsController extends AbstractActionController
         );
     }
 
+    /**
+     * Get the information of the news.
+     * @param  int $newsID - the unique id of the news
+     * @return an array which contains information of a post of news
+     */
     private function getNewsContent($newsID)
     {
         $sm                 = $this->getServiceLocator();
