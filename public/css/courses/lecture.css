@@ -1,130 +1,96 @@
 div#content {
-	background-color: #fff;
-	margin: 0 auto;
-	width: 960px;
+    padding-top: 74px;
 }
 
 div#content div#banner {
-	background: url('../../img/banner-courses.jpg') no-repeat;
-	border-bottom: 1px solid #8a8c8f;
-	height: 120px;
+    background-color: #3995c4;
+    color: #fff;
+    padding-top: 25px;
+    padding-bottom: 25px;
 }
 
-div#content div#banner div#title {
-	padding-top: 30px;
-	padding-left: 50px;
+div#banner div#banner-content {
+    margin: 0 auto;
+    overflow: hidden;
+    width: 960px;
 }
 
-div#content div#banner div#title h1 {
-	color: #1790c7;
+div#banner-content div#slogan {
+    float: left;
 }
 
-div#content div#banner div#title h2 {
-	padding-left: 20px;
+div#banner-content form#search {
+    margin-top: 50px;
 }
 
-div#content div#main-content {
-	position: relative;
-	height: auto;
-	overflow: hidden;
+div#content div#main-container {
+    margin: 0 auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 960px;
+}
+
+div#main-container div#main-content {
+    overflow: hidden;
 }
 
 div#main-content div#sidebar {
-	background-color: #e6f4fb;
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100%;
-	min-height: 500px;
-	width: 260px;
+    float: left;
+    width: 300px;
 }
 
-div#sidebar div#search {
-	padding: 20px 20px 0 20px;
-	width: 220px;
-	top: 0;
+div#sidebar div.section {
+    margin-bottom: 10px;
 }
 
-div#search div.field,
-div#search form.field {
-	margin-bottom: 20px;
+div#sidebar div.section input[type=submit] {
+    margin-left: 168px;
 }
 
-form.field select.place {
-	margin-bottom: 10px;
+div#main-content div#course-content {
+    margin-left: 320px;
 }
 
-div#main-content div#lectures {
-	margin-left: 260px;
-	width: 660px;
-	padding: 20px 20px 10px 20px;
+div#course-content div.block {
+    border: 1px solid #ebeef1;
+    margin-bottom: 20px;
+    padding: 8px;
+    overflow: hidden;
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
 }
 
-div#lectures div.section {
-	border-bottom: 1px dotted #aeaeae;
-	margin-bottom: 20px;
-	overflow: hidden;
+div#course-content div.block a {
+    text-decoration: none;
 }
 
-div.section div.title {
-	font-size: 16px;
-	font-weight: bold;
-	margin: 10px 0 10px 0;
-	overflow: hidden;
+div#course-content div.block div.icon {
+    float: left;
 }
 
-div.section div.title span {
-	float: left;
-	margin-right: 10px;
+div#course-content div.block div.content {
+    color: #8e959b;
+    font-size: 13px;
+    margin-left: 50px;
 }
 
-div.section div.brand {
-	height: 29px;
-	width: 30px;
+div#course-content div.block div.content h4 {
+    color: #2f3536;
 }
 
-div.section div.brand.brand-new {
-	background: url('../../img/brand-new.png') no-repeat;
+div#course-content div.block div.content span {
+    margin-right: 20px;
 }
 
-div.section div.brand.brand-hot {
-	background: url('../../img/brand-hot.png') no-repeat;
+div#course-content div.block div.content i {
+    opacity: .6;
 }
 
-div.section div.meta {
-	color: #565656;
-	font-size: 12px;
-	margin-bottom: 10px;
+div#course-content div.block div.icon {
+    padding: 8px 0 0 4px;
 }
 
-div.section div.meta span {
-	margin-right: 10px;
-}
-
-div.section div.meta i {
-	opacity: .6;
-}
-
-div.section div.introduction {
-	color: #565656;
-	font-size: 13px;
-	margin-bottom: 10px;
-}
-
-div.section div.detail {
-	background-color: #f2f2f2;
-	color: #000;
-	font-size: 13px;
-	margin-bottom: 10px;
-	padding: 5px;
-}
-
-div.section div.detail ul {
-	margin: 0;
-}
-
-div#pagination {
-	margin-left: 260px;
-	width: 660px;
-	padding: 0 20px 20px 20px;
+div#course-content div.block div.meta {
+    margin-bottom: 10px;
 }
