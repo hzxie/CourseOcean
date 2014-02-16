@@ -19,6 +19,7 @@ class Lecture {
     {
         $this->lecture_id           = (!empty($data['lecture_id']))         ? $data['lecture_id']           : null;
         $this->course_id            = (!empty($data['course_id']))          ? $data['course_id']            : null;
+        $this->create_time          = (!empty($data['create_time']))        ? $data['create_time']          : null;
         $this->course_name          = (!empty($data['course_name']))        ? $data['course_name']          : null;
         $this->course_brief         = (!empty($data['course_brief']))       ? $data['course_brief']         : null;
         $this->course_type_slug     = (!empty($data['course_type_slug']))   ? $data['course_type_slug']     : null;
@@ -46,6 +47,12 @@ class Lecture {
      * @var int
      */
     public $course_id;
+
+    /**
+     * The time when the lecture was created.
+     * @var TimeStamp
+     */
+    public $create_time;
 
     /**
      * The name of the course.
