@@ -17,23 +17,23 @@ class Lecture {
      */
     public function exchangeArray($data)
     {
-        $this->lecture_id           = (!empty($data['lecture_id']))         ? $data['lecture_id']           : null;
-        $this->course_id            = (!empty($data['course_id']))          ? $data['course_id']            : null;
-        $this->create_time          = (!empty($data['create_time']))        ? $data['create_time']          : null;
-        $this->course_name          = (!empty($data['course_name']))        ? $data['course_name']          : null;
-        $this->course_brief         = (!empty($data['course_brief']))       ? $data['course_brief']         : null;
-        $this->course_type_slug     = (!empty($data['course_type_slug']))   ? $data['course_type_slug']     : null;
-        $this->course_type_name     = (!empty($data['course_type_name']))   ? $data['course_type_name']     : null;
-        $this->uid                  = (!empty($data['uid']))                ? $data['uid']                  : null;
-        $this->teacher_name         = (!empty($data['teacher_name']))       ? $data['teacher_name']         : null;
-        $this->course_audience      = (!empty($data['course_audience']))    ? $data['course_audience']      : null;
-        $this->lecture_start_time   = (!empty($data['lecture_start_time'])) ? $data['lecture_start_time']   : null;
-        $this->lecture_end_time     = (!empty($data['lecture_end_time']))   ? $data['lecture_end_time']     : null;
-        $this->lecture_region       = (!empty($data['lecture_region']))     ? $data['lecture_region']       : null;
-        $this->lecture_province     = (!empty($data['lecture_province']))   ? $data['lecture_province']     : null;
-        $this->lecture_city         = (!empty($data['lecture_city']))       ? $data['lecture_city']         : null;
-        $this->lecture_address      = (!empty($data['lecture_address']))    ? $data['lecture_address']      : null;
-        $this->lecture_expense      = (!empty($data['lecture_expense']))    ? $data['lecture_expense']      : null;
+        $this->lecture_id           = (!empty($data['lecture_id']))             ? $data['lecture_id']           : null;
+        $this->course_id            = (!empty($data['course_id']))              ? $data['course_id']            : null;
+        $this->lecture_create_time  = (!empty($data['lecture_create_time']))    ? $data['lecture_create_time']  : null;
+        $this->course_name          = (!empty($data['course_name']))            ? $data['course_name']          : null;
+        $this->course_brief         = (!empty($data['course_brief']))           ? $data['course_brief']         : null;
+        $this->course_type_slug     = (!empty($data['course_type_slug']))       ? $data['course_type_slug']     : null;
+        $this->course_type_name     = (!empty($data['course_type_name']))       ? $data['course_type_name']     : null;
+        $this->uid                  = (!empty($data['uid']))                    ? $data['uid']                  : null;
+        $this->teacher_name         = (!empty($data['teacher_name']))           ? $data['teacher_name']         : null;
+        $this->course_audience      = (!empty($data['course_audience']))        ? $data['course_audience']      : null;
+        $this->lecture_start_time   = (!empty($data['lecture_start_time']))     ? $data['lecture_start_time']   : null;
+        $this->lecture_end_time     = (!empty($data['lecture_end_time']))       ? $data['lecture_end_time']     : null;
+        $this->lecture_region       = (!empty($data['lecture_region']))         ? $data['lecture_region']       : null;
+        $this->lecture_province     = (!empty($data['lecture_province']))       ? $data['lecture_province']     : null;
+        $this->lecture_city         = (!empty($data['lecture_city']))           ? $data['lecture_city']         : null;
+        $this->lecture_address      = (!empty($data['lecture_address']))        ? $data['lecture_address']      : null;
+        $this->lecture_expense      = (!empty($data['lecture_expense']))        ? $data['lecture_expense']      : null;
     }
 
     /**
@@ -49,10 +49,10 @@ class Lecture {
     public $course_id;
 
     /**
-     * The time when the lecture was created.
+     * The time when the lecture has been created.
      * @var TimeStamp
      */
-    public $create_time;
+    public $lecture_create_time;
 
     /**
      * The name of the course.

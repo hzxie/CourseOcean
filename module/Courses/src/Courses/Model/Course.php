@@ -17,17 +17,17 @@ class Course {
      */
     public function exchangeArray($data)
     {
-        $this->course_id            = (!empty($data['course_id']))          ? $data['course_id']        : null;
-        $this->course_name          = (!empty($data['course_name']))        ? $data['course_name']      : null;
-        $this->course_type_id       = (!empty($data['course_type_id']))     ? $data['course_type_id']   : null;
-        $this->course_type_slug     = (!empty($data['course_type_slug']))   ? $data['course_type_slug'] : null;
-        $this->course_type_name     = (!empty($data['course_type_name']))   ? $data['course_type_name'] : null;
-        $this->uid                  = (!empty($data['uid']))                ? $data['uid']              : null;
-        $this->teacher_name         = (!empty($data['teacher_name']))       ? $data['teacher_name']     : null;
-        $this->create_time          = (!empty($data['create_time']))        ? $data['create_time']      : null;
-        $this->course_brief         = (!empty($data['course_brief']))       ? $data['course_brief']     : null;
-        $this->course_cycle         = (!empty($data['course_cycle']))       ? $data['course_cycle']     : null;
-        $this->course_audience      = (!empty($data['course_audience']))    ? $data['course_audience']  : null;
+        $this->course_id            = (!empty($data['course_id']))          ? $data['course_id']            : null;
+        $this->course_name          = (!empty($data['course_name']))        ? $data['course_name']          : null;
+        $this->course_type_id       = (!empty($data['course_type_id']))     ? $data['course_type_id']       : null;
+        $this->course_type_slug     = (!empty($data['course_type_slug']))   ? $data['course_type_slug']     : null;
+        $this->course_type_name     = (!empty($data['course_type_name']))   ? $data['course_type_name']     : null;
+        $this->uid                  = (!empty($data['uid']))                ? $data['uid']                  : null;
+        $this->teacher_name         = (!empty($data['teacher_name']))       ? $data['teacher_name']         : null;
+        $this->course_create_time   = (!empty($data['course_create_time'])) ? $data['course_create_time']   : null;
+        $this->course_brief         = (!empty($data['course_brief']))       ? $data['course_brief']         : null;
+        $this->course_cycle         = (!empty($data['course_cycle']))       ? $data['course_cycle']         : null;
+        $this->course_audience      = (!empty($data['course_audience']))    ? $data['course_audience']      : null;
     }
 
     /**
@@ -76,7 +76,7 @@ class Course {
      * The time when the course has been created.
      * @var TimeStamp
      */
-    public $create_time;
+    public $course_create_time;
 
     /**
      * The brief introduction of the course.

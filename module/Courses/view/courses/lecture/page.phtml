@@ -42,7 +42,7 @@
                 <?php foreach ( $lectures as $lecture ) { ?>
                 <div class="block">
                     <div class="icon">
-                    <?php if ( strtotime($lecture->create_time) > strtotime('-7 day', time()) ):?>
+                    <?php if ( strtotime($lecture->lecture_create_time) > strtotime('-7 day', time()) ):?>
                         <span class="label label-success">NEW</span>
                     <?php endif; ?>
                     </div> <!-- .icon -->
