@@ -45,7 +45,7 @@ class Module
     {
         return array(
             'factories' => array(
-                'Courses\Model\LectureTable' => function($sm) {
+                'Solution\Model\LectureTable' => function($sm) {
                     $tableGateway = $sm->get('LectureTableGateway');
                     $table = new LectureTable($tableGateway);
                     return $table;
@@ -56,7 +56,7 @@ class Module
                     $resultSetPrototype->setArrayObjectPrototype(new Lecture());
                     return new TableGateway('itp_lectures', $dbAdapter, null, $resultSetPrototype);
                 },
-                'Courses\Model\NewsTable' => function($sm) {
+                'Solution\Model\NewsTable' => function($sm) {
                     $tableGateway = $sm->get('NewsTableGateway');
                     $table = new NewsTable($tableGateway);
                     return $table;

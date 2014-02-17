@@ -4,9 +4,7 @@ return array(
     'modules' => array(
         'Application',
         'Accounts',
-        'Courses',
-        // 'Notification',
-        // 'Requirements',
+        'Solution',
     ),
 
     // These are various options for the listeners attached to the ModuleManager
