@@ -1,0 +1,82 @@
+<?php 
+    echo $this->headTitle($teacher['teacher_name'].' | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/solutions/detail.css');
+?>
+
+<div id="content">
+    <div id="banner">
+        <div id="banner-content">
+            <h3><?php echo $teacher['teacher_name']; ?></h3>
+        </div> <!-- #banner-content -->
+    </div> <!-- #banner -->
+    <div id="main-container">
+        <div id="main-content">
+            <ul class="breadcrumb">
+                <li><a href="<?php echo $this->basePath(); ?>">首页</a> <span class="divider">/</span></li>
+                <li><a href="<?php echo $this->basePath('/solutions/teacher'); ?>">讲师团队</a> <span class="divider">/</span></li>
+                <li class="active"><?php echo $teacher['teacher_name']; ?></li>
+            </ul>
+            <div id="detail-container">
+                <div id="overview">
+                	<div id="avatar">
+                    <?php if ( $teacher['teacher_avatar'] == null ): ?>
+                        <img class="img-circle" src="<?php echo $this->basePath('/img/avatars/avatar.png'); ?>" alt="avatar">
+                    <?php else: ?>
+                        <img class="img-circle" src="<?php echo $this->basePath($teacher['teacher_avatar']); ?>" alt="avatar" />
+                    <?php endif; ?>
+                    </div> <!-- .avatar -->
+                    <div id="overview-content">
+                        <h4><?php echo $teacher['teacher_name']; ?></h4>
+                        <p><?php echo $teacher['teacher_company']; ?></p>
+                    </div> <!-- #overview-content -->
+                </div> <!-- #overview -->
+                <div id="detail-content">
+                    <div class="section">
+                        <h4>讲师简介</h4>
+                        <p><?php echo $teacher['teacher_brief']; ?></p>
+                    </div> <!-- .section -->
+                    <div class="section">
+                        <h4>授课领域</h4>
+                        <p><?php echo $teacher['teacher_field']; ?></p>
+                    </div> <!-- .section -->
+                    <div class="section">
+                        <h4>开设课程</h4>
+                        <?php if ( $courses == null ): ?>
+                            <p>暂无开设课程</p>
+                        <?php else: ?>
+                        <ul>
+                            <?php foreach ( $courses as $course ) { ?>
+                            <li><a href="<?php echo $this->basePath('/solutions/course/detail/'.$course['course_id']); ?>" target="_blank"><?php echo $course['course_name']; ?></a></li>
+                            <?php } ?>
+                        </ul>
+                        <?php endif; ?>
+                    </div> <!-- .section -->
+                </div> <!-- #detail-content -->
+            </div> <!-- #detail-container -->
+        </div> <!-- #main-content -->
+        <div id="sidebar">
+            <div class="section">
+                <h4>相关讲师</h4>
+                <ul class="teachers">
+                	<li class="teacher">
+                		<div class="avatar">
+                			<img class="img-circle" src="<?php echo $this->basePath('/img/avatars/avatar.png'); ?>" alt="avatar">
+                		</div> <!-- .avatar -->
+                		<div class="introduction">
+                			<strong><a href="#">朱少民</a></strong>
+                			<p>曾任思科网迅QA总监</p>
+                		</div> <!-- .introduction -->
+                	</li>
+                </ul>
+            </div> <!-- .section -->
+            <div class="section">
+                <h4>分享</h4>
+                <ul class="inline">
+                    <li><a href="#" title="新浪微博"><img src="<?php echo $this->basePath(); ?>/img/socials/weibo.png" alt="Weibo"></a></li>
+                    <li><a href="#" title="微信"><img src="<?php echo $this->basePath(); ?>/img/socials/wechat.png" alt="Wechat"></a></li>
+                    <li><a href="#" title="来往"><img src="<?php echo $this->basePath(); ?>/img/socials/laiwang.png" alt="Laiwang"></a></li>
+                </ul>
+            </div> <!-- .section -->
+        </div> <!-- #sidebar -->
+    </div> <!-- #main-container -->
+</div> <!-- #content -->

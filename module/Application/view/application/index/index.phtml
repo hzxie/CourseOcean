@@ -66,7 +66,7 @@
                         <span class="label label-success">NEW</span>
                     <?php endif; ?>
                     </div> <!-- .icon -->
-                    <a href="<?php echo $this->basePath(); ?>/solution/lecture/detail/<?php echo $lecture->lecture_id; ?>">
+                    <a href="<?php echo $this->basePath(); ?>/solutions/lecture/detail/<?php echo $lecture->lecture_id; ?>">
                         <div class="content">
                             <h4><?php echo $lecture->course_name; ?></h4>
                             <span><i class="icon-calendar"></i> <?php echo date('Y年m月d日', strtotime($lecture->lecture_start_time)); ?>~<?php echo date('Y年m月d日', strtotime($lecture->lecture_end_time)); ?></span>
@@ -96,7 +96,7 @@
                     <div class="icon">
                         <img src="<?php echo $this->basePath(); ?>/img/icons/post.png" alt="Post">
                     </div> <!-- .icon -->
-                    <a href="<?php echo $this->basePath(); ?>/solution/news/detail/<?php echo $newsPost->news_id; ?>">
+                    <a href="<?php echo $this->basePath(); ?>/solutions/news/detail/<?php echo $newsPost->news_id; ?>">
                         <div class="content">
                             <h4><?php echo $newsPost->news_title; ?></h4>
                             <span><i class="icon-th-list"></i> <?php echo $newsPost->news_category_name; ?></span>

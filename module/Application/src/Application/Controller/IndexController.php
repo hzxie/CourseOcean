@@ -48,7 +48,7 @@ class IndexController extends AbstractActionController
     {
         $pageNumber     = 1;
         $sm             = $this->getServiceLocator();
-        $lectureTable   = $sm->get('Courses\Model\LectureTable');
+        $lectureTable   = $sm->get('Solutions\Model\LectureTable');
 
         return $lectureTable->fetchAll($pageNumber, $limit);
     }
@@ -74,7 +74,7 @@ class IndexController extends AbstractActionController
     {
         $pageNumber     = 1;
         $sm             = $this->getServiceLocator();
-        $newsTable      = $sm->get('Courses\Model\NewsTable');
+        $newsTable      = $sm->get('Solutions\Model\NewsTable');
 
         return $newsTable->fetchAll($pageNumber, $limit);
     }
