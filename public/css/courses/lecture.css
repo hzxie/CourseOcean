@@ -94,3 +94,7 @@ div#course-content div.block div.icon {
 div#course-content div.block div.meta {
     margin-bottom: 10px;
 }
+
+div#course-content div.block div.meta td {
+    padding-right: 10px;
+}

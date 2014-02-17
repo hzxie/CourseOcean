@@ -50,10 +50,16 @@
                         <div class="content">
                             <h4><?php echo $lecture->course_name; ?></h4>
                             <div class="meta">
-                                <span><i class="icon-th-list"></i><strong>课程类别: </strong><?php echo $lecture->course_type_name; ?></span>
-                                <span><i class="icon-time"></i><strong>培训时间: </strong><?php echo date('Y年m月d日', strtotime($lecture->lecture_start_time)); ?>~<?php echo date('Y年m月d日', strtotime($lecture->lecture_end_time)); ?></span><br />
-                                <span><i class="icon-map-marker"></i><strong>培训地点: </strong><? echo $lecture->lecture_province; ?> <? echo $lecture->lecture_city; ?></span>
-                                <span><i class="icon-user"></i><strong>讲师: </strong><?php echo $lecture->teacher_name; ?></span><br />
+                                <table>
+                                    <tr>
+                                        <td><i class="icon-th-list"></i><strong>课程类别: </strong><?php echo $lecture->course_type_name; ?></td>
+                                        <td><i class="icon-time"></i><strong>培训时间: </strong><?php echo date('Y年m月d日', strtotime($lecture->lecture_start_time)); ?>~<?php echo date('Y年m月d日', strtotime($lecture->lecture_end_time)); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="icon-user"></i><strong>讲师: </strong><?php echo $lecture->teacher_name; ?></td>
+                                        <td><i class="icon-map-marker"></i><strong>培训地点: </strong><? echo $lecture->lecture_province; ?> <? echo $lecture->lecture_city; ?></td>
+                                    </tr>
+                                </table>
                                 <span><i class="icon-eye-open"></i><strong>听众范围: </strong><?php echo $lecture->course_audience; ?></span>
                             </div> <!-- .meta -->
                             <p><?php echo mb_substr( $lecture->course_brief, 0, 120, "utf-8" ); ?>...</p>

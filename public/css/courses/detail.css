@@ -91,6 +91,10 @@ div#detail-container div.section div.content {
     margin-right: 30px;
 }
 
+div#detail-container div.section div.content table td {
+    min-width: 120px;
+}
+
 div#detail-container div#teacher-introduction {
     overflow: hidden;
 }
