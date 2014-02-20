@@ -1,0 +1,92 @@
+div#mask {
+    background-color: #fff;
+    display: none;
+    opacity: .75;
+    filter: alpha(opacity=75);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)";
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=75);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 255;
+}
+
+div#dialog-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+}
+
+div#dialog-container div.dialog {
+    display: none;
+    position: relative;
+    top: 120px;
+    left: -50%;
+    width: 625px;
+    z-index: 256;
+    -webkit-box-shadow: 0 0 40px rgba(0,0,0,.4);
+       -moz-box-shadow: 0 0 40px rgba(0,0,0,.4);
+            box-shadow: 0 0 40px rgba(0,0,0,.4);
+}
+
+div.dialog div.dialog-header {
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 144%;
+    padding: 30px;
+}
+
+div.dialog div.dialog-content {
+    background-color: #fff;
+    overflow: hidden;
+    padding: 30px; 
+}
+
+div.dialog-content div.field {
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+div.dialog-content div.field:last-child {
+    float: right;
+    margin-bottom: 0;
+    margin-right: 20px;
+}
+
+div.field div.title {
+    float: left;
+    color: #404040;
+    font-size: 16px;
+    font-weight: bold;
+    padding-top: 12px;
+    width: 120px;
+}
+
+div.field div.value {
+    float: left;
+    border-bottom: 1px dotted #d4d4d4;
+    font-size: 16px;
+    padding: 6px 0 2px 0;
+    width: 420px;
+}
+
+div.value input[type="text"],
+div.value input[type="password"] {
+    border: 1px solid #fff;
+    box-shadow: none;
+    color: #000;
+    width: 100%;
+}
+
+div.value input[type="text"]:focus,
+div.value input[type="password"]:focus {
+    border: 1px solid #84a3ff;
+}
+
+div.value input[type="text"]:disabled,
+div.value input[type="password"]:disabled {
+    background-color: #fff;
+}

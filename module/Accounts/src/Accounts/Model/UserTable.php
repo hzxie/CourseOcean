@@ -168,6 +168,24 @@ class UserTable
     }
 
     /**
+     * Update activation status of the account in database.
+     * @param  String $email - the email of the user
+     * @param  bool $isActivated - a flag that infers if the account has 
+     *         been activated
+     */
+    public function updateAccountActivated($email, $isActivated)
+    {
+        return $this->tableGateway->update(
+            array(
+                'is_activated'  => $isActivated,
+            ),
+            array(
+                'email'         => $email,
+            )
+        );
+    }
+
+    /**
      * Handle asynchronous editing email requests for a user.
      * @param  Array $userInfo
      * @return true if the query is successful

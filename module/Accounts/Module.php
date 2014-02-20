@@ -18,6 +18,8 @@ use Accounts\Model\Teacher;
 use Accounts\Model\TeacherTable;
 use Accounts\Model\Company;
 use Accounts\Model\CompanyTable;
+use Accounts\Model\EmailValidation;
+use Accounts\Model\EmailValidationTable;
 
 class Module implements AutoloaderProviderInterface
 {
@@ -103,6 +105,17 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Company());
                     return new TableGateway('itp_companies', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Accounts\Model\EmailValidationTable' => function($sm) {
+                    $tableGateway = $sm->get('EmailValidationTableGateway');
+                    $table = new EmailValidationTable($tableGateway);
+                    return $table;
+                },
+                'EmailValidationTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new EmailValidation());
+                    return new TableGateway('itp_email_validation', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );

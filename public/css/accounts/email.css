@@ -3,7 +3,7 @@ div#content {
 	padding-bottom: 40px;
 }
 
-div#content div#dialog-container {
+div#content div#dialog {
 	background-color: #fff;
 	border: 1px solid #d0d1d5;
 	margin: 40px auto 0 auto;
@@ -13,7 +13,7 @@ div#content div#dialog-container {
     		border-radius: 4px;
 }
 
-div#dialog-container div#dialog-header {
+div#dialog div#dialog-header {
 	background-color: #f6f7f8;
 	border-bottom: 1px solid #d0d1d5;
 	font-weight: bold;
@@ -23,11 +23,11 @@ div#dialog-container div#dialog-header {
     		border-radius: 4px 4px 0 0;
 }
 
-div#dialog-container div#dialog-content {
+div#dialog div#dialog-content {
 	padding: 30px 20px 10px 20px;
 }
 
-div#dialog-container div#dialog-footer {
+div#dialog div#dialog-footer {
 	border-top: 1px solid #d0d1d5;
 	margin: 0 20px 0 20px;
 	padding: 10px 0 10px 0;
@@ -37,4 +37,46 @@ div#dialog-container div#dialog-footer {
 div#footer {
 	position: absolute;
 	bottom: 0;
+}
+
+div#mask {
+    background-color: #fff;
+    display: none;
+    opacity: .75;
+    filter: alpha(opacity=75);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)";
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=75);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 255;
+}
+
+div#dialog-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+}
+
+div#dialog-container div.dialog {
+    display: none;
+    position: relative;
+    top: 120px;
+    left: -50%;
+    width: 625px;
+    z-index: 65536;
+    -webkit-box-shadow: 0 0 40px rgba(0,0,0,.4);
+       -moz-box-shadow: 0 0 40px rgba(0,0,0,.4);
+            box-shadow: 0 0 40px rgba(0,0,0,.4);
+}
+
+div.dialog div.dialog-header {
+    background-color: #e59400;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 144%;
+    padding: 30px;
 }

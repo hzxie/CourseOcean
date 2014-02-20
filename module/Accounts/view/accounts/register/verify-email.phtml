@@ -4,7 +4,7 @@
 ?>
 
 <div id="content">
-    <div id="dialog-container" class="row">
+    <div id="dialog" class="row">
         <div id="dialog-header">
             请确认您的Email地址
         </div> <!-- #dialog-header -->
@@ -16,11 +16,10 @@
             <button class="btn btn-danger" onclick="javascript:editEmail();">修改电子邮件地址</button>
             <button class="btn btn-primary" onclick="javascript:redirectToMailbox();">查看邮箱</button>
         </div> <!-- #dialog-footer -->
-    </div> <!-- #dialog-container -->
+    </div> <!-- #dialog -->
 </div> <!-- #content -->
 
-<div id="email-dialog">
-</div> <!-- #email-dialog -->
+<div id="mask"></div>
 
 <script type="text/javascript">
     function editEmail() {
