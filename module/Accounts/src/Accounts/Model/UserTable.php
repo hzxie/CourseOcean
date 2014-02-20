@@ -167,6 +167,26 @@ class UserTable
         return $userData->uid;
     }
 
+    public function updateAccountActivated($email, $isActivated)
+    {
+        /*$rowSet    = $this->tableGateway->select(
+            array( 'email' => $email )
+        );
+
+        $row                = $rowSet->current();
+        $row->is_activated  = $isActivated;
+        return $row->save();*/
+
+        return $this->tableGateway->update(
+            array(
+                'is_activated'  => $isActivated,
+            ),
+            array(
+                'email'         => $email,
+            )
+        );
+    }
+
     /**
      * Handle asynchronous editing email requests for a user.
      * @param  Array $userInfo

@@ -178,7 +178,7 @@
 <?php $this->inlineScript()->captureStart(); ?>
     function processResult(result, userGroup) {
         if ( result['isSuccessful'] ) {
-            
+            return doVerifyEmailAction();
         }
 
         var errorMessage = '';

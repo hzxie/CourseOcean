@@ -4,10 +4,13 @@ namespace Accounts\Controller;
 
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Json\Json;
-use Zend\Mail;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
+
+use Zend\Mail\Message;
+use Zend\Mail\Transport\Smtp as SmtpTransport;
+use Zend\Mail\Transport\SmtpOptions;
 
 /**
  * Handle requests on the register page.
@@ -99,7 +102,7 @@ class RegisterController extends AbstractActionController
     private function verifyBasicInfo($basicInfo)
     {
         $result = array(
-            'isBasicSuccessful'         => false,
+            'isSuccessful'              => false,
             'isUsernameEmpty'           => empty($basicInfo['username']),
             'isUsernameLegal'           => $this->isUsernameLegal($basicInfo['username']),
             'isUsernameExists'          => $this->isUsernameExists($basicInfo['username']),
@@ -235,7 +238,7 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * [verifyEmailAction description]
+     * Display a HTML content which notice user to check his mailbox.
      * @return a ViewModel object which contains HTML content
      */
     public function verifyEmailAction()
@@ -243,12 +246,29 @@ class RegisterController extends AbstractActionController
         if ( !$this->isAllowedToAccess() ) {
             return $this->sendRedirect('accounts/register');
         }
+        if ( $this->isActivated() ) {
+            return $this->sendRedirect('accounts/register/completeProfile');
+        }
 
-        $email = $this->getEmailAddress();
-        $this->sendValidationEmail($email);
+        $this->verifyEmail();        
         return array(
-            'email'     => $email,
+            'email'     => $this->getEmailAddress(),
         );
+    }
+
+    /**
+     * Verify if the email of the user is valid.
+     *
+     * The function will add a record to database and send an email
+     * to the user.
+     */
+    private function verifyEmail()
+    {
+        $email  = $this->getEmailAddress();
+        $guid   = $this->getGUID();
+
+        $this->saveToDatabase($email, $guid);
+        $this->sendValidationEmail($email, $guid);
     }
 
     /**
@@ -261,26 +281,149 @@ class RegisterController extends AbstractActionController
         return $session->offsetExists('isLogined');
     }
 
+    /**
+     * Get the email of the user.
+     * @return an String which infers the email of the user
+     */
     private function getEmailAddress()
     {
         $session    = new Container('itp_session');
         return $session->offsetGet('email');
     }
 
-    private function sendValidationEmail($email)
+    /**
+     * Save activation information in the database.
+     * @param  String $email - the email of the user
+     * @param  String $guid - the activation code of the account
+     */
+    private function saveToDatabase($email, $guid)
     {
-        $mail   = new Mail\Message();
-        $mail->setBody($this->getMailContent())
-             ->setFrom('noreply@zjhzxhz.com', 'IT培训平台')
-             ->addTo($email, $email)
-             ->setSubject('欢迎使用IT培训平台');
+        $sm                 = $this->getServiceLocator();
+        $validationTable    = $sm->get('Accounts\Model\EmailValidationTable');
+        $record             = array(
+            'email'         => $email,
+            'guid'          => $guid,
+        );
+
+        return $validationTable->createRecord($record);
     }
 
-    private function getMailContent()
+    /**
+     * Send validation email to the user.
+     * @param  String $email - the email of the user
+     * @param  String $guid - the activation code of the account
+     */
+    private function sendValidationEmail($email, $guid)
     {
-        return 'Mail from XieHaozhe-Thinkpad.';
+        $message = new Message();
+        $message->addTo($email)
+                ->addFrom('noreply@zjhzxhz.com', 'IT培训平台')
+                ->setSubject('请完成在IT培训平台的注册')
+                ->setBody($this->getMailContent($email, $guid));
+
+        $transport = new SmtpTransport();
+        $transport->send($message);
     }
 
+    /**
+     * Get random activation code.
+     * @return an random activation code of the account
+     */
+    private function getGUID()
+    {
+        if (function_exists('com_create_guid') === true) {
+            return trim(com_create_guid(), '{}');
+        }
+
+        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
+    }
+
+    /**
+     * Generate the content of the validation email.
+     * @param  String $email - the email of the user
+     * @param  String $guid - the activation code of the account
+     * @return the content of the validation email
+     */
+    private function getMailContent($email, $guid)
+    {
+        return "<html><body><a href=\"#email=$email&activationCode=$guid\">单击此处激活账户</a></body></html>";
+    }
+
+    /**
+     * Handle the activating account requrests of the users.
+     * @return an HTTP redirect reponse object
+     */
+    public function activateAccountAction()
+    {
+        $email          = $this->getRequest()->getQuery('email');
+        $guid           = $this->getRequest()->getQuery('activationCode');
+
+        $isSuccessful   = $this->activateAccount($email, $guid);
+
+        if ( $isSuccessful ) {
+            return $this->sendRedirect('accounts/register/completeProfile');
+        } else {
+            return $this->sendRedirect('accounts/register/verifyEmail');
+        }
+    }
+
+    /**
+     * Handle the activating account requrests of the users.
+     * @param  String $email - the email of the user
+     * @param  String $guid - the activation code of the account
+     * @return true if the operation is successful
+     */
+    private function activateAccount($email, $guid)
+    {
+        $sm                 = $this->getServiceLocator();
+        $validationTable    = $sm->get('Accounts\Model\EmailValidationTable');
+        $isSuccessful       = $validationTable->validateEmail($email, $guid);
+
+        if ( $isSuccessful ) {
+            $isActivated    = true;
+            $this->updateAccountActivated($email, $isActivated);
+        }
+
+        return $isSuccessful;
+    }
+
+    /**
+     * Update activation status of the account.
+     * @param  String $email - the email of the user
+     * @param  bool $isActivated - a flag that infers if the account has 
+     *         been activated
+     */
+    private function updateAccountActivated($email, $isActivated)
+    {
+        $this->updateSessionAccountActivated($isActivated);
+        $this->updateDatabaseAccountActivated($email, $isActivated);
+    }
+
+    /**
+     * Update activation status of the account in session.
+     * @param  bool $isActivated - a flag that infers if the account has 
+     *         been activated
+     */
+    private function updateSessionAccountActivated($isActivated)
+    {
+        $session    = new Container('itp_session');
+        $session->offsetSet('isActivated', true);
+    }
+
+    /**
+     * Update activation status of the account in database.
+     * @param  String $email - the email of the user
+     * @param  bool $isActivated - a flag that infers if the account has 
+     *         been activated
+     */
+    private function updateDatabaseAccountActivated($email, $isActivated)
+    {
+        $sm         = $this->getServiceLocator();
+        $userTable  = $sm->get('Accounts\Model\UserTable');
+
+        return $userTable->updateAccountActivated($email, $isActivated);
+    }
+    
     /**
      * [completeProfileAction description]
      * @return a ViewModel object which contains HTML content
