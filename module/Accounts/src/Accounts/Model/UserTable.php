@@ -169,14 +169,6 @@ class UserTable
 
     public function updateAccountActivated($email, $isActivated)
     {
-        /*$rowSet    = $this->tableGateway->select(
-            array( 'email' => $email )
-        );
-
-        $row                = $rowSet->current();
-        $row->is_activated  = $isActivated;
-        return $row->save();*/
-
         return $this->tableGateway->update(
             array(
                 'is_activated'  => $isActivated,
