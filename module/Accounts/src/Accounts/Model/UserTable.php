@@ -167,6 +167,26 @@ class UserTable
         return $userData->uid;
     }
 
+    public function updateAccountActivated($email, $isActivated)
+    {
+        /*$rowSet    = $this->tableGateway->select(
+            array( 'email' => $email )
+        );
+
+        $row                = $rowSet->current();
+        $row->is_activated  = $isActivated;
+        return $row->save();*/
+
+        return $this->tableGateway->update(
+            array(
+                'is_activated'  => $isActivated,
+            ),
+            array(
+                'email'         => $email,
+            )
+        );
+    }
+
     /**
      * Update activation status of the account in database.
      * @param  String $email - the email of the user
