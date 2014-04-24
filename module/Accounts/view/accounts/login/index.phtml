@@ -43,7 +43,6 @@
 
         setButtonStyle(true);
         doLoginAction(username, password);
-        setButtonStyle(false);
     });
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
@@ -89,6 +88,8 @@
                 displayErrorMessage('用户名或密码不正确.');
             }
             $('input[name=password]').val('');
+
+            setButtonStyle(false);
         }
     }
 <?php $this->inlineScript()->captureEnd(); ?>

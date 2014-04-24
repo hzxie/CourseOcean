@@ -14,6 +14,8 @@ use Accounts\Model\UserGroup;
 use Accounts\Model\UserGroupTable;
 use Accounts\Model\Person;
 use Accounts\Model\PersonTable;
+use Accounts\Model\Position;
+use Accounts\Model\PositionTable;
 use Accounts\Model\Teacher;
 use Accounts\Model\TeacherTable;
 use Accounts\Model\Company;
@@ -83,6 +85,17 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Person());
                     return new TableGateway('itp_people', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Accounts\Model\PositionTable' => function($sm) {
+                    $tableGateway = $sm->get('PositionTableGateway');
+                    $table = new PositionTable($tableGateway);
+                    return $table;
+                },
+                'PositionTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Position());
+                    return new TableGateway('itp_positions', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Accounts\Model\TeacherTable' => function($sm) {
                     $tableGateway = $sm->get('TeacherTableGateway');

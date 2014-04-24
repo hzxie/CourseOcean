@@ -209,6 +209,23 @@ class RegisterController extends AbstractActionController
     }
 
     /**
+     * Get the unique slug of the user group by its id.
+     * @param  int $userGroupID - the unique id of the user group
+     * @return the unique slug of the user group
+     */
+    private function getUserGroupSlug($userGroupID)
+    {
+        $sm                 = $this->getServiceLocator();
+        $userGroupTable     = $sm->get('Accounts\Model\UserGroupTable');
+        $userGroup          = $userGroupTable->getUserGroupSlug($userGroupID);
+
+        if ( $userGroup == null ) {
+            return null;
+        }
+        return $userGroup->user_group_slug;
+    }
+
+    /**
      * Create a session for a registering user.
      * @param  Array $basicInfoArray - an array which contains user's profile
      */
@@ -221,6 +238,23 @@ class RegisterController extends AbstractActionController
         $session->offsetSet('email', $basicInfoArray['email']);
         $session->offsetSet('isActivated', false);
         $session->offsetSet('userGroupID', $basicInfoArray['userGroupID']);
+    }
+
+    /**
+     * Get user profile from the session.
+     * @return an array which contains user's profile
+     */
+    private function getSessionData()
+    {
+        $session    = new Container('itp_session');
+
+        $sessionData = array(
+            'uid'               => $session->offsetGet('uid'),
+            'username'          => $session->offsetGet('username'),
+            'email'             => $session->offsetGet('email'),
+            'userGroupID'       => $session->offsetGet('userGroupID'),
+        );
+        return $sessionData;
     }
 
     /**
@@ -356,7 +390,7 @@ class RegisterController extends AbstractActionController
     public function activateAccountAction()
     {
         $email          = $this->getRequest()->getQuery('email');
-        $guid           = $this->getRequest()->getQuery('activationCode');
+        $guid           = $this->getRequest()->getQuery('activation_code');
 
         $isSuccessful   = $this->activateAccount($email, $guid);
 
@@ -434,17 +468,46 @@ class RegisterController extends AbstractActionController
             return $this->sendRedirect('accounts/register/verifyEmail');
         }
 
+        $sessionData        = $this->getSessionData();
+        $workPositions      = $this->getWorkPositions();
+
         return array(
-            'username'      => 'zjhzxhz',
-            'email'         => 'zjhzxhz@gmail.com',
-            'userGroupSlug' => 'person',
+            'username'      => $sessionData['username'],
+            'email'         => $sessionData['email'],
+            'userGroupSlug' => $this->getUserGroupSlug($sessionData['userGroupID']),
+            'workPositions' => $workPositions,
         );
     }
 
+    /**
+     * Check if the user has verify his email address.
+     * @return true if the user has verify his email address
+     */
     private function isActivated()
     {
         $session    = new Container('itp_session');
         return $session->offsetGet('isActivated');
+    }
+
+    private function getWorkPositions()
+    {
+        $sm                 = $this->getServiceLocator();
+        $positionTable      = $sm->get('Accounts\Model\PositionTable');
+        $positions          = $positionTable->fetchAll();
+
+        return $this->getWorkPositionsArray($positions);
+    }
+
+    private function getWorkPositionsArray($resultSet)
+    {
+        $workPositionsArray = array();
+
+        if ( $resultSet != null ) {
+            foreach ( $resultSet as $key => $value ) {
+                $workPositionsArray[ $key ] = $value;
+            }
+        }
+        return $workPositionsArray;
     }
 
     /**

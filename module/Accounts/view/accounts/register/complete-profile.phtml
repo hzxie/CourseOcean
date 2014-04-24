@@ -1,6 +1,7 @@
 <?php 
     echo $this->headTitle('完成注册 | ');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/complete.css');
+    echo $this->headScript()->appendFile($this->basePath().'/js/citypicker.js');
 ?>
 
 <div id="content">
@@ -12,8 +13,55 @@
     </div> <!-- #banner -->
     <div id="main-container" class="row">
     	<div class="span8">
+            <div class="section">
+                <label for="username">用户名</label>
+                <input id="username" class="span6" type="text" value="<?php echo $username; ?>" disabled="disabled"/><br />
+                <span>您无法在注册后修改您的用户名</span>
+            </div> <!-- .section -->
+            <div class="section">
+                <label for="real-name">真实姓名</label>
+                <input id="real-name" class="span6" type="text" maxlength="16" /><br />
+                <span>请提供您的真实姓名以便报名参加课程</span>
+            </div> <!-- .section -->
+            <div class="section">
+                <label for="region">居住地区</label>
+                <form action="#">
+                    <select onchange="setProvince(this, province, city)" id="region" name="region" />
+                        <option value="" selected>任意地区</option>
+                        <script type="text/javascript">setRegions();</script>
+                    </select>
+                    <select name="province" disabled="disabled" onchange="setCity(this, city)"></select>
+                    <select name="city" disabled="disabled"></select>
+                </form>
+                <span>请提供您的所在的城市以便我们为您推荐课程</span>
+            </div> <!-- .section -->
+            <div class="section">
+                <label for="work-position">工作职位</label>
+                <select id="work-position" class="span6">
+                <?php foreach ( $workPositions as $position ) { ?>
+                    <option value="<?php echo $position->position_slug; ?>"><?php echo $position->position_name; ?></option>
+                <?php } ?>
+                </select><br />
+                <span>请提供您的工作职位以便我们为您推荐课程</span>
+            </div> <!-- .section -->
+            <div class="section">
+                <label for="work-time">工作时间</label>
+                <input id="work-time" class="span5" type="text" maxlength="2" /><strong> 年</strong><br />
+                <span>请提供您的工作时间以便我们为您推荐课程</span>
+            </div> <!-- .section -->
+            <div class="section">
+                <label for="mobile-phone">移动电话</label>
+                <input id="mobile-phone" class="span6" type="text" maxlength="16" /><br />
+                <span>请提供您的联系方式以便在报名后我们与您联系</span>
+            </div> <!-- .section -->
+            <div id="controls" class="section span6 text-right">
+                <button class="btn btn-primary">确认</button>
+                <button class="btn">取消</button>
+            </div> <!-- .section -->
         </div> <!-- .span8 -->
         <div class="span4">
+            <h4>完善个人资料</h4>
+            <p>请完善您的个人资料, 以便我们更好地为您推荐课程.</p>
         </div>
     </div> <!-- #main-container -->
 </div> <!-- #content -->

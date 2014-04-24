@@ -24,3 +24,34 @@ div#content div#main-container {
 div#main-container div.span8 {
 	margin-left: 0;
 }
+
+div#main-container div.span8 div.section {
+	margin-bottom: 10px;
+}
+
+div#main-container div.span8 div.section#controls {
+	margin-left: 0;
+}
+
+div#main-container div.span8 div.section label {
+	font-weight: bold;
+}
+
+div#main-container div.span8 div.section form,
+div#main-container div.span8 div.section input,
+div#main-container div.span8 div.section select {
+	margin-bottom: 0px;
+}
+
+div#main-container div.span8 div.section select#region {
+	margin-bottom: 10px;
+}
+
+div#main-container div.span8 div.section span {
+	color: #666;
+	font-size: 12px;
+}
+
+div#main-container div.span8 div.section select#region {
+	margin-right: 15px;
+}
