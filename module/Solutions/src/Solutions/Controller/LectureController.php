@@ -267,11 +267,14 @@ class LectureController extends AbstractActionController
      */
     public function attendLectureAction()
     {
-        $lectureID  = $this->getRequest()->getPost('lectureID');
-        $uid        = $this->isLogined();
+        $lectureID      = $this->getRequest()->getPost('lectureID');
+        $uid            = $this->isLogined();
 
-        $result     = array(
-            'isSuccessful'  => $this->attendLecture($uid, $lectureID),
+        /* Check if the attend action is out of date */
+        /* Check if the lecture is full */
+
+        $result         = array(
+            'isSuccessful'  => $this->attendLecture($uid, $lectureID, $isOutOfDate),
         );
 
         $response = $this->getResponse();
@@ -291,6 +294,7 @@ class LectureController extends AbstractActionController
         if ( $uid == 0 || $lectureID == 0 ) {
             return false;
         }
+
         $sm                 = $this->getServiceLocator();
         $attendanceTable    = $sm->get('Solutions\Model\LectureAttendanceTable');
         $attendanceRecord  = array(

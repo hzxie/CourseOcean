@@ -72,7 +72,10 @@
             <div class="section">
                 <h4>参加培训</h4>
                 <p>
-                    <?php if ( !$isAttended ): ?>
+                    <?php date_default_timezone_set('Asia/Shanghai'); ?>
+                    <?php if ( strtotime(date('Y-m-d H:i')) >= strtotime($lecture['lecture_start_time']) ): ?>
+                    <button id="attend-lecture" class="btn btn-danger" disabled="disabled">报名结束</button>
+                    <?php elseif ( !$isAttended ): ?>
                     <button id="attend-lecture" class="btn btn-danger" onclick="javascript:attendLecture()">我要报名</button>
                     <?php else: ?>
                     <button class="btn btn-danger" disabled="disabled">您已报名</button>
