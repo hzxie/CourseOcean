@@ -1,7 +1,7 @@
 <phpunit bootstrap="./bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="ZendSkeletonModule Test Suite">
-            <directory>./</directory>
+        <testsuite name="Accounts Module Test Suite">
+            <directory>./AccountsTest</directory>
         </testsuite>
     </testsuites>
 </phpunit>

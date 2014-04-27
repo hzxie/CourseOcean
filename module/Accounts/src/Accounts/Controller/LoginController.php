@@ -60,8 +60,6 @@ class LoginController extends AbstractActionController
                 return $basePath.'/courses/news/detail/'.$value;
             } else if ( $key == 'courseId' ) {
                 return $basePath.'/courses/course/detail/'.$value;
-            } else if ( $key == 'RequirementId' ) {
-                return $basePath.'/courses/requirement/detail/'.$value;
             } else {
                 return $basePath.'/accounts/dashboard';
             }
