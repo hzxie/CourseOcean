@@ -13,6 +13,7 @@
     </div> <!-- #banner -->
     <div id="main-container" class="row">
     	<div class="span8">
+            <div id="error" class="span6 alert alert-error hide"></div> <!-- #error -->
             <div class="section">
                 <label for="username">用户名</label>
                 <input id="username" class="span6" type="text" value="<?php echo $username; ?>" disabled="disabled"/><br />
@@ -30,8 +31,8 @@
                         <option value="" selected>任意地区</option>
                         <script type="text/javascript">setRegions();</script>
                     </select>
-                    <select name="province" disabled="disabled" onchange="setCity(this, city)"></select>
-                    <select name="city" disabled="disabled"></select>
+                    <select id="province" disabled="disabled" onchange="setCity(this, city)"></select>
+                    <select id="city" disabled="disabled"></select>
                 </form>
                 <span>请提供您的所在的城市以便我们为您推荐课程</span>
             </div> <!-- .section -->
@@ -55,7 +56,7 @@
                 <span>请提供您的联系方式以便在报名后我们与您联系</span>
             </div> <!-- .section -->
             <div id="controls" class="section span6 text-right">
-                <button class="btn btn-primary">确认</button>
+                <button id="complete-profile" class="btn btn-primary">确认</button>
                 <button class="btn">取消</button>
             </div> <!-- .section -->
         </div> <!-- .span8 -->
@@ -67,5 +68,104 @@
 </div> <!-- #content -->
 
 <script type="text/javascript">
-    
+    $('#complete-profile').click(function() {
+        var postData = getPostData();
+        setInputStyle(true);
+        doCompleteProfileAction(postData);
+    });
+</script>
+<script type="text/javascript">
+    function getPostData() {
+        var postData    = '';
+
+        $('input').each(function() {
+            var key     = $(this).attr('id'),
+                value   = $(this).val();
+            postData   += '&' + key + '=' + value;
+        });
+        $('select').each(function() {
+            var key     = $(this).attr('id'),
+                value   = $(this).val();
+            postData   += '&' + key + '=' + value;
+        });
+        return postData;
+    }
+</script>
+<script type="text/javascript">
+    function setInputStyle(isLoading) {
+        var registerButtonObject = $('#complete-profile');
+        if ( isLoading ) {
+            registerButtonObject.html('正在处理...');
+            $('input').attr('disabled', 'disabled');
+            $('select').attr('disabled', 'disabled');
+            $('button').attr('disabled', 'disabled');
+        } else {
+            registerButtonObject.html('确认');
+            $('input').removeAttr('disabled');
+            $('select').removeAttr('disabled');
+            $('button').removeAttr('disabled');
+        }
+    }
+</script>
+<script type="text/javascript">
+    function doCompleteProfileAction(postData) {
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: '<?php echo $this->basePath(); ?>/accounts/register/processCompleteProfile',
+            data: postData,
+            dataType: 'JSON',
+            success: function(result) {
+                processResult(result);
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function processResult(result) {
+        if ( result['isSuccessful'] ) {
+            return doDashboardAction();
+        } else {
+            return errorHandler(result);
+        }
+    }
+</script>
+<script type="text/javascript">
+    function doDashboardAction() {
+        window.location.href='<?php echo $this->basePath(); ?>/accounts/dashboard';
+    }
+</script>
+<script type="text/javascript">
+    function errorHandler(result) {
+        var errorMessage = '';
+<?php if ( $userGroupSlug == 'Person' ): ?>
+        if ( result['isPersonNameEmpty'] ) {
+            errorMessage += '请填写您的真实姓名<br />';
+        } else if ( result['isPersonNameLegal'] ) {
+            errorMessage += '请填写您的姓名不能超过32个字符<br />';
+        }
+        if ( result['isPersonRegionEmpty'] ) {
+            errorMessage += '请选择您所在的地区<br />';
+        }
+        if ( result['isPersonProvinceEmpty'] ) {
+            errorMessage += '请选择您所在的省份<br />';
+        }
+        if ( result['isPersonCityEmpty'] ) {
+            errorMessage += '请选择您所在的城市<br />';
+        }
+        if ( result['isPersonWorkTimeEmpty'] ) {
+            errorMessage += '请填写您的工作时间<br />';
+        } else if ( result['isPersonWorkTimeLegal'] ) {
+            errorMessage += '请填写正确的工作时间<br />';
+        }
+        if ( result['isPersonPhoneEmpty'] ) {
+            errorMessage += '请填写您的移动电话<br />';
+        } else if ( result['isPersonPhoneLegal'] ) {
+            errorMessage += '请填写正确的移动电话<br />';
+        }
+<?php endif; ?>
+        $('#error').html(errorMessage);
+        $('#error').fadeIn();
+        scrollToTop();
+    }
 </script>

@@ -95,6 +95,7 @@
     </div> <!-- #main-container -->
 </div> <!-- #content -->
 
+<script type="text/javascript">
 <?php $this->inlineScript()->captureStart(); ?>
     function addFavorite(){ 
         var title   = 'IT自助培训平台',
@@ -123,8 +124,21 @@
         var postData = getPostData();
         setInputStyle(true);
         doRegisterAction(postData);
-        setInputStyle(false);
     });
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function getPostData() {
+        var postData    = '';
+        $(':input').each(function() {
+            var key     = $(this).attr('name'),
+                value   = $(this).val();
+            if ( typeof key != 'undefined' && value != '' ) {
+                postData += '&' + key + '=' + value;
+            }
+        });
+
+        return postData;
+    }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
     function setInputStyle(isLoading) {
@@ -140,20 +154,6 @@
             $('select').removeAttr('disabled');
             $('button').removeAttr('disabled');
         }
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
-    function getPostData() {
-        var postData    = '';
-        $(':input').each(function() {
-            var key     = $(this).attr('name'),
-                value   = $(this).val();
-            if ( typeof key != 'undefined' && value != '' ) {
-                postData += '&' + key + '=' + value;
-            }
-        });
-
-        return postData;
     }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
@@ -187,6 +187,8 @@
         $('#register-error').html(errorMessage);
         $('#register-error').fadeIn();
         $('html, body').animate({ scrollTop: 0 }, 'slow');
+
+        setInputStyle(false);
     }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>

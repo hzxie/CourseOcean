@@ -21,8 +21,15 @@ div#content div#main-container {
 	width: 960px;
 }
 
+div#main-container div.span6,
 div#main-container div.span8 {
 	margin-left: 0;
+}
+
+div#main-container div#error {
+	float: none;
+	font-size: 12px;
+	margin-bottom: 10px;
 }
 
 div#main-container div.span8 div.section {

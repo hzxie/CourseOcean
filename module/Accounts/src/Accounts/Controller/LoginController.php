@@ -173,8 +173,42 @@ class LoginController extends AbstractActionController
         $session->offsetSet('username', $userData['username']);
         $session->offsetSet('email', $userData['email']);
         $session->offsetSet('isActivated', $userData['isActivated']);
-        $session->offsetSet('userGroupID', $userData['userGroupID']);
+        $session->offsetSet('userGroupSlug', $this->getUserGroupSlug($userData['userGroupID']));
         $session->offsetSet('lastTimeSignIn', $userData['lastTimeSignIn']);
+    }
+
+    /**
+     * Get the unique id of the user group by its slug.
+     * @param  String $userGroupSlug - the unique slug of the user group
+     * @return the unique id of the user group
+     */
+    private function getUserGroupID($userGroupSlug)
+    {
+        $sm                 = $this->getServiceLocator();
+        $userGroupTable     = $sm->get('Accounts\Model\UserGroupTable');
+        $userGroup          = $userGroupTable->getUserGroupID($userGroupSlug);
+
+        if ( $userGroup == null ) {
+            return null;
+        }
+        return $userGroup->user_group_id;
+    }
+
+    /**
+     * Get the unique slug of the user group by its id.
+     * @param  int $userGroupID - the unique id of the user group
+     * @return the unique slug of the user group
+     */
+    private function getUserGroupSlug($userGroupID)
+    {
+        $sm                 = $this->getServiceLocator();
+        $userGroupTable     = $sm->get('Accounts\Model\UserGroupTable');
+        $userGroup          = $userGroupTable->getUserGroupSlug($userGroupID);
+
+        if ( $userGroup == null ) {
+            return null;
+        }
+        return $userGroup->user_group_slug;
     }
 
 

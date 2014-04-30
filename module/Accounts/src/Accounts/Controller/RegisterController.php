@@ -237,7 +237,7 @@ class RegisterController extends AbstractActionController
         $session->offsetSet('username', $basicInfoArray['username']);
         $session->offsetSet('email', $basicInfoArray['email']);
         $session->offsetSet('isActivated', false);
-        $session->offsetSet('userGroupID', $basicInfoArray['userGroupID']);
+        $session->offsetSet('userGroupSlug', $this->getUserGroupSlug($basicInfoArray['userGroupID']));
     }
 
     /**
@@ -252,7 +252,7 @@ class RegisterController extends AbstractActionController
             'uid'               => $session->offsetGet('uid'),
             'username'          => $session->offsetGet('username'),
             'email'             => $session->offsetGet('email'),
-            'userGroupID'       => $session->offsetGet('userGroupID'),
+            'userGroupSlug'     => ucfirst($session->offsetGet('userGroupSlug')),
         );
         return $sessionData;
     }
@@ -474,7 +474,7 @@ class RegisterController extends AbstractActionController
         return array(
             'username'      => $sessionData['username'],
             'email'         => $sessionData['email'],
-            'userGroupSlug' => $this->getUserGroupSlug($sessionData['userGroupID']),
+            'userGroupSlug' => $sessionData['userGroupSlug'],
             'workPositions' => $workPositions,
         );
     }
@@ -489,6 +489,10 @@ class RegisterController extends AbstractActionController
         return $session->offsetGet('isActivated');
     }
 
+    /**
+     * Get all available positions for a user.
+     * @return all available positions for a user within an array
+     */
     private function getWorkPositions()
     {
         $sm                 = $this->getServiceLocator();
@@ -498,6 +502,11 @@ class RegisterController extends AbstractActionController
         return $this->getWorkPositionsArray($positions);
     }
 
+    /**
+     * Get all available positions for a user.
+     * @param  ResultSet $resultSet [description]
+     * @return all available positions for a user within an array
+     */
     private function getWorkPositionsArray($resultSet)
     {
         $workPositionsArray = array();
@@ -508,6 +517,29 @@ class RegisterController extends AbstractActionController
             }
         }
         return $workPositionsArray;
+    }
+
+    public function processCompleteProfileAction()
+    {
+        $sessionData        = $this->getSessionData();
+        $uid                = $sessionData['uid'];
+        $userGroupSlug      = $sessionData['userGroupSlug'];
+
+        $getInfoArrayFunc   = 'get'.$userGroupSlug.'InfoArray';
+        $verifyInfoFunc     = 'verify'.$userGroupSlug.'Info';
+        $processActionFunc  = 'process'.$userGroupSlug.'Action';
+
+        $infoArray          = $this->$getInfoArrayFunc();
+        $verifyResult       = $this->$verifyInfoFunc($infoArray);
+        
+        if ( $verifyResult['isSuccessful'] ) {
+            $verifyResult['isSuccessful'] = $this->$processActionFunc($uid, $infoArray);
+        }
+        
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($verifyResult) );
+        return $response;
     }
 
     /**
@@ -523,12 +555,26 @@ class RegisterController extends AbstractActionController
         $personTable        = $sm->get('Accounts\Model\PersonTable');
 
         $personInfo         = array(
-            'uid'           => $uid,
-            'person_name'   => $personInfoArray['personName'],
-            'person_phone'  => $personInfoArray['personPhone'],
+            'uid'                   => $uid,
+            'person_name'           => $personInfoArray['personName'],
+            'person_region'         => $personInfoArray['personRegion'],
+            'person_province'       => $personInfoArray['personProvince'],
+            'person_city'           => $personInfoArray['personCity'],
+            'person_position_id'    => $this->getWorkPositionId( $personInfoArray['personPositionSlug'] ),
+            'person_work_time'      => $personInfoArray['personWorkTime'],
+            'person_phone'          => $personInfoArray['personPhone'],
         );
 
         return $personTable->createNewPerson($personInfo);
+    }
+
+    private function getWorkPositionId($workPositionSlug)
+    {
+        $sm                 = $this->getServiceLocator();
+        $positionTable      = $sm->get('Accounts\Model\PositionTable');
+        $position           = $positionTable->getPositionID($workPositionSlug);
+
+        return $position->position_id;
     }
 
     /**
@@ -537,12 +583,22 @@ class RegisterController extends AbstractActionController
      */
     private function getPersonInfoArray()
     {
-        $personName         = $this->getRequest()->getPost('person-name');
-        $personPhone        = $this->getRequest()->getPost('person-phone');
+        $personName         = $this->getRequest()->getPost('real-name');
+        $personRegion       = $this->getRequest()->getPost('region');
+        $personProvince     = $this->getRequest()->getPost('province');
+        $personCity         = $this->getRequest()->getPost('city');
+        $personPositionSlug = $this->getRequest()->getPost('work-position');
+        $personWorkTime     = $this->getRequest()->getPost('work-time');
+        $personPhone        = $this->getRequest()->getPost('mobile-phone');
 
         return array(
-            'personName'    => strip_tags($personName),
-            'personPhone'   => strip_tags($personPhone),
+            'personName'            => strip_tags($personName),
+            'personRegion'          => strip_tags($personRegion),
+            'personProvince'        => strip_tags($personProvince),
+            'personCity'            => strip_tags($personCity),
+            'personPositionSlug'    => strip_tags($personPositionSlug),
+            'personWorkTime'        => strip_tags($personWorkTime),
+            'personPhone'           => strip_tags($personPhone),
         );
     }
 
@@ -555,14 +611,20 @@ class RegisterController extends AbstractActionController
     private function verifyPersonInfo($personInfo)
     {
         $result = array(
-            'isDetailSuccessful'        => false,
+            'isSuccessful'              => false,
             'isPersonNameEmpty'         => empty($personInfo['personName']),
             'isPersonNameLegal'         => $this->isNameLegal($personInfo['personName']),
+            'isPersonRegionEmpty'       => empty($personInfo['region']),
+            'isPersonProvinceEmpty'     => empty($personInfo['province']),
+            'isPersonCityEmpty'         => empty($personInfo['city']),
+            'isPersonWorkTimeEmpty'     => empty($personInfo['personWorkTime']),
+            'isPersonWorkTimeLegal'     => $this->isWorkTimeLegal($personInfo['personWorkTime']),
             'isPersonPhoneEmpty'        => empty($personInfo['personPhone']),
             'isPersonPhoneLegal'        => $this->isPhoneNumberLegal($personInfo['personPhone']),
         );
-        $result['isDetailSuccessful']   = !$result['isPersonNameEmpty']  && $result['isPersonNameLegal'] &&
-                                          !$result['isPersonPhoneEmpty'] && $result['isPersonPhoneLegal'];
+        $result['isSuccessful']   = !$result['isPersonNameEmpty']     && $result['isPersonNameLegal'] &&
+                                    !$result['isPersonWorkTimeEmpty'] && $result['isPersonWorkTimeLegal'];
+                                    !$result['isPersonPhoneEmpty']    && $result['isPersonPhoneLegal'];
         return $result;
     }
 
@@ -577,6 +639,11 @@ class RegisterController extends AbstractActionController
     {
         $MAX_LENGTH_OF_NAME    = 32;
         return ( strlen($name) <= $MAX_LENGTH_OF_NAME );
+    }
+
+    private function isWorkTimeLegal($workTime)
+    {
+        return ( is_numeric($workTime) && $workTime >= 0 && $workTime <= 100 );
     }
 
     /**
@@ -634,14 +701,14 @@ class RegisterController extends AbstractActionController
     private function verifyTeacherInfo($teacherInfo)
     {
         $result = array(
-            'isDetailSuccessful'        => false,
+            'isSuccessful'        => false,
             'isTeacherNameEmpty'        => empty($teacherInfo['teacherName']),
             'isTeacherNameLegal'        => $this->isNameLegal($teacherInfo['teacherName']),
             'isTeacherPhoneEmpty'       => empty($teacherInfo['teacherPhone']),
             'isTeacherPhoneLegal'       => $this->isPhoneNumberLegal($teacherInfo['teacherPhone']),
         );
-        $result['isDetailSuccessful']   = !$result['isTeacherNameEmpty']  && $result['isTeacherNameLegal'] &&
-                                          !$result['isTeacherPhoneEmpty'] && $result['isTeacherPhoneLegal'];
+        $result['isSuccessful']   = !$result['isTeacherNameEmpty']  && $result['isTeacherNameLegal'] &&
+                                    !$result['isTeacherPhoneEmpty'] && $result['isTeacherPhoneLegal'];
         return $result;
     }
 
@@ -693,7 +760,7 @@ class RegisterController extends AbstractActionController
     private function verifyCompanyInfo($companyInfo)
     {
         $result = array(
-            'isDetailSuccessful'        => false,
+            'isSuccessful'        => false,
             'isCompanyNameEmpty'        => empty($companyInfo['companyName']),
             'isCompanyNameLegal'        => $this->isCompanyNameLegal($companyInfo['companyName']),
             'isCompanyAddressEmpty'     => empty($companyInfo['companyAddress']),
@@ -701,7 +768,7 @@ class RegisterController extends AbstractActionController
             'isCompanyPhoneEmpty'       => empty($companyInfo['companyPhone']),
             'isCompanyPhoneLegal'       => $this->isPhoneNumberLegal($companyInfo['companyPhone']),
         );
-        $result['isDetailSuccessful']   = !$result['isCompanyNameEmpty']    && $result['isCompanyNameLegal'] &&
+        $result['isSuccessful']   = !$result['isCompanyNameEmpty']    && $result['isCompanyNameLegal'] &&
                                           !$result['isCompanyAddressEmpty'] && $result['isCompanyAddressLegal'] &&
                                           !$result['isCompanyPhoneEmpty']   && $result['isCompanyPhoneLegal'];
         return $result;
