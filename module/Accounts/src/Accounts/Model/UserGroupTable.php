@@ -45,7 +45,7 @@ class UserGroupTable
 	/**
      * Get the unique id of the user group by its slug.
      * @param  String $userGroupSlug - the unique slug of the user group
-     * @return the unique id of the user group
+     * @return an object of UserGroup or null if the slug is invalid
      */
     public function getUserGroupID($userGroupSlug)
     {
@@ -60,7 +60,7 @@ class UserGroupTable
     /**
      * Get the unique slug of the user group by its id.
      * @param  int $userGroupID - the unique id of the user group
-     * @return the unique slug of the user group
+     * @return an object of UserGroup or null if the slug is invalid
      */
     public function getUserGroupSlug($userGroupID)
     {

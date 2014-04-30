@@ -46,11 +46,6 @@
                 <span>请提供您的工作职位以便我们为您推荐课程</span>
             </div> <!-- .section -->
             <div class="section">
-                <label for="work-time">工作时间</label>
-                <input id="work-time" class="span5" type="text" maxlength="2" /><strong> 年</strong><br />
-                <span>请提供您的工作时间以便我们为您推荐课程</span>
-            </div> <!-- .section -->
-            <div class="section">
                 <label for="mobile-phone">移动电话</label>
                 <input id="mobile-phone" class="span6" type="text" maxlength="16" /><br />
                 <span>请提供您的联系方式以便在报名后我们与您联系</span>
@@ -141,7 +136,7 @@
 <?php if ( $userGroupSlug == 'Person' ): ?>
         if ( result['isPersonNameEmpty'] ) {
             errorMessage += '请填写您的真实姓名<br />';
-        } else if ( result['isPersonNameLegal'] ) {
+        } else if ( !result['isPersonNameLegal'] ) {
             errorMessage += '请填写您的姓名不能超过32个字符<br />';
         }
         if ( result['isPersonRegionEmpty'] ) {
@@ -153,19 +148,23 @@
         if ( result['isPersonCityEmpty'] ) {
             errorMessage += '请选择您所在的城市<br />';
         }
-        if ( result['isPersonWorkTimeEmpty'] ) {
-            errorMessage += '请填写您的工作时间<br />';
-        } else if ( result['isPersonWorkTimeLegal'] ) {
-            errorMessage += '请填写正确的工作时间<br />';
+        if ( !result['isWorkPositionLegal'] ) {
+            errorMessage += '请选择您的工作职位<br />';
         }
         if ( result['isPersonPhoneEmpty'] ) {
             errorMessage += '请填写您的移动电话<br />';
-        } else if ( result['isPersonPhoneLegal'] ) {
+        } else if ( !result['isPersonPhoneLegal'] ) {
             errorMessage += '请填写正确的移动电话<br />';
         }
+<?php else if ( $userGroupSlug == 'Teacher' ): ?>
+
+<?php else if ( $userGroupSlug == 'Company' ): ?>
+
 <?php endif; ?>
         $('#error').html(errorMessage);
         $('#error').fadeIn();
+        
         scrollToTop();
+        setInputStyle(false);
     }
 </script>

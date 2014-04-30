@@ -98,8 +98,7 @@ class DashboardController extends AbstractActionController
         $userData          += $this->getSessionData();
 
         $uid                = $userData['uid'];
-        $userGroupID        = $userData['userGroupID'];
-        $userGroupSlug      = ucfirst($this->getUserGroupSlug($userGroupID));
+        $userGroupSlug      = $userData['userGroupSlug'];
 
         $getProfileFunction = 'get'.$userGroupSlug.'Info';
         if ( method_exists($this, $getProfileFunction) ) {
@@ -120,7 +119,7 @@ class DashboardController extends AbstractActionController
             'uid'               => $session->offsetGet('uid'),
             'username'          => $session->offsetGet('username'),
             'email'             => $session->offsetGet('email'),
-            'userGroupID'       => $session->offsetGet('userGroupID'),
+            'userGroupSlug'     => $session->offsetGet('userGroupSlug'),
             'lastTimeSignIn'    => $session->offsetGet('lastTimeSignIn'),
         );
         return $sessionData;
@@ -128,18 +127,18 @@ class DashboardController extends AbstractActionController
 
     /**
      * Get the unique slug of the user group by its id.
-     * @param  int $userGroupID - the unique id of the user group
+     * @param  int $userGroupId - the unique id of the user group
      * @return the unique slug of the user group
      */
-    private function getUserGroupSlug($userGroupID)
+    private function getUserGroupSlug($userGroupId)
     {
-        if ( $userGroupID == 0 ) {
+        if ( $userGroupId == 4 ) {
             return 'administrator';
         }
 
         $sm                 = $this->getServiceLocator();
         $userGroupTable     = $sm->get('Accounts\Model\UserGroupTable');
-        $userGroup          = $userGroupTable->getUserGroupSlug($userGroupID);
+        $userGroup          = $userGroupTable->getUserGroupSlug($userGroupId);
 
         if ( $userGroup == null ) {
             return null;
@@ -155,7 +154,7 @@ class DashboardController extends AbstractActionController
     private function getPersonInfo($uid)
     {
         $personInfo         = array(
-            'userGroupSlug' => 'person',
+            
         );
 
         $sm                 = $this->getServiceLocator();
@@ -174,7 +173,7 @@ class DashboardController extends AbstractActionController
     private function getTeacherInfo($uid)
     {
         $teacherInfo        = array(
-            'userGroupSlug' => 'teacher',
+            
         );
 
         $sm                 = $this->getServiceLocator();
@@ -193,7 +192,7 @@ class DashboardController extends AbstractActionController
     private function getCompanyInfo($uid)
     {
         $companyInfo  = array(
-            'userGroupSlug' => 'company',
+            
         );
 
         $sm                 = $this->getServiceLocator();

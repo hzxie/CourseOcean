@@ -8,9 +8,9 @@
         <div id="banner-content">
             <h3><?php echo $lecture['course_name']; ?></h3>
             <span><i class="icon-white icon-th-list"></i><strong>课程类别: </strong><?php echo $lecture['course_type_name']; ?></span>
-            <span><i class="icon-white icon-time"></i><strong>培训时间: </strong><?php echo date('Y年m月d日', strtotime($lecture['lecture_start_time'])); ?>~<?php echo date('Y年m月d日', strtotime($lecture['lecture_end_time'])); ?></span>
             <span><i class="icon-white icon-user"></i><strong>讲师: </strong><?php echo $teacher['teacher_name']; ?></span>
             <span><i class="icon-white icon-tag"></i><strong>费用: </strong><?php echo $lecture['lecture_expense']; ?> 元</span><br />
+            <span><i class="icon-white icon-time"></i><strong>培训时间: </strong><?php echo date('Y年m月d日', strtotime($lecture['lecture_start_time'])); ?>~<?php echo date('Y年m月d日', strtotime($lecture['lecture_end_time'])); ?></span><br />
             <span><i class="icon-white icon-map-marker"></i><strong>培训地点: </strong>
                 <?php if ( !$isAttended ): ?>
                     (报名后查看详细地址)

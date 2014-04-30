@@ -65,7 +65,7 @@ class RegisterController extends AbstractActionController
             'username'      => $basicInfoArray['username'],
             'password'      => md5($basicInfoArray['password']),
             'email'         => $basicInfoArray['email'],
-            'user_group_id' => $basicInfoArray['userGroupID'],
+            'user_group_id' => $basicInfoArray['userGroupId'],
         );
         
         return $userTable->createNewUser($basicInfo);
@@ -89,7 +89,7 @@ class RegisterController extends AbstractActionController
             'password'          => $password,
             'confirmPassword'   => strip_tags($confirmPassword),
             'userGroupSlug'     => ucfirst(strip_tags($userGroupSlug)),
-            'userGroupID'       => strip_tags($this->getUserGroupID($userGroupSlug)),
+            'userGroupId'       => strip_tags($this->getUserGroupID($userGroupSlug)),
         );
     }
 
@@ -113,7 +113,7 @@ class RegisterController extends AbstractActionController
             'isPasswordLegal'           => $this->isPasswordLegal($basicInfo['password']),
             'isConfirmPasswordEmpty'    => empty($basicInfo['confirmPassword']),
             'isConfirmPasswordMatched'  => ($basicInfo['password'] == $basicInfo['confirmPassword']),
-            'isUserGroupLegal'          => ($basicInfo['userGroupID'] != 0),
+            'isUserGroupLegal'          => ($basicInfo['userGroupId'] != 0),
         );
         $result['isSuccessful']         = !$result['isUsernameEmpty']        &&  $result['isUsernameLegal']          &&
                                           !$result['isUsernameExists']       && !$result['isEmailEmpty']             && 
@@ -210,14 +210,14 @@ class RegisterController extends AbstractActionController
 
     /**
      * Get the unique slug of the user group by its id.
-     * @param  int $userGroupID - the unique id of the user group
+     * @param  int $userGroupId - the unique id of the user group
      * @return the unique slug of the user group
      */
-    private function getUserGroupSlug($userGroupID)
+    private function getUserGroupSlug($userGroupId)
     {
         $sm                 = $this->getServiceLocator();
         $userGroupTable     = $sm->get('Accounts\Model\UserGroupTable');
-        $userGroup          = $userGroupTable->getUserGroupSlug($userGroupID);
+        $userGroup          = $userGroupTable->getUserGroupSlug($userGroupId);
 
         if ( $userGroup == null ) {
             return null;
@@ -237,7 +237,8 @@ class RegisterController extends AbstractActionController
         $session->offsetSet('username', $basicInfoArray['username']);
         $session->offsetSet('email', $basicInfoArray['email']);
         $session->offsetSet('isActivated', false);
-        $session->offsetSet('userGroupSlug', $this->getUserGroupSlug($basicInfoArray['userGroupID']));
+        $session->offsetSet('userGroupSlug', 
+                            $this->getUserGroupSlug($basicInfoArray['userGroupId']));
     }
 
     /**
@@ -369,7 +370,11 @@ class RegisterController extends AbstractActionController
             return trim(com_create_guid(), '{}');
         }
 
-        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
+        return sprintf( '%04X%04X-%04X-%04X-%04X-%04X%04X%04X', 
+                        mt_rand(0, 65535), mt_rand(0, 65535), 
+                        mt_rand(0, 65535), mt_rand(16384, 20479), 
+                        mt_rand(32768, 49151), mt_rand(0, 65535), 
+                        mt_rand(0, 65535), mt_rand(0, 65535) );
     }
 
     /**
@@ -459,7 +464,7 @@ class RegisterController extends AbstractActionController
     }
     
     /**
-     * [completeProfileAction description]
+     * Display a HTML content which notice user to complete his profile.
      * @return a ViewModel object which contains HTML content
      */
     public function completeProfileAction()
@@ -504,7 +509,8 @@ class RegisterController extends AbstractActionController
 
     /**
      * Get all available positions for a user.
-     * @param  ResultSet $resultSet [description]
+     * @param  ResultSet $resultSet - an object of ResultSet which contains
+     *         all information of work positions
      * @return all available positions for a user within an array
      */
     private function getWorkPositionsArray($resultSet)
@@ -519,6 +525,12 @@ class RegisterController extends AbstractActionController
         return $workPositionsArray;
     }
 
+    /**
+     * Handle asynchronous complete profile requests for the users.
+     * @return a HTTP response object which contains JSON data
+     *         infers whether the complete profile operation is 
+     *         successful
+     */
     public function processCompleteProfileAction()
     {
         $sessionData        = $this->getSessionData();
@@ -543,41 +555,6 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Handle asynchronous register requests for a person.
-     * @param  int $uid - the unique id of the user
-     * @param  Array $personInfoArray - an array which contains essential 
-     *         information of a person
-     * @return true if the query is successful
-     */
-    private function processPersonAction($uid, $personInfoArray)
-    {
-        $sm                 = $this->getServiceLocator();
-        $personTable        = $sm->get('Accounts\Model\PersonTable');
-
-        $personInfo         = array(
-            'uid'                   => $uid,
-            'person_name'           => $personInfoArray['personName'],
-            'person_region'         => $personInfoArray['personRegion'],
-            'person_province'       => $personInfoArray['personProvince'],
-            'person_city'           => $personInfoArray['personCity'],
-            'person_position_id'    => $this->getWorkPositionId( $personInfoArray['personPositionSlug'] ),
-            'person_work_time'      => $personInfoArray['personWorkTime'],
-            'person_phone'          => $personInfoArray['personPhone'],
-        );
-
-        return $personTable->createNewPerson($personInfo);
-    }
-
-    private function getWorkPositionId($workPositionSlug)
-    {
-        $sm                 = $this->getServiceLocator();
-        $positionTable      = $sm->get('Accounts\Model\PositionTable');
-        $position           = $positionTable->getPositionID($workPositionSlug);
-
-        return $position->position_id;
-    }
-
-    /**
      * Get essential information of a person within an array.
      * @return an array which contains essential information of a person
      */
@@ -596,10 +573,27 @@ class RegisterController extends AbstractActionController
             'personRegion'          => strip_tags($personRegion),
             'personProvince'        => strip_tags($personProvince),
             'personCity'            => strip_tags($personCity),
-            'personPositionSlug'    => strip_tags($personPositionSlug),
+            'personPositionId'      => $this->getPositionID( $personPositionSlug ),
             'personWorkTime'        => strip_tags($personWorkTime),
             'personPhone'           => strip_tags($personPhone),
         );
+    }
+
+    /**
+     * Get the unique id of the work position by its slug.
+     * @param  String $positionSlug - the unique slug of the work position
+     * @return the unique id of the work position
+     */
+    private function getPositionID($workPositionSlug)
+    {
+        $sm                 = $this->getServiceLocator();
+        $positionTable      = $sm->get('Accounts\Model\PositionTable');
+        $position           = $positionTable->getPositionID($workPositionSlug);
+
+        if ( $position == null ) {
+            return null;
+        }
+        return $position->position_id;
     }
 
     /**
@@ -614,17 +608,17 @@ class RegisterController extends AbstractActionController
             'isSuccessful'              => false,
             'isPersonNameEmpty'         => empty($personInfo['personName']),
             'isPersonNameLegal'         => $this->isNameLegal($personInfo['personName']),
-            'isPersonRegionEmpty'       => empty($personInfo['region']),
-            'isPersonProvinceEmpty'     => empty($personInfo['province']),
-            'isPersonCityEmpty'         => empty($personInfo['city']),
-            'isPersonWorkTimeEmpty'     => empty($personInfo['personWorkTime']),
-            'isPersonWorkTimeLegal'     => $this->isWorkTimeLegal($personInfo['personWorkTime']),
+            'isPersonRegionEmpty'       => empty($personInfo['personRegion']),
+            'isPersonProvinceEmpty'     => empty($personInfo['personProvince']),
+            'isPersonCityEmpty'         => empty($personInfo['personCity']),
+            'isWorkPositionLegal'       => ( $personInfo['personPositionId'] != null ),
             'isPersonPhoneEmpty'        => empty($personInfo['personPhone']),
             'isPersonPhoneLegal'        => $this->isPhoneNumberLegal($personInfo['personPhone']),
         );
-        $result['isSuccessful']   = !$result['isPersonNameEmpty']     && $result['isPersonNameLegal'] &&
-                                    !$result['isPersonWorkTimeEmpty'] && $result['isPersonWorkTimeLegal'];
-                                    !$result['isPersonPhoneEmpty']    && $result['isPersonPhoneLegal'];
+        $result['isSuccessful']   = !$result['isPersonNameEmpty']     &&  $result['isPersonNameLegal'] &&
+                                    !$result['isPersonRegionEmpty']   && !$result['isPersonProvinceEmpty'] &&
+                                    !$result['isPersonCityEmpty']     &&  $result['isWorkPositionLegal'] &&
+                                    !$result['isPersonPhoneEmpty']    &&  $result['isPersonPhoneLegal'];
         return $result;
     }
 
@@ -641,11 +635,6 @@ class RegisterController extends AbstractActionController
         return ( strlen($name) <= $MAX_LENGTH_OF_NAME );
     }
 
-    private function isWorkTimeLegal($workTime)
-    {
-        return ( is_numeric($workTime) && $workTime >= 0 && $workTime <= 100 );
-    }
-
     /**
      * Verify if the phone number of the user is legal.
      * @param  String  $phone - the phone number of the user
@@ -654,6 +643,31 @@ class RegisterController extends AbstractActionController
     private function isPhoneNumberLegal($phone)
     {
         return (bool)preg_match('/^[0-9-]{7,24}$/', $phone);
+    }
+
+    /**
+     * Handle asynchronous register requests for a person.
+     * @param  int $uid - the unique id of the user
+     * @param  Array $personInfoArray - an array which contains essential 
+     *         information of a person
+     * @return true if the query is successful
+     */
+    private function processPersonAction($uid, $personInfoArray)
+    {
+        $sm                 = $this->getServiceLocator();
+        $personTable        = $sm->get('Accounts\Model\PersonTable');
+
+        $personInfo         = array(
+            'uid'                   => $uid,
+            'person_name'           => $personInfoArray['personName'],
+            'person_region'         => $personInfoArray['personRegion'],
+            'person_province'       => $personInfoArray['personProvince'],
+            'person_city'           => $personInfoArray['personCity'],
+            'person_position_id'    => $personInfoArray['personPositionId'],
+            'person_phone'          => $personInfoArray['personPhone'],
+        );
+
+        return $personTable->createNewPerson($personInfo);
     }
 
     /**
