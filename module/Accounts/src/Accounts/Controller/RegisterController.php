@@ -357,7 +357,7 @@ class RegisterController extends AbstractActionController
                 ->setBody($this->getMailContent($email, $guid));
 
         $transport = new SmtpTransport();
-        $transport->send($message);
+        // $transport->send($message);
     }
 
     /**
@@ -385,7 +385,7 @@ class RegisterController extends AbstractActionController
      */
     private function getMailContent($email, $guid)
     {
-        return "<html><body><a href=\"#email=$email&activationCode=$guid\">单击此处激活账户</a></body></html>";
+        return "<html><body><a href=\"#email=$email&activation_code=$guid\">单击此处激活账户</a></body></html>";
     }
 
     /**
@@ -475,12 +475,14 @@ class RegisterController extends AbstractActionController
 
         $sessionData        = $this->getSessionData();
         $workPositions      = $this->getWorkPositions();
+        $courseTypes        = $this->getCourseTypes();
 
         return array(
             'username'      => $sessionData['username'],
             'email'         => $sessionData['email'],
             'userGroupSlug' => $sessionData['userGroupSlug'],
             'workPositions' => $workPositions,
+            'courseTypes'   => $courseTypes,
         );
     }
 
@@ -523,6 +525,36 @@ class RegisterController extends AbstractActionController
             }
         }
         return $workPositionsArray;
+    }
+
+    /**
+     * [getCourseTypes description]
+     * @return [type] [description]
+     */
+    private function getCourseTypes()
+    {
+        $sm                 = $this->getServiceLocator();
+        $courseTypeTable    = $sm->get('Solutions\Model\CourseTypeTable');
+        $courseTypes        = $courseTypeTable->fetchAll();
+
+        return $this->getCourseTypesArray($courseTypes);
+    }
+
+    /**
+     * [getCourseTypesArray description]
+     * @param  [type] $resultSet [description]
+     * @return [type]            [description]
+     */
+    private function getCourseTypesArray($resultSet)
+    {
+        $courseTypesArray = array();
+
+        if ( $resultSet != null ) {
+            foreach ( $resultSet as $key => $value ) {
+                $courseTypesArray[ $key ] = $value;
+            }
+        }
+        return $courseTypesArray;
     }
 
     /**
@@ -610,7 +642,8 @@ class RegisterController extends AbstractActionController
             'isPersonNameLegal'         => $this->isNameLegal($personInfo['personName']),
             'isPersonRegionEmpty'       => empty($personInfo['personRegion']),
             'isPersonProvinceEmpty'     => empty($personInfo['personProvince']),
-            'isPersonCityEmpty'         => empty($personInfo['personCity']),
+            'isPersonCityEmpty'         => $this->isCityEmpty($personInfo['personCity'], 
+                                                              $personInfo['personProvince']),
             'isWorkPositionLegal'       => ( $personInfo['personPositionId'] != null ),
             'isPersonPhoneEmpty'        => empty($personInfo['personPhone']),
             'isPersonPhoneLegal'        => $this->isPhoneNumberLegal($personInfo['personPhone']),
@@ -646,6 +679,25 @@ class RegisterController extends AbstractActionController
     }
 
     /**
+     * Check if the city of the user is empty.
+     * @param  [type]  $city     [description]
+     * @param  [type]  $province [description]
+     * @return true if the user hasn't choose his city where he live
+     */
+    private function isCityEmpty($city, $province)
+    {
+        $municipalities = array( '北京市', '天津市', '上海市', '重庆市' );
+        
+        if ( $city != null ) {
+            return false;
+        } else if ( in_array( $province, $municipalities ) ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Handle asynchronous register requests for a person.
      * @param  int $uid - the unique id of the user
      * @param  Array $personInfoArray - an array which contains essential 
@@ -671,38 +723,29 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Handle asynchronous register requests for a teacher.
-     * @param  int $uid - the unique id of the user
-     * @param  Array $teacherInfoArray - an array which contains essential 
-     *         information of a teacher
-     * @return true if the query is successful
-     */
-    private function processTeacherAction($uid, $teacherInfoArray)
-    {
-        $sm                 = $this->getServiceLocator();
-        $teacherTable       = $sm->get('Accounts\Model\TeacherTable');
-
-        $teacherInfo        = array(
-            'uid'           => $uid,
-            'teacher_name'  => $teacherInfoArray['teacherName'],
-            'teacher_phone' => $teacherInfoArray['teacherPhone'],
-        );
-
-        return $teacherTable->createNewTeacher($teacherInfo);
-    }
-
-    /**
      * Get essential information of a teacher within an array.
      * @return an array which contains essential information of a teacher
      */
     private function getTeacherInfoArray()
     {
-        $teacherName        = $this->getRequest()->getPost('teacher-name');
-        $teacherPhone       = $this->getRequest()->getPost('teacher-phone');
+        $teacherName        = $this->getRequest()->getPost('real-name');
+        $teacherRegion      = $this->getRequest()->getPost('region');
+        $teacherProvince    = $this->getRequest()->getPost('province');
+        $teacherCity        = $this->getRequest()->getPost('city');
+        $teacherField       = $this->getRequest()->getPost('teaching-field');
+        $teacherCompany     = $this->getRequest()->getPost('company');
+        $teacherPhone       = $this->getRequest()->getPost('mobile-phone');
+        $teacherWeibo       = $this->getRequest()->getPost('weibo');
 
         return array(
-            'teacherName'   => strip_tags($teacherName),
-            'teacherPhone'  => strip_tags($teacherPhone),
+            'teacherName'       => strip_tags($teacherName),
+            'teacherRegion'     => strip_tags($teacherRegion),
+            'teacherProvince'   => strip_tags($teacherProvince),
+            'teacherCity'       => strip_tags($teacherCity),
+            'teacherField'      => strip_tags($teacherField),
+            'teacherCompany'    => strip_tags($teacherCompany),
+            'teacherPhone'      => strip_tags($teacherPhone),
+            'teacherWeibo'      => strip_tags($teacherWeibo),
         );
     }
 
@@ -715,15 +758,237 @@ class RegisterController extends AbstractActionController
     private function verifyTeacherInfo($teacherInfo)
     {
         $result = array(
-            'isSuccessful'        => false,
+            'isSuccessful'              => false,
             'isTeacherNameEmpty'        => empty($teacherInfo['teacherName']),
             'isTeacherNameLegal'        => $this->isNameLegal($teacherInfo['teacherName']),
+            'isTeacherRegionEmpty'      => empty($teacherInfo['teacherRegion']),
+            'isTeacherProvinceEmpty'    => empty($teacherInfo['teacherProvince']),
+            'isTeacherCityEmpty'        => $this->isCityEmpty($teacherInfo['teacherCity'], 
+                                                              $teacherInfo['teacherProvince']),
+            'isTeachingFieldEmpty'      => empty($teacherInfo['teacherField']),
+            'isTeachingFieldLegal'      => $this->isTeachingFieldLegal($teacherInfo['teacherField']),
+            'isCompanyNameEmpty'        => empty($teacherInfo['teacherCompany']),
+            'isCompanyNameLegal'        => $this->isCompanyNameLegal($teacherInfo['teacherCompany']),
             'isTeacherPhoneEmpty'       => empty($teacherInfo['teacherPhone']),
             'isTeacherPhoneLegal'       => $this->isPhoneNumberLegal($teacherInfo['teacherPhone']),
+            'isTeacherWeiboLegal'       => $this->isWeiboAccountLegal($teacherInfo['teacherWeibo'])
+
         );
-        $result['isSuccessful']   = !$result['isTeacherNameEmpty']  && $result['isTeacherNameLegal'] &&
-                                    !$result['isTeacherPhoneEmpty'] && $result['isTeacherPhoneLegal'];
+        $result['isSuccessful']   = !$result['isTeacherNameEmpty']   &&  $result['isTeacherNameLegal'] &&
+                                    !$result['isTeacherRegionEmpty'] && !$result['isTeacherProvinceEmpty'] &&
+                                    !$result['isTeacherCityEmpty']   &&
+                                    !$result['isTeachingFieldEmpty'] &&  $result['isTeachingFieldLegal'] &&
+                                    !$result['isCompanyNameEmpty']   &&  $result['isCompanyNameLegal'] &&
+                                    !$result['isTeacherPhoneEmpty']  &&  $result['isTeacherPhoneLegal'] &&
+                                     $result['isTeacherWeiboLegal'];
         return $result;
+    }
+
+    /**
+     * [isTeachingFieldLegal description]
+     * @param  [type]  $teachingField [description]
+     * @return boolean                [description]
+     */
+    private function isTeachingFieldLegal($teachingField)
+    {
+        $teachingFields = split( ',', $teachingField );
+
+        if ( count( $teachingFields ) > 3 ) {
+            return false;
+        }
+
+        foreach ( $teachingFields as $teachingFieldSlug ) {
+            $teachingFieldId = $this->getFieldID( $teachingFieldSlug );
+
+            if ( $teachingField == null ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * [getFieldID description]
+     * @param  [type] $fieldSlug [description]
+     * @return [type]            [description]
+     */
+    private function getFieldID($fieldSlug)
+    {
+        $sm                 = $this->getServiceLocator();
+        $courseTypeTable    = $sm->get('Solutions\Model\CourseTypeTable');
+        $courseType         = $courseTypeTable->getCourseTypeID($fieldSlug);
+
+        if ( $courseType == null ) {
+            return null;
+        }
+        return $courseType->course_type_id;
+    }
+
+    /**
+     * [isCompanyNameLegal description]
+     * @param  [type]  $companyName [description]
+     * @return boolean              [description]
+     */
+    private function isCompanyNameLegal($companyName)
+    {
+        $MAX_LENGTH_OF_COMPANY_NANE = 64;
+        return ( strlen($companyName) < $MAX_LENGTH_OF_COMPANY_NANE );
+    }
+
+    /**
+     * [isWeiboAccountLegal description]
+     * @param  [type]  $weiboAccount [description]
+     * @return boolean               [description]
+     */
+    private function isWeiboAccountLegal($weiboAccount)
+    {
+        $MAX_LENGTH_OF_WEIBO_ACCOUNT = 32;
+        return ( strlen($weiboAccount) < $MAX_LENGTH_OF_WEIBO_ACCOUNT );
+    }
+
+    /**
+     * Handle asynchronous register requests for a teacher.
+     * @param  int $uid - the unique id of the user
+     * @param  Array $teacherInfoArray - an array which contains essential 
+     *         information of a teacher
+     * @return true if the query is successful
+     */
+    private function processTeacherAction($uid, $teacherInfoArray)
+    {
+        $isBasicInfoSuccessful      = $this->processTeacherInfo($uid, $teacherInfoArray);
+        $isTeachingFieldSuccessful  = $this->processTeachingField($uid, 
+                                                $teacherInfoArray['teacherField']);
+
+        return ( $isBasicInfoSuccessful && $isTeachingFieldSuccessful );
+    }
+
+    private function processTeacherInfo($uid, $teacherInfoArray)
+    {
+        $sm                 = $this->getServiceLocator();
+        $teacherTable       = $sm->get('Accounts\Model\TeacherTable');
+
+        $teacherInfo        = array(
+            'uid'               => $uid,
+            'teacher_name'      => $teacherInfoArray['teacherName'],
+            'teacher_region'    => $teacherInfoArray['teacherRegion'],
+            'teacher_province'  => $teacherInfoArray['teacherProvince'],
+            'teacher_city'      => $teacherInfoArray['teacherCity'],
+            'teacher_company'   => $teacherInfoArray['teacherCompany'],
+            'teacher_phone'     => $teacherInfoArray['teacherPhone'],
+            'teacher_weibo'     => $teacherInfoArray['teacherWeibo'],
+        );
+
+        return $teacherTable->createNewTeacher($teacherInfo);
+    }
+
+    private function processTeachingField($uid, $teachingField)
+    {
+        return true;
+    }
+
+    /**
+     * Get essential information of an enterprise within an array.
+     * @return an array which contains essential information of an enterprise
+     */
+    private function getCompanyInfoArray()
+    {
+        $companyName        = $this->getRequest()->getPost('company-name');
+        $companyRegion      = $this->getRequest()->getPost('region');
+        $companyProvince    = $this->getRequest()->getPost('province');
+        $companyCity        = $this->getRequest()->getPost('city');
+        $companyAddress     = $this->getRequest()->getPost('address');
+        $companyField       = $this->getRequest()->getPost('company-field');
+        $companyScale       = $this->getRequest()->getPost('company-scale');
+        $companyPhone       = $this->getRequest()->getPost('phone');
+
+        return array(
+            'companyName'       => strip_tags($companyName),
+            'companyRegion'     => strip_tags($companyRegion),
+            'companyProvince'   => strip_tags($companyProvince),
+            'companyCity'       => strip_tags($companyCity),
+            'companyAddress'    => strip_tags($companyAddress),
+            'companyField'      => strip_tags($companyField),
+            'companyScale'      => strip_tags($companyScale),
+            'companyPhone'      => strip_tags($companyPhone),
+        );
+    }
+
+    /**
+     * Verify if the information of the company is legal.
+     * @param  Array $companyInfo - an array which contains information of the 
+     *         company
+     * @return an array which contains query result
+     */
+    private function verifyCompanyInfo($companyInfo)
+    {
+        $result = array(
+            'isSuccessful'              => false,
+            'isCompanyNameEmpty'        => empty($companyInfo['companyName']),
+            'isCompanyNameLegal'        => $this->isCompanyNameLegal($companyInfo['companyName']),
+            'isCompanyRegionEmpty'      => empty($companyInfo['companyRegion']),
+            'isCompanyProvinceEmpty'    => empty($companyInfo['companyProvince']),
+            'isCompanyCityEmpty'        => $this->isCityEmpty($companyInfo['companyCity'], 
+                                                              $companyInfo['companyProvince']),
+            'isCompanyAddressEmpty'     => empty($companyInfo['companyAddress']),
+            'isCompanyAddressLegal'     => $this->isAddressLegal($companyInfo['companyAddress']),
+            'isCompanyFieldEmpty'       => empty($companyInfo['companyField']),
+            'isCompanyFieldLegal'       => $this->isCompanyFieldLegal($companyInfo['companyField']),
+            'isCompanyScaleEmpty'       => empty($companyInfo['companyScale']),
+            'isCompanyScaleLegal'       => $this->isCompanyScaleLegal($companyInfo['companyScale']),
+            'isCompanyPhoneEmpty'       => empty($companyInfo['companyPhone']),
+            'isCompanyPhoneLegal'       => $this->isPhoneNumberLegal($companyInfo['companyPhone']),
+        );
+        $result['isSuccessful']   = !$result['isCompanyNameEmpty']    &&  $result['isCompanyNameLegal'] &&
+                                    !$result['isCompanyRegionEmpty']  && !$result['isCompanyProvinceEmpty'] &&
+                                    !$result['isCompanyCityEmpty']    && 
+                                    !$result['isCompanyAddressEmpty'] &&  $result['isCompanyAddressLegal'] &&
+                                    !$result['isCompanyFieldEmpty']   &&  $result['isCompanyFieldLegal'] &&
+                                    !$result['isCompanyScaleEmpty']   &&  $result['isCompanyScaleLegal'] &&
+                                    !$result['isCompanyPhoneEmpty']   &&  $result['isCompanyPhoneLegal'];
+        return $result;
+    }
+
+    /**
+     * Verify if the address of the company is legal.
+     * Rule: the length of the address should no more than 256
+     *       characters.
+     * 
+     * @param  String  $address - the address of the company
+     * @return true if the address of the company is legal
+     */
+    private function isAddressLegal($address)
+    {
+        $MAX_LENGTH_OF_ADDRESS      = 256;
+        return ( strlen($address) < $MAX_LENGTH_OF_ADDRESS );
+    }
+
+    /**
+     * Verify if the field of the company is legal.
+     * Rule: the length of the address should no more than 32
+     *       characters.
+     * 
+     * @param  String  $companyField - the field of the company
+     * @return true if the field of the company is legal
+     */
+    private function isCompanyFieldLegal($companyField)
+    {
+        $MAX_LENGTH_OF_FIELD        = 128;
+        return ( strlen($companyField) < $MAX_LENGTH_OF_FIELD );
+    }
+
+    /**
+     * Verify if the scale of the company is legal.
+     * Rule: the scale should be a number.
+     * 
+     * @param  String  $companyScale - the scale of the company
+     * @return true if the scale of the company is legal
+     */
+    private function isCompanyScaleLegal($companyScale)
+    {
+        if ( !is_numeric($companyScale) ) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -741,70 +1006,15 @@ class RegisterController extends AbstractActionController
         $companyInfo     = array(
             'uid'               => $uid,
             'company_name'      => $companyInfoArray['companyName'],
+            'company_region'    => $companyInfoArray['companyRegion'],
+            'company_province'  => $companyInfoArray['companyProvince'],
+            'company_city'      => $companyInfoArray['companyCity'],
             'company_address'   => $companyInfoArray['companyAddress'],
+            'company_field'     => $companyInfoArray['companyField'],
+            'company_scale'     => $companyInfoArray['companyScale'],
             'company_phone'     => $companyInfoArray['companyPhone'],
         );
 
         return $companyTable->createNewCompany($companyInfo);
-    }
-
-    /**
-     * Get essential information of an enterprise within an array.
-     * @return an array which contains essential information of an enterprise
-     */
-    private function getCompanyInfoArray()
-    {
-        $companyName        = $this->getRequest()->getPost('company-name');
-        $companyAddress     = $this->getRequest()->getPost('company-address');
-        $companyPhone       = $this->getRequest()->getPost('company-phone');
-
-        return array(
-            'companyName'       => strip_tags($companyName),
-            'companyAddress'    => strip_tags($companyAddress),
-            'companyPhone'      => strip_tags($companyPhone),
-        );
-    }
-
-    /**
-     * Verify if the information of the enterprise is legal.
-     * @param  Array $teacherInfo - an array which contains information of the 
-     *         enterprise
-     * @return an array which contains query result
-     */
-    private function verifyCompanyInfo($companyInfo)
-    {
-        $result = array(
-            'isSuccessful'        => false,
-            'isCompanyNameEmpty'        => empty($companyInfo['companyName']),
-            'isCompanyNameLegal'        => $this->isCompanyNameLegal($companyInfo['companyName']),
-            'isCompanyAddressEmpty'     => empty($companyInfo['companyAddress']),
-            'isCompanyAddressLegal'     => $this->isAddressLegal($companyInfo['companyAddress']),
-            'isCompanyPhoneEmpty'       => empty($companyInfo['companyPhone']),
-            'isCompanyPhoneLegal'       => $this->isPhoneNumberLegal($companyInfo['companyPhone']),
-        );
-        $result['isSuccessful']   = !$result['isCompanyNameEmpty']    && $result['isCompanyNameLegal'] &&
-                                          !$result['isCompanyAddressEmpty'] && $result['isCompanyAddressLegal'] &&
-                                          !$result['isCompanyPhoneEmpty']   && $result['isCompanyPhoneLegal'];
-        return $result;
-    }
-
-    private function isCompanyNameLegal($companyName)
-    {
-        $MAX_LENGTH_OF_COMPANY_BANE = 64;
-        return ( strlen($companyName) < $MAX_LENGTH_OF_COMPANY_BANE );
-    }
-
-    /**
-     * Verify if the address of the company is legal.
-     * Rule: the length of the address should no more than 256
-     *       characters.
-     * 
-     * @param  String  $address - the address of the company
-     * @return true if the address of the company is legal
-     */
-    private function isAddressLegal($address)
-    {
-        $MAX_LENGTH_OF_ADDRESS      = 256;
-        return ( strlen($address) < $MAX_LENGTH_OF_ADDRESS );
     }
 }

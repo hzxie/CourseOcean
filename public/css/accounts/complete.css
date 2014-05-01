@@ -47,7 +47,10 @@ div#main-container div.span8 div.section label {
 div#main-container div.span8 div.section form,
 div#main-container div.span8 div.section input,
 div#main-container div.span8 div.section select#city,
-div#main-container div.span8 div.section select#work-position {
+div#main-container div.span8 div.section select#work-position,
+div#main-container div.span8 div.section select#teaching-field,
+div#main-container div.span8 div.section select#company-field,
+div#main-container div.span8 div.section select#company-scale {
 	margin-bottom: 0px;
 }
 

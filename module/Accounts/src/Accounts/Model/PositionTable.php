@@ -45,7 +45,8 @@ class PositionTable
     /**
      * Get the unique id of the work position by its slug.
      * @param  String $positionSlug - the unique slug of the work position
-     * @return the unique id of the work position
+     * @return an Object of Position which contains information of the
+     *         work position
      */
     public function getPositionID($positionSlug)
     {
@@ -60,7 +61,8 @@ class PositionTable
     /**
      * Get the unique slug of the work position by its id.
      * @param  int $positionID - the unique id of the work position
-     * @return the unique slug of the work position
+     * @return an Object of Position which contains information of the
+     *         work position
      */
     public function getUserGroupSlug($positionID)
     {

@@ -44,6 +44,7 @@ class TeacherTable
 	{
 		$offset     = ( $pageNumber - 1 ) * $limit;
         $resultSet  = $this->tableGateway->select(function (Select $select) use ($offset, $limit) {
+            $select->where("is_approved = true");
             $select->order(new Expression('CONVERT(teacher_name USING GBK)'));
             $select->offset($offset);
             $select->limit($limit);

@@ -18,6 +18,8 @@ use Accounts\Model\Position;
 use Accounts\Model\PositionTable;
 use Accounts\Model\Teacher;
 use Accounts\Model\TeacherTable;
+use Solutions\Model\CourseType;
+use Solutions\Model\CourseTypeTable;
 use Accounts\Model\Company;
 use Accounts\Model\CompanyTable;
 use Accounts\Model\EmailValidation;
@@ -107,6 +109,17 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Teacher());
                     return new TableGateway('itp_teachers', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Solutions\Model\CourseTypeTable' => function($sm) {
+                    $tableGateway = $sm->get('CourseTypeTableGateway');
+                    $table = new CourseTypeTable($tableGateway);
+                    return $table;
+                },
+                'CourseTypeTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new CourseType());
+                    return new TableGateway('itp_course_types', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Accounts\Model\CompanyTable' => function($sm) {
                     $tableGateway = $sm->get('CompanyTableGateway');

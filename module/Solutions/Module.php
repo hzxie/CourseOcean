@@ -9,11 +9,11 @@ use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
 use Solutions\Model\Course;
-use Solutions\Model\CourseType;
-use Solutions\Model\CourseTypeTable;
 use Solutions\Model\CourseTable;
 use Solutions\Model\CourseMeta;
 use Solutions\Model\CourseMetaTable;
+use Solutions\Model\CourseType;
+use Solutions\Model\CourseTypeTable;
 use Solutions\Model\Lecture;
 use Solutions\Model\LectureTable;
 use Solutions\Model\LectureMeta;

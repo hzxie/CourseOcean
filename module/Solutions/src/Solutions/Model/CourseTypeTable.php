@@ -42,4 +42,36 @@ class CourseTypeTable
         $resultSet  = $this->tableGateway->select();
         return $resultSet;
     }
+
+    /**
+     * Get the unique id of the course type by its slug.
+     * @param  int $courseTypeSlug - the unique slug of the course type
+     * @return an Object of CourseType which contains information of
+     *         the course type
+     */
+    public function getCourseTypeID($courseTypeSlug)
+    {
+        $rowset     = $this->tableGateway->select(
+            array( 
+                'course_type_slug'  => $courseTypeSlug,
+            )
+        );
+        return $rowset->current();
+    }
+
+    /**
+     * Get the unique slug of the course type by its id.
+     * @param  int $courseTypeID - the unique id of the course type
+     * @return an Object of CourseType which contains information of
+     *         the course type
+     */
+    public function getCourseTypeSlug($courseTypeID)
+    {
+        $rowset     = $this->tableGateway->select(
+            array( 
+                'course_type_id'  => $courseTypeID,
+            )
+        );
+        return $rowset->current();
+    }
 }
