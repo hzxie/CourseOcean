@@ -20,12 +20,36 @@ class TeacherController extends AbstractActionController
     {
         $NUMBER_OF_TEACHERS_PER_PAGE = 16;
         $pageNumber                  = $this->params()->fromRoute('param', 1);
+        $catelogySlug                = $this->params()->fromQuery('catelogy');
+        $catelogyID                  = $this->getCatelogyID($catelogySlug);
+
+        if ( $catelogySlug != null && $catelogyID == null ) {
+            return $this->notFoundAction();
+        }
         return array(
-            'teachers'          => $this->getAllTeachers($pageNumber, $NUMBER_OF_TEACHERS_PER_PAGE),
+            'teachers'          => $this->getTeachers($pageNumber, $NUMBER_OF_TEACHERS_PER_PAGE, $catelogyID),
             'currentPageNumber' => $pageNumber,
-            'numberOfPages'     => $this->getNumberOfPages($NUMBER_OF_TEACHERS_PER_PAGE),
+            'numberOfPages'     => $this->getNumberOfPages($NUMBER_OF_TEACHERS_PER_PAGE, $catelogyID),
             'courseTypes'       => $this->getAllCourseTypes(),
+            'catelogySlug'      => $catelogySlug,
         );
+    }
+
+    /**
+     * Get the unique id of the course type by its slug.
+     * @param  String $courseTypeSlug - the unique slug of the couse type
+     * @return the unique id of the course type
+     */
+    private function getCatelogyID($courseTypeSlug)
+    {
+        $sm                 = $this->getServiceLocator();
+        $courseTypeTable    = $sm->get('Solutions\Model\CourseTypeTable');
+        $courseType         = $courseTypeTable->getCourseTypeID($courseTypeSlug);
+
+        if ( $courseType == null ) {
+            return null;
+        }
+        return $courseType->course_type_id;
     }
 
     /**
@@ -33,12 +57,12 @@ class TeacherController extends AbstractActionController
      * @return an array which contains general information of the
      *         teachers
      */
-    private function getAllTeachers($pageNumber, $limit)
+    private function getTeachers($pageNumber, $limit, $catelogyID)
     {
         $sm                 = $this->getServiceLocator();
         $teacherTable       = $sm->get('Accounts\Model\TeacherTable');
 
-        return $teacherTable->fetchAll($pageNumber, $limit);
+        return $teacherTable->fetchAll($pageNumber, $limit, $catelogyID);
     }
 
     /**
@@ -47,11 +71,11 @@ class TeacherController extends AbstractActionController
      * @return an integer which stands for the total number of pages for 
      *         the teachers
      */
-    private function getNumberOfPages($limit)
+    private function getNumberOfPages($limit, $catelogyID)
     {
         $sm                 = $this->getServiceLocator();
         $teacherTable       = $sm->get('Accounts\Model\TeacherTable');
-        $numberOfTeachers   = $teacherTable->getNumberOfTeachers();
+        $numberOfTeachers   = $teacherTable->getNumberOfTeachers($catelogyID);
 
         return ceil( $numberOfTeachers / $limit );
     }
@@ -67,6 +91,11 @@ class TeacherController extends AbstractActionController
         $courseTypeTable    = $sm->get('Solutions\Model\CourseTypeTable');
 
         return $courseTypeTable->fetchAll();
+    }
+
+    public function searchAction()
+    {
+
     }
 
     /**

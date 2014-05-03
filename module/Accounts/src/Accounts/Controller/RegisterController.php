@@ -883,7 +883,7 @@ class RegisterController extends AbstractActionController
 
     private function processTeachingField($uid, $teachingField)
     {
-        return true;
+        
     }
 
     /**

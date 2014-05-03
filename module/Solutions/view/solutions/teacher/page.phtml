@@ -23,7 +23,7 @@
                 <ul class="nav nav-pills nav-stacked">
                 <?php foreach ( $courseTypes as $courseType ) { ?>
                     <li>
-                        <a href="#"><?php echo $courseType->course_type_name; ?></a>
+                        <a href="<?php echo $this->basePath(); ?>/solutions/teacher/page/1?catelogy=<?php echo $courseType->course_type_slug; ?>"><?php echo $courseType->course_type_name; ?></a>
                     </li>
                 <?php } ?>
                 </ul>
@@ -66,16 +66,21 @@
                         <li class="disabled"><a>&lt;</a></li>
                     <?php endif; ?>
                     <?php
-                        $lowerBound = $currentPageNumber - 5;
-                        $lowerBound = ( $lowerBound > 0 ) ? $lowerBound : 1;
-                        $upperBound = $currentPageNumber + 4;
-                        $upperBound = ( $upperBound <= $numberOfPages ) ? $upperBound : $numberOfPages;
+                        $lowerBound     = $currentPageNumber - 5;
+                        $lowerBound     = ( $lowerBound > 0 ) ? $lowerBound : 1;
+                        $upperBound     = $currentPageNumber + 4;
+                        $upperBound     = ( $upperBound <= $numberOfPages ) ? $upperBound : $numberOfPages;
+                        $catelogySlug   = $catelogySlug;
 
                         for ( $i = $lowerBound; $i <= $upperBound; ++ $i ) {
                             if ( $i == $currentPageNumber ) {
                                 echo "<li class=\"active\"><a>$i</a></li>";
                             } else {
-                                echo "<li><a href=\"$basePath$i\">$i</a></li>";
+                                if ( $catelogySlug == null ) {
+                                    echo "<li><a href=\"$basePath$i\">$i</a></li>";
+                                } else {
+                                    echo "<li><a href=\"$basePath$i?catelogySlug=$catelogySlug\">$i</a></li>";
+                                }
                             }
                         }
                     ?>

@@ -35,17 +35,26 @@ class TeacherTable
 
 	/**
 	 * Get all records from the teacher table by pagination.
+     *
 	 * @param  int $pageNumber - current number of the page
      * @param  int $limit - max number of courses in a page
+     * @param  int $catelogyID - the teaching field of the teachers
 	 * @return an object which is an instance of ResultSet, which contains
 	 *         data of all teachers.
 	 */
-	public function fetchAll($pageNumber, $limit)
+	public function fetchAll($pageNumber, $limit, $catelogyID)
 	{
 		$offset     = ( $pageNumber - 1 ) * $limit;
-        $resultSet  = $this->tableGateway->select(function (Select $select) use ($offset, $limit) {
+        $resultSet  = $this->tableGateway->select(function (Select $select) use ($offset, $limit, $catelogyID) {
+            if ( $catelogyID != 0 ) {
+                $select->join('itp_teaching_field', 
+                              'itp_teaching_field.uid = itp_teachers.uid');
+                $select->where("course_type_id = $catelogyID");
+            }
             $select->where("is_approved = true");
+
             $select->order(new Expression('CONVERT(teacher_name USING GBK)'));
+            $select->group('itp_teachers.uid');
             $select->offset($offset);
             $select->limit($limit);
         });
@@ -54,12 +63,19 @@ class TeacherTable
 
 	/**
      * Get number of records in the teachers table.
+     * @param  int $catelogyID - the teaching field of the teachers
      * @return an integer which stands for the number of records in the teacher
      *         table
      */
-    public function getNumberOfTeachers()
+    public function getNumberOfTeachers($catelogyID)
     {
-        return $this->tableGateway->select()->count();
+        return $this->tableGateway->select(function (Select $select) use ($catelogyID) {
+            if ( $catelogyID != 0 ) {
+                $select->join('itp_teaching_field', 
+                              'itp_teaching_field.uid = itp_teachers.uid');
+                $select->where("course_type_id = $catelogyID");
+            }
+        })->count();
     }
 
     /**

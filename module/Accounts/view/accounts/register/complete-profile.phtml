@@ -41,7 +41,7 @@
                 <form action="#">
                     <select onchange="setProvince(this, province, city)" id="region" name="region" />
                         <option value="" selected>任意地区</option>
-                        <?php $this->inlineScript()->captureStart(); ?>setRegions();<?php $this->inlineScript()->captureEnd(); ?>
+                        <script type="text/javascript">setRegions();</script>
                     </select>
                     <select id="province" disabled="disabled" onchange="setCity(this, city)"></select>
                     <select id="city" disabled="disabled"></select>
@@ -76,8 +76,8 @@
                     <span>请选择您的授课领域以便让更多人了解您</span>
                 </div> <!-- .section -->
                 <div class="section">
-                    <label for="comapny">所在公司及职位</label>
-                    <input id="comapny" class="span6" type="text" maxlength="64" /><br />
+                    <label for="company">所在公司及职位</label>
+                    <input id="company" class="span6" type="text" maxlength="64" /><br />
                     <span>请填写您所在的(或曾经就职的)公司职位以便让更多人了解您</span>
                 </div> <!-- .section -->
             <?php elseif ( $userGroupSlug == 'Company' ): ?>
