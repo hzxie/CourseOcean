@@ -271,6 +271,7 @@ class LectureController extends AbstractActionController
         $uid            = $this->isLogined();
 
         /* Check if the attend action is out of date */
+        $isOutOfDate = false;
         /* Check if the lecture is full */
 
         $result         = array(

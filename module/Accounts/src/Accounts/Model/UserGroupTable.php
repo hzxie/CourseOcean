@@ -47,7 +47,7 @@ class UserGroupTable
      * @param  String $userGroupSlug - the unique slug of the user group
      * @return an object of UserGroup or null if the slug is invalid
      */
-    public function getUserGroupID($userGroupSlug)
+    public function getUserGroupId($userGroupSlug)
     {
         $rowset     = $this->tableGateway->select(
             array( 
@@ -59,14 +59,14 @@ class UserGroupTable
 
     /**
      * Get the unique slug of the user group by its id.
-     * @param  int $userGroupID - the unique id of the user group
+     * @param  int $userGroupId - the unique id of the user group
      * @return an object of UserGroup or null if the slug is invalid
      */
-    public function getUserGroupSlug($userGroupID)
+    public function getUserGroupSlug($userGroupId)
     {
     	$rowset     = $this->tableGateway->select(
             array( 
-                'user_group_id'  => $userGroupID,
+                'user_group_id'  => $userGroupId,
             )
         );
         return $rowset->current();

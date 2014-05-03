@@ -351,6 +351,10 @@
             errorMessage += '请填写正确的联系电话<br />';
         }
 <?php endif; ?>
+        if ( !errorMessage ) {
+            errorMessage = '发生未知错误<br />';
+        }
+
         $('#error').html(errorMessage);
         $('#error').fadeIn();
         

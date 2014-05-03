@@ -145,7 +145,7 @@ class UserTable
      * @param  String  $username - the username of the user
      * @return the unique id of the user
      */
-    private function getUidByUsername($username)
+    public function getUidByUsername($username)
     {
         $rowset     = $this->tableGateway->select(
             array( 

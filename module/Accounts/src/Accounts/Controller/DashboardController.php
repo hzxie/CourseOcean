@@ -34,15 +34,16 @@ class DashboardController extends AbstractActionController
             return $this->sendRedirect('accounts/login');
         }
         if ( !$this->isActivated() ) {
-            return $this->sendRedirect('accounts/register/verifyEmail');   
+            return $this->sendRedirect('accounts/register/email');   
         }
         
-        $this->profile  = $this->getUserData();
-        $uid            = $this->profile['uid'];
-        $userGroupSlug  = $this->profile['userGroupSlug'];
+        $this->profile      = $this->getUserData();
+        $uid                = $this->profile['uid'];
+        $userGroupSlug      = $this->profile['userGroupSlug'];
+        $isProfileCompleted = $this->profile['isProfileCompleted'];
 
-        if ( true ) {
-            return $this->sendRedirect('accounts/register/completeProfile');
+        if ( !$isProfileCompleted ) {
+            return $this->sendRedirect('accounts/register/complete');
         }
 
         $view = new ViewModel(
@@ -94,7 +95,7 @@ class DashboardController extends AbstractActionController
      */
     private function getUserData()
     {
-        $userData           = array();
+        $userData           = array('isProfileCompleted' => false);
         $userData          += $this->getSessionData();
 
         $uid                = $userData['uid'];
@@ -102,7 +103,12 @@ class DashboardController extends AbstractActionController
 
         $getProfileFunction = 'get'.$userGroupSlug.'Info';
         if ( method_exists($this, $getProfileFunction) ) {
-            $userData      += $this->$getProfileFunction($uid);
+            $extraUserData  = $this->$getProfileFunction($uid);
+
+            if ( $extraUserData ) {
+                $userData['isProfileCompleted'] = true;
+                $userData  += $extraUserData;
+            }
         }
         return $userData;
     }

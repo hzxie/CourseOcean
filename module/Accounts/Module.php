@@ -18,6 +18,8 @@ use Accounts\Model\Position;
 use Accounts\Model\PositionTable;
 use Accounts\Model\Teacher;
 use Accounts\Model\TeacherTable;
+use Accounts\Model\TeachingField;
+use Accounts\Model\TeachingFieldTable;
 use Solutions\Model\CourseType;
 use Solutions\Model\CourseTypeTable;
 use Accounts\Model\Company;
@@ -109,6 +111,17 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Teacher());
                     return new TableGateway('itp_teachers', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Accounts\Model\TeachingFieldTable' => function($sm) {
+                    $tableGateway = $sm->get('TeachingFieldTableGateway');
+                    $table = new TeachingFieldTable($tableGateway);
+                    return $table;
+                },
+                'TeachingFieldTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new TeachingField());
+                    return new TableGateway('itp_teaching_field', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Solutions\Model\CourseTypeTable' => function($sm) {
                     $tableGateway = $sm->get('CourseTypeTableGateway');

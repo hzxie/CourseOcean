@@ -13,15 +13,15 @@ use Zend\Mail\Transport\Smtp as SmtpTransport;
 use Zend\Mail\Transport\SmtpOptions;
 
 /**
- * Handle requests on the register page.
+ * 处理用户注册请求的控制器.
  * 
- * @author Xie Haozhe <zjhzxhz@gmail.com>
+ * @author 谢浩哲 <zjhzxhz@gmail.com>
  */
 class RegisterController extends AbstractActionController
 {
     /**
-     * Default method to call in the controller.
-     * @return a ViewModel object which contains HTML content
+     * 该控制器的默认方法, 显示用户注册页面.
+     * @return 一个包含了HTML内容的ViewModel对象
      */
     public function indexAction()
     {
@@ -29,9 +29,8 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Handle asynchronous register requests for the users.
-     * @return a HTTP response object which contains JSON data
-     *         infers whether the register is successful
+     * 处理用户的注册请求, 处理用户的基本注册信息请求.
+     * @return 一个含有若干标志位的JSON数组
      */
     public function processAction()
     {
@@ -49,31 +48,8 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Create a record in the users table.
-     * @param  Array $basicInfoArray - an array which contains basic 
-     *         information of the user
-     * @return the unique id of the user
-     */
-    private function processBasicAction($basicInfoArray)
-    {
-        $this->createSession($basicInfoArray);
-
-        $sm                 = $this->getServiceLocator();
-        $userTable          = $sm->get('Accounts\Model\UserTable');
-
-        $basicInfo          = array(
-            'username'      => $basicInfoArray['username'],
-            'password'      => md5($basicInfoArray['password']),
-            'email'         => $basicInfoArray['email'],
-            'user_group_id' => $basicInfoArray['userGroupId'],
-        );
-        
-        return $userTable->createNewUser($basicInfo);
-    }
-
-    /**
-     * Get basic information within an array.
-     * @return an array which contains basic information of the user
+     * 从用户的POST请求中提取用户的基本信息, 并以数组形式返回.
+     * @return 一个包含了用户基本信息的数组
      */
     private function getBasicInfoArray()
     {
@@ -89,15 +65,14 @@ class RegisterController extends AbstractActionController
             'password'          => $password,
             'confirmPassword'   => strip_tags($confirmPassword),
             'userGroupSlug'     => ucfirst(strip_tags($userGroupSlug)),
-            'userGroupId'       => strip_tags($this->getUserGroupID($userGroupSlug)),
+            'userGroupId'       => strip_tags($this->getUserGroupId($userGroupSlug)),
         );
     }
 
     /**
-     * Verify if the basic information of the user is legal.
-     * @param  Array $basicInfo - an array which contains basic information 
-     *         of the user
-     * @return an array which contains query result
+     * 检查用户所填写的信息是否合法.
+     * @param  Array $basicInfo - 包含用户基本信息的数组
+     * @return 一个含有若干标志位的数组
      */
     private function verifyBasicInfo($basicInfo)
     {
@@ -125,13 +100,11 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Verify if the username is legal.
-     * Rule: the username should start with a character, and the length of
-     *       it should no less than 6 characters and no more than 16 characters.
-     *       It should be conbined with characters, numbers and underlines.
+     * 检查用户的用户名是否合法.
+     * 规则: 用户的用户名必须以英文字母开头, 长度在6-16(包含边界)个字符之间.
      * 
-     * @param  String  $username - the username of the user
-     * @return true if the username is legal
+     * @param  String  $username - 用户的用户名
+     * @return 用户的用户名是否合法
      */
     private function isUsernameLegal($username)
     {
@@ -139,9 +112,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Verify if the username has existed.
-     * @param  String  $username - the username of the user
-     * @return true if the username has existed
+     * 检查用户的用户名是否已经被使用.
+     * @param  String  $username - 用户的用户名
+     * @return 用户的用户名是否已经被使用
      */
     private function isUsernameExists($username)
     {
@@ -152,9 +125,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Verify if the email address is legal.
-     * @param  String  $email - the email address of the user
-     * @return true if the email is legal
+     * 检查用户的Email地址是否合法.
+     * @param  String  $email - 用户的Email地址
+     * @return 用户的Email地址是否合法
      */
     private function isEmailLegal($email)
     {
@@ -162,9 +135,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Verify if the email address has existed.
-     * @param  String  $email - the email address of the user
-     * @return true if the email has existed
+     * 检查用户的Email地址是否已经被使用.
+     * @param  String  $email - 用户的Email地址
+     * @return 用户的Email地址是否已经被使用
      */
     private function isEmailExists($email)
     {
@@ -175,12 +148,11 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Verify if the password is legal.
-     * Rule: the length of the password should no less than 6 characters,
-     *       and no more than 16 characters.
+     * 检查用户的密码是否合法
+     * 规则: 用户密码的长度必须在6-16(包含边界)个字符之间.
      * 
-     * @param  String  $password - the password of the user
-     * @return true if the password is legal
+     * @param  String  $password - 用户的密码
+     * @return 用户的密码是否合法
      */
     private function isPasswordLegal($password)
     {
@@ -192,15 +164,15 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Get the unique id of the user group by its slug.
-     * @param  String $userGroupSlug - the unique slug of the user group
-     * @return the unique id of the user group
+     * 通过用户组的唯一简写(slug)以获取用户组的唯一标识符.
+     * @param  String $userGroupSlug - 用户组的唯一简写
+     * @return 用户组的唯一标识符
      */
-    private function getUserGroupID($userGroupSlug)
+    private function getUserGroupId($userGroupSlug)
     {
         $sm                 = $this->getServiceLocator();
         $userGroupTable     = $sm->get('Accounts\Model\UserGroupTable');
-        $userGroup          = $userGroupTable->getUserGroupID($userGroupSlug);
+        $userGroup          = $userGroupTable->getUserGroupId($userGroupSlug);
 
         if ( $userGroup == null ) {
             return null;
@@ -209,9 +181,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Get the unique slug of the user group by its id.
-     * @param  int $userGroupId - the unique id of the user group
-     * @return the unique slug of the user group
+     * 通过用户组的唯一标识符以获取用户组的唯一简写(slug).
+     * @param  int $userGroupId - 用户组的唯一标识符
+     * @return 用户组的唯一简写(slug)
      */
     private function getUserGroupSlug($userGroupId)
     {
@@ -226,8 +198,31 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Create a session for a registering user.
-     * @param  Array $basicInfoArray - an array which contains user's profile
+     * 将用户的基本信息添加至用户表(users).
+     * 在本函数中会对用户的密码进行加密存储.
+     * @param  Array $basicInfoArray - 含有用户基本信息的数组
+     * @return 用户的唯一标识符(uid)
+     */
+    private function processBasicAction($basicInfoArray)
+    {
+        $this->createSession($basicInfoArray);
+
+        $sm                 = $this->getServiceLocator();
+        $userTable          = $sm->get('Accounts\Model\UserTable');
+
+        $basicInfo          = array(
+            'username'      => $basicInfoArray['username'],
+            'password'      => md5($basicInfoArray['password']),
+            'email'         => $basicInfoArray['email'],
+            'user_group_id' => $basicInfoArray['userGroupId'],
+        );
+        
+        return $userTable->createNewUser($basicInfo);
+    }
+
+    /**
+     * 为该用户创建Session. 该Session包含了一些用户必要的信息.
+     * @param  Array $basicInfoArray - 包含了用户基本信息的数组
      */
     private function createSession($basicInfoArray)
     {
@@ -242,8 +237,8 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Get user profile from the session.
-     * @return an array which contains user's profile
+     * 从Session中获取用户的信息, 以便用户继续完成注册.
+     * @return 返回包含用户部分信息的数组
      */
     private function getSessionData()
     {
@@ -259,9 +254,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Send HTTP redirect reponse.
-     * @param  String $redirectPath - the pasth to redirect
-     * @return an HTTP redirect reponse object
+     * HTTP重定向请求.
+     * @param  String $redirectPath - 重定向的相对路径
+     * @return HTTP重定向请求的对象.
      */
     private function sendRedirect($redirectPath = '')
     {
@@ -273,16 +268,19 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Display a HTML content which notice user to check his mailbox.
-     * @return a ViewModel object which contains HTML content
+     * 显示验证用户Email地址的页面.
+     * [拦截] 若用户还没有填写基本信息, 则跳转至注册页面.
+     * [拦截] 若用户已经验证了Email地址, 则跳转至完善个人资料页面.
+     * 
+     * @return 一个包含了HTML内容的ViewModel对象
      */
-    public function verifyEmailAction()
+    public function emailAction()
     {
         if ( !$this->isAllowedToAccess() ) {
             return $this->sendRedirect('accounts/register');
         }
         if ( $this->isActivated() ) {
-            return $this->sendRedirect('accounts/register/completeProfile');
+            return $this->sendRedirect('accounts/register/complete');
         }
 
         $this->verifyEmail();        
@@ -292,23 +290,22 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Verify if the email of the user is valid.
-     *
-     * The function will add a record to database and send an email
-     * to the user.
+     * 验证用户Email地址的准备工作:
+     *     1. 产生验证码并保存至数据库
+     *     2. 向用户的电子邮箱发送一封验证邮件
      */
     private function verifyEmail()
     {
         $email  = $this->getEmailAddress();
-        $guid   = $this->getGUID();
+        $guid   = $this->getGUId();
 
         $this->saveToDatabase($email, $guid);
         $this->sendValidationEmail($email, $guid);
     }
 
     /**
-     * Check if the user has logined.
-     * @return true if the user has logined
+     * 检查用户是否已经登陆, 是否尝试非法访问.
+     * @return 用户是否已经登陆
      */
     private function isAllowedToAccess()
     {
@@ -317,8 +314,8 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Get the email of the user.
-     * @return an String which infers the email of the user
+     * 从Session中获取用户的电子邮件地址.
+     * @return 用户的电子邮件地址
      */
     private function getEmailAddress()
     {
@@ -327,9 +324,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Save activation information in the database.
-     * @param  String $email - the email of the user
-     * @param  String $guid - the activation code of the account
+     * 将验证信息(用户Email地址 + 验证码)保存至数据库.
+     * @param  String $email - 用户的Email地址
+     * @param  String $guid  - 用户激活邮箱的验证码
      */
     private function saveToDatabase($email, $guid)
     {
@@ -344,9 +341,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Send validation email to the user.
-     * @param  String $email - the email of the user
-     * @param  String $guid - the activation code of the account
+     * 发送验证邮件至用户的邮箱.
+     * @param  String $email - 用户的Email地址
+     * @param  String $guid  - 用户激活邮箱的验证码
      */
     private function sendValidationEmail($email, $guid)
     {
@@ -357,14 +354,14 @@ class RegisterController extends AbstractActionController
                 ->setBody($this->getMailContent($email, $guid));
 
         $transport = new SmtpTransport();
-        // $transport->send($message);
+        $transport->send($message);
     }
 
     /**
-     * Get random activation code.
-     * @return an random activation code of the account
+     * 生成用户激活邮箱所使用的验证码.
+     * @return 用户激活邮箱的验证码
      */
-    private function getGUID()
+    private function getGUId()
     {
         if (function_exists('com_create_guid') === true) {
             return trim(com_create_guid(), '{}');
@@ -378,10 +375,13 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Generate the content of the validation email.
-     * @param  String $email - the email of the user
-     * @param  String $guid - the activation code of the account
-     * @return the content of the validation email
+     * 生成用户激活邮箱的电子邮件的HTML内容.
+     *
+     * @todo  完善电子邮件的HTML内容
+     * 
+     * @param  String $email - 用户的Email地址
+     * @param  String $guid  - 用户激活邮箱的验证码
+     * @return 电子邮件的HTML内容
      */
     private function getMailContent($email, $guid)
     {
@@ -389,8 +389,10 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Handle the activating account requrests of the users.
-     * @return an HTTP redirect reponse object
+     * 处理用户的验证邮箱请求.
+     * 邮件中包含的Email地址和激活邮箱验证码通过GET方式发送.
+     * 若激活成功, 则跳转至完善个人资料页面; 否则, 停留在本页面.
+     * @return HTTP重定向请求的对象
      */
     public function activateAccountAction()
     {
@@ -400,17 +402,17 @@ class RegisterController extends AbstractActionController
         $isSuccessful   = $this->activateAccount($email, $guid);
 
         if ( $isSuccessful ) {
-            return $this->sendRedirect('accounts/register/completeProfile');
+            return $this->sendRedirect('accounts/register/complete');
         } else {
-            return $this->sendRedirect('accounts/register/verifyEmail');
+            return $this->sendRedirect('accounts/register/email');
         }
     }
 
     /**
-     * Handle the activating account requrests of the users.
-     * @param  String $email - the email of the user
-     * @param  String $guid - the activation code of the account
-     * @return true if the operation is successful
+     * 处理用户的验证邮箱请求.
+     * @param  String $email - 用户的Email地址
+     * @param  String $guid  - 用户激活邮箱的验证码
+     * @return 返回该操作是否成功
      */
     private function activateAccount($email, $guid)
     {
@@ -427,10 +429,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Update activation status of the account.
-     * @param  String $email - the email of the user
-     * @param  bool $isActivated - a flag that infers if the account has 
-     *         been activated
+     * 在数据库表中和Session中更新账户的激活状态(是否验证了Email地址)
+     * @param  String $email - 用户的Email地址
+     * @param  bool $isActivated - 账户是否被激活
      */
     private function updateAccountActivated($email, $isActivated)
     {
@@ -439,9 +440,8 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Update activation status of the account in session.
-     * @param  bool $isActivated - a flag that infers if the account has 
-     *         been activated
+     * 在Session中更新账户的激活状态(是否验证了Email地址)
+     * @param  bool $isActivated - 账户是否被激活
      */
     private function updateSessionAccountActivated($isActivated)
     {
@@ -450,10 +450,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Update activation status of the account in database.
-     * @param  String $email - the email of the user
-     * @param  bool $isActivated - a flag that infers if the account has 
-     *         been activated
+     * 在用户表(users)中更新账户的激活状态(是否验证了Email地址)
+     * @param  String $email - 用户的Email地址
+     * @param  bool $isActivated - 账户是否被激活
      */
     private function updateDatabaseAccountActivated($email, $isActivated)
     {
@@ -462,33 +461,37 @@ class RegisterController extends AbstractActionController
 
         return $userTable->updateAccountActivated($email, $isActivated);
     }
-    
+
     /**
-     * Display a HTML content which notice user to complete his profile.
-     * @return a ViewModel object which contains HTML content
+     * 显示完善个人信息页面. 该页面将提示不同类型的用户分别完善它们的
+     * 个性化资料.
+     * [拦截] 若用户尚未验证Email地址, 则跳转至验证Email地址页面.
+     * [拦截] 若用户已经激活, 则跳转至用户控制面板(Dashboard).
+     * 
+     * @return 一个包含了HTML内容的ViewModel对象
      */
-    public function completeProfileAction()
+    public function completeAction()
     {
         if ( !$this->isActivated() ) {
-            return $this->sendRedirect('accounts/register/verifyEmail');
+            return $this->sendRedirect('accounts/register/email');
+        }
+        if ( $this->isProfileCompleted() ) {
+            return $this->sendRedirect('accounts/dashboard');
         }
 
         $sessionData        = $this->getSessionData();
-        $workPositions      = $this->getWorkPositions();
-        $courseTypes        = $this->getCourseTypes();
-
         return array(
             'username'      => $sessionData['username'],
             'email'         => $sessionData['email'],
             'userGroupSlug' => $sessionData['userGroupSlug'],
-            'workPositions' => $workPositions,
-            'courseTypes'   => $courseTypes,
+            'workPositions' => $this->getWorkPositions(),
+            'courseTypes'   => $this->getCourseTypes(),
         );
     }
 
     /**
-     * Check if the user has verify his email address.
-     * @return true if the user has verify his email address
+     * 检查用户是否已经验证了Email地址.
+     * @return 用户是否已经验证了Email地址
      */
     private function isActivated()
     {
@@ -497,8 +500,79 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Get all available positions for a user.
-     * @return all available positions for a user within an array
+     * 检查用户是否已经完善了个人资料.
+     *
+     * @param  int  $uid - 用户的唯一标识符
+     * @param  int  $userGroupSlug - 用户所在用户组的唯一标识符
+     * @return 用户是否已经完善了个人资料
+     */
+    private function isProfileCompleted()
+    {
+        $sessionData    = $this->getSessionData();
+        $username       = $sessionData['username'];
+        $uid            = $this->getUid($username);
+        $userGroupSlug  = $sessionData['userGroupSlug'];
+
+        $isProfileCompletedFunc = 'is'.$userGroupSlug.'ProfileCompleted';
+        if ( $this->$isProfileCompletedFunc($uid) ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 通过用户的用户名以获得用户的唯一标识符(uid).
+     * @param  String $username - 用户的用户名
+     * @return 用户的唯一标识符
+     */
+    private function getUid($username)
+    {
+        $sm         = $this->getServiceLocator();
+        $userTable  = $sm->get('Accounts\Model\UserTable');
+        $user       = $userTable->getUidByUsername($username);
+
+        return $user->uid;
+    }
+
+    /**
+     * 检查一个个人用户是否已经完善了个人信息.
+     * @param  int  $uid - 用户的唯一标识符
+     * @return 一个个人用户是否已经完善了个人信息
+     */
+    private function isPersonProfileCompleted($uid)
+    {
+        $sm             = $this->getServiceLocator();
+        $personTable    = $sm->get('Accounts\Model\PersonTable');
+        return $personTable->getPersonInfo($uid);
+    }
+
+    /**
+     * 检查一个教师用户是否已经完善了个人信息.
+     * @param  int  $uid - 用户的唯一标识符
+     * @return 一个教师用户是否已经完善了个人信息
+     */
+    private function isTeacherProfileCompleted($uid)
+    {
+        $sm             = $this->getServiceLocator();
+        $TeacherTable   = $sm->get('Accounts\Model\TeacherTable');
+        return $TeacherTable->getTeacherInfo($uid);
+    }
+
+    /**
+     * 检查一个企业用户是否已经完善了个人信息.
+     * @param  int  $uid - 用户的唯一标识符
+     * @return 一个企业用户是否已经完善了个人信息
+     */
+    private function isCompanyProfileCompleted($uid)
+    {
+        $sm             = $this->getServiceLocator();
+        $companyTable   = $sm->get('Accounts\Model\CompanyTable');
+        return $companyTable->getCompanyInfo($uid);
+    }
+
+    /**
+     * 从数据库表(work_positions)中获取获取个人用户所有可选择的工作职位.
+     * @return 一个包含了所有工作职位信息的数组
      */
     private function getWorkPositions()
     {
@@ -510,10 +584,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Get all available positions for a user.
-     * @param  ResultSet $resultSet - an object of ResultSet which contains
-     *         all information of work positions
-     * @return all available positions for a user within an array
+     * 将TableGateway对象返回的ResultSet对象转换为数组对象, 并以数组形式返回.
+     * @param  ResultSet $resultSet - 一个包含了所有工作职位信息的ResultSet对象
+     * @return 一个包含了所有工作职位信息的数组
      */
     private function getWorkPositionsArray($resultSet)
     {
@@ -528,8 +601,8 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * [getCourseTypes description]
-     * @return [type] [description]
+     * 从数据库表(course_type)中获取所有可选择的课程类型(授课范围).
+     * @return 一个包含了所有授课范围信息的数组
      */
     private function getCourseTypes()
     {
@@ -541,9 +614,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * [getCourseTypesArray description]
-     * @param  [type] $resultSet [description]
-     * @return [type]            [description]
+     * 将TableGateway对象返回的ResultSet对象转换为数组对象, 并以数组形式返回.
+     * @param  ResultSet $resultSet - 一个包含了所有授课范围信息的ResultSet对象
+     * @return 一个包含了所有授课范围信息的数组
      */
     private function getCourseTypesArray($resultSet)
     {
@@ -558,10 +631,8 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Handle asynchronous complete profile requests for the users.
-     * @return a HTTP response object which contains JSON data
-     *         infers whether the complete profile operation is 
-     *         successful
+     * 处理用户完善个人附加信息的请求.
+     * @return 一个含有若干标志位的JSON数组
      */
     public function processCompleteProfileAction()
     {
@@ -587,8 +658,8 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Get essential information of a person within an array.
-     * @return an array which contains essential information of a person
+     * 为个人用户从HTTP请求中提取个人用户所需的用户信息.
+     * @return 一个包含了个人用户的附加信息的数组
      */
     private function getPersonInfoArray()
     {
@@ -605,22 +676,24 @@ class RegisterController extends AbstractActionController
             'personRegion'          => strip_tags($personRegion),
             'personProvince'        => strip_tags($personProvince),
             'personCity'            => strip_tags($personCity),
-            'personPositionId'      => $this->getPositionID( $personPositionSlug ),
+            'personPositionId'      => $this->getPositionId($personPositionSlug),
             'personWorkTime'        => strip_tags($personWorkTime),
             'personPhone'           => strip_tags($personPhone),
         );
     }
 
     /**
-     * Get the unique id of the work position by its slug.
-     * @param  String $positionSlug - the unique slug of the work position
-     * @return the unique id of the work position
+     * 通过工作职位的唯一简写(slug)以获取工作职位的唯一标识符.
+     * 在个人用户信息表(people)中, 工作职位信息以工作职位的唯一标识符的形式存储.
+     * 
+     * @param  String $positionSlug - 工作职位的唯一简写(slug)
+     * @return 工作职位的唯一标识符
      */
-    private function getPositionID($workPositionSlug)
+    private function getPositionId($workPositionSlug)
     {
         $sm                 = $this->getServiceLocator();
         $positionTable      = $sm->get('Accounts\Model\PositionTable');
-        $position           = $positionTable->getPositionID($workPositionSlug);
+        $position           = $positionTable->getPositionId($workPositionSlug);
 
         if ( $position == null ) {
             return null;
@@ -629,10 +702,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Verify if the information of the person is legal.
-     * @param  Array $personInfo - an array which contains information of the 
-     *         person
-     * @return an array which contains query result
+     * 检查个人用户所提交的附加信息是否合法.
+     * @param  Array $personInfo - 个人用户的附加信息
+     * @return 一个含有若干标志位的数组
      */
     private function verifyPersonInfo($personInfo)
     {
@@ -656,11 +728,11 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Verify if the real name of the user is legal.
-     * Rule: the max length of the real name should less than 32 characters.
+     * 检查用户(个人用户, 教师用户)的真实姓名是否合法.
+     * 规则: 用户的真实姓名不应该超过32个字符.
      * 
-     * @param  String  $name - the real name of the user
-     * @return true if the real name of the user is legal
+     * @param  String  $name - 用户的真实姓名
+     * @return 用户的真实姓名是否合法
      */
     private function isNameLegal($name)
     {
@@ -669,9 +741,10 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Verify if the phone number of the user is legal.
-     * @param  String  $phone - the phone number of the user
-     * @return true if the phone number of the user is legal
+     * 检查用户(个人用户, 教师用户, 企业用户)的联系电话是否合法.
+     * 规则: 用户的联系电话应该在7-24(包含边界)字符之间, 且只能由数字和-组成.
+     * @param  String $phone - 用户的联系电话
+     * @return 用户的联系电话员是否合法
      */
     private function isPhoneNumberLegal($phone)
     {
@@ -679,10 +752,12 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Check if the city of the user is empty.
-     * @param  [type]  $city     [description]
-     * @param  [type]  $province [description]
-     * @return true if the user hasn't choose his city where he live
+     * 检查用户(个人用户, 教师用户, 企业用户)是否选择了所在城市.
+     * 对于处在直辖市的用户, 在字段应该为空.
+     * 
+     * @param  String $city - 用户所在的城市
+     * @param  String $province - 用户所在的省份
+     * @return 用户是否选择了所在城市
      */
     private function isCityEmpty($city, $province)
     {
@@ -698,11 +773,10 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Handle asynchronous register requests for a person.
-     * @param  int $uid - the unique id of the user
-     * @param  Array $personInfoArray - an array which contains essential 
-     *         information of a person
-     * @return true if the query is successful
+     * 处理个人用户完善个人附加信息的请求.
+     * @param  int $uid - 用户的唯一标识符(uid)
+     * @param  Array $personInfoArray - 包含个人用户的附加信息的数组
+     * @return 数据库操作是否成功
      */
     private function processPersonAction($uid, $personInfoArray)
     {
@@ -723,8 +797,8 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Get essential information of a teacher within an array.
-     * @return an array which contains essential information of a teacher
+     * 为教师用户从HTTP请求中提取个人用户所需的用户信息.
+     * @return 一个包含了教师用户的附加信息的数组
      */
     private function getTeacherInfoArray()
     {
@@ -750,10 +824,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Verify if the information of the teacher is legal.
-     * @param  Array $teacherInfo - an array which contains information of the 
-     *         teacher
-     * @return an array which contains query result
+     * 检查教师用户所提交的附加信息是否合法.
+     * @param  Array $teacherInfo - 教师用户的附加信息
+     * @return 一个含有若干标志位的数组
      */
     private function verifyTeacherInfo($teacherInfo)
     {
@@ -785,22 +858,20 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * [isTeachingFieldLegal description]
-     * @param  [type]  $teachingField [description]
-     * @return boolean                [description]
+     * 检查用户(教师用户)的授课范围是否合法
+     * @param  String $teachingField - 教师用户授课范围的缩写字符串
+     * @return 用户的授课范围是否合法
      */
-    private function isTeachingFieldLegal($teachingField)
+    private function isTeachingFieldLegal($teachingFieldString)
     {
-        $teachingFields = split( ',', $teachingField );
-
-        if ( count( $teachingFields ) > 3 ) {
+        $teachingFieldSlugs     = split(',', $teachingFieldString);
+        if ( count( $teachingFieldSlugs ) > 3 ) {
             return false;
         }
 
-        foreach ( $teachingFields as $teachingFieldSlug ) {
-            $teachingFieldId = $this->getFieldID( $teachingFieldSlug );
-
-            if ( $teachingField == null ) {
+        $teachingFields = $this->getCourseTypes();
+        foreach ( $teachingFieldSlugs as $teachingFieldSlug ) {
+            if ( !$this->isTeachingFieldSlugLegal($teachingFieldSlug, $teachingFields) ) {
                 return false;
             }
         }
@@ -808,61 +879,118 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * [getFieldID description]
-     * @param  [type] $fieldSlug [description]
-     * @return [type]            [description]
+     * 判断教师用户提交的授课范围唯一缩写(slug)是否合法.
+     * @param  String $fieldSlug - 授课范围唯一缩写(slug)
+     * @param  Array $teachingFields - 所有合法的授课范围(CourseType)对象
+     * @return 授课范围唯一缩写(slug)是否合法
      */
-    private function getFieldID($fieldSlug)
+    private function isTeachingFieldSlugLegal($fieldSlug, $teachingFields)
     {
-        $sm                 = $this->getServiceLocator();
-        $courseTypeTable    = $sm->get('Solutions\Model\CourseTypeTable');
-        $courseType         = $courseTypeTable->getCourseTypeID($fieldSlug);
-
-        if ( $courseType == null ) {
-            return null;
+        foreach ( $teachingFields as $teachingField ) {
+            if ( $teachingField->course_type_slug == $fieldSlug ) {
+                return true;
+            }
         }
-        return $courseType->course_type_id;
+        return false;
     }
 
     /**
-     * [isCompanyNameLegal description]
-     * @param  [type]  $companyName [description]
-     * @return boolean              [description]
+     * 判断用户(教师用户, 企业用户)提交的公司名称是否合法.
+     * 规则: 一个合法的公司名称的长度不应该超过64个字符.
+     * 
+     * @param  String $companyName - 用户所在的公司名称
+     * @return 公司名称是否合法
      */
     private function isCompanyNameLegal($companyName)
     {
         $MAX_LENGTH_OF_COMPANY_NANE = 64;
-        return ( strlen($companyName) < $MAX_LENGTH_OF_COMPANY_NANE );
+        return ( strlen($companyName) <= $MAX_LENGTH_OF_COMPANY_NANE );
     }
 
     /**
-     * [isWeiboAccountLegal description]
-     * @param  [type]  $weiboAccount [description]
-     * @return boolean               [description]
+     * 判断用户(教师用户)的微博账号是否合法.
+     * 规则: 一个合法的微博账号的长度不应该超过32个字符.
+     * 
+     * @param  String  $weiboAccount - 用户的微博账号
+     * @return 用户的微博账号是否合法
      */
     private function isWeiboAccountLegal($weiboAccount)
     {
         $MAX_LENGTH_OF_WEIBO_ACCOUNT = 32;
-        return ( strlen($weiboAccount) < $MAX_LENGTH_OF_WEIBO_ACCOUNT );
+        return ( strlen($weiboAccount) <= $MAX_LENGTH_OF_WEIBO_ACCOUNT );
     }
 
     /**
-     * Handle asynchronous register requests for a teacher.
-     * @param  int $uid - the unique id of the user
-     * @param  Array $teacherInfoArray - an array which contains essential 
-     *         information of a teacher
-     * @return true if the query is successful
+     * 处理教师用户完善个人附加信息的请求.
+     * 该请求会包含如下2个数据库操作:
+     *     1. 向教师附加信息表中添加教师的附加信息
+     *     2. 向教师授课范围表中添加教师授课范围的信息(以便推荐相关的教师)
+     * 
+     * @param  int $uid - 用户的唯一标识符(uid)
+     * @param  Array $teacherInfoArray - 一个包含了教师用户附加信息的数组
+     * @return 数据库操作是否成功
      */
     private function processTeacherAction($uid, $teacherInfoArray)
     {
-        $isBasicInfoSuccessful      = $this->processTeacherInfo($uid, $teacherInfoArray);
-        $isTeachingFieldSuccessful  = $this->processTeachingField($uid, 
-                                                $teacherInfoArray['teacherField']);
+        $teachingFieldNames         = $this->processTeachingFieldAction($uid, $teacherInfoArray['teacherField']);
+        $isTeachingFieldSuccessful  = ( $teachingFieldNames != null );
+        $isBasicInfoSuccessful      = $this->processTeacherInfoAction($uid, $teacherInfoArray, $teachingFieldNames);
 
         return ( $isBasicInfoSuccessful && $isTeachingFieldSuccessful );
     }
 
-    private function processTeacherInfo($uid, $teacherInfoArray)
+    /**
+     * 向教师授课范围表(teaching_field)表中添加授课范围的信息.
+     * @param  int $uid - 用户的唯一标识符(uid)
+     * @param  String $teachingFields - 教师用户授课范围的缩写字符串
+     * @return 教师用户授课范围的中文字符串(以','分隔)
+     */
+    private function processTeachingFieldAction($uid, $teachingFields)
+    {
+        $teachingFieldArray     = $this->getCourseTypes();
+        $teachingFieldIds       = array();
+        $teachingFieldNames     = '';
+        $teachingFieldSlugs     = split(',', $teachingFields);
+
+        foreach ( $teachingFieldSlugs as $teachingFieldSlug ) {
+            foreach ( $teachingFieldArray as $teachingField ) {
+                if ( $teachingField->course_type_slug == $teachingFieldSlug ) {
+                    $teachingFieldId = $teachingField->course_type_id;
+
+                    array_push( $teachingFieldIds, $teachingFieldId );
+                    $teachingFieldNames .= $teachingField->course_type_name.',';
+                    
+                    break;
+                }
+            }
+        }
+
+        $this->processTeachingField($uid, $teachingFieldIds);
+        return rtrim($teachingFieldNames, ',');
+    }
+
+    /**
+     * 向教师授课范围表(teaching_field)表中添加授课范围的信息.
+     * @param  int $uid - 用户的唯一标识符(uid)
+     * @param  Array $courseTypeIdArray - 包含了教师授课范围的数组
+     * @return 数据库操作是否成功
+     */
+    private function processTeachingField($uid, $courseTypeIdArray)
+    {
+        $sm                 = $this->getServiceLocator();
+        $teachingFieldTable = $sm->get('Accounts\Model\TeachingFieldTable');
+
+        return $teachingFieldTable->changeTeachingField($uid, $courseTypeIdArray);
+    }
+
+    /**
+     * 向教师附加信息表(teachers)中添加教师的附加信息.
+     * @param  int $uid - 用户的唯一标识符(uid)
+     * @param  Array $teacherInfoArray - 一个包含了教师用户附加信息的数组
+     * @param  String $teachingField - 包含了教师授课范围的字符串
+     * @return 数据库操作是否成功
+     */
+    private function processTeacherInfoAction($uid, $teacherInfoArray, $teachingField)
     {
         $sm                 = $this->getServiceLocator();
         $teacherTable       = $sm->get('Accounts\Model\TeacherTable');
@@ -870,6 +998,7 @@ class RegisterController extends AbstractActionController
         $teacherInfo        = array(
             'uid'               => $uid,
             'teacher_name'      => $teacherInfoArray['teacherName'],
+            'teacher_field'     => $teachingField,
             'teacher_region'    => $teacherInfoArray['teacherRegion'],
             'teacher_province'  => $teacherInfoArray['teacherProvince'],
             'teacher_city'      => $teacherInfoArray['teacherCity'],
@@ -881,14 +1010,9 @@ class RegisterController extends AbstractActionController
         return $teacherTable->createNewTeacher($teacherInfo);
     }
 
-    private function processTeachingField($uid, $teachingField)
-    {
-        
-    }
-
     /**
-     * Get essential information of an enterprise within an array.
-     * @return an array which contains essential information of an enterprise
+     * 为企业用户从HTTP请求中提取个人用户所需的用户信息.
+     * @return 一个包含了企业用户的附加信息的数组
      */
     private function getCompanyInfoArray()
     {
@@ -914,10 +1038,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Verify if the information of the company is legal.
-     * @param  Array $companyInfo - an array which contains information of the 
-     *         company
-     * @return an array which contains query result
+     * 检查企业用户所提交的附加信息是否合法.
+     * @param  Array $companyInfo - 企业用户的附加信息
+     * @return 一个含有若干标志位的数组
      */
     private function verifyCompanyInfo($companyInfo)
     {
@@ -949,26 +1072,24 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Verify if the address of the company is legal.
-     * Rule: the length of the address should no more than 256
-     *       characters.
+     * 检查用户(企业用户)的公司详细地址是否合法.
+     * 规则: 一个合法的公司详细地址不应该超过256个字符.
      * 
-     * @param  String  $address - the address of the company
-     * @return true if the address of the company is legal
+     * @param  String  $address - 公司的详细地址
+     * @return 用户的公司详细地址是否合法
      */
     private function isAddressLegal($address)
     {
         $MAX_LENGTH_OF_ADDRESS      = 256;
-        return ( strlen($address) < $MAX_LENGTH_OF_ADDRESS );
+        return ( strlen($address) <= $MAX_LENGTH_OF_ADDRESS );
     }
 
     /**
-     * Verify if the field of the company is legal.
-     * Rule: the length of the address should no more than 32
-     *       characters.
+     * 检查用户(企业用户)的公司行业是否合法.
+     * 规则: 一个合法的公司行业不应该超过128个字符.
      * 
-     * @param  String  $companyField - the field of the company
-     * @return true if the field of the company is legal
+     * @param  String  $companyField - 公司所在的行业
+     * @return 用户公司的行业是否合法
      */
     private function isCompanyFieldLegal($companyField)
     {
@@ -977,11 +1098,12 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Verify if the scale of the company is legal.
-     * Rule: the scale should be a number.
+     * 检查用户的公司规模是否合法.
+     * 规则: 一个合法的公司规模应该是一个数字, 且应该是10, 100, 100, 
+     * 10000和32767之间的一个值.
      * 
-     * @param  String  $companyScale - the scale of the company
-     * @return true if the scale of the company is legal
+     * @param  String  $companyScale - 公司规模
+     * @return 用户的公司规模是否合法
      */
     private function isCompanyScaleLegal($companyScale)
     {
@@ -992,11 +1114,10 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * Handle asynchronous register requests for a teacher.
-     * @param  int $uid - the unique id of the user
-     * @param  Array $teacherInfoArray - an array which contains essential 
-     *         information of a teacher
-     * @return true if the query is successful
+     * 处理企业用户完善个人附加信息的请求.
+     * @param  int $uid - 用户的唯一标识符(uid)
+     * @param  Array $companyInfoArray - 一个包含了企业用户附加信息的数组
+     * @return 数据库操作是否成功
      */
     private function processCompanyAction($uid, $companyInfoArray)
     {

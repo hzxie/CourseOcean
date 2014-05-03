@@ -9,7 +9,7 @@ use Zend\Db\Sql\Expression;
 use Zend\Db\TableGateway\TableGateway;
 
 /**
- * The table gateway of the teacher table.
+ * The table gateway of the teaching field table.
  * 
  * @author Xie Haozhe <zjhzxhz@gmail.com>
  */
@@ -25,7 +25,7 @@ class TeachingFieldTable
 	protected $tableGateway;
 
 	/**
-	 * The contructor of the TeacherTable class.
+	 * The contructor of the TeacherFieldTable class.
 	 * @param TableGateway $tableGateway 
 	 */
 	public function __construct(TableGateway $tableGateway)
@@ -33,15 +33,45 @@ class TeachingFieldTable
 		$this->tableGateway = $tableGateway;
 	}
 
-	
-	public function getTeachingField($uid)
+	/**
+	 * Handle teachers' changing teaching field requests.
+	 * @param  int   $uid - the unique id of the teacher
+	 * @param  Array $courseTypeIdArray - an array which contains teaching
+	 *         field ids of the teacher
+	 * @return true if the query is successful
+	 */
+	public function changeTeachingField($uid, $courseTypeIdArray)
 	{
-        $resultSet  = $this->tableGateway->select(function (Select $select) use ($uid) {
-            $select->join('itp_course_types', 
-                          'itp_teaching_field.course_type_id = itp_course_types.course_type_id');
-            $select->where->equalTo('uid', $uid);
-        });
-        return $resultSet;
+		$this->removeTeachingField($uid);
+
+		foreach ( $courseTypeIdArray as $courseTypeId ) {
+			$teachingFieldInfo = array(
+				'uid' 				=> $uid,
+				'course_type_id'	=> $courseTypeId,
+			);
+			$this->addTeachingField($teachingFieldInfo);
+		}
+		return true;
 	}
-	
+
+	/**
+	 * [addTeachingField description]
+	 * @param [type] $teachingFieldInfo [description]
+	 */
+	private function addTeachingField($teachingFieldInfo)
+	{
+		return $this->tableGateway->insert($teachingFieldInfo);
+	}
+
+	/**
+	 * Remove all teaching field of a teacher before changing.
+	 * @param  int   $uid - the unique id of the teacher
+	 * @return true if the query is successful
+	 */
+	private function removeTeachingField($uid)
+	{
+		return $this->tableGateway->delete(
+            array( 'uid' => $uid )
+        );
+	}
 }
