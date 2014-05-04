@@ -19,6 +19,16 @@
                     <span class="data"><?php echo $profile['email']; ?></span>
                 </li>
                 <li>
+                    <i class="icon-map-marker"></i>
+                    <span class="title">所在地区</span>
+                    <span class="data"><?php echo $profile['person_province']; ?> <?php echo $profile['person_city']; ?></span>
+                </li>
+                <li>
+                    <i class="icon-briefcase"></i>
+                    <span class="title">工作职位</span>
+                    <span class="data"><?php echo $profile['person_position_name']; ?></span>
+                </li>
+                <li>
                     <i class="icon-info-sign"></i>
                     <span class="title">联系电话</span>
                     <span class="data"><?php echo $profile['person_phone']; ?></span>
@@ -59,231 +69,12 @@
     </div> <!-- #main-content -->
 </div> <!-- #content -->
 
-<!-- Edit Profile Dialog -->
-<div id="mask"></div> <!-- #mask -->
-<div id="dialog-container">
-    <div id="profile-dialog" class="dialog">
-        <div class="dialog-header">
-            修改个人资料
-        </div> <!-- .dialog-header -->
-        <div class="dialog-content">
-            <div id="profile-error" class="alert alert-error hide"></div>
-            <div class="field">
-                <div class="title">您的姓名</div>
-                <div class="value"><input type="text" disabled="disabled" value="<?php echo $profile['real_name']; ?>" /></div>
-            </div> <!-- .field -->
-            <div class="field">
-                <div class="title">电子邮件</div>
-                <div class="value"><input type="text" name="email" value="<?php echo $profile['email']; ?>" /></div>
-            </div> <!-- .field -->
-            <div class="field">
-                <div class="title">联系电话</div>
-                <div class="value"><input type="text" name="phone" value="<?php echo $profile['phone']; ?>" /></div>
-            </div> <!-- .field -->
-            <div class="field">
-                <button id="edit-profile-button" class="btn btn-primary" onclick="javascript:editProfile()">确认</button>
-                <button class="btn btn-cancel"  onclick="javascript:closeProfileDialog()">取消</button>
-            </div> <!-- .field -->
-        </div> <!-- .dialog-content -->
-    </div> <!-- #profile-dialog -->
-    <div id="password-dialog" class="dialog">
-        <div class="dialog-header">
-            修改密码
-        </div> <!-- .dialog-header -->
-        <div class="dialog-content">
-            <div id="password-error" class="alert alert-error hide"></div>
-            <div class="field">
-                <div class="title">旧密码</div>
-                <div class="value"><input type="password" name="old-password" maxlength="16" /></div>
-            </div> <!-- .field -->
-            <div class="field">
-                <div class="title">新密码</div>
-                <div class="value"><input type="password" name="new-password" maxlength="16" /></div>
-            </div> <!-- .field -->
-            <div class="field">
-                <div class="title">确认新密码</div>
-                <div class="value"><input type="password" name="password-again" maxlength="16" /></div>
-            </div> <!-- .field -->
-            <div class="field">
-                <button id="change-password-button" class="btn btn-primary" onclick="javascript:changePassword()">确认</button>
-                <button class="btn btn-cancel"  onclick="javascript:closePasswordDialog()">取消</button>
-            </div> <!-- .field -->
-        </div> <!-- .dialog-content -->
-    </div> <!-- #password-dialog -->
-</div> <!-- #dialog-container -->
-
-<?php $this->inlineScript()->captureStart(); ?>
+<script type="text/javascript">
     $('#tab a').click(function (e) {
         e.preventDefault();
         $(this).tab('show');
     })
-<?php $this->inlineScript()->captureEnd(); ?>
-
-<?php $this->inlineScript()->captureStart(); ?>
-    function openProfileDialog() {
-        setProfileDialogVisibility(true);
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
-    function closeProfileDialog() {
-        setProfileDialogVisibility(false);
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
-    function setProfileDialogVisibility(isVisible) {
-        if ( isVisible ) {
-            $('#mask').css('display', 'block');
-            $('#profile-dialog').css('display', 'block');
-        } else {
-            $('#mask').css('display', 'none');
-            $('#profile-dialog').css('display', 'none');
-        }
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
-    function editProfile() {
-        var processButtonObject = $('#edit-profile-button');
-            email               = $('input[name=email]').val(),
-            phone               = $('input[name=phone]').val();
-
-        setInputStyle(processButtonObject, true);
-        doEditProfileAction(email, phone);
-        setInputStyle(processButtonObject, false);
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
-    function doEditProfileAction(email, phone) {
-        var postData = 'email=' + email + '&phone=' + phone;
-        $.ajax({
-            type: 'POST',
-            async: false,
-            url: '<?php echo $this->basePath(); ?>/accounts/dashboard/editPersonProfile',
-            data: postData,
-            dataType: 'JSON',
-            success: function(result) {
-                processProfileResult(result);
-            }
-        });
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
-    function processProfileResult(result) {
-        if ( result['isSuccessful'] ) {
-            window.location.reload();
-        } else {
-            var errorMessage = '';
-            if ( !result['isUserGroupLegal'] ) {
-                errorMessage += '发生未知错误<br />';
-            }
-            if ( result['isEmailEmpty'] ) {
-                errorMessage += '请填写您的电子邮件地址<br />';
-            } else if ( !result['isEmailLegal'] ) {
-                errorMessage += '请填写合法的电子邮件地址<br />';
-            } else if ( result['isEmailExists'] ) {
-                errorMessage += '该电子邮件地址已被使用, 请使用其他电子邮件地址<br />';
-            } 
-            if ( result['isPhoneEmpty'] ) {
-                errorMessage += '请填写您的联系电话<br />';
-            } else if ( !result['isPhoneLegal'] ) {
-                errorMessage += '联系电话必须由数字和-组成, 且长度在7~24个字符之间<br />';
-            }
-            $('#profile-error').html(errorMessage);
-            $('#profile-error').fadeIn();
-        }
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-
-<?php $this->inlineScript()->captureStart(); ?>
-    function openPasswordDialog() {
-        setPasswordDialogVisibility(true);
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
-    function closePasswordDialog() {
-        setPasswordDialogVisibility(false);
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
-    function setPasswordDialogVisibility(isVisible) {
-        if ( isVisible ) {
-            $('#mask').css('display', 'block');
-            $('#password-dialog').css('display', 'block');
-        } else {
-            $('#mask').css('display', 'none');
-            $('#password-dialog').css('display', 'none');
-        }
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
-    function changePassword() {
-        var processButtonObject = $('#change-password-button');
-            oldPassword         = $('input[name=old-password]').val(),
-            newPassword         = $('input[name=new-password]').val(),
-            confirmPassword     = $('input[name=password-again]').val();
-        
-        setInputStyle(processButtonObject, true);
-        doChangePasswordAction(oldPassword, newPassword, confirmPassword);
-        setInputStyle(processButtonObject, false);
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
-    function doChangePasswordAction(oldPassword, newPassword, confirmPassword) {
-        var postData = 'old-password=' + oldPassword + '&new-password=' + newPassword +
-                       '&password-again=' + confirmPassword;
-        $.ajax({
-            type: 'POST',
-            async: false,
-            url: '<?php echo $this->basePath(); ?>/accounts/dashboard/changePassword',
-            data: postData,
-            dataType: 'JSON',
-            success: function(result) {
-                processPasswordResult(result);
-            }
-        });
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
-    function processPasswordResult(result) {
-        if ( result['isSuccessful'] ) {
-            closePasswordDialog();
-        } else {
-            var errorMessage = '';
-            if ( result['isOldPasswordEmpty'] ) {
-                errorMessage += '请输入您的旧密码<br />';
-            } else if ( !result['isOldPasswordCorrect'] ) {
-                errorMessage += '您输入的旧密码不正确<br />';
-            }
-            if ( result['isNewPasswordEmpty'] ) {
-                errorMessage += '请输入您的新密码<br />';
-            } else if ( !result['isNewPasswordLegal'] ) {
-                errorMessage += '新密码的长度必须在6~16个字符之间<br />';
-            }
-            if ( result['isConfirmPasswordEmpty'] ) {
-                errorMessage += '请确认您使用的新密码<br />';
-            } else if ( !result['isConfirmPasswordMatched'] ) {
-                errorMessage += '新密码与确认密码输入不一致<br />';
-            }
-            
-            $('#password-error').html(errorMessage);
-            $('#password-error').fadeIn();
-        }
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-
-<?php $this->inlineScript()->captureStart(); ?>
-    function setInputStyle(processButtonObject, isLoading) {
-        if ( isLoading ) {
-            processButtonObject.html('正在处理...');
-            $('input').attr('disabled', 'disabled');
-            $('button').attr('disabled', 'disabled');
-        } else {
-            processButtonObject.html('确认');
-            $('input').removeAttr('disabled');
-            $('button').removeAttr('disabled');
-        }
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-
+</script>
 <script type="text/javascript">
     function getAttendanceRecord() {
         var offset = $('li.lecture').length;
@@ -328,12 +119,12 @@
                 '<div class="right">' + 
                     '<div class="title">' + attendanceRecord['course_name'] + '</div>' +
                     '<div class="detail">' +
-                        '<span><i class="icon-calendar"></i>' + getFormattedDateSection(attendanceRecord['start_time'], attendanceRecord['end_time']) + '</span>' +
-                        '<span><i class="icon-user"></i>' + attendanceRecord['real_name'] + '</span><br />' +
+                        '<span><i class="icon-calendar"></i>' + getFormattedDateSection(attendanceRecord['lecture_start_time'], attendanceRecord['lecture_end_time']) + '</span>' +
+                        '<span><i class="icon-user"></i>' + attendanceRecord['teacher_name'] + '</span><br />' +
                         '<span><i class="icon-map-marker"></i>' + getFormattedPlace(attendanceRecord) + '</span>' +
                     '</div>' +
                     '<div class="view">' +
-                        '<button class="btn btn-primary" onclick="window.open(\'<?php echo $this->basePath(); ?>/courses/lecture/detail/' + attendanceRecord['lecture_id'] + '\')">查看课程</button>' +
+                        '<button class="btn btn-primary" onclick="window.open(\'<?php echo $this->basePath(); ?>/solutions/lecture/detail/' + attendanceRecord['lecture_id'] + '\')">查看课程</button>' +
                     '</div>' +
                 '</div>' +
             '</li>'
@@ -343,9 +134,9 @@
 <script type="text/javascript">
     function getFormattedPlace(attendanceRecord) {
         var places = [
-            attendanceRecord['place_province'], 
-            attendanceRecord['place_city'], 
-            attendanceRecord['place_address']
+            attendanceRecord['lecture_province'], 
+            attendanceRecord['lecture_city'], 
+            attendanceRecord['lecture_address']
         ],  place = '';
 
         for (var i in places) {
@@ -358,19 +149,24 @@
 </script>
 <script type="text/javascript">
     function getFormattedDateSection(startTimeString, endTimeString) {
-        var startTime   = getFormattedDate(startTimeString),
-            endTime     = getFormattedDate(endTimeString);
+        var startTime   = getFormattedDateTime(startTimeString),
+            endTime     = getFormattedDateTime(endTimeString);
 
-        return startTime + '-' + endTime;
+        return startTime + ' - ' + endTime;
     }
 </script>
 <script type="text/javascript">
-    function getFormattedDate(dateString) {
-        var dateElement = dateString.split('-'),
-            year        = dateElement[0],
-            month       = dateElement[1],
-            day         = dateElement[2];
-        return year + '年' + month + '月' + day + '日';
+    function getFormattedDateTime(dateTimeString) {
+        var dateTimeElement = dateTimeString.split(' '),
+            dateElement     = dateTimeElement[0].split('-'),
+            year            = dateElement[0],
+            month           = dateElement[1],
+            day             = dateElement[2],
+            timeElement     = dateTimeElement[1].split(':'),
+            hour            = timeElement[0],
+            minute          = timeElement[1];
+
+        return year + '年' + month + '月' + day + '日 ' + hour + ':' + minute;
     }
 </script>
 

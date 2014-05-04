@@ -39,7 +39,7 @@ class DashboardController extends AbstractActionController
         
         $this->profile      = $this->getUserData();
         $uid                = $this->profile['uid'];
-        $userGroupSlug      = $this->profile['userGroupSlug'];
+        $userGroupSlug      = lcfirst($this->profile['userGroupSlug']);
         $isProfileCompleted = $this->profile['isProfileCompleted'];
 
         if ( !$isProfileCompleted ) {
@@ -500,13 +500,13 @@ class DashboardController extends AbstractActionController
      */
     public function getLectureAttendanceAction()
     {
-        $offset                         = $this->getRequest()->getQuery('offset', 0);
+        $offset                         = (int)$this->getRequest()->getQuery('offset', 0);
         $NUMBER_OF_RECORDS_PER_QUERY    = 10;
 
         $this->profile          = $this->getUserData();
         $uid                    = $this->profile['uid'];
         $sm                     = $this->getServiceLocator();
-        $lectureAttendanceTable = $sm->get('Courses\Model\LectureAttendanceTable');
+        $lectureAttendanceTable = $sm->get('Solutions\Model\LectureAttendanceTable');
         $resultSet              = $lectureAttendanceTable->
                                     getAttendaceRecordsOfUser($uid, $offset, $NUMBER_OF_RECORDS_PER_QUERY);
         $result                 = $this->getLectureAttendanceArray($resultSet);

@@ -4,6 +4,8 @@ namespace Accounts\Model;
 
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Expression;
 use Zend\Db\TableGateway\TableGateway;
 
 /**
@@ -38,7 +40,7 @@ class PersonTable
 	 */
 	public function fetchAll()
 	{
-		$resultSet 		= $this->tableGateway->select();
+		$resultSet = $this->tableGateway->select();
 		return $resultSet;
 	}
 
@@ -49,11 +51,11 @@ class PersonTable
 	 */
 	public function getPersonInfo($uid)
 	{
-		$rowset     	= $this->tableGateway->select(
-            array( 
-                'uid'  	=> $uid,
-            )
-        );
+		$rowset = $this->tableGateway->select(function (Select $select) use ($uid) {
+			$select->join('itp_positions', 
+                          'itp_people.person_position_id = itp_positions.position_id');
+			$select->where("uid = $uid");
+		});
         return $rowset->current();
 	}
 

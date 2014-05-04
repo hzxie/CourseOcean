@@ -125,9 +125,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * 检查用户的Email地址是否合法.
-     * @param  String  $email - 用户的Email地址
-     * @return 用户的Email地址是否合法
+     * 检查用户的电子邮件地址是否合法.
+     * @param  String  $email - 用户的电子邮件地址
+     * @return 用户的电子邮件地址是否合法
      */
     private function isEmailLegal($email)
     {
@@ -135,9 +135,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * 检查用户的Email地址是否已经被使用.
-     * @param  String  $email - 用户的Email地址
-     * @return 用户的Email地址是否已经被使用
+     * 检查用户的电子邮件地址是否已经被使用.
+     * @param  String  $email - 用户的电子邮件地址
+     * @return 用户的电子邮件地址是否已经被使用
      */
     private function isEmailExists($email)
     {
@@ -194,7 +194,7 @@ class RegisterController extends AbstractActionController
         if ( $userGroup == null ) {
             return null;
         }
-        return $userGroup->user_group_slug;
+        return ucfirst($userGroup->user_group_slug);
     }
 
     /**
@@ -268,9 +268,9 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * 显示验证用户Email地址的页面.
+     * 显示验证用户电子邮件地址的页面.
      * [拦截] 若用户还没有填写基本信息, 则跳转至注册页面.
-     * [拦截] 若用户已经验证了Email地址, 则跳转至完善个人资料页面.
+     * [拦截] 若用户已经验证了电子邮件地址, 则跳转至完善个人资料页面.
      * 
      * @return 一个包含了HTML内容的ViewModel对象
      */
@@ -290,7 +290,7 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * 验证用户Email地址的准备工作:
+     * 验证用户电子邮件地址的准备工作:
      *     1. 产生验证码并保存至数据库
      *     2. 向用户的电子邮箱发送一封验证邮件
      */
@@ -324,8 +324,8 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * 将验证信息(用户Email地址 + 验证码)保存至数据库.
-     * @param  String $email - 用户的Email地址
+     * 将验证信息(用户电子邮件地址 + 验证码)保存至数据库.
+     * @param  String $email - 用户的电子邮件地址
      * @param  String $guid  - 用户激活邮箱的验证码
      */
     private function saveToDatabase($email, $guid)
@@ -342,7 +342,7 @@ class RegisterController extends AbstractActionController
 
     /**
      * 发送验证邮件至用户的邮箱.
-     * @param  String $email - 用户的Email地址
+     * @param  String $email - 用户的电子邮件地址
      * @param  String $guid  - 用户激活邮箱的验证码
      */
     private function sendValidationEmail($email, $guid)
@@ -379,7 +379,7 @@ class RegisterController extends AbstractActionController
      *
      * @todo  完善电子邮件的HTML内容
      * 
-     * @param  String $email - 用户的Email地址
+     * @param  String $email - 用户的电子邮件地址
      * @param  String $guid  - 用户激活邮箱的验证码
      * @return 电子邮件的HTML内容
      */
@@ -390,7 +390,7 @@ class RegisterController extends AbstractActionController
 
     /**
      * 处理用户的验证邮箱请求.
-     * 邮件中包含的Email地址和激活邮箱验证码通过GET方式发送.
+     * 邮件中包含的电子邮件地址和激活邮箱验证码通过GET方式发送.
      * 若激活成功, 则跳转至完善个人资料页面; 否则, 停留在本页面.
      * @return HTTP重定向请求的对象
      */
@@ -410,7 +410,7 @@ class RegisterController extends AbstractActionController
 
     /**
      * 处理用户的验证邮箱请求.
-     * @param  String $email - 用户的Email地址
+     * @param  String $email - 用户的电子邮件地址
      * @param  String $guid  - 用户激活邮箱的验证码
      * @return 返回该操作是否成功
      */
@@ -429,8 +429,8 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * 在数据库表中和Session中更新账户的激活状态(是否验证了Email地址)
-     * @param  String $email - 用户的Email地址
+     * 在数据库表中和Session中更新账户的激活状态(是否验证了电子邮件地址)
+     * @param  String $email - 用户的电子邮件地址
      * @param  bool $isActivated - 账户是否被激活
      */
     private function updateAccountActivated($email, $isActivated)
@@ -440,7 +440,7 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * 在Session中更新账户的激活状态(是否验证了Email地址)
+     * 在Session中更新账户的激活状态(是否验证了电子邮件地址)
      * @param  bool $isActivated - 账户是否被激活
      */
     private function updateSessionAccountActivated($isActivated)
@@ -450,8 +450,8 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * 在用户表(users)中更新账户的激活状态(是否验证了Email地址)
-     * @param  String $email - 用户的Email地址
+     * 在用户表(users)中更新账户的激活状态(是否验证了电子邮件地址)
+     * @param  String $email - 用户的电子邮件地址
      * @param  bool $isActivated - 账户是否被激活
      */
     private function updateDatabaseAccountActivated($email, $isActivated)
@@ -465,7 +465,7 @@ class RegisterController extends AbstractActionController
     /**
      * 显示完善个人信息页面. 该页面将提示不同类型的用户分别完善它们的
      * 个性化资料.
-     * [拦截] 若用户尚未验证Email地址, 则跳转至验证Email地址页面.
+     * [拦截] 若用户尚未验证电子邮件地址, 则跳转至验证电子邮件地址页面.
      * [拦截] 若用户已经激活, 则跳转至用户控制面板(Dashboard).
      * 
      * @return 一个包含了HTML内容的ViewModel对象
@@ -490,8 +490,8 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * 检查用户是否已经验证了Email地址.
-     * @return 用户是否已经验证了Email地址
+     * 检查用户是否已经验证了电子邮件地址.
+     * @return 用户是否已经验证了电子邮件地址
      */
     private function isActivated()
     {

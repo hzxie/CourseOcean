@@ -8,15 +8,15 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
 
 /**
- * Handle requests on the login page.
+ * 处理用户登录请求的控制器.
  * 
- * @author Xie Haozhe <zjhzxhz@gmail.com>
+ * @author 谢浩哲 <zjhzxhz@gmail.com>
  */
 class LoginController extends AbstractActionController
 {
     /**
-     * Default method to call in the controller.
-     * @return a ViewModel object which contains HTML content
+     * 该控制器的默认方法, 显示用户登录页面.
+     * @return 一个包含了HTML内容的ViewModel对象
      */
     public function indexAction()
     {
@@ -32,8 +32,8 @@ class LoginController extends AbstractActionController
     }
 
     /**
-     * Check if the user has enabled auto login.
-     * @return true if the user has enabled auto login
+     * 检查用户是否已经启用了自动登录功能.
+     * @return 用户是否已经启用了自动登录功能
      */
     private function isEnableAutoLogin()
     {
@@ -44,10 +44,9 @@ class LoginController extends AbstractActionController
     }
 
     /**
-     * Get the redirect url after login.
-     * @param  Array $param - an array which contains information of 
-     *         previous page
-     * @return a string which stand for the redirect url
+     * 获取访问登陆页面时的相关参数, 以便在登陆后跳转至登录前的页面.
+     * @param  Array $param - 通过GET请求的相关参数, 包含了登录前页面的相关信息
+     * @return 需要重定向到的URL
      */
     private function getRedirectUrl($param)
     {
@@ -55,11 +54,7 @@ class LoginController extends AbstractActionController
 
         foreach ( $param as $key => $value ) {
             if ( $key == 'lectureId' ) {
-                return $basePath.'/courses/lecture/detail/'.$value;
-            } else if ( $key == 'newsId' ) {
-                return $basePath.'/courses/news/detail/'.$value;
-            } else if ( $key == 'courseId' ) {
-                return $basePath.'/courses/course/detail/'.$value;
+                return $basePath.'/solutions/lecture/detail/'.$value;
             } else {
                 return $basePath.'/accounts/dashboard';
             }
@@ -67,8 +62,8 @@ class LoginController extends AbstractActionController
     }
 
     /**
-     * Get the base path of the website.
-     * @return a string which stand for the base path of the website
+     * 获取网站的基础路径. (如localhost/itp)
+     * @return 网站的基础路径
      */
     private function basePath()
     {
@@ -78,9 +73,8 @@ class LoginController extends AbstractActionController
     }
 
     /**
-     * Handle asynchronous login requests for the users.
-     * @return a HTTP response object which contains JSON data
-     *         infers whether the login is successful
+     * 处理用户的登录请求.
+     * @return 包含若干标志位的JSON数组
      */
     public function processAction()
     {
@@ -108,10 +102,10 @@ class LoginController extends AbstractActionController
     }
 
     /**
-     * Verify if the username and password is valid.
-     * @param  String $username - the username or email of an account
-     * @param  String $password - the password of an account
-     * @return true if the username and password is valid
+     * 验证用户的用户名和密码是否合法.
+     * @param  String $username - 用户的用户名/电子邮件地址
+     * @param  String $password - 用户的密码
+     * @return 用户的用户名和密码是否合法
      */
     private function verifyAccount($username, $password)
     {
@@ -130,9 +124,9 @@ class LoginController extends AbstractActionController
     }
 
     /**
-     * Check if the username is an email address.
-     * @param  String  $username - the username or email of an account
-     * @return true if the username is an email address
+     * 检查用户的登陆凭据是否为电子邮件地址.
+     * @param  String  $username - 用户的登陆凭据
+     * @return 用户的登陆凭据是否为电子邮件地址
      */
     private function isEmailAddress($username)
     {
@@ -140,10 +134,9 @@ class LoginController extends AbstractActionController
     }
 
     /**
-     * Get user data from the login query result.
-     * @param  User $user - an object of User which contains user's
-     *         profile
-     * @return an array which is needed in the session.
+     * 获取用户的基本信息, 以便存储至Session中.
+     * @param  User $user - 一个包含了用户基本信息的User对象
+     * @return 一个包含用户基本信息的数组
      */
     private function parseUserData($user)
     {
@@ -160,8 +153,8 @@ class LoginController extends AbstractActionController
     }
 
     /**
-     * Create a session for a logined user.
-     * @param  Array $userData - an array which contains user's profile
+     * 为已登录的用户创建Session.
+     * @param  Array $userData - 用户的基本信息
      */
     private function createSession($userData, $allowAutoLogin)
     {
@@ -178,9 +171,9 @@ class LoginController extends AbstractActionController
     }
 
     /**
-     * Get the unique id of the user group by its slug.
-     * @param  String $userGroupSlug - the unique slug of the user group
-     * @return the unique id of the user group
+     * 通过用户组的唯一简写(slug)以获取用户组的唯一标识符.
+     * @param  String $userGroupSlug - 用户组的唯一简写
+     * @return 用户组的唯一标识符
      */
     private function getUserGroupID($userGroupSlug)
     {
@@ -195,9 +188,9 @@ class LoginController extends AbstractActionController
     }
 
     /**
-     * Get the unique slug of the user group by its id.
-     * @param  int $userGroupId - the unique id of the user group
-     * @return the unique slug of the user group
+     * 通过用户组的唯一标识符以获取用户组的唯一简写(slug).
+     * @param  int $userGroupId - 用户组的唯一标识符
+     * @return 用户组的唯一简写(slug)
      */
     private function getUserGroupSlug($userGroupId)
     {
@@ -208,13 +201,13 @@ class LoginController extends AbstractActionController
         if ( $userGroup == null ) {
             return null;
         }
-        return $userGroup->user_group_slug;
+        return ucfirst($userGroup->user_group_slug);
     }
 
 
     /**
-     * Handle asynchronous logout requests for the users.
-     * @return a ViewModel object which contains HTML content
+     * 处理用户的注销请求.
+     * @return 一个包含了HTML内容的ViewModel对象
      */
     public function logoutAction()
     {
@@ -224,9 +217,9 @@ class LoginController extends AbstractActionController
     }
 
     /**
-     * Send HTTP redirect reponse.
-     * @param  String $redirectPath - the pasth to redirect
-     * @return an HTTP redirect reponse object
+     * HTTP重定向请求.
+     * @param  String $redirectPath - 重定向的相对路径
+     * @return HTTP重定向请求的对象.
      */
     private function sendRedirect($redirectPath = '')
     {
@@ -238,7 +231,7 @@ class LoginController extends AbstractActionController
     }
 
     /**
-     * Destroy a session for logined user.
+     * 销毁用户的Session.
      */
     private function destroySession()
     {

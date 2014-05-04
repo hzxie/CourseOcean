@@ -26,6 +26,8 @@ use Accounts\Model\Company;
 use Accounts\Model\CompanyTable;
 use Accounts\Model\EmailValidation;
 use Accounts\Model\EmailValidationTable;
+use Solutions\Model\LectureAttendance;
+use Solutions\Model\LectureAttendanceTable;
 
 class Module implements AutoloaderProviderInterface
 {
@@ -155,6 +157,17 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new EmailValidation());
                     return new TableGateway('itp_email_validation', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Solutions\Model\LectureAttendanceTable' => function($sm) {
+                    $tableGateway = $sm->get('LectureAttendanceTableGateway');
+                    $table = new LectureAttendanceTable($tableGateway);
+                    return $table;
+                },
+                'LectureAttendanceTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new LectureAttendance());
+                    return new TableGateway('itp_lecture_attendance', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );

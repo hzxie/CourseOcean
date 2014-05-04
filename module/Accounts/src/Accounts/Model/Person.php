@@ -3,9 +3,10 @@
 namespace Accounts\Model;
 
 /**
- * The class is the model of the itp_people table.
+ * 个人用户的Model.
+ * 与数据库中的itp_people表关联.
  * 
- * @author Xie Haozhe <zjhzxhz@gmail.com>
+ * @author 谢浩哲 <zjhzxhz@gmail.com>
  */
 class Person {
     /**
@@ -20,57 +21,57 @@ class Person {
         $this->uid                  = (!empty($data['uid']))                    ? $data['uid']                  : null;
         $this->person_name          = (!empty($data['person_name']))            ? $data['person_name']          : null;
         $this->person_region        = (!empty($data['person_region']))          ? $data['person_region']        : null;
-        $this->preson_province      = (!empty($data['preson_province']))        ? $data['preson_province']      : null;
+        $this->person_province      = (!empty($data['person_province']))        ? $data['person_province']      : null;
         $this->person_city          = (!empty($data['person_city']))            ? $data['person_city']          : null;
         $this->person_position_id   = (!empty($data['person_position_id']))     ? $data['person_position_id']   : null;
-        $this->person_work_time     = (!empty($data['person_work_time']))       ? $data['person_work_time']     : null;
+        $this->person_position_name = (!empty($data['position_name']))          ? $data['position_name']        : null;
         $this->person_phone         = (!empty($data['person_phone']))           ? $data['person_phone']         : null;
     }
 
     /**
-     * The unique id of the user.
+     * 用户的唯一标识符(uid).
      * @var int 
      */
     public $uid;
 
     /**
-     * The real name of the user.
+     * 用户的真实姓名.
      * @var String
      */
     public $person_name;
 
     /**
-     * The region in China where the user live.
+     * 用户所在地区.
      * @var String
      */
     public $person_region;
 
     /**
-     * The province in China where the user live.
+     * 用户所在省份.
      * @var String
      */
-    public $preson_province;
+    public $person_province;
 
     /**
-     * The city in China where the user live.
+     * 用户所在城市.
      * @var String
      */
     public $person_city;
 
     /**
-     * The unique id of positions(职位) of the user.
+     * 用户工作职位的唯一标识符.
      * @var int
      */
     public $person_position_id;
 
     /**
-     * The duration the user working.
+     * 用户工作职位的名称.
      * @var String
      */
-    public $person_work_time;
+    public $person_position_name;
 
     /**
-     * The phone number of the user.
+     * 用户的联系方式.
      * @var String
      */
     public $person_phone;
