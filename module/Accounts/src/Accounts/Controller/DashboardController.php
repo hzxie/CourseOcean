@@ -49,6 +49,7 @@ class DashboardController extends AbstractActionController
         $view = new ViewModel(
             array( 
                 'profile'       => $this->profile,
+                'extra'         => $this->getExtraData($userGroupSlug),
             )
         );
         $view->setTemplate("accounts/dashboard/$userGroupSlug.phtml");
@@ -131,25 +132,9 @@ class DashboardController extends AbstractActionController
         return $sessionData;
     }
 
-    /**
-     * Get the unique slug of the user group by its id.
-     * @param  int $userGroupId - the unique id of the user group
-     * @return the unique slug of the user group
-     */
-    private function getUserGroupSlug($userGroupId)
+    private function getExtraData($userGroupSlug)
     {
-        if ( $userGroupId == 4 ) {
-            return 'administrator';
-        }
-
-        $sm                 = $this->getServiceLocator();
-        $userGroupTable     = $sm->get('Accounts\Model\UserGroupTable');
-        $userGroup          = $userGroupTable->getUserGroupSlug($userGroupId);
-
-        if ( $userGroup == null ) {
-            return null;
-        }
-        return $userGroup->user_group_slug;
+        
     }
 
     /**
@@ -159,16 +144,16 @@ class DashboardController extends AbstractActionController
      */
     private function getPersonInfo($uid)
     {
-        $personInfo         = array(
-            
-        );
-
         $sm                 = $this->getServiceLocator();
         $personTable        = $sm->get('Accounts\Model\PersonTable');
         $person             = $personTable->getPersonInfo($uid);
 
-        $personInfo        += $this->getProfileArray($person);
-        return $personInfo;
+        return  $this->getProfileArray($person);
+    }
+
+    private function getExtraDataForPerson()
+    {
+        
     }
 
     /**
@@ -178,9 +163,7 @@ class DashboardController extends AbstractActionController
      */
     private function getTeacherInfo($uid)
     {
-        $teacherInfo        = array(
-            
-        );
+        $teacherInfo        = array();
 
         $sm                 = $this->getServiceLocator();
         $teacherTable       = $sm->get('Accounts\Model\TeacherTable');

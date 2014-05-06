@@ -1,6 +1,7 @@
 <?php 
     echo $this->headTitle('个人中心 | ');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/dashboard.css');
+    echo $this->headScript()->appendFile($this->basePath().'/js/citypicker.js');
 ?>
 
 <div id="content">
@@ -69,12 +70,94 @@
     </div> <!-- #main-content -->
 </div> <!-- #content -->
 
+<!-- Dialog Mask -->
+<div id="mask"></div> <!-- #mask -->
+
+<!-- Dialogs -->
+<div id="dialog-container">
+<!-- Password Dialog -->
+<div id="password-dialog" class="dialog">
+    <div class="dialog-header">
+        修改密码
+    </div> <!-- .dialog-header -->
+    <div class="dialog-content">
+        <div id="password-error" class="alert alert-error hide"></div>
+        <div class="field">
+            <div class="title">旧密码</div>
+            <div class="value"><input type="password" name="old-password" maxlength="16" /></div>
+        </div> <!-- .field -->
+        <div class="field">
+            <div class="title">新密码</div>
+            <div class="value"><input type="password" name="new-password" maxlength="16" /></div>
+        </div> <!-- .field -->
+        <div class="field">
+            <div class="title">确认新密码</div>
+            <div class="value"><input type="password" name="password-again" maxlength="16" /></div>
+        </div> <!-- .field -->
+        <div class="field">
+            <button id="change-password-button" class="btn btn-primary" onclick="javascript:changePassword()">确认</button>
+            <button class="btn btn-cancel"  onclick="javascript:closePasswordDialog()">取消</button>
+        </div> <!-- .field -->
+    </div> <!-- .dialog-content -->
+</div> <!-- #password-dialog -->
+<!-- Profile Dialog -->
+<div id="profile-dialog" class="dialog">
+    <div class="dialog-header">
+        修改个人资料
+    </div> <!-- .dialog-header -->
+    <div class="dialog-content">
+        <div id="profile-error" class="alert alert-error hide"></div>
+        <div class="field">
+            <div class="title">您的姓名</div>
+            <div class="value"><input type="text" disabled="disabled" value="<?php echo $profile['person_name']; ?>" /></div>
+        </div> <!-- .field -->
+        <div class="field">
+            <div class="title">电子邮件</div>
+            <div class="value"><input type="text" name="email" value="<?php echo $profile['email']; ?>" /></div>
+        </div> <!-- .field -->
+        <div class="field">
+            <div class="title">所在地区</div>
+            <div class="value">
+                <form action="#">
+                    <select onchange="setProvince(this, province, city)" id="region" name="region" />
+                        <option value="" selected>任意地区</option>
+                        <script type="text/javascript">setRegions();</script>
+                    </select>
+                    <select id="province" disabled="disabled" onchange="setCity(this, city)"></select>
+                    <select id="city" disabled="disabled"></select>
+                </form>
+            </div>
+        </div> <!-- .field -->
+        <div class="field">
+            <div class="title">工作职位</div>
+            <div class="value">
+                <select name="work-position">
+                    <?php foreach ( $workPositions as $position ) { ?>
+                        <option value="<?php echo $position->position_slug; ?>"><?php echo $position->position_name; ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div> <!-- .field -->
+        <div class="field">
+            <div class="title">联系电话</div>
+            <div class="value"><input type="text" name="phone" value="<?php echo $profile['person_phone']; ?>" /></div>
+        </div> <!-- .field -->
+        <div class="field">
+            <button id="edit-profile-button" class="btn btn-primary" onclick="javascript:editProfile()">确认</button>
+            <button class="btn btn-cancel"  onclick="javascript:closeProfileDialog()">取消</button>
+        </div> <!-- .field -->
+    </div> <!-- .dialog-content -->
+</div> <!-- #profile-dialog -->
+</div> <!-- dialog-container -->
+
 <script type="text/javascript">
     $('#tab a').click(function (e) {
         e.preventDefault();
         $(this).tab('show');
     })
 </script>
+
+<!-- JavaScript for Getting Attendance Record -->
 <script type="text/javascript">
     function getAttendanceRecord() {
         var offset = $('li.lecture').length;
@@ -174,4 +257,186 @@
     $(document).ready(function() {
         getAttendanceRecord();
     });
+</script>
+
+<!-- JavaScript for Opening Dialogs -->
+<script type="text/javascript">
+    function openPasswordDialog() {
+        setPasswordDialogVisibility(true);
+    }
+</script>
+<script type="text/javascript">
+    function closePasswordDialog() {
+        setPasswordDialogVisibility(false);
+
+        $('#password-error').css('display', 'none');
+        $('input[name=old-password]').val('');
+        $('input[name=new-password]').val('');
+        $('input[name=password-again]').val('');
+    }
+</script>
+<script type="text/javascript">
+    function setPasswordDialogVisibility(isVisible) {
+        if ( isVisible ) {
+            $('#mask').css('display', 'block');
+            $('#password-dialog').css('display', 'block');
+        } else {
+            $('#mask').css('display', 'none');
+            $('#password-dialog').css('display', 'none');
+        }
+    }
+</script>
+<script type="text/javascript">
+    function changePassword() {
+        var processButtonObject = $('#change-password-button'),
+            oldPassword         = $('input[name=old-password]').val(),
+            newPassword         = $('input[name=new-password]').val(),
+            confirmPassword     = $('input[name=password-again]').val();
+        
+        setInputStyle(processButtonObject, true);
+        doChangePasswordAction(oldPassword, newPassword, confirmPassword);
+        setInputStyle(processButtonObject, false);
+    }
+</script>
+<script type="text/javascript">
+    function doChangePasswordAction(oldPassword, newPassword, confirmPassword) {
+        var postData = 'old-password=' + oldPassword + '&new-password=' + newPassword +
+                       '&password-again=' + confirmPassword;
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: '<?php echo $this->basePath(); ?>/accounts/dashboard/changePassword',
+            data: postData,
+            dataType: 'JSON',
+            success: function(result) {
+                processPasswordResult(result);
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function processPasswordResult(result) {
+        if ( result['isSuccessful'] ) {
+            closePasswordDialog();
+        } else {
+            var errorMessage = '';
+            if ( result['isOldPasswordEmpty'] ) {
+                errorMessage += '请输入您的旧密码<br />';
+            } else if ( !result['isOldPasswordCorrect'] ) {
+                errorMessage += '您输入的旧密码不正确<br />';
+            }
+            if ( result['isNewPasswordEmpty'] ) {
+                errorMessage += '请输入您的新密码<br />';
+            } else if ( !result['isNewPasswordLegal'] ) {
+                errorMessage += '新密码的长度必须在6~16个字符之间<br />';
+            }
+            if ( result['isConfirmPasswordEmpty'] ) {
+                errorMessage += '请确认您使用的新密码<br />';
+            } else if ( !result['isConfirmPasswordMatched'] ) {
+                errorMessage += '新密码与确认密码输入不一致<br />';
+            }
+            
+            $('#password-error').html(errorMessage);
+            $('#password-error').fadeIn();
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    function openProfileDialog() {
+        var region      = '<?php echo $profile['person_region']; ?>',
+            province    = '<?php echo $profile['person_province']; ?>',
+            city        = '<?php echo $profile['person_city']; ?>';
+
+        loadCityInformation(region, province, city);
+        setProfileDialogVisibility(true);
+    }
+</script>
+<script type="text/javascript">
+    function loadCityInformation(region, province, city) {
+
+    }
+</script>
+<script type="text/javascript">
+    function closeProfileDialog() {
+        setProfileDialogVisibility(false);
+    }
+</script>
+<script type="text/javascript">
+    function setProfileDialogVisibility(isVisible) {
+        if ( isVisible ) {
+            $('#mask').css('display', 'block');
+            $('#profile-dialog').css('display', 'block');
+        } else {
+            $('#mask').css('display', 'none');
+            $('#profile-dialog').css('display', 'none');
+        }
+    }
+</script>
+<script type="text/javascript">
+    function editProfile() {
+        var processButtonObject = $('#edit-profile-button');
+            email               = $('input[name=email]').val(),
+            phone               = $('input[name=phone]').val();
+
+        setInputStyle(processButtonObject, true);
+        doEditProfileAction(email, phone);
+        setInputStyle(processButtonObject, false);
+    }
+</script>
+<script type="text/javascript">
+    function doEditProfileAction(email, phone) {
+        var postData = 'email=' + email + '&phone=' + phone;
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: '<?php echo $this->basePath(); ?>/accounts/dashboard/editPersonProfile',
+            data: postData,
+            dataType: 'JSON',
+            success: function(result) {
+                processProfileResult(result);
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function processProfileResult(result) {
+        if ( result['isSuccessful'] ) {
+            window.location.reload();
+        } else {
+            var errorMessage = '';
+            if ( !result['isUserGroupLegal'] ) {
+                errorMessage += '发生未知错误<br />';
+            }
+            if ( result['isEmailEmpty'] ) {
+                errorMessage += '请填写您的电子邮件地址<br />';
+            } else if ( !result['isEmailLegal'] ) {
+                errorMessage += '请填写合法的电子邮件地址<br />';
+            } else if ( result['isEmailExists'] ) {
+                errorMessage += '该电子邮件地址已被使用, 请使用其他电子邮件地址<br />';
+            } 
+            if ( result['isPhoneEmpty'] ) {
+                errorMessage += '请填写您的联系电话<br />';
+            } else if ( !result['isPhoneLegal'] ) {
+                errorMessage += '联系电话必须由数字和-组成, 且长度在7~24个字符之间<br />';
+            }
+            $('#profile-error').html(errorMessage);
+            $('#profile-error').fadeIn();
+        }
+    }
+</script>
+
+
+<script type="text/javascript">
+    function setInputStyle(processButtonObject, isLoading) {
+        if ( isLoading ) {
+            processButtonObject.html('正在处理...');
+            $('input').attr('disabled', 'disabled');
+            $('button').attr('disabled', 'disabled');
+        } else {
+            processButtonObject.html('确认');
+            $('input').removeAttr('disabled');
+            $('button').removeAttr('disabled');
+        }
+    }
 </script>

@@ -510,7 +510,7 @@ class RegisterController extends AbstractActionController
     {
         $sessionData    = $this->getSessionData();
         $username       = $sessionData['username'];
-        $uid            = $this->getUid($username);
+        $uid            = $sessionData['uid'];
         $userGroupSlug  = $sessionData['userGroupSlug'];
 
         $isProfileCompletedFunc = 'is'.$userGroupSlug.'ProfileCompleted';
@@ -518,20 +518,6 @@ class RegisterController extends AbstractActionController
             return true;
         }
         return false;
-    }
-
-    /**
-     * 通过用户的用户名以获得用户的唯一标识符(uid).
-     * @param  String $username - 用户的用户名
-     * @return 用户的唯一标识符
-     */
-    private function getUid($username)
-    {
-        $sm         = $this->getServiceLocator();
-        $userTable  = $sm->get('Accounts\Model\UserTable');
-        $user       = $userTable->getUidByUsername($username);
-
-        return $user->uid;
     }
 
     /**

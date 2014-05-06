@@ -1,0 +1,196 @@
+<?php 
+    echo $this->headTitle('个人中心 | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/dashboard.css');
+?>
+
+<div id="content">
+    <?php if ( !$profile['teacher_is_approved'] ): ?>
+        <div class="alert alert-warning">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <strong>警告:</strong> 由于您的资料尚未通过审核, 暂时不能开设新课程.
+        </div> <!-- .alert-warning -->
+    <?php endif; ?>
+    <div id="sidebar">
+        <div id="username"><?php echo $profile['username']; ?></div>
+        <div id="profile">
+            <ul>
+                <li>
+                    <i class="icon-user"></i>
+                    <span class="title">姓名</span>
+                    <span class="data"><?php echo $profile['teacher_name']; ?></span>
+                </li>
+                <li>
+                    <i class="icon-envelope"></i>
+                    <span class="title">电子邮件</span>
+                    <span class="data"><?php echo $profile['email']; ?></span>
+                </li>
+                <li>
+                    <i class="icon-map-marker"></i>
+                    <span class="title">所在地区</span>
+                    <span class="data"><?php echo $profile['teacher_province']; ?> <?php echo $profile['teacher_city']; ?></span>
+                </li>
+                <li>
+                    <i class="icon-info-sign"></i>
+                    <span class="title">联系电话</span>
+                    <span class="data"><?php echo $profile['teacher_phone']; ?></span>
+                </li>
+                <li>
+                    <i class="icon-time"></i>
+                    <span class="title">上次登录</span>
+                    <span class="data">
+                        <?php if ( $profile['lastTimeSignIn'] == '0000-00-00 00:00:00' ): ?>
+                            从未登录
+                        <?php else: ?>
+                            <?php echo date('Y年m月d日 H:i', strtotime($profile['lastTimeSignIn'])); ?>
+                        <?php endif; ?>
+                    </span>
+                </li>
+                <li>
+                    <span><a href="javascript:openPasswordDialog()">修改密码</a></span>
+                </li>
+            </ul>
+        </div>
+    </div> <!-- #sidebar -->
+    <div id="main-content">
+        <ul id="tab" class="nav nav-tabs">
+            <li class="active"><a href="#profile-pane">个人资料</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">我的课程 <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li class="active-pane"><a href="#courses-pane" data-toggle="tab">我开设的课程</a></li>
+                    <li><a href="#lectures-pane" data-toggle="tab">我参与的课程</a></li>
+                </ul>
+            </li>
+            <li><a href="#requirements-pane">我的需求</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="profile-pane">
+                <div id="avatar">
+                    <?php if ( $profile['teacher_avatar'] == null ): ?>  
+                    <img data-src="holder.js/150x150" src="<?php echo $this->basePath('/img/avatars/silhouette.png'); ?>" alt="Avatar" />
+                    <?php else: ?>
+                    <img data-src="holder.js/150x150" src="<?php echo $this->basePath($profile['teacher_avatar']); ?>" alt="Avatar" />
+                    <?php endif; ?>
+                </div> <!-- #avatar -->
+            </div> <!-- #profile -->
+            <div class="tab-pane" id="courses-pane">
+                
+            </div> <!-- #courses -->
+            <div class="tab-pane" id="lectures-pane">
+                <p id="no-attendance-records">暂无培训课记录</p>
+                <ul></ul>
+                <button id="load-attendance-records" class="btn btn-block" onclick="javascript:getAttendanceRecord()">加载更多...</button>
+            </div> <!-- #lectures -->
+            <div class="tab-pane" id="requirements-pane">
+                Requirements
+            </div> <!-- #requirements -->
+        </div>
+    </div> <!-- #main-content -->
+</div> <!-- #content -->
+
+<script type="text/javascript">
+    $('.alert .close').click(function() {
+        $('this').parent().alert('close');
+    });
+</script>
+<script type="text/javascript">
+    $('#tab a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    })
+</script>
+
+<script type="text/javascript">
+    function getAttendanceRecord() {
+        var offset = $('li.lecture').length;
+        return doGetAttendanceRecordAction(offset);
+    }
+</script>
+<script type="text/javascript">
+    function doGetAttendanceRecordAction(offset) {
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?php echo $this->basePath(); ?>/accounts/dashboard/getLectureAttendance?offset=' + offset,
+            dataType: 'JSON',
+            success: function(result) {
+                return processAttendanceResult(result, offset);
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function processAttendanceResult(result, offset) {
+        var NUMBER_OF_RECORDS_PER_QUERY = 10;
+        if ( result.length != 0 ) {
+            $('#no-attendance-records').css('display', 'none');
+            for (var i in result) {
+                appendAttendanceRecord(result[i]);
+            }
+        } 
+        if ( offset != 0 || result.length < NUMBER_OF_RECORDS_PER_QUERY ) {
+            $('#load-attendance-records').html('已加载全部记录');
+            $('#load-attendance-records').attr('disabled', 'disabled');
+        }
+    }
+</script>
+<script type="text/javascript">
+    function appendAttendanceRecord(attendanceRecord) {
+        $("#lectures ul").append(
+            '<li class="lecture">' +
+                '<div class="left">' +
+                    '<img src="<?php echo $this->basePath(); ?>/img/courses/' + attendanceRecord['course_type_slug'] + '-small.jpg" alt="Thumbnail" />' +
+                '</div>' +
+                '<div class="right">' + 
+                    '<div class="title">' + attendanceRecord['course_name'] + '</div>' +
+                    '<div class="detail">' +
+                        '<span><i class="icon-calendar"></i>' + getFormattedDateSection(attendanceRecord['lecture_start_time'], attendanceRecord['lecture_end_time']) + '</span>' +
+                        '<span><i class="icon-user"></i>' + attendanceRecord['teacher_name'] + '</span><br />' +
+                        '<span><i class="icon-map-marker"></i>' + getFormattedPlace(attendanceRecord) + '</span>' +
+                    '</div>' +
+                    '<div class="view">' +
+                        '<button class="btn btn-primary" onclick="window.open(\'<?php echo $this->basePath(); ?>/solutions/lecture/detail/' + attendanceRecord['lecture_id'] + '\')">查看课程</button>' +
+                    '</div>' +
+                '</div>' +
+            '</li>'
+        );
+    }
+</script>
+<script type="text/javascript">
+    function getFormattedPlace(attendanceRecord) {
+        var places = [
+            attendanceRecord['lecture_province'], 
+            attendanceRecord['lecture_city'], 
+            attendanceRecord['lecture_address']
+        ],  place = '';
+
+        for (var i in places) {
+            if ( places[i] != null ) {
+                place += places[i] + ' ';
+            }
+        }
+        return place;
+    }
+</script>
+<script type="text/javascript">
+    function getFormattedDateSection(startTimeString, endTimeString) {
+        var startTime   = getFormattedDateTime(startTimeString),
+            endTime     = getFormattedDateTime(endTimeString);
+
+        return startTime + ' - ' + endTime;
+    }
+</script>
+<script type="text/javascript">
+    function getFormattedDateTime(dateTimeString) {
+        var dateTimeElement = dateTimeString.split(' '),
+            dateElement     = dateTimeElement[0].split('-'),
+            year            = dateElement[0],
+            month           = dateElement[1],
+            day             = dateElement[2],
+            timeElement     = dateTimeElement[1].split(':'),
+            hour            = timeElement[0],
+            minute          = timeElement[1];
+
+        return year + '年' + month + '月' + day + '日 ' + hour + ':' + minute;
+    }
+</script>

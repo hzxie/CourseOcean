@@ -51,7 +51,7 @@ class TeacherTable
                               'itp_teaching_field.uid = itp_teachers.uid');
                 $select->where("course_type_id = $catelogyID");
             }
-            $select->where("is_approved = true");
+            $select->where("teacher_is_approved = true");
 
             $select->order(new Expression('CONVERT(teacher_name USING GBK)'));
             $select->group('itp_teachers.uid');
