@@ -37,7 +37,7 @@ class DashboardController extends AbstractActionController
             return $this->sendRedirect('accounts/register/email');   
         }
         
-        $this->profile      = $this->getUserData();
+        $this->profile      = $this->getUserProfile();
         $uid                = $this->profile['uid'];
         $userGroupSlug      = lcfirst($this->profile['userGroupSlug']);
         $isProfileCompleted = $this->profile['isProfileCompleted'];
@@ -94,7 +94,7 @@ class DashboardController extends AbstractActionController
      * Get the profile of the user.
      * @return an array which contains user's profile
      */
-    private function getUserData()
+    private function getUserProfile()
     {
         $userData           = array('isProfileCompleted' => false);
         $userData          += $this->getSessionData();
@@ -163,13 +163,11 @@ class DashboardController extends AbstractActionController
      */
     private function getTeacherInfo($uid)
     {
-        $teacherInfo        = array();
-
         $sm                 = $this->getServiceLocator();
         $teacherTable       = $sm->get('Accounts\Model\TeacherTable');
         $teacher            = $teacherTable->getTeacherInfo($uid);
 
-        $teacherInfo      += $this->getProfileArray($teacher);
+        $teacherInfo        = $this->getProfileArray($teacher);
         return $teacherInfo;
     }
 
@@ -180,15 +178,11 @@ class DashboardController extends AbstractActionController
      */
     private function getCompanyInfo($uid)
     {
-        $companyInfo  = array(
-            
-        );
-
         $sm                 = $this->getServiceLocator();
         $companyTable       = $sm->get('Accounts\Model\CompanyTable');
         $company            = $companyTable->getCompanyInfo($uid);
 
-        $companyInfo       += $this->getProfileArray($company);
+        $companyInfo        = $this->getProfileArray($company);
         return $companyInfo;
     }
 
@@ -217,7 +211,7 @@ class DashboardController extends AbstractActionController
         $oldPassword        = $this->getRequest()->getPost('old-password');
         $newPassword        = $this->getRequest()->getPost('new-password');
         $confirmPassword    = $this->getRequest()->getPost('password-again');
-        $this->profile      = $this->getUserData();
+        $this->profile      = $this->getUserProfile();
         $uid                = $this->profile['uid'];
 
         $result     = array(
@@ -304,7 +298,7 @@ class DashboardController extends AbstractActionController
     {
         $email                  = $this->getRequest()->getPost('email');
         $phone                  = $this->getRequest()->getPost('phone');
-        $this->profile          = $this->getUserData();
+        $this->profile          = $this->getUserProfile();
         $uid                    = $this->profile['uid'];
         $userGroupSlug          = $this->profile['userGroupSlug'];
 
@@ -486,7 +480,7 @@ class DashboardController extends AbstractActionController
         $offset                         = (int)$this->getRequest()->getQuery('offset', 0);
         $NUMBER_OF_RECORDS_PER_QUERY    = 10;
 
-        $this->profile          = $this->getUserData();
+        $this->profile          = $this->getUserProfile();
         $uid                    = $this->profile['uid'];
         $sm                     = $this->getServiceLocator();
         $lectureAttendanceTable = $sm->get('Solutions\Model\LectureAttendanceTable');

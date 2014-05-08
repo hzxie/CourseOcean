@@ -24,8 +24,14 @@ use Solutions\Model\News;
 use Solutions\Model\NewsTable;
 use Solutions\Model\NewsCategory;
 use Solutions\Model\NewsCategoryTable;
+use Solutions\Model\Requirement;
+use Solutions\Model\RequirementTable;
+use Accounts\Model\Person;
+use Accounts\Model\PersonTable;
 use Accounts\Model\Teacher;
 use Accounts\Model\TeacherTable;
+use Accounts\Model\Company;
+use Accounts\Model\CompanyTable;
 
 class Module implements AutoloaderProviderInterface
 {
@@ -144,6 +150,28 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype->setArrayObjectPrototype(new NewsCategory());
                     return new TableGateway('itp_news_categories', $dbAdapter, null, $resultSetPrototype);
                 },
+                'Solutions\Model\RequirementTable' => function($sm) {
+                    $tableGateway = $sm->get('RequirementTableGateway');
+                    $table = new RequirementTable($tableGateway);
+                    return $table;
+                },
+                'RequirementTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Requirement());
+                    return new TableGateway('itp_requirements', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Accounts\Model\PersonTable' => function($sm) {
+                    $tableGateway = $sm->get('PersonTableGateway');
+                    $table = new PersonTable($tableGateway);
+                    return $table;
+                },
+                'PersonTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Person());
+                    return new TableGateway('itp_people', $dbAdapter, null, $resultSetPrototype);
+                },
                 'Accounts\Model\TeacherTable' => function($sm) {
                     $tableGateway = $sm->get('TeacherTableGateway');
                     $table = new TeacherTable($tableGateway);
@@ -154,6 +182,17 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Teacher());
                     return new TableGateway('itp_teachers', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Accounts\Model\CompanyTable' => function($sm) {
+                    $tableGateway = $sm->get('CompanyTableGateway');
+                    $table = new CompanyTable($tableGateway);
+                    return $table;
+                },
+                'CompanyTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Company());
+                    return new TableGateway('itp_companies', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );

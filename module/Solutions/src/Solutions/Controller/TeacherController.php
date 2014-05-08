@@ -18,7 +18,7 @@ class TeacherController extends AbstractActionController
      */
     public function pageAction()
     {
-        $NUMBER_OF_TEACHERS_PER_PAGE = 16;
+        $NUMBER_OF_TEACHERS_PER_PAGE = 12;
         $pageNumber                  = $this->params()->fromRoute('param', 1);
         $catelogySlug                = $this->params()->fromQuery('catelogy');
         $catelogyID                  = $this->getCatelogyID($catelogySlug);

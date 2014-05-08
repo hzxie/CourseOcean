@@ -42,16 +42,19 @@ class TeacherTable
 	 * @return an object which is an instance of ResultSet, which contains
 	 *         data of all teachers.
 	 */
-	public function fetchAll($pageNumber, $limit, $catelogyID)
+	public function fetchAll($pageNumber, $limit, $catelogyID, $isAdministrator = false)
 	{
 		$offset     = ( $pageNumber - 1 ) * $limit;
-        $resultSet  = $this->tableGateway->select(function (Select $select) use ($offset, $limit, $catelogyID) {
+        $resultSet  = $this->tableGateway->select(function (Select $select) use ($offset, $limit, 
+                                                                                 $catelogyID, $isAdministrator) {
             if ( $catelogyID != 0 ) {
                 $select->join('itp_teaching_field', 
                               'itp_teaching_field.uid = itp_teachers.uid');
                 $select->where("course_type_id = $catelogyID");
             }
-            $select->where("teacher_is_approved = true");
+            if ( !$isAdministrator ) {
+                $select->where("teacher_is_approved = true");
+            }
 
             $select->order(new Expression('CONVERT(teacher_name USING GBK)'));
             $select->group('itp_teachers.uid');
@@ -67,13 +70,16 @@ class TeacherTable
      * @return an integer which stands for the number of records in the teacher
      *         table
      */
-    public function getNumberOfTeachers($catelogyID)
+    public function getNumberOfTeachers($catelogyID, $isAdministrator = false)
     {
-        return $this->tableGateway->select(function (Select $select) use ($catelogyID) {
+        return $this->tableGateway->select(function (Select $select) use ($catelogyID, $isAdministrator) {
             if ( $catelogyID != 0 ) {
                 $select->join('itp_teaching_field', 
                               'itp_teaching_field.uid = itp_teachers.uid');
                 $select->where("course_type_id = $catelogyID");
+            }
+            if ( !$isAdministrator ) {
+                $select->where("teacher_is_approved = true");
             }
         })->count();
     }
@@ -92,6 +98,31 @@ class TeacherTable
             )
         );
         return $rowset->current();
+    }
+
+    public function isTeacherExists($uid)
+    {
+        $rowset     = $this->tableGateway->select(
+            array(
+                'uid'   => $uid,
+            )
+        );
+        return ( $rowset->current() != null );
+    }
+
+    /**
+     * 通过部分关键字搜索讲师的相关信息.
+     * @param  String $keyword - 关键字
+     * @return 一个包含讲师相关信息的ResultSet对象
+     */
+    public function searchTeacher($keyword)
+    {
+        $resultSet = $this->tableGateway->select(function(Select $select) use ($keyword) {
+            $select->where("teacher_name LIKE '%$keyword%'");
+            $select->where("teacher_is_approved = true");
+            $select->limit(10);
+        });
+        return $resultSet;
     }
 
     /**

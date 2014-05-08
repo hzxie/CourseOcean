@@ -121,7 +121,6 @@
             headerHeight    = $('#header').outerHeight(),
             footerOffsetTop = $('#footer').offset().top - $(window).scrollTop() - headerHeight,
             offset          = footerOffsetTop - sidebarHeight - headerHeight;
-        console.log( 'OffsetTop = ' + footerOffsetTop + "\n" + 'sidebarHeight = ' + sidebarHeight );
         if ( footerOffsetTop < sidebarHeight ) {
             $('#sidebar').css('top', offset);
         } else {

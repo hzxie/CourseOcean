@@ -135,6 +135,7 @@ div#dialog-container {
     position: absolute;
     top: 0;
     left: 50%;
+    z-index: 256;
 }
 
 div#dialog-container div.dialog {
