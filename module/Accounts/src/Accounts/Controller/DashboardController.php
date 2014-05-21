@@ -9,24 +9,21 @@ use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
 /**
+ * 处理用户控制面板请求的控制器.
  * 
  * @author Xie Haozhe <zjhzxhz@gmail.com>
  */
 class DashboardController extends AbstractActionController
 {
     /**
-     * An array which contains profile of the user.
+     * 一个包含了用户个人信息的数组.
      * @var Array
      */
     private $profile;
 
     /**
-     * Default method to call in the controller.
-     * 
-     * It will check if the user has logined, if not, it will 
-     * send a HTTP redirect response.
-     * 
-     * @return a ViewModel object which contains HTML content
+     * 该控制器的默认方法, 显示用户登录页面.
+     * @return 一个包含了HTML内容的ViewModel对象
      */
     public function indexAction()
     {
@@ -57,8 +54,8 @@ class DashboardController extends AbstractActionController
     }
 
     /**
-     * Check if the user has logined.
-     * @return true if the user has logined
+     * 检查用户是否已经登录.
+     * @return 用户是否已经登录
      */
     private function isAllowedToAccess()
     {
@@ -67,8 +64,8 @@ class DashboardController extends AbstractActionController
     }
 
     /**
-     * Check if the user has verified email.
-     * @return true if the user's email has been verified
+     * 检查用户是否已经验证了电子邮件.
+     * @return 用户是否已经验证了电子邮件
      */
     private function isActivated()
     {
@@ -77,9 +74,9 @@ class DashboardController extends AbstractActionController
     }
 
     /**
-     * Send HTTP redirect reponse.
-     * @param  String $redirectPath - the pasth to redirect
-     * @return an HTTP redirect reponse object
+     * HTTP重定向请求.
+     * @param  String $redirectPath - 重定向的相对路径
+     * @return HTTP重定向请求的对象.
      */
     private function sendRedirect($redirectPath = '')
     {
@@ -91,8 +88,8 @@ class DashboardController extends AbstractActionController
     }
 
     /**
-     * Get the profile of the user.
-     * @return an array which contains user's profile
+     * 获取用户的个人信息, 以数组的形式返回.
+     * @return 一个包含用户个人资料的数组
      */
     private function getUserProfile()
     {
@@ -115,8 +112,8 @@ class DashboardController extends AbstractActionController
     }
 
     /**
-     * Get user profile from the session.
-     * @return an array which contains user's profile
+     * 从Session中获取用户的基本信息.
+     * @return 一个包含用户基本信息的数组
      */
     private function getSessionData()
     {
@@ -132,15 +129,20 @@ class DashboardController extends AbstractActionController
         return $sessionData;
     }
 
+    /**
+     * 获取用户的附加信息(例如参加讲座的情况等).
+     * @param  String $userGroupSlug - 用户组的英文唯一简称(slug)
+     * @return 一个包含用户个人信息的数组
+     */
     private function getExtraData($userGroupSlug)
     {
         
     }
 
     /**
-     * Get profile of a person.
-     * @param  int $uid - the unique id of the user
-     * @return an array which contains profile of a person
+     * 获取个人用户的基本信息.
+     * @param  int $uid - 用户的唯一标识符(uid)
+     * @return 一个包含了用户基本信息的数组
      */
     private function getPersonInfo($uid)
     {
@@ -151,15 +153,19 @@ class DashboardController extends AbstractActionController
         return  $this->getProfileArray($person);
     }
 
+    /**
+     * 获取个人用户的附加信息.
+     * @return 一个包含个人用户附加信息的数组
+     */
     private function getExtraDataForPerson()
     {
-        
+        # Not Implemented
     }
 
     /**
-     * Get profile of a teacher.
-     * @param  int $uid - the unique id of the user
-     * @return an array which containsp profile of a teacher
+     * 获取讲师用户的基本信息.
+     * @param  int $uid - 用户的唯一标识符(uid)
+     * @return 一个包含讲师基本信息的数组
      */
     private function getTeacherInfo($uid)
     {
@@ -172,9 +178,18 @@ class DashboardController extends AbstractActionController
     }
 
     /**
-     * Get profile of a company.
-     * @param  int $uid - the unique id of the user
-     * @return an array which contains profile of a company
+     * 获取讲师用户的附加信息.
+     * @return 一个包含讲师用户附加信息的数组
+     */
+    private function getExtraDataForTeacher()
+    {
+        # Not Implemented
+    }
+
+    /**
+     * 获取企业用户的个人信息.
+     * @param  int $uid - 用户的唯一标识符(uid)
+     * @return 一个包含企业个人信息的数组
      */
     private function getCompanyInfo($uid)
     {
@@ -187,10 +202,19 @@ class DashboardController extends AbstractActionController
     }
 
     /**
-     * Get profile within an array.
-     * @param  Object $profileInfo - an object of (Person/ Teacher/ Company)
-     *         which contains profile of the user
-     * @return an array which contains profile of the user
+     * 获取企业用户的附加信息.
+     * @return 一个包含企业用户附加信息的数组
+     */
+    private function getExtraDataForCompany()
+    {
+        # Not Implemented
+    }
+
+    /**
+     * 将从数据库获取的Model对象转换为数组并返回.
+     * @param  Object $profileInfo - 一个包含了用户个人信息的的对象, 可能是
+     *         Person/ Teacher/ Company之一的对象.
+     * @return 一个包含用户个人信息的数组
      */
     private function getProfileArray($profileInfo)
     {
@@ -203,8 +227,8 @@ class DashboardController extends AbstractActionController
     }
 
     /**
-     * Handle asynchronous changing password requests for a user.
-     * @return an HTTP reponse with contains JSON array object
+     * 处理用户修改密码的请求.
+     * @return 包含若干标志位的JSON数组
      */
     public function changePasswordAction()
     {
@@ -238,10 +262,10 @@ class DashboardController extends AbstractActionController
     }
 
     /**
-     * Verify if the old password is correct.
-     * @param  int    $uid - the unique id of the user
-     * @param  String $password - the password of the user
-     * @return true if the old password is correct
+     * 验证用户(在修改密码时)所填写的旧密码是否正确.
+     * @param  int    $uid - 用户的唯一标识符
+     * @param  String $password - 用户所填写的旧密码
+     * @return 用户填写的旧密码是否正确
      */
     private function isPasswordCorrect($uid, $password)
     {
@@ -256,12 +280,11 @@ class DashboardController extends AbstractActionController
     }
 
     /**
-     * Verify if the password is legal.
-     * Rule: the length of the password should no less than 6 characters,
-     *       and no more than 16 characters.
+     * 验证新密码是否合法.
+     * 规则: 用户的新密码必须在6~16个字符之间.
      * 
-     * @param  String  $password - the password of the user
-     * @return true if the password is legal
+     * @param  String  $password - 用户所使用的新密码
+     * @return 新密码是否合法
      */
     private function isPasswordLegal($password)
     {
@@ -273,10 +296,10 @@ class DashboardController extends AbstractActionController
     }
 
     /**
-     * Handle asynchronous changing password requests for a user.
-     * @param  int    $uid - the unique id of the user
-     * @param  String $password - the new password of the user
-     * @return true if the query is successful
+     * 修改用户的密码(在数据库中对用户密码进行修改)
+     * @param  int    $uid - 用户的唯一标识符
+     * @param  String $password - 用户希望使用的新密码
+     * @return 数据库操作是否成功
      */
     private function changePassword($uid, $password)
     {
@@ -291,189 +314,8 @@ class DashboardController extends AbstractActionController
     }
 
     /**
-     * Handle asynchronous editing profile requests for a person.
-     * @return an HTTP reponse with contains JSON array object
-     */
-    public function editPersonProfileAction()
-    {
-        $email                  = $this->getRequest()->getPost('email');
-        $phone                  = $this->getRequest()->getPost('phone');
-        $this->profile          = $this->getUserProfile();
-        $uid                    = $this->profile['uid'];
-        $userGroupSlug          = $this->profile['userGroupSlug'];
-
-        $result     = array(
-            'isSuccessful'      => false,
-            'isUserGroupLegal'  => $this->isUserGroupLegal($userGroupSlug, 'person'),
-            'isEmailEmpty'      => empty($email),
-            'isEmailLegal'      => $this->isEmailLegal($email),
-            'isEmailExists'     => $this->isEmailExists($uid, $email),
-            'isPhoneEmpty'      => empty($phone),
-            'isPhoneLegal'      => $this->isPhoneNumberLegal($phone),
-        );
-
-        $result['isSuccessful'] = !$result['isEmailEmpty']  &&  $result['isEmailLegal'] &&
-                                  !$result['isEmailExists'] && !$result['isPhoneEmpty'] && 
-                                   $result['isPhoneLegal']  &&  $result['isUserGroupLegal'];
-        if ( $result['isSuccessful'] ) {
-            $uid                    = $this->profile['uid'];
-            $result['isSuccessful'] = $this->editPersonProfile($uid, $email, $phone);
-        }
-
-        $response   = $this->getResponse();
-        $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
-        return $response;
-    }
-
-    /**
-     * Handle asynchronous editing profile requests for a person.
-     * @param  int $uid - the unique id of the user
-     * @param  String $email - the email of the user
-     * @param  String $phone - the phone number of the user
-     * @return true if the query is successful
-     */
-    private function editPersonProfile($uid, $email, $phone)
-    {
-        $isEditEmailSuccessful      = $this->editUserEmail($uid, $email);
-        $isEditProfileSuccessful    = $this->editParticalPersonProfile($uid, $phone);
-        $isSuccessful               = $isEditEmailSuccessful && $isEditProfileSuccessful;
-
-        if ( $isSuccessful ) {
-            $this->updateSession($email);
-        }
-        return $isSuccessful;
-    }
-
-    /**
-     * Handle asynchronous editing email requests for a user.
-     * @param  int $uid - the unique id of the user
-     * @param  String $email - the email of the user
-     * @return true if the query is successful
-     */
-    private function editUserEmail($uid, $email)
-    {
-        $sm             = $this->getServiceLocator();
-        $userTable      = $sm->get('Accounts\Model\UserTable');
-
-        $userInfo       = array(
-            'uid'       => $uid,
-            'email'     => $email,
-        );
-        return $userTable->editProfile($userInfo);
-    }
-
-    /**
-     * Handle asynchronous editing profile(without email) requests for a 
-     * user.
-     * @param  int $uid - the unique id of the user
-     * @param  String $phone - the phone number of the user
-     * @return true if the query is successful
-     */
-    private function editParticalPersonProfile($uid, $phone)
-    {
-        $sm             = $this->getServiceLocator();
-        $personTable    = $sm->get('Accounts\Model\PersonTable');
-
-        $personInfo     = array(
-            'uid'       => $uid,
-            'phone'     => $phone,
-        );
-        return $personTable->editProfile($personInfo);
-    }
-
-    /**
-     * Verify if the email address is legal.
-     * @param  String  $email - the email address of the user
-     * @return true if the email is legal
-     */
-    private function isEmailLegal($email)
-    {
-        return (bool)preg_match('/^[A-Z0-9._%-]{4,18}@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email);
-    }
-
-    /**
-     * Verify if the email address has existed.
-     * @param  int $uid - the unique id of the user
-     * @param  String  $email - the email address of the user
-     * @return true if the email has existed
-     */
-    private function isEmailExists($uid, $email)
-    {
-        $sm                 = $this->getServiceLocator();
-        $userTable          = $sm->get('Accounts\Model\UserTable');
-        $user               = $userTable->isEmailExists($email);
-
-        if ( $user == null ) {
-            return false;
-        } else {
-            return ( $user->uid != $uid );
-        }
-    }
-
-    /**
-     * Verify if the phone number of the user is legal.
-     * @param  String  $phone - the phone number of the user
-     * @return true if the phone number of the user is legal
-     */
-    private function isPhoneNumberLegal($phone)
-    {
-        return (bool)preg_match('/^[0-9-]{7,24}$/', $phone);
-    }
-
-    /**
-     * Verify if the user group is legal, avoiding illegal access.
-     * @param  String  $userGroupSlug - the user group of the user
-     * @param  String  $requestUserGroupSlug - the user group requsted by 
-     *         the user
-     * @return true if the user group is metched
-     */
-    private function isUserGroupLegal($userGroupSlug, $requestUserGroupSlug)
-    {
-        return ( $userGroupSlug == $requestUserGroupSlug );
-    }
-
-    /**
-     * Update email in the session after updating profile.
-     * @param String  $email - the email address of the user
-     */
-    private function updateSession($email)
-    {
-        $session    = new Container('itp_session');
-        $session->offsetSet('email', $email);
-    }
-
-    /**
-     * Verify if the name of the company is legal.
-     * Rule: the length of the company name should no more than 
-     *       64 characters.
-     * 
-     * @param  String  $companyName - the name of the company
-     * @return true if the name of the company is legal
-     */
-    private function isCompanyLegal($companyName)
-    {
-        $MAX_LENGTH_OF_COMPANY_NAME = 64;
-        return ( strlen($companyName) <= $MAX_LENGTH_OF_COMPANY_NAME );
-    }
-
-    /**
-     * Verify if the field of research of the teacher is legal.
-     * Rule: the length of the field should no more than 128 characters.
-     * 
-     * @param  String  $field - field of research of the teacher
-     * @return true if the field of research of the teacher is legal
-     */
-    private function isFieldLegal($field)
-    {
-        $MAX_LENGTH_OF_FIELD        = 128;
-        return ( strlen($field) <= $MAX_LENGTH_OF_FIELD );
-    }
-
-    /**
-     * Handle asynchronous getting attendance record of lectures for a 
-     * user.
-     * @return an HTTP reponse with contains JSON array object
+     * 获取用户参加讲座的记录, 以JSON数组的形式返回.
+     * @return 一个包含用户参与讲座记录的JSON数组
      */
     public function getLectureAttendanceAction()
     {
