@@ -3,9 +3,10 @@
 namespace Solutions\Model;
 
 /**
- * The class is the model of the itp_lecture_attendance table.
+ * 讲座参与记录的Model.
+ * 与数据库中的itp_lecture_attendance表关联.
  * 
- * @author Xie Haozhe <zjhzxhz@gmail.com>
+ * @author 谢浩哲 <zjhzxhz@gmail.com>
  */
 class LectureAttendance {
     /**
@@ -30,61 +31,73 @@ class LectureAttendance {
     }
 
     /**
-     * The unique id of the lecture.
+     * 讲座的唯一标识符.
      * @var int
      */
     public $lecture_id;
 
     /**
-     * The unique id of the user.
+     * 用户唯一标识符(uid).
      * @var int
      */
     public $uid;
 
     /**
-     * The name of the course.
+     * 该记录的参与人数.
+     * @var int
+     */
+    public $participants;
+
+    /**
+     * 讲座参与序列号(入场时使用).
+     * @var String
+     */
+    public $serial_number;
+
+    /**
+     * 该课程的名称.
      * @var String
      */
     public $course_name;
 
     /**
-     * The slug name of the course type.
+     * 该课程的类型唯一缩写(slug).
      * @var String
      */
     public $course_type_slug;
 
     /**
-     * The date when the lecture start.
-     * @var Date
+     * 该课程的开始时间.
+     * @var DateTime
      */
     public $lecture_start_time;
 
     /**
-     * The date when the lecture end.
-     * @var Date
+     * 该课程的结束时间.
+     * @var DateTime
      */
     public $lecture_end_time;
 
     /**
-     * The real name of the teacher.
+     * 讲师的真实姓名.
      * @var String
      */
     public $teacher_name;
 
     /**
-     * The province where the lecture is held.
+     * 该课程的开课地点所在省份.
      * @var String
      */
     public $lecture_province;
 
     /**
-     * The city where the lecture is held.
+     * 该课程的开课地点所在城市.
      * @var String
      */
     public $lecture_city;
 
     /**
-     * The address where the lecture is held.
+     * 该课程的开课地点的地址.
      * @var String
      */
     public $lecture_address;
