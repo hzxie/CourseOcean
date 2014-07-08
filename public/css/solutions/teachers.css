@@ -1,0 +1,21 @@
+div#container div#content ul#teachers a {
+    color: #222;
+    text-decoration: none;
+}
+
+div#container div#content ul#teachers li.teacher {
+    color: #565656;
+    font-size: 13px;
+}
+
+div#container div#content ul#teachers li.teacher div.company {
+    margin-bottom: 10px;
+    overflow: hidden;
+    height: 40px;
+}
+
+div#container div#content ul#teachers li.teacher div.field {
+    margin-bottom: 10px;
+    overflow: hidden;
+    height: 20px;
+}

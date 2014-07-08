@@ -93,11 +93,6 @@ class TeacherController extends AbstractActionController
         return $courseTypeTable->fetchAll();
     }
 
-    public function searchAction()
-    {
-
-    }
-
     /**
      * Get detail information of a teacher.
      * @return a ViewModel object which contains HTML content
@@ -111,8 +106,8 @@ class TeacherController extends AbstractActionController
             return $this->notFoundAction();
         }
         return array(
-            'teacher'       => $teacherInfo,
-            'courses'       => $this->getCourseInfo($uid),
+            'teacher'        => $teacherInfo,
+            'lectures'       => $this->getLectureInfo($uid),
         );
     }
 
@@ -155,13 +150,13 @@ class TeacherController extends AbstractActionController
      * @return an array which contains general information of the courses 
      *         which are powered by the teacher
      */
-    private function getCourseInfo($uid)
+    private function getLectureInfo($uid)
     {
         $sm                 = $this->getServiceLocator();
-        $courseTable        = $sm->get('Solutions\Model\CourseTable');
-        $courseInfo         = $courseTable->getCourseOfTeacher($uid);
+        $lectureTable       = $sm->get('Solutions\Model\LectureTable');
+        $lectureInfo        = $lectureTable->getLectureOfTeacher($uid);
 
-        return $this->getCourseInfoArray($courseInfo);
+        return $this->getLectureInfoArray($lectureInfo);
     }
 
     /**
@@ -171,18 +166,18 @@ class TeacherController extends AbstractActionController
      * @return an array which contains general information of the courses 
      *         which are powered by the teacher
      */
-    private function getCourseInfoArray($resultSet)
+    private function getLectureInfoArray($resultSet)
     {
-        $courseInfoArray    = array();
+        $lectureInfoArray   = array();
 
         if ( $resultSet != null ) {
-            foreach ( $resultSet as $course ) {
-                array_push($courseInfoArray, array(
-                    'course_id'     => $course->course_id,
-                    'course_name'   => $course->course_name,
+            foreach ( $resultSet as $lecture ) {
+                array_push($lectureInfoArray, array(
+                    'lecture_id'     => $lecture->lecture_id,
+                    'lecture_name'   => $lecture->lecture_name,
                 ));
             }
         }
-        return $courseInfoArray;
+        return $lectureInfoArray;
     }
 }

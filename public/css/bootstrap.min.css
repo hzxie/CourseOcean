@@ -1065,7 +1065,7 @@ input,
 button,
 select,
 textarea {
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: "Microsoft YaHei", "Sogoe UI",Arial, sans-serif;
 }
 
 label {
@@ -1093,7 +1093,6 @@ input[type="color"],
 	display: inline-block;
 	height: 20px;
 	padding: 4px 6px;
-	margin-bottom: 10px;
 	font-size: 14px;
 	line-height: 20px;
 	color: #555555;

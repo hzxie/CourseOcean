@@ -3,7 +3,7 @@
 namespace Solutions\Model;
 
 /**
- * The class is the model of the itp_courses table.
+ * 课程模块类的Model.
  * 
  * @author Xie Haozhe <zjhzxhz@gmail.com>
  */
@@ -19,80 +19,66 @@ class Course {
     {
         $this->course_id            = (!empty($data['course_id']))          ? $data['course_id']            : null;
         $this->course_name          = (!empty($data['course_name']))        ? $data['course_name']          : null;
-        $this->course_type_id       = (!empty($data['course_type_id']))     ? $data['course_type_id']       : null;
-        $this->course_type_slug     = (!empty($data['course_type_slug']))   ? $data['course_type_slug']     : null;
-        $this->course_type_name     = (!empty($data['course_type_name']))   ? $data['course_type_name']     : null;
-        $this->uid                  = (!empty($data['uid']))                ? $data['uid']                  : null;
-        $this->teacher_name         = (!empty($data['teacher_name']))       ? $data['teacher_name']         : null;
-        $this->course_create_time   = (!empty($data['course_create_time'])) ? $data['course_create_time']   : null;
-        $this->course_brief         = (!empty($data['course_brief']))       ? $data['course_brief']         : null;
+        $this->teacher_id           = (!empty($data['teacher_id']))         ? $data['teacher_id']           : null;
         $this->course_cycle         = (!empty($data['course_cycle']))       ? $data['course_cycle']         : null;
-        $this->course_audience      = (!empty($data['course_audience']))    ? $data['course_audience']      : null;
+        $this->course_brief         = (!empty($data['course_brief']))       ? $data['course_brief']         : null;
+        $this->course_objective     = (!empty($data['course_objective']))   ? $data['course_objective']     : null;
+        $this->course_outline       = (!empty($data['course_outline']))     ? $data['course_outline']       : null;
+        $this->course_start_time    = (!empty($data['course_start_time']))  ? $data['course_start_time']    : null;
+        $this->course_end_time      = (!empty($data['course_end_time']))    ? $data['course_end_time']      : null;
     }
 
     /**
-     * The unique id of the course.
+     * 课程模块的唯一标识符.
      * @var int
      */
     public $course_id;
 
     /**
-     * The name of the course.
+     * 课程模块的名称.
      * @var String
      */
     public $course_name;
 
     /**
-     * The unique id of the course type.
+     * 讲师的用户唯一标识符.
      * @var int
      */
-    public $course_type_id;
+    public $teacher_id;
 
     /**
-     * The slug name of the course type.
-     * @var String
-     */
-    public $course_type_slug;
-
-    /**
-     * The name of the course type.
-     * @var String
-     */
-    public $course_type_name;
-
-    /**
-     * The unique id of the teacher.
-     * @var int
-     */
-    public $uid;
-
-    /**
-     * The real name of the teacher.
-     * @var String
-     */
-    public $teacher_name;
-
-    /**
-     * The time when the course has been created.
-     * @var TimeStamp
-     */
-    public $course_create_time;
-
-    /**
-     * The brief introduction of the course.
-     * @var String
-     */
-    public $course_brief;
-
-    /**
-     * The time required of the course.
+     * 课程模块的授课时间(分钟)
      * @var int
      */
     public $course_cycle;
 
     /**
-     * The audience who are suitable for the course.
+     * 课程模块概述.
      * @var String
      */
-    public $course_audience;
+    public $course_brief;
+
+    /**
+     * 课程模块的目标.
+     * @var String
+     */
+    public $course_objective;
+
+    /**
+     * 课程模块的大纲.
+     * @var String
+     */
+    public $course_outline;
+
+    /**
+     * 课程开始时间.
+     * @var DateTime
+     */
+    public $course_start_time;
+
+    /**
+     * 课程结束时间.
+     * @var DateTime
+     */
+    public $course_end_time;
 }

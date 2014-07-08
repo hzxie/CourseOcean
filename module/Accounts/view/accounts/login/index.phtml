@@ -1,49 +1,86 @@
 <?php 
     echo $this->headTitle('登录 | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/style.css');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/login.css');
 ?>
 
-<div id="content">
-    <div id="login-container">
-        <div id="login-error" class="alert alert-error hide"></div>
-        <div id="login-form">
-            <h4>用户登录</h4>
-            <div class="field">
-                <label for="username">用户名或电子邮件地址</label>
-                <input type="text" id="username" name="username" maxlength="48" />
-            </div> <!-- .field -->
-            <div class="field">
-                <label for="password">密码</label>
-                <span id="forgot-password"><a href="#">忘记密码?</a></span>
-                <input type="password" id="password" name="password" maxlength="16" />
-            </div> <!-- .field -->
-            <div class="field">
-                <div id="remember-me" class="field">
-                    <span><input type="checkbox" name="remember-me" /></span>
-                    <span>保持登录状态</span>
-                </div> <!-- #remember-me -->
-                <div id="login-control">
-                    <button id="login" class="btn btn-primary">登录</button>
-                </div> <!-- #login-control -->
-            </div> <!-- .field -->
-        </div> <!-- #login-form -->
-    </div> <!-- #login-container -->
-    <div id="register-container">
-        <div id="register-form">
-            没有帐号? <a href="<?php echo $this->basePath(); ?>/accounts/register">立即注册</a>
-        </div> <!-- #register-form -->
-    </div> <!-- #register-container -->
-</div> <!-- #content -->
+<div id="wrapper" class="container">
+    <div id="header" class="row-fluid">
+        <div id="logo" class="span4">
+            <a href="<?php echo $this->basePath(); ?>">
+                <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+            </a>
+        </div> <!-- #logo -->
+        <div id="accounts" class="offset4 span4">
+            <ul class="inline">
+            <?php
+                $session    = new Zend\Session\Container('itp_session');
+                if ( !$session->offsetExists('isLogined') ):
+            ?>
+                <li><a href="<?php echo $this->basePath(); ?>/accounts/register">注册</a></li>
+                <li>|</li>
+                <li><a href="<?php echo $this->basePath(); ?>/accounts/login">登录</a></li>
+            <?php else: ?>
+                <li>您好, 谢浩哲</li>
+                <li>|</li>
+                <li><a href="#">注销</a></li>
+            <?php endif; ?>
+            </ul>
+        </div> <!-- #accounts -->
+    </div> <!-- #header -->
+    <div id="container">
+        <div id="navigation">
+            <ul class="inline left">
+                <li><a href="<?php echo $this->basePath(); ?>/solutions/lecture">课程库</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/solutions/teacher">讲师团队</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard/requirement">需求定制</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/solutions/news">培训动态</a></li>
+            </ul>
+            <ul class="inline right">
+                <li><a href="<?php echo $this->basePath(); ?>/accounts/mailbox">收件箱</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard/profile">个人信息</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard">我的账户</a></li>
+            </ul>
+        </div> <!-- #navigation -->
+        <form id="search" action="<?php echo $this->basePath(); ?>/solutions/search">
+            <input type="text" placeholder="搜索课程或讲师" />
+            <button class="btn btn-success" type="submit">搜索</button>
+        </form>
+        <div id="content" class="row-fluid">
+            <div id="login-container" class="offset1 span3">
+                <form method="post" onsubmit="onSubmit(); return false;">
+                    <h3>用户登录</h3>
+                    <div id="login-error" class="alert alert-error hide"></div>
+                    <p>
+                        <label for="username">用户名或电子邮件地址</label>
+                        <input type="text" id="username" name="username" maxlength="48" />
+                    </p>
+                    <p>
+                        <label for="password">密码<span id="forget-password"><a href="#">忘记密码?</a></span></label>
+                        <input type="password" id="password" name="password" maxlength="16" />
+                    </p>
+                    <p>
+                        <label for="remember-me">
+                            <input id="remember-me" name="remember-me" type="checkbox" />保持登录状态
+                        </label>
+                        <button class="btn btn-success btn-block" type="submit">登录</button>
+                    </p>
+                </form> <!-- #login-form -->
+                <p>还没有账号? <a href="<?php echo $this->basePath(); ?>/accounts/register">立即注册</a></p>
+            </div> <!-- #login-container -->
+        </div> <!-- #content -->
+    </div> <!-- #container -->
+</div> <!-- #wrapper -->
 
 <?php $this->inlineScript()->captureStart(); ?>
-    $('#login').click(function() {
+    function onSubmit() {
         var username    = $('input[name=username]').val(),
             password    = $('input[name=password]').val(),
             rememberMe  = $('input[name=remember-me]').val();
 
         setButtonStyle(true);
         doLoginAction(username, password);
-    });
+    };
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
     function setButtonStyle(isLoading) {

@@ -1,0 +1,142 @@
+html, body {
+	background: url('../../img/accounts/site-background.png');
+	font-family: "Microsoft YaHei", "Sogoe UI";
+	margin: 0;
+	padding: 0;
+}
+
+div.container {
+	padding: 20px;
+	width: 960px;
+}
+
+div#wrapper {
+	background-color: #fff;
+	margin: 40px auto 0;
+	-webkit-box-shadow: 0 0 6px 0 rgba(0,0,0,0.2);
+	   -moz-box-shadow: 0 0 6px 0 rgba(0,0,0,0.2);
+			box-shadow: 0 0 6px 0 rgba(0,0,0,0.2);
+}
+
+div#header div#logo img {
+	max-height: 60px;
+}
+
+div#header div#accounts {
+	color: #333;
+	font-size: 12px;
+	padding-top: 30px;
+	text-align: right;
+}
+
+div#container {
+	margin-top: 20px;
+	padding: 10px 0;
+}
+
+div#container div#navigation {
+	border-bottom: 5px solid #599a2f;
+	color: #fff;
+	font-size: 12px;
+	overflow: hidden;
+}
+
+div#container div#navigation a {
+	color: #fff;
+	text-decoration: none;
+}
+
+div#container div#navigation ul.inline {
+	margin-bottom: 0;
+}
+
+div#container div#navigation ul.inline > li {
+	border-color: #fff;
+	border-style: solid;
+	border-width: 0 0 1px 1px;
+	margin-left: -5px;
+	padding: 5px 15px;
+}
+
+div#container div#navigation ul.inline > li:first-child {
+	-webkit-border-radius: 5px 0 0 0;
+	   -moz-border-radius: 5px 0 0 0;
+			border-radius: 5px 0 0 0;
+}
+
+div#container div#navigation ul.inline > li:last-child {
+	-webkit-border-radius: 0 5px 0 0;
+	   -moz-border-radius: 0 5px 0 0;
+			border-radius: 0 5px 0 0;
+}
+
+div#container div#navigation ul.left {
+	float: left;
+}
+
+div#container div#navigation ul.left > li {
+	background-color: #00bce4;
+}
+
+div#container div#navigation ul.left > li:hover {
+	background-color: #369;
+}
+
+div#container div#navigation ul.right {
+	float: right;
+}
+
+div#container div#navigation ul.right > li {
+	background-color: #73b63b;
+}
+
+div#container div#navigation ul.right > li.active {
+	background-color: #599a2f;
+	border-bottom: 1px solid #599a2f;
+}
+
+div#container form#search {
+	background-color: #e3edf4;
+	padding: 10px;
+	text-align: right;
+}
+
+div#container form#search button.btn-success {
+	background-color: #73b63b;
+}
+
+div#container div#content {
+	margin-top: 20px;
+}
+
+div#footer {
+	color: #808080;
+	font-size: 12px;
+	padding: 20px 0 10px;
+}
+
+div#footer a {
+	color: #00aacc;
+	text-decoration: none;
+}
+
+div#footer ul {
+	list-style: none;
+}
+
+div#footer ul.inline {
+	font-size: 14px;
+}
+
+div#footer div#introduction img {
+	border-right: 1px solid #808080;
+	float: left;
+	max-width: 100px;
+	margin-right: 20px;
+	padding-right: 20px;
+	padding-bottom: 40px;
+}
+
+div#footer div.span4 {
+	text-align: right;
+}

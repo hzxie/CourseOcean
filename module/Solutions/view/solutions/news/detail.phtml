@@ -1,44 +1,47 @@
 <?php 
     echo $this->headTitle("$news->news_title | ");
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/solutions/detail.css');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/solutions/style.css');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/solutions/post.css');
 ?>
 
-<div id="content">
-    <div id="banner">
-        <div id="banner-content">
-            <h3><?php echo $news->news_title; ?></h3>
-            <span><i class="icon-th-list icon-white"></i> <?php echo $news->news_category_name; ?></span>
-            <span><i class="icon-calendar icon-white"></i> <?php echo date('Y年m月d日', strtotime($news->publish_date)); ?></span>
-        </div> <!-- #banner-content -->
-    </div> <!-- #banner -->
-    <div id="main-container">
-        <div id="main-content">
-            <ul class="breadcrumb">
-                <li><a href="<?php echo $this->basePath(); ?>">首页</a> <span class="divider">/</span></li>
-                <li><a href="<?php echo $this->basePath('/courses/news'); ?>">培训动态</a> <span class="divider">/</span></li>
-                <li class="active"><?php echo $news->news_title; ?></li>
+<div class="border-top"></div> <!-- .border-top -->
+<div id="header">
+    <div class="container row-fluid">
+        <div id="logo" class="span4">
+            <a href="<?php echo $this->basePath(); ?>">
+                <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+            </a>
+        </div> <!-- #logo -->
+        <div id="navigation" class="span8">
+            <ul class="inline">
+                <li><a href="<?php echo $this->basePath(); ?>/solutions/lecture">课程库</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/solutions/teacher">讲师团队</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard/requirement">需求定制</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/solutions/news">培训动态</a></li>
+                <?php
+                    $session    = new Zend\Session\Container('itp_session');
+                    if ( !$session->offsetExists('isLogined') ):
+                ?>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/login"><strong>登录</strong></a></li>
+                    <li><button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">创建账户</button></li>
+                <?php else: ?>
+                    <li>您好, <a href="<?php echo $this->basePath(); ?>/accounts/dashboard"><?php echo $session->offsetGet('username'); ?></a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/logout">注销</a></li>
+                <?php endif; ?>
             </ul>
-            <div id="detail-container">
-                <?php echo $news->news_content; ?>
-            </div> <!-- #detail-container -->
-            <div id="comments">
-                <h4>评论</h4>
-                <p>您没有添加评论的权限</p>
-            </div>
-        </div> <!-- #main-content -->
-        <div id="sidebar">
-            <div class="section">
-                <h4>相关动态</h4>
-                <p>暂无相关动态</p>
-            </div> <!-- .section -->
-            <div class="section">
-                <h4>分享</h4>
-                <ul class="inline">
-                    <li><a href="#" title="新浪微博"><img src="<?php echo $this->basePath(); ?>/img/socials/weibo.png" alt="Weibo"></a></li>
-                    <li><a href="#" title="微信"><img src="<?php echo $this->basePath(); ?>/img/socials/wechat.png" alt="Wechat"></a></li>
-                    <li><a href="#" title="来往"><img src="<?php echo $this->basePath(); ?>/img/socials/laiwang.png" alt="Laiwang"></a></li>
-                </ul>
-            </div> <!-- .section -->
-        </div> <!-- #sidebar -->
-    </div> <!-- #main-container -->
-</div> <!-- #content -->
+            <form id="search" action="<?php echo $this->basePath(); ?>/solutions/search">
+                <input type="text" placeholder="搜索课程或讲师" />
+                <button class="btn" type="submit">搜索</button>
+            </form>
+        </div> <!-- #navigation -->
+    </div> <!-- .container -->
+</div> <!-- #header -->
+<div id="container">
+    <div class="container">
+        <div class="row-fluid">
+            <div id="post" class="offset2 span8">
+                <?php var_dump($news); ?>
+            </div> <!-- #post -->
+        </div> <!-- .row-fluid -->
+    </div> <!-- .container -->
+</div> <!-- #container -->

@@ -92,7 +92,8 @@ class LectureController extends AbstractActionController
             'lecture'       => $lectureInfo,
             'isLogined'     => $uid,
             'isAttended'    => $this->isAttended($uid, $lectureInfo['lecture_id']),
-            'teacher'       => $this->getTeacherInfo($lectureInfo['uid']),
+            'teacher'       => $this->getTeacherInfo($lectureInfo['teacher_id']),
+            'comments'      => $this->getCommentInfo($lectureInfo['lecture_id']),
         );
     }
 
@@ -106,17 +107,17 @@ class LectureController extends AbstractActionController
     {
         $lectureInfo        = array();
         $generalInfo        = $this->getGeneralInfo($lectureID);
-        $lectureMetaInfo    = $this->getLectureMetaInfo($lectureID);
+        $courseInfo         = $this->getCourseInfo($lectureID);
 
         if ( $generalInfo == null ) {
             return $lectureInfo;
         }
-        $courseID           = $generalInfo->course_id;
-        $courseMetaInfo     = $this->getCourseMetaInfo($courseID);
+        $courseID           = $generalInfo->lecture_id;
 
         $lectureInfo       += $this->getGeneralInfoArray($generalInfo);
-        $lectureInfo       += $this->getMetaInfoArray($lectureMetaInfo);
-        $lectureInfo       += $this->getMetaInfoArray($courseMetaInfo);
+        $lectureInfo       += array(
+            'courses'       => $this->getCourseInfoArray($courseInfo),
+        );
 
         return $lectureInfo;
     }
@@ -154,53 +155,22 @@ class LectureController extends AbstractActionController
         return $generalInfoArray;
     }
 
-    /**
-     * Get detail information of a certain lecture.
-     * @param  int $lectureID - the unique id of the lecture
-     * @return an array of an object of CourseMeta which contains detail
-     *         information of a certain lecture
-     */
-    private function getLectureMetaInfo($lectureID)
-    {
-        $sm                 = $this->getServiceLocator();
-        $lectureMetaTable   = $sm->get('Solutions\Model\LectureMetaTable');
 
-        return $lectureMetaTable->getMetaData($lectureID);
+    private function getCourseInfo($lectureID)
+    {
+        $sm             = $this->getServiceLocator();
+        $courseTable    = $sm->get('Solutions\Model\CourseTable');
+
+        return $courseTable->getCoursesOfLecture($lectureID);
     }
 
-    /**
-     * Get detail information of a certain course.
-     * @param  int $courseID - the unique id of the course
-     * @return an array of an object of CourseMeta which contains detail
-     *         information of a certain course
-     */
-    private function getCourseMetaInfo($courseID)
+    private function getCourseInfoArray($resultSet)
     {
-        $sm                 = $this->getServiceLocator();
-        $courseMetaTable    = $sm->get('Solutions\Model\CourseMetaTable');
-
-        return $courseMetaTable->getMetaData($courseID);
-    }
-
-    /**
-     * Get detail information of a certain lecture in an array.
-     * @param  ResultSet $resultSet - an array of an object of CourseMeta/
-     *         LectureMeta which contains detail information of a certain 
-     *         course/lecture
-     * @return an array which contains detail information of a certain
-     *         lecture
-     */
-    private function getMetaInfoArray($resultSet)
-    {
-        $metaInfoArray      = array();
-        
-        if ( $resultSet != null ) {
-            foreach ( $resultSet as $resultRow ) {
-                $metaInfoArray[ $resultRow->meta_key ] 
-                                            = $resultRow->meta_value;
-            }
+        $courses        = array();
+        foreach ( $resultSet as $course ) {
+            array_push( $courses, $this->getGeneralInfoArray($course) );
         }
-        return $metaInfoArray;
+        return $courses;
     }
 
     /**
@@ -234,6 +204,24 @@ class LectureController extends AbstractActionController
             }
         }
         return $teacherInfoArray;
+    }
+
+    private function getCommentInfo($lectureID)
+    {
+        $sm                 = $this->getServiceLocator();
+        $commentTable       = $sm->get('Solutions\Model\CommentTable');
+        $commentInfo        = $commentTable->getCommentsOfCourse($lectureID, 0, 10);
+
+        return $this->getCommentInfoArray($commentInfo);
+    }
+
+    private function getCommentInfoArray($resultSet)
+    {
+        $comments   = array();
+        foreach ( $resultSet as $comment ) {
+            array_push( $comments, $this->getGeneralInfoArray($comment) );
+        }
+        return $comments;
     }
 
     /**

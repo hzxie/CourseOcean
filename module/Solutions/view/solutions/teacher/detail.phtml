@@ -1,82 +1,82 @@
 <?php 
     echo $this->headTitle($teacher['teacher_name'].' | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/solutions/detail.css');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/solutions/style.css');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/solutions/teacher.css');
 ?>
 
-<div id="content">
-    <div id="banner">
-        <div id="banner-content">
-            <h3><?php echo $teacher['teacher_name']; ?></h3>
-        </div> <!-- #banner-content -->
-    </div> <!-- #banner -->
-    <div id="main-container">
-        <div id="main-content">
-            <ul class="breadcrumb">
-                <li><a href="<?php echo $this->basePath(); ?>">首页</a> <span class="divider">/</span></li>
-                <li><a href="<?php echo $this->basePath('/solutions/teacher'); ?>">讲师团队</a> <span class="divider">/</span></li>
-                <li class="active"><?php echo $teacher['teacher_name']; ?></li>
+<div class="border-top"></div> <!-- .border-top -->
+<div id="header">
+    <div class="container row-fluid">
+        <div id="logo" class="span4">
+            <a href="<?php echo $this->basePath(); ?>">
+                <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+            </a>
+        </div> <!-- #logo -->
+        <div id="navigation" class="span8">
+            <ul class="inline">
+                <li><a href="<?php echo $this->basePath(); ?>/solutions/lecture">课程库</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/solutions/teacher">讲师团队</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard/requirement">需求定制</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/solutions/news">培训动态</a></li>
+                <?php
+                    $session    = new Zend\Session\Container('itp_session');
+                    if ( !$session->offsetExists('isLogined') ):
+                ?>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/login"><strong>登录</strong></a></li>
+                    <li><button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">创建账户</button></li>
+                <?php else: ?>
+                    <li>您好, <a href="<?php echo $this->basePath(); ?>/accounts/dashboard"><?php echo $session->offsetGet('username'); ?></a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/logout">注销</a></li>
+                <?php endif; ?>
             </ul>
-            <div id="detail-container">
-                <div id="overview">
-                	<div id="avatar">
+            <form id="search" action="<?php echo $this->basePath(); ?>/solutions/search">
+                <input type="text" placeholder="搜索课程或讲师" />
+                <button class="btn" type="submit">搜索</button>
+            </form>
+        </div> <!-- #navigation -->
+    </div> <!-- .container -->
+</div> <!-- #header -->
+<div id="container">
+    <div class="container">
+        <div class="row-fluid">
+            <div id="teacher" class="offset2 span8">
+                <div id="overview" class="row-fluid">
+                    <div class="span3">
                     <?php if ( $teacher['teacher_avatar'] == null ): ?>
                         <img class="img-circle" src="<?php echo $this->basePath('/img/avatars/avatar.png'); ?>" alt="avatar">
                     <?php else: ?>
                         <img class="img-circle" src="<?php echo $this->basePath($teacher['teacher_avatar']); ?>" alt="avatar" />
                     <?php endif; ?>
-                    </div> <!-- .avatar -->
-                    <div id="overview-content">
-                        <h4><?php echo $teacher['teacher_name']; ?></h4>
-                        <p><?php echo $teacher['teacher_company']; ?></p>
-                    </div> <!-- #overview-content -->
+                    </div> <!-- .span3 -->
+                    <div class="span9">
+                        <h3><?php echo $teacher['teacher_name']; ?></h3>
+                        <p class="company"><?php echo $teacher['teacher_company']; ?></p>
+                        <button class="btn btn-orange">预约讲师</button>
+                    </div> <!-- .span9 -->
                 </div> <!-- #overview -->
-                <div id="detail-content">
-                    <div class="section">
+                <div id="detail">
+                    <div id="introduction" class="section">
                         <h4>讲师简介</h4>
                         <p><?php echo $teacher['teacher_brief']; ?></p>
-                    </div> <!-- .section -->
-                    <div class="section">
+                    </div> <!-- #introduction -->
+                    <div id="field" class="section">
                         <h4>授课领域</h4>
                         <p><?php echo $teacher['teacher_field']; ?></p>
-                    </div> <!-- .section -->
-                    <div class="section">
+                    </div> <!-- #field -->
+                    <div id="lectures" class="section">
                         <h4>开设课程</h4>
-                        <?php if ( $courses == null ): ?>
+                        <?php if ( $lectures == null ): ?>
                             <p>暂无开设课程</p>
                         <?php else: ?>
-                        <ul>
-                            <?php foreach ( $courses as $course ) { ?>
-                            <li><a href="<?php echo $this->basePath('/solutions/course/detail/'.$course['course_id']); ?>" target="_blank"><?php echo $course['course_name']; ?></a></li>
-                            <?php } ?>
+                        <ul id="courses">
+                            <?php foreach ( $lectures as $lecture ): ?>
+                            <li><a href="<?php echo $this->basePath('/solutions/lecture/detail/'.$lecture['lecture_id']); ?>" target="_blank"><?php echo $lecture['lecture_name']; ?></a></li>
+                            <?php endforeach; ?>
                         </ul>
                         <?php endif; ?>
-                    </div> <!-- .section -->
-                </div> <!-- #detail-content -->
-            </div> <!-- #detail-container -->
-        </div> <!-- #main-content -->
-        <div id="sidebar">
-            <div class="section">
-                <h4>相关讲师</h4>
-                <ul class="teachers">
-                	<li class="teacher">
-                		<div class="avatar">
-                			<img class="img-circle" src="<?php echo $this->basePath('/img/avatars/avatar.png'); ?>" alt="avatar">
-                		</div> <!-- .avatar -->
-                		<div class="introduction">
-                			<strong><a href="#">朱少民</a></strong>
-                			<p>曾任思科网迅QA总监</p>
-                		</div> <!-- .introduction -->
-                	</li>
-                </ul>
-            </div> <!-- .section -->
-            <div class="section">
-                <h4>分享</h4>
-                <ul class="inline">
-                    <li><a href="#" title="新浪微博"><img src="<?php echo $this->basePath(); ?>/img/socials/weibo.png" alt="Weibo"></a></li>
-                    <li><a href="#" title="微信"><img src="<?php echo $this->basePath(); ?>/img/socials/wechat.png" alt="Wechat"></a></li>
-                    <li><a href="#" title="来往"><img src="<?php echo $this->basePath(); ?>/img/socials/laiwang.png" alt="Laiwang"></a></li>
-                </ul>
-            </div> <!-- .section -->
-        </div> <!-- #sidebar -->
-    </div> <!-- #main-container -->
-</div> <!-- #content -->
+                    </div> <!-- #lectures -->
+                </div> <!-- #detail -->
+            </div> <!-- #teacher -->
+        </div> <!-- .row-fluid -->
+    </div> <!-- .container -->
+</div> <!-- #container -->

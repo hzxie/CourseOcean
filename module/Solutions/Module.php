@@ -10,16 +10,14 @@ use Zend\Mvc\MvcEvent;
 
 use Solutions\Model\Course;
 use Solutions\Model\CourseTable;
-use Solutions\Model\CourseMeta;
-use Solutions\Model\CourseMetaTable;
 use Solutions\Model\CourseType;
 use Solutions\Model\CourseTypeTable;
 use Solutions\Model\Lecture;
 use Solutions\Model\LectureTable;
-use Solutions\Model\LectureMeta;
-use Solutions\Model\LectureMetaTable;
 use Solutions\Model\LectureAttendance;
 use Solutions\Model\LectureAttendanceTable;
+use Solutions\Model\Comment;
+use Solutions\Model\CommentTable;
 use Solutions\Model\News;
 use Solutions\Model\NewsTable;
 use Solutions\Model\NewsCategory;
@@ -73,17 +71,6 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype->setArrayObjectPrototype(new Course());
                     return new TableGateway('itp_courses', $dbAdapter, null, $resultSetPrototype);
                 },
-                'Solutions\Model\CourseMetaTable' => function($sm) {
-                    $tableGateway = $sm->get('CourseMetaTableGateway');
-                    $table = new CourseMetaTable($tableGateway);
-                    return $table;
-                },
-                'CourseMetaTableGateway' => function ($sm) {
-                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                    $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new CourseMeta());
-                    return new TableGateway('itp_course_meta', $dbAdapter, null, $resultSetPrototype);
-                },
                 'Solutions\Model\CourseTypeTable' => function($sm) {
                     $tableGateway = $sm->get('CourseTypeTableGateway');
                     $table = new CourseTypeTable($tableGateway);
@@ -106,17 +93,6 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype->setArrayObjectPrototype(new Lecture());
                     return new TableGateway('itp_lectures', $dbAdapter, null, $resultSetPrototype);
                 },
-                'Solutions\Model\LectureMetaTable' => function($sm) {
-                    $tableGateway = $sm->get('LectureMetaTableGateway');
-                    $table = new LectureMetaTable($tableGateway);
-                    return $table;
-                },
-                'LectureMetaTableGateway' => function ($sm) {
-                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                    $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new LectureMeta());
-                    return new TableGateway('itp_lecture_meta', $dbAdapter, null, $resultSetPrototype);
-                },
                 'Solutions\Model\LectureAttendanceTable' => function($sm) {
                     $tableGateway = $sm->get('LectureAttendanceTableGateway');
                     $table = new LectureAttendanceTable($tableGateway);
@@ -127,6 +103,17 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new LectureAttendance());
                     return new TableGateway('itp_lecture_attendance', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Solutions\Model\CommentTable' => function($sm) {
+                    $tableGateway = $sm->get('CommentTableGateway');
+                    $table = new CommentTable($tableGateway);
+                    return $table;
+                },
+                'CommentTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Comment());
+                    return new TableGateway('itp_comments', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Solutions\Model\NewsTable' => function($sm) {
                     $tableGateway = $sm->get('NewsTableGateway');

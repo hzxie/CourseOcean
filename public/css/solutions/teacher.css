@@ -1,66 +1,16 @@
-div#content {
-	padding-top: 74px;
+div#teacher div#overview {
+	border-bottom: 1px dotted #d9d9d9;
+	padding-bottom: 10px;
 }
 
-div#content div#banner {
-    background-color: #3995c4;
-    color: #fff;
-    padding-top: 25px;
-    padding-bottom: 25px;
+div#teacher div#overview h3 {
+	margin-top: 0;
 }
 
-div#banner div#banner-content {
-    margin: 0 auto;
-    overflow: hidden;
-    width: 960px;
+div#teacher div#detail {
+	margin-top: 30px;
 }
 
-div#banner-content div#slogan {
-    float: left;
-}
-
-div#banner-content form#search {
-    margin-top: 50px;
-}
-
-div#content div#main-container {
-    margin: 0 auto;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    width: 960px;
-}
-
-div#main-container div#main-content {
-    overflow: hidden;
-}
-
-div#main-content div#sidebar {
-    float: left;
-    width: 300px;
-}
-
-div#main-content div#teacher-content {
-    margin-left: 320px;
-}
-
-div#teacher-content ul.thumbnails a {
-    color: #222;
-    text-decoration: none;
-}
-
-div#teacher-content div.thumbnail {
-    color: #565656;
-    font-size: 13px;
-}
-
-div#teacher-content div.thumbnail div.company {
-    margin-bottom: 10px;
-    overflow: hidden;
-    height: 40px;
-}
-
-div#teacher-content div.thumbnail div.field {
-    margin-bottom: 10px;
-    overflow: hidden;
-    height: 20px;
+div#teacher div#detail div.section {
+	margin-bottom: 20px;
 }

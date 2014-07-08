@@ -1,0 +1,33 @@
+div#container div#content ul#news > li.post {
+	border-bottom: 1px dotted #ccc;
+	list-style: none;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+}
+
+div#container div#content ul#news > li.post h4 {
+	height: 20px;
+	margin-top: 0;
+	overflow: hidden;
+}
+
+div#container div#content ul#news > li.post h4 > a {
+	color: #333;
+	text-decoration: none;
+}
+
+div#container div#content ul#news > li.post p.introduction {
+	color: #666;
+	height: 60px;
+	overflow: hidden;
+}
+
+div#container div#content ul#news > li.post ul.meta {
+	color: #6db33f;
+	font-size: 13px;
+}
+
+div#container div#content ul#news > li.post ul.meta a {
+	color: #6db33f;
+	text-decoration: none;
+}

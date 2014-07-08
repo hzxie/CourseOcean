@@ -1,18 +1,54 @@
 <?php 
     echo $this->headTitle('页面未找到 | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/solutions/style.css');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/404.css');
 ?>
 
-<div id="content">
-    <div id="error">
-        <div class="left"></div> <!-- .left -->
-        <div class="right">
-            <h4>页面未找到</h4>
-            <p>很抱歉, 我们无法为您加载您所请求的页面.</p>
-        </div> <!-- .right -->
-    </div> <!-- #error -->
+<div class="border-top"></div> <!-- .border-top -->
+<div id="header">
+    <div class="container row-fluid">
+        <div id="logo" class="span4">
+            <a href="<?php echo $this->basePath(); ?>">
+                <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+            </a>
+        </div>
+        <div id="navigation" class="span8">
+            <ul class="inline">
+                <li><a href="<?php echo $this->basePath(); ?>/solutions/lecture">课程库</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/solutions/teacher">讲师团队</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard/requirement">需求定制</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/solutions/news">培训动态</a></li>
+                <?php
+                    $session    = new Zend\Session\Container('itp_session');
+                    if ( !$session->offsetExists('isLogined') ):
+                ?>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/login"><strong>登录</strong></a></li>
+                    <li><button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">创建账户</button></li>
+                <?php else: ?>
+                    <li>您好, <a href="<?php echo $this->basePath(); ?>/accounts/dashboard"><?php echo $session->offsetGet('username'); ?></a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/logout">注销</a></li>
+                <?php endif; ?>
+            </ul>
+            <form id="search" action="#">
+                <input type="text" placeholder="搜索课程或讲师" />
+                <button class="btn" type="submit">搜索</button>
+            </form>
+        </div> <!-- #navigation -->
+    </div> <!-- .container -->
+</div> <!-- #header -->
+<div id="container">
+    <div class="container row-fluid">
+        <div class="span6">
+            <img src="<?php echo $this->basePath(); ?>/img/404.png" alt="Header Image">
+        </div> <!-- .span6 -->
+        <div class="span6">
+            <h2>页面未找到</h2>
+            <p>很抱歉, 我们无法为您加载您所请求的页面..</p>
+            <button class="btn btn-orange">返回</button>
+        </div> <!-- .span6 -->
+    </div> <!-- .container -->
     <?php if (isset($this->display_exceptions) && $this->display_exceptions): ?>
-    <div id="debug">
+    <div id="debug" class="container row-fluid">
         <h4><?php echo $this->translate('An error occurred') ?></h4>
         <h5><?php echo $this->message ?></h5>
         <?php if(isset($this->exception) && $this->exception instanceof Exception): ?>
@@ -69,4 +105,4 @@
         <?php endif ?>
     </div> <!-- #debug -->
     <?php endif ?>
-</div> <!-- #content -->
+</div> <!-- #container -->

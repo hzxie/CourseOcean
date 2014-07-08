@@ -3,7 +3,7 @@
 namespace Solutions\Model;
 
 /**
- * The class is the model of the itp_lectures table.
+ * 课程类的Model.
  * 
  * @author Xie Haozhe <zjhzxhz@gmail.com>
  */
@@ -18,15 +18,14 @@ class Lecture {
     public function exchangeArray($data)
     {
         $this->lecture_id           = (!empty($data['lecture_id']))             ? $data['lecture_id']           : null;
-        $this->course_id            = (!empty($data['course_id']))              ? $data['course_id']            : null;
-        $this->lecture_create_time  = (!empty($data['lecture_create_time']))    ? $data['lecture_create_time']  : null;
-        $this->course_name          = (!empty($data['course_name']))            ? $data['course_name']          : null;
-        $this->course_brief         = (!empty($data['course_brief']))           ? $data['course_brief']         : null;
+        $this->lecture_name         = (!empty($data['lecture_name']))           ? $data['lecture_name']         : null;
+        $this->course_type_id       = (!empty($data['course_type_id']))         ? $data['course_type_id']       : null;
         $this->course_type_slug     = (!empty($data['course_type_slug']))       ? $data['course_type_slug']     : null;
         $this->course_type_name     = (!empty($data['course_type_name']))       ? $data['course_type_name']     : null;
-        $this->uid                  = (!empty($data['uid']))                    ? $data['uid']                  : null;
+        $this->lecture_create_time  = (!empty($data['lecture_create_time']))    ? $data['lecture_create_time']  : null;
+        $this->teacher_id           = (!empty($data['teacher_id']))             ? $data['teacher_id']           : null;
         $this->teacher_name         = (!empty($data['teacher_name']))           ? $data['teacher_name']         : null;
-        $this->course_audience      = (!empty($data['course_audience']))        ? $data['course_audience']      : null;
+        $this->lecture_brief        = (!empty($data['lecture_brief']))          ? $data['lecture_brief']        : null;
         $this->lecture_start_time   = (!empty($data['lecture_start_time']))     ? $data['lecture_start_time']   : null;
         $this->lecture_end_time     = (!empty($data['lecture_end_time']))       ? $data['lecture_end_time']     : null;
         $this->lecture_region       = (!empty($data['lecture_region']))         ? $data['lecture_region']       : null;
@@ -37,103 +36,97 @@ class Lecture {
     }
 
     /**
-     * The unique id of the lecture.
+     * 课程的唯一标识符.
      * @var int
      */
     public $lecture_id;
 
     /**
-     * The unique id of the course.
+     * 课程的名称.
+     * @var String
+     */
+    public $lecture_name;
+
+    /**
+     * 课程类型的唯一标识符.
      * @var int
      */
-    public $course_id;
+    public $course_type_id;
 
     /**
-     * The time when the lecture has been created.
-     * @var TimeStamp
-     */
-    public $lecture_create_time;
-
-    /**
-     * The name of the course.
-     * @var String
-     */
-    public $course_name;
-
-    /**
-     * The brief introduction of the course.
-     * @var String
-     */
-    public $course_brief;
-
-    /**
-     * The slug name of the course type.
+     * 课程类型的唯一英文简称.
      * @var String
      */
     public $course_type_slug;
 
     /**
-     * The name of the course type.
+     * 课程类型的名称.
      * @var String
      */
     public $course_type_name;
 
     /**
-     * The unique id of the teacher.
-     * @var int
+     * 课程的创建时间.
+     * @var DateTime
      */
-    public $uid;
+    public $lecture_create_time;
 
     /**
-     * The real name of the teacher.
+     * 讲师的用户唯一标识符.
+     * @var int
+     */
+    public $teacher_id;
+
+    /**
+     * 讲师的真实姓名.
      * @var String
      */
     public $teacher_name;
 
     /**
-     * The audience who are suitable for the course.
+     * 课程概述.
      * @var String
      */
-    public $course_audience;
+    public $lecture_brief;
 
     /**
-     * The date when the lecture start.
-     * @var Date
+     * 课程的开始时间.
+     * @var DateTime
      */
     public $lecture_start_time;
 
     /**
-     * The date when the lecture end.
-     * @var Date
+     * 课程的结束时间.
+     * @var DateTime
      */
     public $lecture_end_time;
 
     /**
-     * The region where the lecture is held.
+     * 课程的开课地区.
      * @var String
      */
     public $lecture_region;
 
     /**
-     * The province where the lecture is held.
+     * 课程的开课省份.
      * @var String
      */
     public $lecture_province;
 
     /**
-     * The city where the lecture is held.
+     * 课程的开课城市.
      * @var String
      */
     public $lecture_city;
 
     /**
-     * The address where the lecture is held.
+     * 课程的开课详细地址.
      * @var String
      */
     public $lecture_address;
 
     /**
-     * The expense of the lecture.
+     * 课程的费用.
      * @var int
      */
     public $lecture_expense;

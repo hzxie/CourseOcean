@@ -1,149 +1,51 @@
 <?php 
-    echo $this->headTitle($lecture['course_name'].' | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/solutions/detail.css');
+    echo $this->headTitle($lecture['lecture_name'].' | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/solutions/style.css');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/solutions/lecture.css');
 ?>
 
-<div id="content">
-    <div id="banner">
-        <div id="banner-content">
-            <h3><?php echo $lecture['course_name']; ?></h3>
-            <span><i class="icon-white icon-th-list"></i><strong>课程类别: </strong><?php echo $lecture['course_type_name']; ?></span>
-            <span><i class="icon-white icon-user"></i><strong>讲师: </strong><?php echo $teacher['teacher_name']; ?></span>
-            <span><i class="icon-white icon-tag"></i><strong>费用: </strong><?php echo $lecture['lecture_expense']; ?> 元</span><br />
-            <span><i class="icon-white icon-time"></i><strong>培训时间: </strong><?php echo date('Y年m月d日', strtotime($lecture['lecture_start_time'])); ?>~<?php echo date('Y年m月d日', strtotime($lecture['lecture_end_time'])); ?></span><br />
-            <span><i class="icon-white icon-map-marker"></i><strong>培训地点: </strong>
-                <?php if ( !$isAttended ): ?>
-                    (报名后查看详细地址)
+<div class="border-top"></div> <!-- .border-top -->
+<div id="header">
+    <div class="container row-fluid">
+        <div id="logo" class="span4">
+            <a href="<?php echo $this->basePath(); ?>">
+                <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+            </a>
+        </div> <!-- #logo -->
+        <div id="navigation" class="span8">
+            <ul class="inline">
+                <li><a href="<?php echo $this->basePath(); ?>/solutions/lecture">课程库</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/solutions/teacher">讲师团队</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard/requirement">需求定制</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/solutions/news">培训动态</a></li>
+                <?php
+                    $session    = new Zend\Session\Container('itp_session');
+                    if ( !$session->offsetExists('isLogined') ):
+                ?>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/login"><strong>登录</strong></a></li>
+                    <li><button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">创建账户</button></li>
                 <?php else: ?>
-                    <?php echo $lecture['lecture_province']; ?> <?php echo $lecture['lecture_city']; ?> <?php echo $lecture['lecture_address']; ?> 
+                    <li>您好, <a href="<?php echo $this->basePath(); ?>/accounts/dashboard"><?php echo $session->offsetGet('username'); ?></a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/logout">注销</a></li>
                 <?php endif; ?>
-            </span><br />
-            <span><i class="icon-white icon-eye-open"></i><strong>听众范围: </strong><?php echo $lecture['course_audience']; ?></span>
-        </div> <!-- #banner-content -->
-    </div> <!-- #banner -->
-    <div id="main-container">
-        <div id="main-content">
-            <div id="detail-container">
-                <div id="brief" class="section">
-                    <h4>课程概述</h4>
-                    <div class="content"><?php echo $lecture['course_brief']; ?></div>
-                </div> <!-- #brief -->
-                <?php if ( isset($lecture['course_objective']) ): ?>
-                    <div id="objective" class="section">
-                        <h4>课程目标</h4>
-                        <div class="content"><?php echo $lecture['course_objective']; ?></div>
-                    </div> <!-- #purpose -->
-                <?php endif; ?>
-                <?php if ( isset($lecture['course_feature']) ): ?>
-                    <div id="feature" class="section">
-                        <h4>课程特点</h4>
-                        <div class="content"><?php echo $lecture['course_feature']; ?></div>
-                    </div> <!-- #feature -->
-                <?php endif; ?>
-                <?php if ( isset($lecture['course_outline']) ): ?>
-                    <div id="outline" class="section">
-                        <h4>课程大纲</h4>
-                        <div class="content"><?php echo $lecture['course_outline']; ?></div>
-                    </div> <!-- #outline -->
-                <?php endif; ?>
-                <?php if ( isset($lecture['lecture_guideline']) ): ?>
-                    <div id="outline" class="section">
-                        <h4>注意事项</h4>
-                        <div class="content"><?php echo $lecture['lecture_guideline']; ?></div>
-                    </div> <!-- #guideline -->
-                <?php endif; ?>
-                <div id="teacher-introduction" class="section">
-                    <h4>讲师简介</h4>
-                    <div id="avatar">
-                    <?php if ( $teacher['teacher_avatar'] == null ): ?>
-                        <img class="img-circle" src="<?php echo $this->basePath(); ?>/img/avatars/avatar.png" alt="Avatar" />
-                    <?php else: ?>
-                        <img class="img-circle" src="<?php echo $this->basePath($teacher['avatar']); ?>" alt="Avatar" />
-                    <?php endif; ?>
-                    </div> <!-- #avatar -->
-                    <div class="content">
-                        <h4><?php echo $teacher['teacher_name']; ?></h4>
-                        <div><?php echo $teacher['teacher_brief']; ?></div>
-                    </div> <!-- .content -->
-                </div>
-            </div> <!-- #detail-container -->
-        </div> <!-- #main-content -->
-        <div id="sidebar">
-            <div class="section">
-                <h4>参加培训</h4>
-                <p>
-                    <?php date_default_timezone_set('Asia/Shanghai'); ?>
-                    <?php if ( strtotime(date('Y-m-d H:i')) >= strtotime($lecture['lecture_start_time']) ): ?>
-                    <button id="attend-lecture" class="btn btn-danger" disabled="disabled">报名结束</button>
-                    <?php elseif ( !$isAttended ): ?>
-                    <button id="attend-lecture" class="btn btn-danger" onclick="javascript:attendLecture()">我要报名</button>
-                    <?php else: ?>
-                    <button class="btn btn-danger" disabled="disabled">您已报名</button>
-                    <?php endif; ?>
-                </p>
-            </div> <!-- .section -->
-            <div class="section">
-                <h4>相关培训</h4>
-                <p>暂无相关培训</p>
-            </div> <!-- .section -->
-            <div class="section">
-                <h4>分享</h4>
-                <ul class="inline">
-                    <li><a href="#" title="新浪微博"><img src="<?php echo $this->basePath(); ?>/img/socials/weibo.png" alt="Weibo"></a></li>
-                    <li><a href="#" title="微信"><img src="<?php echo $this->basePath(); ?>/img/socials/wechat.png" alt="Wechat"></a></li>
-                    <li><a href="#" title="来往"><img src="<?php echo $this->basePath(); ?>/img/socials/laiwang.png" alt="Laiwang"></a></li>
-                </ul>
-            </div> <!-- .section -->
-        </div> <!-- #sidebar -->
-    </div> <!-- #main-container -->
-</div> <!-- #content -->
-
-<?php $this->inlineScript()->captureStart(); ?>
-    function attendLecture() {
-    <?php if ( isset($isLogined)  && $isLogined ): ?>
-        var lectureID   = <?php echo $lecture['lecture_id']; ?>;
-        setButtonStyle(true);
-        doAttendLectureAction(lectureID);
-        setButtonStyle(false);
-    <?php else: ?>
-        alert('您还没有登录!\n单击确定后将为您跳转至登录页面.');
-        window.location.href="<?php echo $this->basePath('/accounts/login?lectureId='.$lecture['lecture_id']); ?>";
-    <?php endif; ?>
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
-    function doAttendLectureAction(lectureID) {
-        var postData = 'lectureID=' + lectureID;
-        $.ajax({
-            type: 'POST',
-            async: false,
-            url: '<?php echo $this->basePath(); ?>/solutions/lecture/attendLecture',
-            data: postData,
-            dataType: 'JSON',
-            success: function(result) {
-                processResult(result);
-            }
-        });
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
-    function processResult(result) {
-        if ( result['isSuccessful'] ) {
-            window.location.reload();
-        } else {
-            alert("对不起, 报名未能成功.\n请稍候再试.");
-        }
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
-    function setButtonStyle(isLoading) {
-        var attendButtonObject = $('#attend-lecture');
-        if ( isLoading ) {
-            attendButtonObject.html('正在处理...');
-            attendButtonObject.attr('disabled', 'disabled');
-        } else {
-            attendButtonObject.html('我要报名');
-            attendButtonObject.removeAttr('disabled');
-        }
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
+            </ul>
+            <form id="search" action="<?php echo $this->basePath(); ?>/solutions/search">
+                <input type="text" placeholder="搜索课程或讲师" />
+                <button class="btn" type="submit">搜索</button>
+            </form>
+        </div> <!-- #navigation -->
+    </div> <!-- .container -->
+</div> <!-- #header -->
+<div id="container">
+    <div class="container">
+        <div class="span9">
+            General
+        </div> <!-- .span9 -->
+        <div class="span3">
+            Meta
+        </div> <!-- .span3 -->
+        <p><?php var_dump($teacher); ?></p>
+        <p><?php var_dump($lecture); ?></p>
+        <p><?php var_dump($comments); ?></p>
+    </div> <!-- .container -->
+</div> <!-- #container -->

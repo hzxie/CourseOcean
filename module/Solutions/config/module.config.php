@@ -4,9 +4,8 @@ return array(
         'invokables' => array(
             'Solutions\Controller\Lecture'      => 'Solutions\Controller\LectureController',
             'Solutions\Controller\News'         => 'Solutions\Controller\NewsController',
-            'Solutions\Controller\Course'       => 'Solutions\Controller\CourseController',
             'Solutions\Controller\Teacher'      => 'Solutions\Controller\TeacherController',
-            'Solutions\Controller\Requirement'  => 'Solutions\Controller\RequirementController',
+            'Solutions\Controller\Search'       => 'Solutions\Controller\SearchController',
         ),
     ),
     'router' => array(

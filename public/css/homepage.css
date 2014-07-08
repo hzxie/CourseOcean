@@ -1,136 +1,146 @@
+html, body {
+	font-family: "Microsoft YaHei", "Sogoe UI";
+	margin: 0;
+	padding: 0;
+}
+
 div#header {
-    background-color: transparent;
+	background: url('../img/homepage/header-background.jpg') no-repeat right top #09bde2;
+	color: #fff;
+	height: 27px;
+	padding: 7px 0px 0px 0px;
+	text-align: right;
 }
 
-div#slider {
-    text-align: center;
-    overflow: hidden;
-    width: 100%;
+div#header ul.inline {
+	margin-right: 20px;
 }
 
-div#slider img {
-    max-height: 100%;
-    max-width: 100%;
+div#header ul.inline > li > a {
+	color: #fff;
+	font-size: 12px;
 }
 
-div#quotes {
-    background-color: #161f2a;
-    color: #d8d8d8;
-    padding: 4px;
+div#guide {
+	background: url('../img/homepage/guide-background.jpg') no-repeat center;
+	height: 616px;
 }
 
-div#search-box {
-    margin: 0 auto;
-    position: relative;
-    top: -30px;
-    left: 0px;
-    width: 480px;
+div#guide div#introduction {
+	margin: 0 auto;
+	width: 70%;
 }
 
-div#search-box input {
-    height: 40px;
+div#guide div#introduction div#logo {
+	padding-top: 20px;
 }
 
-div#search-box button {
-    height: 50px;   
+div#guide div#introduction div#slogan {
+	color: #fff;
+	margin-top: 100px;
 }
 
-div#quotes-content {
-    margin: 20px auto;
-    padding-bottom: 30px;
-    width: 960px;
+div#guide div#introduction div#slogan > h4 {
+	margin-left: 100px;
 }
 
-div#quotes-content div.avatar {
-    float: left;
-    max-height: 80px;
-    max-width: 80px;
+div#guide div#selector {
+	background: url('../img/homepage/transparent.png');
+	border: 1px solid #69ab3e;
+	color: #333;
+	margin: 60px auto;
+	padding: 10px;
+	width: 70%;
+	-webkit-box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, .25);
+	   -moz-box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, .25);
+			box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, .25);
 }
 
-div#quotes-content div.quote {
-    margin-left: 100px;
+div#guide div#selector div#selector-inner {
+	background: transparent;
+	border: 2px solid #aecf99;
+	overflow: hidden;
+	padding: 10px 0;
+	position: relative;
+	text-align: center;
+	height: 180px;
 }
 
-div#quotes-content div.quote p.blockquote {
-    color: #6d8089;
-    font-size: 20px;
-    line-height: 28px;
+div#selector div#selector-inner div.span6 {
+	margin-left: 5px;
+	margin-right: 5px;
 }
 
-div#quotes-content div.quote p.introduction {
-    color: #d8d8d8;
-    font-size: 14px;
+div#selector div#selector-inner div.block {
+	border: 1px solid #c8c8c8;
+	margin: 20px;
+	padding: 5px 0 20px;
+	position: relative;
+	text-align: center;
 }
 
-div.section {
-    margin: 0 auto;
-    padding: 20px 0 20px 0;
-    width: 960px;
+div#selector div#selector-inner div.block > h4 {
+	color: #00bce4;
+	margin-top: -15px;
 }
 
-div.section h3 {
-    text-align: center;
-    margin-bottom: 40px;
+div#selector div#selector-inner div.block > h4 > span {
+	color: #8cc63f;
 }
 
-div.section div.block {
-    border: 1px solid #ebeef1;
-    margin-bottom: 20px;
-    padding: 8px;
-    -webkit-border-radius: 4px;
-       -moz-border-radius: 4px;
-            border-radius: 4px;
+div#selector div#selector-inner div.block > p {
+	color: #666;
+	margin-top: 20px;
 }
 
-div.section div.block a {
-    text-decoration: none;
+div#navigation {
+	background-color: #000;
+	padding: 10px 0;
+	-webkit-box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, .25);
+	   -moz-box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, .25);
+			box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, .25);
 }
 
-div.section div.block div.icon {
-    float: left;
+div#navigation ul.inline {
+	color: #999;
+	margin: 0 auto;
+	width: 70%;
 }
 
-div.section div.block div.content {
-    color: #8e959b;
-    font-size: 13px;
-    margin-left: 50px;
+div#navigation ul.inline > li {
+	margin-right: 20px;
 }
 
-div.section div.block div.content h4 {
-    color: #2f3536;
+div#footer {
+	color: #808080;
+	font-size: 12px;
+	margin: 0 auto;
+	padding: 20px 0 10px;
+	width: 70%;
 }
 
-div.section div.block div.content span {
-    margin-right: 20px;
+div#footer a {
+	color: #00aacc;
+	text-decoration: none;
 }
 
-div.section div.block div.content i {
-    opacity: .6;
+div#footer ul {
+	list-style: none;
 }
 
-div#lectures div.block div.icon {
-    padding: 8px 0 0 4px;
+div#footer ul.inline {
+	font-size: 14px;
 }
 
-div#news {
-    background-color: #dce1e6;
+div#footer div#introduction img {
+	border-right: 1px solid #808080;
+	float: left;
+	max-width: 100px;
+	margin-right: 20px;
+	padding-right: 20px;
+	padding-bottom: 40px;
 }
 
-div#news div.block div.content {
-    color: #565656;
-}
-
-div#partners-content {
-    margin: 0 auto;
-    padding: 20px 0 20px 0;
-    text-align: center;
-    width: 960px;
-}
-
-div#partners-content ul.inline {
-    margin: 20px 0 20px 0;
-}
-
-div#partners-content ul.inline li {
-    margin-right: 40px;
+div#footer div.span4 {
+	text-align: right;
 }

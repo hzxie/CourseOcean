@@ -1,0 +1,174 @@
+html, body {
+	font-family: "Microsoft YaHei", "Sogoe UI";
+	margin: 0;
+	padding: 0;
+}
+
+button.btn.btn-orange {
+	background-color: #f15c22;
+	border-color: #f15c22;
+	color: #fff;
+}
+
+ul.inline > li:first-child {
+	padding-left: 0;
+}
+
+ul.inline > li:last-child {
+	padding-right: 0;
+}
+
+div.container {
+	width: 1200px;
+}
+
+div.border-top {
+	background-image: linear-gradient(to right, #00bce4 0%, #62a139 100%);
+	background-repeat: repeat-x;
+	height: 5px;
+}
+
+div.border-bottom {
+	background-image: linear-gradient(to right, #00bce4 0%, #62a139 100%);
+	background-repeat: repeat-x;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	height: 1px;
+	width: 20%;
+}
+
+div#header {
+	padding: 10px 0;
+}
+
+div#header div#logo img {
+	max-height: 65px;
+}
+
+div#header div#navigation {
+	color: #666;
+	text-align: right;
+}
+
+div#header div#navigation li {
+	border-right: 1px solid #d9d9d9;
+	padding-right: 10px;
+}
+
+div#header div#navigation li:last-child {
+	border-right: none;
+	padding-right: 0;
+}
+
+div#header div#navigation a {
+	text-decoration: none;
+}
+
+div#header form#search input {
+	margin-right: 10px;
+}
+
+div#container {
+	margin-bottom: 40px;
+}
+
+div#container div#sub-header {
+	position: relative;
+	height: 180px;
+}
+
+div#container div#sub-header p {
+	color: #6db33f;
+}
+
+div#container div#sub-header img {
+	max-height: 200px;
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+div#container div#content ul#course-types li {
+	margin-bottom: 5px;
+	padding: 0;
+}
+
+div#container div#content ul#course-types li > a {
+	color: #909090;
+	font-size: 12px;
+	padding: 5px 10px;
+	text-decoration: none;
+}
+
+div#container div#content ul#course-types li.active > a {
+	background-color: #f15c22;
+	color: #fff;
+}
+
+div#container div#content {
+	margin-top: 20px;
+}
+
+div#footer {
+	background-color: #f6f6f6;
+	color: #808080;
+	font-size: 12px;
+	padding: 20px 0 10px;
+}
+
+div#footer a {
+	color: #00aacc;
+	text-decoration: none;
+}
+
+div#footer ul {
+	list-style: none;
+}
+
+div#footer ul.inline {
+	font-size: 14px;
+}
+
+div#footer div#introduction img {
+	border-right: 1px solid #808080;
+	float: left;
+	max-width: 100px;
+	margin-right: 20px;
+	padding-right: 20px;
+	padding-bottom: 40px;
+}
+
+div#footer div.span4 {
+	text-align: right;
+}
+
+@media only screen and (min-width: 960px) and (max-width: 1199px) {
+	div.container {
+		width: 960px;
+	}
+}
+
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+	div.container {
+		width: 480px;
+	}
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px){
+	div.container {
+		width: 480px;
+	}
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px){
+	div.container {
+		width: 480px;
+	}
+}
+
+@media only screen and (max-width: 479px) {
+	div.container {
+		width: 320px;
+	}
+}

@@ -3,121 +3,52 @@
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/register.css');
 ?>
 
-<div id="content">
-    <div id="banner">
-        <div id="banner-content">
-            <h2>从这里开启您的IT培训之旅</h2>
-            <h4>为您提供最及时、最便捷的IT培训</h4>
-            <button class="btn btn-danger" onclick="javascript:addFavorite()">收藏本站</button>
-        </div> <!-- #banner-content -->
-    </div> <!-- #banner -->
-    <div id="main-container" class="row">
-        <div id="introduction" class="span7">
-            <div id="features">
-                <div class="row">
-                    <div class="feature span3">
-                        <div class="icon">
-                            <img src="<?php echo $this->basePath(); ?>/img/features/feature-teachers.png" alt="Feature" />
-                        </div> <!-- .icon -->
-                        <div class="content">
-                            <p class="title">最好的讲师</p>
-                            <p>我们的讲师大部分都来自于知名企业, 如思科、淘宝等, 可以提供最优质的培训.</p>
-                        </div> <!-- .content -->
-                    </div> <!-- .feature -->
-                    <div class="feature span3">
-                        <div class="icon">
-                            <img src="<?php echo $this->basePath(); ?>/img/features/feature-bridge.png" alt="Feature" />
-                        </div> <!-- .icon -->
-                        <div class="content">
-                            <p class="title">讲师和用户的桥梁</p>
-                            <p>我们为讲师和用户提供了沟通的平台, 使用户可以选择适合自己的培训课.</p>
-                        </div> <!-- .content -->
-                    </div> <!-- .feature -->
-                </div>
-                <div class="row">
-                    <div class="feature span3">
-                        <div class="icon">
-                            <img src="<?php echo $this->basePath(); ?>/img/features/feature-money.png" alt="Feature" />
-                        </div> <!-- .icon -->
-                        <div class="content">
-                            <p class="title">最优惠的价格</p>
-                            <p>用户和讲师可以线下交易, 我们不会收取任何中间费用.</p>
-                        </div> <!-- .content -->
-                    </div> <!-- .feature -->
-                    <div class="feature span3">
-                        <div class="icon">
-                            <img src="<?php echo $this->basePath(); ?>/img/features/feature-service.png" alt="Feature" />
-                        </div> <!-- .icon -->
-                        <div class="content">
-                            <p class="title">倾听用户需求</p>
-                            <p>您可以在平台上向任何一位讲师提出自己的培训需求, 使培训更具针对性.</p>
-                        </div> <!-- .content -->
-                    </div> <!-- .feature -->
-                </div>
-            </div> <!-- #features -->
-        </div> <!-- #introduction -->
-        <div id="register-container" class="span5">
-            <div id="register-form">
-                <h3>创建您的账户</h3>
-                <div id="register-error" class="alert alert-error hide"></div>
-                <div class="field">
-                    <label for="username"><strong>用户名</strong> <small>(6~16个字符, 须以字母开始, 由数字和字母组成)</small></label>
-                    <input type="text" id="username" name="username" maxlength="16" />
-                </div> <!-- .field -->
-                <div class="field">
-                    <label for="email"><strong>电子邮件地址</strong></label>
-                    <input type="text" id="email" name="email" maxlength="48" />
-                </div> <!-- .field -->
-                <div class="field">
-                    <label for="password"><strong>密码 <small>(6~16个字符, 建议采用强度高的密码)</small></strong></label>
-                    <input type="password" id="password" name="password" maxlength="16" />
-                </div> <!-- .field -->
-                <div class="field">
-                    <label for="password-again"><strong>确认密码</strong></label>
-                    <input type="password" id="password-again" name="password-again" maxlength="16" />
-                </div> <!-- .field -->
-                <div class="field">
-                    <label for="user-group"><strong>用户类型</strong> <small>(用户类型提交后将不能修改)</small></label>
-                    <select id="user-group" name="user-group" id="user-group-selector">
-                        <option value="person">个人用户</option>
-                        <option value="teacher">讲师用户</option>
-                        <option value="company">企业用户</option>
-                    </select>
-                </div> <!-- .field -->
-                <div id="agreement" class="field">
-                    <span><strong>创建账户</strong>表示您同意"<a href="#">服务条款</a>"和"<a href="#">隐私声明</a>"</span>
-                </div> <!-- #agreement -->
-                <div id="controls">
-                    <button id="register" class="btn btn-success btn-block">创建您的账户</button>
-                </div> <!-- #controls -->
-            </div> <!-- #register-form -->
-        </div> <!-- #register-container -->
-    </div> <!-- #main-container -->
-</div> <!-- #content -->
+<div id="header">
+    <ul class="inline">
+        <li>已有账户? <a href="<?php echo $this->basePath(); ?>/accounts/login">立即登录</a></li>
+    </ul>
+</div> <!-- #header -->
+<div id="container">
+    <div class="container">
+        <div id="logo">
+            <a href="#">
+                <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo">
+            </a>
+        </div>
+        <div id="content" class="row-fluid">
+            <div id="tab-nav" class="span3">
+                <div class="tab active">
+                    <div class="tab-label">个人用户</div>
+                    <div class="nav-arrow"></div>
+                </div> <!-- .tab -->
+                <div class="tab">
+                    <div class="tab-label">讲师用户</div>
+                    <div class="nav-arrow"></div>
+                </div> <!-- .tab -->
+                <div class="tab">
+                    <div class="tab-label">企业用户</div>
+                    <div class="nav-arrow"></div>
+                </div> <!-- .tab -->
+            </div> <!-- #tab-nav -->
+            <div id="tab-content" class="span9">
+                <div class="content-node active">
+                    <div class="row-fluid">
+                        <div class="span7"><img src="<?php echo $this->basePath(); ?>/img/accounts/register-tab-1.jpg" alt="Tab Content"></div><!-- .span8 -->
+                        <div class="span5 register-form">
+                            <h4>创建您的账户</h4>
+                            <span>用户类型: 个人用户</span>
+                            <input id="username" name="username" type="text" placeholder="用户名(以字母开头, 6-16个字符)" maxlength="16" />
+                            <input id="email" name="email" type="text" placeholder="电子邮件地址" maxlength="64" />
+                            <input id="password" name="password" type="password" placeholder="密码(6-16个字符)" maxlength="16" />
+                            <input id="password-again" name="password-again" type="password" placeholder="确认密码" maxlength="16" />
+                        </div>
+                    </div> <!-- .row-fluid -->
+                </div> <!-- .content-node -->
+            </div> <!-- #tab-content -->
+        </div> <!-- .row-fluid -->
+    </div> <!-- .container -->
+</div> <!-- #container -->
 
-<?php $this->inlineScript()->captureStart(); ?>
-    function addFavorite(){ 
-        var title   = 'IT自助培训平台',
-            url     = '<?php echo $this->basePath(); ?>';
-        if (window.sidebar) {
-            // Mozilla Firefox
-            window.sidebar.addPanel(title, url, "");
-        } else if(window.opera && window.print){
-            // Opera
-            var elem = document.createElement('a');
-            elem.setAttribute('href',url);
-            elem.setAttribute('title',title);
-            elem.setAttribute('rel','sidebar');
-            elem.click();
-        }  else if(document.all) {
-            // Internet Explorer
-            window.external.AddFavorite(url, title);
-        } else {
-            // Other Browsers
-            alert('请按下Ctrl+D添加至收藏夹');
-        }
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
     $('#register').click(function() {
         var postData = getPostData();

@@ -35,18 +35,18 @@ class CommentTable
 
     /**
      * 获取某一课程的评论.
-     * @param  int $courseId - 课程的唯一标识符
+     * @param  int $lectureID - 课程的唯一标识符
      * @param  int $offset - 当前已经获取的评论数量
      * @param  int $limit - 每次获取的评论数量
      * @return 一个包含若干评论信息的ResultSet对象
      */
-    public function getCommentsOfCourse($courseId, $offset, $limit)
+    public function getCommentsOfCourse($lectureID, $offset, $limit)
     {
-        $resultSet  = $this->tableGateway->select(function (Select $select) use ($courseId, $offset, $limit) {
-            $select->join('itp_courses',
-                          'it_comments.course_id = itp_courses.course_id');
-            $select->order('it_comments.comment_time DESC');
-            $select->where("it_comments.course_id = $courseId");
+        $resultSet  = $this->tableGateway->select(function (Select $select) use ($lectureID, $offset, $limit) {
+            $select->join('itp_lecture_courses',
+                          'itp_comments.comment_course_id = itp_lecture_courses.course_id');
+            $select->order('itp_comments.comment_time DESC');
+            $select->where("itp_lecture_courses.lecture_id = $lectureID");
             $select->offset($offset);
             $select->limit($limit);
         });

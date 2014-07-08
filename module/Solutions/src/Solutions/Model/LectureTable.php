@@ -43,12 +43,10 @@ class LectureTable
     {
         $offset     = ( $pageNumber - 1 ) * $limit;
         $resultSet  = $this->tableGateway->select(function (Select $select) use ($offset, $limit) {
-            $select->join('itp_courses',
-                          'itp_lectures.course_id = itp_courses.course_id');
-            $select->join('itp_course_types',
-                          'itp_courses.course_type_id = itp_course_types.course_type_id');
+            $select->join('itp_course_types', 
+                          'itp_lectures.course_type_id = itp_course_types.course_type_id');
             $select->join('itp_teachers', 
-                          'itp_courses.uid = itp_teachers.uid');
+                          'itp_lectures.teacher_id = itp_teachers.uid');
             $select->order('lecture_id DESC');
             $select->offset($offset);
             $select->limit($limit);
@@ -74,25 +72,17 @@ class LectureTable
     public function getGeneralInfo($lectureID)
     {
         $rowset     = $this->tableGateway->select(function (Select $select) use ($lectureID) {
-            $select->join('itp_courses',
-                          'itp_lectures.course_id = itp_courses.course_id');
-            $select->join('itp_course_types',
-                          'itp_courses.course_type_id = itp_course_types.course_type_id');
+            $select->join('itp_course_types', 
+                          'itp_lectures.course_type_id = itp_course_types.course_type_id');
             $select->where->equalTo('lecture_id', $lectureID);
         });
         return $rowset->current();
     }
 
-    /**
-     * Get a list of lectures of a certain course.
-     * @param  int $courseID - the unique id of the course
-     * @return an array of objects of Lecture which contains general information of
-     *         lectures
-     */
-    public function getLectureOfCourse($courseID)
+    public function getLectureOfTeacher($teacher_id)
     {
         $resultSet  = $this->tableGateway->select(
-            array( 'course_id'  => $courseID )
+            array( 'teacher_id' => $teacher_id )
         );
         return $resultSet;
     }
