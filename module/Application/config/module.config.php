@@ -3,40 +3,31 @@ return array(
     'router' => array(
         'routes' => array(
             'home' => array(
-                'type' => 'Literal',
+                'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/',
                     'defaults' => array(
-                        'controller' => 'Application\Controller\Index',
+                        'controller' => 'Application\Controller\Home',
                         'action'     => 'index',
                     ),
                 ),
-            ),
-            'application' => array(
-                'type'    => 'Literal',
-                'options' => array(
-                    'route'    => '/application',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Application\Controller',
-                        'controller'    => 'Index',
-                        'action'        => 'index',
-                    ),
-                ),
                 'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
-                        'type'    => 'Segment',
+                'child_routes'  => array(
+                    'default'   => array(
+                        'type'  => 'Segment',
                         'options' => array(
-                            'route'    => '/[:controller[/:action]]',
+                            'route' => '[:controller[/:action]]',
                             'constraints' => array(
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'controller'    => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'        => '[a-zA-Z][a-zA-Z0-9_-]*'
                             ),
                             'defaults' => array(
-                            ),
-                        ),
-                    ),
-                ),
+                                'action'        => 'index',
+                                '__NAMESPACE__' => 'Application\Controller'
+                            )
+                        )
+                    )
+                )
             ),
         ),
     ),
@@ -61,7 +52,9 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => 'Application\Controller\IndexController'
+            'Application\Controller\Home'       => 'Application\Controller\HomeController',
+            'Application\Controller\Accounts'   => 'Application\Controller\AccountsController',
+            'Application\Controller\Training'   => 'Application\Controller\TrainingController',
         ),
     ),
     'view_manager' => array(

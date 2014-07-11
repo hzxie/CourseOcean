@@ -1,7 +1,0 @@
-<phpunit bootstrap="./bootstrap.php" colors="true">
-    <testsuites>
-        <testsuite name="Accounts Module Test Suite">
-            <directory>./AccountsTest</directory>
-        </testsuite>
-    </testsuites>
-</phpunit>

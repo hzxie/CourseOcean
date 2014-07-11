@@ -3,8 +3,6 @@ return array(
     // This should be an array of module namespaces used in the application.
     'modules' => array(
         'Application',
-        'Accounts',
-        'Solutions',
     ),
 
     // These are various options for the listeners attached to the ModuleManager
@@ -51,7 +49,7 @@ return array(
     ),
 
     // Used to create an own service manager. May contain one or more child arrays.
-    //'service_listener_options' => array(
+    // 'service_listener_options' => array(
     //     array(
     //         'service_manager' => $stringServiceManagerName,
     //         'config_key'      => $stringConfigKey,

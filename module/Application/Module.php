@@ -9,8 +9,14 @@
 
 namespace Application;
 
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\TableGateway\TableGateway;
+use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
+
+use Application\Model\User;
+use Application\Model\UserTable;
 
 class Module
 {
@@ -45,27 +51,16 @@ class Module
     {
         return array(
             'factories' => array(
-                'Solutions\Model\LectureTable' => function($sm) {
-                    $tableGateway = $sm->get('LectureTableGateway');
-                    $table = new LectureTable($tableGateway);
-                    return $table;
+                'Application\Model\UserTable' => function($sm) {
+                    $tableGateway   = $sm->get('UserTableGateway');
+                    $userTable      = new UserTable($tableGateway);
+                    return $userTable;
                 },
-                'LectureTableGateway' => function ($sm) {
-                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                'UserTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Lecture());
-                    return new TableGateway('itp_lectures', $dbAdapter, null, $resultSetPrototype);
-                },
-                'Solutions\Model\NewsTable' => function($sm) {
-                    $tableGateway = $sm->get('NewsTableGateway');
-                    $table = new NewsTable($tableGateway);
-                    return $table;
-                },
-                'NewsTableGateway' => function ($sm) {
-                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                    $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new News());
-                    return new TableGateway('itp_news', $dbAdapter, null, $resultSetPrototype);
+                    $resultSetPrototype->setArrayObjectPrototype(new User());
+                    return new TableGateway('itp_users', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );
