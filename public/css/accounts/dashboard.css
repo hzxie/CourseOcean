@@ -1,0 +1,43 @@
+div#content div#sidebar div#profile {
+	border-bottom: 5px solid #ccc;
+	margin: 0 10px;
+	padding-bottom: 20px;
+}
+
+div#content div#sidebar div#profile img {
+	display: block;
+
+}
+
+div#content div#sidebar div#profile span {
+	display: block;
+	margin-top: 5px;
+	text-align: center;
+}
+
+div#content div#sidebar div#sidebar-nav {
+	padding: 10px;
+}
+
+div#content div#sidebar div#sidebar-nav ul {
+	list-style: none;
+	margin-left: 0;
+}
+
+div#content div#sidebar div#sidebar-nav li {
+	border-bottom: 1px solid #e6e6e6;
+	padding: 10px;
+}
+
+div#content div#sidebar div#sidebar-nav li > a {
+	color: #666;
+	font-size: 16px;
+	display: block;
+	text-decoration: none;
+}
+
+div#content div#sidebar div#sidebar-nav li.active > a {
+	background: url("../../img/accounts/nav-arrow-green.png") no-repeat scroll right center #fff;
+	color: #6db33f;
+	font-weight: bold;
+}

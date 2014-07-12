@@ -17,7 +17,7 @@ class AccountsController extends AbstractActionController
 {
     /**
      * 显示用户登录页面.
-     * @return 返回一个包含页面所需参数的数组.
+     * @return 返回一个包含页面所需参数的数组
      */
     public function loginAction()
     {
@@ -45,7 +45,7 @@ class AccountsController extends AbstractActionController
     /**
      * HTTP重定向请求.
      * @param  String $redirectPath - 重定向的相对路径
-     * @return HTTP重定向请求的对象.
+     * @return HTTP重定向请求的对象
      */
     private function sendRedirect($redirectPath)
     {
@@ -177,7 +177,7 @@ class AccountsController extends AbstractActionController
 
     public function registerAction()
     {
-
+        return array();
     }
 
     public function doRegisterAction()
@@ -187,6 +187,20 @@ class AccountsController extends AbstractActionController
 
     public function dashboardAction()
     {
-        
+        if ( !$this->isAllowedToAccess() ) {
+            return $this->sendRedirect('accounts/login');
+        }
+
+        return array();
+    }
+
+    /**
+     * 检查用户是否已经登录.
+     * @return 用户是否已经登录
+     */
+    private function isAllowedToAccess()
+    {
+        $session    = new Container('itp_session');
+        return $session->offsetExists('isLogined');
     }
 }

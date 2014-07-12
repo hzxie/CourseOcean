@@ -5,7 +5,7 @@ namespace Application\Model;
 /**
  * 用户类的Model.
  * 
- * @author Xie Haozhe <zjhzxhz@gmail.com>
+ * @author 谢浩哲 <zjhzxhz@gmail.com>
  */
 class User {
     /**

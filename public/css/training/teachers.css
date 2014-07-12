@@ -6,6 +6,8 @@ div#container div#content ul#teachers a {
 div#container div#content ul#teachers li.teacher {
     color: #565656;
     font-size: 13px;
+    margin-left: 0;
+    margin-right: 19px;
 }
 
 div#container div#content ul#teachers li.teacher div.company {

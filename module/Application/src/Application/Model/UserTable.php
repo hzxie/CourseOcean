@@ -10,7 +10,7 @@ use Zend\Db\TableGateway\TableGateway;
 /**
  * 用户类的DAO(Data Access Object).
  * 
- * @author Xie Haozhe <zjhzxhz@gmail.com>
+ * @author 谢浩哲 <zjhzxhz@gmail.com>
  */
 class UserTable
 {
@@ -24,7 +24,7 @@ class UserTable
 	protected $tableGateway;
 
 	/**
-	 * UserDAO类的构造函数.
+	 * UserTable类的构造函数.
 	 * @param TableGateway $tableGateway 
 	 */
 	public function __construct(TableGateway $tableGateway)
@@ -119,8 +119,8 @@ class UserTable
      */
     public function deleteUser($uid)
     {
-        $this->tableGateway->delete($user, array(
-            'uid'   => $user['uid'],
+        $this->tableGateway->delete(array(
+            'uid'   => $uid,
         ));
         return true;
     }

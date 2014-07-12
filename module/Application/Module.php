@@ -17,6 +17,10 @@ use Zend\Mvc\MvcEvent;
 
 use Application\Model\User;
 use Application\Model\UserTable;
+use Application\Model\Teacher;
+use Application\Model\TeacherTable;
+use Application\Model\CourseType;
+use Application\Model\CourseTypeTable;
 
 class Module
 {
@@ -61,6 +65,28 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new User());
                     return new TableGateway('itp_users', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\TeacherTable' => function($sm) {
+                    $tableGateway   = $sm->get('TeacherTableGateway');
+                    $teacherTable   = new TeacherTable($tableGateway);
+                    return $teacherTable;
+                },
+                'TeacherTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Teacher());
+                    return new TableGateway('itp_teachers', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\CourseTypeTable' => function($sm) {
+                    $tableGateway       = $sm->get('CourseTypeTableGateway');
+                    $courseTypeTable    = new CourseTypeTable($tableGateway);
+                    return $courseTypeTable;
+                },
+                'CourseTypeTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new CourseType());
+                    return new TableGateway('itp_course_types', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );
