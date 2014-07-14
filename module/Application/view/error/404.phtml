@@ -45,7 +45,7 @@
         <div class="span6">
             <h2>页面未找到</h2>
             <p>很抱歉, 我们无法为您加载您所请求的页面..</p>
-            <button class="btn btn-orange">返回</button>
+            <button class="btn btn-orange" onclick="history.go(-1);">返回</button>
         </div> <!-- .span6 -->
     </div> <!-- .container -->
     <?php if (isset($this->reason) && $this->reason): ?>

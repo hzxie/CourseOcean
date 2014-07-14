@@ -53,9 +53,80 @@ class TrainingController extends AbstractActionController
 
     }
     
+    /**
+     * 显示课程库页面.
+     * @return 返回一个包含页面所需参数的数组
+     */
     public function coursesAction()
     {
+        $serviceManager     = $this->getServiceLocator();
+        $courseTypeTable    = $serviceManager->get('Application\Model\CourseTypeTable');
+        $courseTypes        = $courseTypeTable->getAllCourseTypes();
 
+        return array(
+            'courseTypes'   => $courseTypes,
+        );
+    }
+
+    /**
+     * 获取课程列表.
+     * @return 一个包含课程信息的JSON数组
+     */
+    public function getCoursesAction()
+    {
+        $NUMBER_OF_COURSES_PER_PAGE     = 10;
+        $courseTypeSlug                 = $this->params()->fromQuery('category');
+        $pageNumber                     = $this->params()->fromQuery('page', 1);
+        $courseTypeId                   = $this->getCourseTypeId($courseTypeSlug);
+        $offset                         = ($pageNumber - 1) * $NUMBER_OF_COURSES_PER_PAGE;
+
+        $serviceManager = $this->getServiceLocator();
+        $courseTable    = $serviceManager->get('Application\Model\CourseTable');
+        $courses        = null;
+
+        if ( $courseTypeSlug === 'all' ) {
+            $courses    = $courseTable->getAllCourses($offset, $NUMBER_OF_COURSES_PER_PAGE);
+        } else if ( $courseTypeId != 0 ) {
+            $courses    = $courseTable->getCoursesUsingCategory($courseTypeId, $offset, $NUMBER_OF_COURSES_PER_PAGE);
+        }
+
+        $result   = array(
+            'isSuccessful'  => $courses != null && $courses->count() != 0,
+            'courses'       => $this->getResultSetArray($courses),
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 获取课程页面数量.
+     * @return 一个包含课程页面数量的JSON数组.
+     */
+    public function getCourseTotalPagesAction()
+    {
+        $NUMBER_OF_COURSES_PER_PAGE     = 10;
+        $courseTypeSlug                 = $this->params()->fromQuery('category');
+        $courseTypeId                   = $this->getCourseTypeId($courseTypeSlug);
+
+        $serviceManager = $this->getServiceLocator();
+        $courseTable    = $serviceManager->get('Application\Model\CourseTable');
+        $totalPages     = ceil($courseTable->getCount($courseTypeId) / $NUMBER_OF_COURSES_PER_PAGE);
+
+        $result   = array(
+            'isSuccessful'  => $totalPages != 0,
+            'totalPages'    => $totalPages,
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    public function courseAction()
+    {
+        
     }
 
     /**
@@ -96,7 +167,7 @@ class TrainingController extends AbstractActionController
         }
 
         $result   = array(
-            'isSuccessful'  => $teachers !== null && $teachers->count() !== 0,
+            'isSuccessful'  => $teachers != null && $teachers->count() != 0,
             'teachers'      => $this->getResultSetArray($teachers),
         );
         $response = $this->getResponse();
@@ -106,8 +177,8 @@ class TrainingController extends AbstractActionController
     }
     
     /**
-     * 返回讲师的页面数量.
-     * @return 讲师的页面数量
+     * 获取讲师页面数量.
+     * @return 一个包含讲师页面数量的JSON数组.
      */
     public function getTeacherTotalPagesAction()
     {
@@ -127,5 +198,53 @@ class TrainingController extends AbstractActionController
         $response->setStatusCode(200);
         $response->setContent( Json::encode($result) );
         return $response;
+    }
+
+    /**
+     * 显示讲师的详细信息.
+     * @return 返回一个包含页面所需参数的数组
+     */
+    public function teacherAction()
+    {
+        $uid            = $this->params()->fromQuery('teacherId');
+        $serviceManager = $this->getServiceLocator();
+        $teacherTable   = $serviceManager->get('Application\Model\TeacherTable');
+        $teacher        = $teacherTable->getTeacherUsingUid($uid);
+
+        if ( $teacher == null ) {
+            $this->notFoundAction();
+        }
+        return array(
+            'teacher'   => $teacher,
+        );
+    }
+
+    /**
+     * 获取某个讲师的详细信息.
+     * @return 一个包含某个讲师详细信息的JSON数组.
+     */
+    public function getTeacherAction()
+    {
+        $uid            = $this->params()->fromQuery('teacherId');
+
+        $serviceManager = $this->getServiceLocator();
+        $teacherTable   = $serviceManager->get('Application\Model\TeacherTable');
+        $teacher        = $teacherTable->getTeacherUsingUid($uid);
+
+        $result   = array(
+            'isSuccessful'  => $teacher != null,
+            'teacher'       => $teacher,
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    public function getTeacherCoursesAction()
+    {
+        $uid            = $this->params()->fromQuery('teacherId');
+
+        $serviceManager = $this->getServiceLocator();
     }
 }

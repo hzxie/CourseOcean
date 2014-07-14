@@ -18,7 +18,8 @@ div#container div#content ul#courses > li.course h4 > a {
 
 div#container div#content ul#courses > li.course p.introduction {
 	color: #666;
-	height: 60px;
+	font-size: 13px;
+	height: 40px;
 	overflow: hidden;
 }
 
