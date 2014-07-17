@@ -241,7 +241,7 @@ class TrainingController extends AbstractActionController
 
     public function getCommentsAction()
     {
-        $NUMBER_OF_COMMENTS_PER_PAGE    = 1;
+        $NUMBER_OF_COMMENTS_PER_PAGE    = 20;
         $courseId                       = $this->params()->fromQuery('courseId');
         $pageNumber                     = $this->params()->fromQuery('page', 1);
         $offset                         = ($pageNumber - 1) * $NUMBER_OF_COMMENTS_PER_PAGE;
@@ -266,7 +266,7 @@ class TrainingController extends AbstractActionController
      */
     public function getCommentTotalPagesAction()
     {
-        $NUMBER_OF_COMMENTS_PER_PAGE    = 1;
+        $NUMBER_OF_COMMENTS_PER_PAGE    = 20;
         $courseId                       = $this->params()->fromQuery('courseId');
 
         $serviceManager                 = $this->getServiceLocator();

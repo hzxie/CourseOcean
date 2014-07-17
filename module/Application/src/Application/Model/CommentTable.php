@@ -32,9 +32,17 @@ class CommentTable
 		$this->tableGateway = $tableGateway;
 	}
 
+    /**
+     * 使用用户的唯一标识符获取该用户对所参加的课程评价的数量.
+     * @param  int $uid - 用户的唯一标识符
+     * @return 某个用户评价的数量
+     */
     public function getCountUsingUid($uid)
     {
-
+        $resultSet = $this->tableGateway->select(array(
+            'reviewer_uid'  => $uid,
+        ));
+        return $resultSet->count();
     }
 
     /**
