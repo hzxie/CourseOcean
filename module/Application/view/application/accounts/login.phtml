@@ -114,7 +114,7 @@
 <?php $this->inlineScript()->captureStart(); ?>
     function processResult(result) {
         if ( result['isSuccessful'] ) {
-            window.location.href='<?php echo $this->basePath(); ?>/accounts/dashboard';
+            window.location.href='<?php echo $this->basePath($forwardUrl); ?>';
         } else {
             if ( result['isUsernameEmpty'] && result['isPasswordEmpty'] ) {
                 displayErrorMessage('请输入用户名或电子邮件地址.<br />请输入密码.');

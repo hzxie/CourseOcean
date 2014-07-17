@@ -122,6 +122,10 @@ class TrainingController extends AbstractActionController
         return $response;
     }
     
+    /**
+     * 显示课程会话的详细信息页面.
+     * @return 一个包含页面所需参数的数组
+     */
     public function lectureAction()
     {
         $lectureId      = $this->params()->fromQuery('lectureId');
@@ -143,7 +147,112 @@ class TrainingController extends AbstractActionController
             'teacher'       => $teacher,
             'courseModules' => $this->getResultSetArray($courseModules),
             'lectures'      => $this->getResultSetArray($lectures),
+            'attendance'    => $this->getLectureAttendance($lecture->lectureId),
         );
+    }
+
+    /**
+     * 获取课程会话的的详细信息.
+     * @return 一个包含课程会话详细信息的JSON数组
+     */
+    private function getLectureAction()
+    {
+        $lectureArray   = $this->lectureAction();
+
+        $result         = array(
+            'isSuccessful'  => is_array($lectureArray),
+            'lecture'       => is_array($lectureArray) ? $lectureArray['lecture'] : null,
+            'teacher'       => is_array($lectureArray) ? $lectureArray['teacher'] : null,
+            'courseModules' => is_array($lectureArray) ? $lectureArray['courseModules'] : null,
+            'lectures'      => is_array($lectureArray) ? $lectureArray['lectures'] : null,
+            'attendance'    => is_array($lectureArray) ? $lectureArray['attendance'] : null,
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 获取课程会话报名情况.
+     * @param  int $lectureId - 课程会话的唯一标识符
+     * @return 一个包含课程会话报名情况的数组
+     */
+    private function getLectureAttendance($lectureId)
+    {
+        $attendance = array(
+            'hasAttended'   => false,
+            'participants'  => 0,
+        );
+
+        $serviceManager             = $this->getServiceLocator();
+        $lectureAttendanceTable     = $serviceManager->get('Application\Model\LectureAttendanceTable');
+        $attendance['participants'] = intval($lectureAttendanceTable->getCount($lectureId));
+
+        $uid = $this->getLoginUserUid();
+        if ( $uid != 0 ) {
+            $attendance['hasAttended'] = $lectureAttendanceTable->getLectureAttendanceUsingUidAndLectureId($uid, $lectureId);
+        }
+        return $attendance;
+    }
+
+    /**
+     * 获取已登录用户的用户唯一标识符
+     * @return 用户的用户唯一标识符
+     */
+    private function getLoginUserUid()
+    {
+        $session    = new Container('itp_session');
+        return $session->offsetGet('uid');
+    }
+
+    /**
+     * 处理用户参加课程的请求.
+     * @return 一个包含操作是否成功标志位的JSON数组
+     */
+    public function attendLectureAction()
+    {
+        $result                 = array(
+            'isSuccessful'      => false,
+        );
+        $uid                    = $this->getLoginUserUid();
+        $lectureId              = $this->params()->fromQuery('lectureId');
+        $participants           = $this->params()->fromQuery('participants');
+
+        if ( $uid != 0 ) {
+            $serviceManager         = $this->getServiceLocator();
+            $lectureTable           = $serviceManager->get('Application\Model\LectureTable');
+            $lecture                = $lectureTable->getLectureUsingLectureId($lectureId);
+            $maxCapcity             = $lecture->maxCapcity;
+            $lectureAttendanceTable = $serviceManager->get('Application\Model\LectureAttendanceTable');
+            $lectureAttendance      = array(
+                'uid'           => $uid,
+                'lecture_id'    => $lectureId,
+                'serial_code'   => $this->getSerialCode($uid, $lectureId),
+                'total_times'   => $participants,
+                'remain_times'  => $participants,
+            );
+
+            $alreadyParticipants    = $lectureAttendanceTable->getCount($lectureId);
+            if ( $alreadyParticipants + $participants <= $maxCapcity ) {
+                $result['isSuccessful'] = $lectureAttendanceTable->createLectureAttendance($lectureAttendance);
+            }
+        }
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 获取报名序列号.
+     * @param  int $uid       - 用户的唯一标识符
+     * @param  int $lectureId - 课程会话的唯一标识符
+     * @return 报名序列号
+     */
+    private function getSerialCode($uid, $lectureId)
+    {
+        return uniqid($uid + $lectureId);
     }
 
     /**

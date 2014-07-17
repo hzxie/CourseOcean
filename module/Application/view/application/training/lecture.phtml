@@ -8,7 +8,9 @@
 <div id="header">
     <div class="container row-fluid">
         <div id="logo" class="span4">
-            <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+            <a href="<?php echo $this->basePath(); ?>">
+                <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+            </a>
         </div> <!-- #logo -->
         <div id="navigation" class="span8">
             <ul class="inline">
@@ -46,6 +48,10 @@
                 <div class="section">
                     <h4>课程概述</h4>
                     <p><?php echo $lecture->brief; ?></p>
+                </div> <!-- .section -->
+                <div class="section">
+                    <h4>听众范围</h4>
+                    <p><?php echo $lecture->audience; ?></p>
                 </div> <!-- .section -->
                 <div class="section">
                     <h4>课程目标</h4>
@@ -105,7 +111,7 @@
                         <li><span class="heading">结束时间: </span><?php echo date('Y年m月d日 H:i', strtotime($lecture->endTime)); ?></li>
                         <li><span class="heading">开班人数: </span><?php echo $lecture->minCapcity; ?> 人</li>
                         <li><span class="heading">最大容量: </span><?php echo $lecture->maxCapcity; ?> 人</li>
-                        <li><span class="heading">已报人数: </span>0 人</li>
+                        <li><span class="heading">已报人数: </span><span class="participants"><?php echo $attendance['participants']; ?></span> 人</li>
                         <li><span class="heading">培训费用: </span><?php echo $lecture->expense; ?> 元</li>
                         <li><span class="heading">开课地点: </span><?php echo $lecture->lectureProvince; ?> <?php echo $lecture->lectureCity; ?> <?php echo $lecture->lectureAddress; ?></li>
                     </ul>
@@ -151,16 +157,20 @@
                     </ul>
                 </div> <!-- #share -->
             </div> <!-- #misc -->
-            <?php if ( $lecture->startTime <= date('Y-m-d H:i:s') ) : ?>
+            <?php if ( $attendance['hasAttended'] ): ?>
+            <button class="btn btn-orange btn-block" disabled="disabled">您已报名</button>
+            <?php elseif ( $lecture->startTime <= date('Y-m-d H:i:s') ) : ?>
             <button class="btn btn-orange btn-block" disabled="disabled">报名结束</button>
+            <?php elseif ( $lecture->maxCapcity <= $attendance['participants']  ) : ?>
+            <button class="btn btn-orange btn-block" disabled="disabled">人数已满</button>
             <?php else: ?>
-            <button class="btn btn-orange btn-block">报名参加</button>
+            <button class="btn btn-orange btn-block btn-attend" onclick="javascript:attendLecture()">报名参加</button>
             <?php endif; ?>
         </div> <!-- .span3 -->
     </div> <!-- .container -->
 </div> <!-- #container -->
 
-<script type="text/javascript">
+<?php $this->inlineScript()->captureStart(); ?>
     $('a.trigger').click(function() {
         if ( !$('ul.history').is(':visible') ) {
             $(this).html('收起');
@@ -170,8 +180,8 @@
             $('ul.history').addClass('hide');
         }
     })
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function getComments(courseId, pageNumber) {
         $.ajax({
             type: 'GET',
@@ -189,8 +199,8 @@
             }
         });
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function displayComments(comments) {
         var numberOfComments = comments.length;
         for ( var i = 0; i < numberOfComments; ++ i ) {
@@ -209,8 +219,8 @@
                                 + '</li>');
         }
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function getDateTime(dateTimeString) {
         var year    = dateTimeString.substring(0, 4),
             month   = dateTimeString.substring(5, 7),
@@ -219,8 +229,8 @@
 
         return year + '年' + month + '月' + day + '日 ' + time;
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function getRanking(rankingLevel) {
         var rankingImageString  = '';
         for ( var i = 0; i < rankingLevel; ++ i ) {
@@ -231,8 +241,8 @@
         }
         return rankingImageString;
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function getCommentTotalPages(courseId, pageNumber) {
         $.ajax({
             type: 'GET',
@@ -250,8 +260,8 @@
             }
         });
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function displayPagination(currentPage, totalPages) {
         var lowerBound = ( currentPage - 5 > 0 ? currentPage - 5 : 1 ),
             upperBound = ( currentPage + 5 < totalPages ? currentPage + 5 : totalPages );
@@ -263,16 +273,16 @@
         paginationString     += '<li' + ( currentPage < totalPages ? '>' : ' class="disabled">') + '<a href="#comments">&gt;</a></li>';
         $('ul.pagination').append(paginationString);
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     $(document).ready(function() {
         var courseId    = <?php echo $lecture->courseId; ?>,
             pageNumber  = 1;
         getComments(courseId, pageNumber);
         getCommentTotalPages(courseId, pageNumber);
     });
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     $('ul.pagination').delegate('li', 'click', function() {
         var currentPage = parseInt($('li.active > a', 'ul.pagination').html(), 10),
             courseId    = <?php echo $lecture->courseId; ?>,
@@ -286,4 +296,31 @@
         getComments(courseId, pageNumber);
         getCommentTotalPages(courseId, pageNumber);
     });
+<?php $this->inlineScript()->captureEnd(); ?>
+<script type="text/javascript">
+    function attendLecture() {
+    <?php if ( !$session->offsetExists('isLogined') ) : ?>
+        window.location.href='<?php echo $this->basePath(); ?>/accounts/login?forward=/training/lecture?lectureId=<?php echo $lecture->lectureId; ?>';
+    <?php else: ?>
+        var lectureId       = <?php echo $lecture->lectureId; ?>,
+            participants    = 1;
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?php echo $this->basePath(); ?>/training/attendLecture?lectureId=' + lectureId + '&participants=' + participants,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    var alreadyParticipants = parseInt($('span.participants').html(), 10);
+                    $('span.participants').html(alreadyParticipants + 1);
+
+                    $('.btn-attend').html('您已报名');
+                    $('.btn-attend').attr('disabled', 'disabled');
+                } else {
+                    alert('未能报名参加该课程, 可能是课程人数已满.\n由此给您造成不便我们深表歉意.');
+                }
+            }
+        });
+    <?php endif; ?>
+    }
 </script>

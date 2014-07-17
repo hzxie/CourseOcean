@@ -26,6 +26,7 @@ class Course {
         $this->teacherId        = (!empty($data['teacher_id']))         ? $data['teacher_id']       : null;
         $this->teacherName      = (!empty($data['teacher_name']))       ? $data['teacher_name']     : null;
         $this->courseCycle      = (!empty($data['course_cycle']))       ? $data['course_cycle']     : null;
+        $this->audience         = (!empty($data['course_audience']))    ? $data['course_audience']  : null;
         $this->brief            = (!empty($data['course_brief']))       ? $data['course_brief']     : null;
         $this->objective        = (!empty($data['course_objective']))   ? $data['course_objective'] : null;
     }
@@ -83,6 +84,12 @@ class Course {
      * @var int
      */
     public $courseCycle;
+
+    /**
+     * 课程培训对象.
+     * @var String
+     */
+    public $audience;
 
     /**
      * 课程概述.

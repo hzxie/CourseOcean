@@ -8,7 +8,9 @@
 <div id="header">
     <div class="container row-fluid">
         <div id="logo" class="span4">
-            <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+            <a href="<?php echo $this->basePath(); ?>">
+                <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+            </a>
         </div> <!-- #logo -->
         <div id="navigation" class="span8">
             <ul class="inline">
@@ -46,6 +48,10 @@
                 <div class="section">
                     <h4>课程概述</h4>
                     <p><?php echo $course->brief; ?></p>
+                </div> <!-- .section -->
+                <div class="section">
+                    <h4>听众范围</h4>
+                    <p><?php echo $course->audience; ?></p>
                 </div> <!-- .section -->
                 <div class="section">
                     <h4>课程目标</h4>
@@ -140,7 +146,7 @@
     </div> <!-- .container -->
 </div> <!-- #container -->
 
-<script type="text/javascript">
+<?php $this->inlineScript()->captureStart(); ?>
     $('a.trigger').click(function() {
         if ( !$('ul.history').is(':visible') ) {
             $(this).html('收起');
@@ -150,8 +156,8 @@
             $('ul.history').addClass('hide');
         }
     })
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function getComments(courseId, pageNumber) {
         $.ajax({
             type: 'GET',
@@ -169,8 +175,8 @@
             }
         });
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function displayComments(comments) {
         var numberOfComments = comments.length;
         for ( var i = 0; i < numberOfComments; ++ i ) {
@@ -189,8 +195,8 @@
                                 + '</li>');
         }
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function getDateTime(dateTimeString) {
         var year    = dateTimeString.substring(0, 4),
             month   = dateTimeString.substring(5, 7),
@@ -199,8 +205,8 @@
 
         return year + '年' + month + '月' + day + '日 ' + time;
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function getRanking(rankingLevel) {
         var rankingImageString  = '';
         for ( var i = 0; i < rankingLevel; ++ i ) {
@@ -211,8 +217,8 @@
         }
         return rankingImageString;
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function getCommentTotalPages(courseId, pageNumber) {
         $.ajax({
             type: 'GET',
@@ -230,8 +236,8 @@
             }
         });
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function displayPagination(currentPage, totalPages) {
         var lowerBound = ( currentPage - 5 > 0 ? currentPage - 5 : 1 ),
             upperBound = ( currentPage + 5 < totalPages ? currentPage + 5 : totalPages );
@@ -243,16 +249,16 @@
         paginationString     += '<li' + ( currentPage < totalPages ? '>' : ' class="disabled">') + '<a href="#comments">&gt;</a></li>';
         $('ul.pagination').append(paginationString);
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     $(document).ready(function() {
         var courseId    = <?php echo $course->courseId; ?>,
             pageNumber  = 1;
         getComments(courseId, pageNumber);
         getCommentTotalPages(courseId, pageNumber);
     });
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     $('ul.pagination').delegate('li', 'click', function() {
         var currentPage = parseInt($('li.active > a', 'ul.pagination').html(), 10),
             courseId    = <?php echo $course->courseId; ?>,
@@ -266,4 +272,4 @@
         getComments(courseId, pageNumber);
         getCommentTotalPages(courseId, pageNumber);
     });
-</script>
+<?php $this->inlineScript()->captureEnd(); ?>

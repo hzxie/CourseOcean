@@ -29,6 +29,8 @@ use Application\Model\Lecture;
 use Application\Model\LectureTable;
 use Application\Model\Comment;
 use Application\Model\CommentTable;
+use Application\Model\LectureAttendance;
+use Application\Model\LectureAttendanceTable;
 
 class Module
 {
@@ -139,6 +141,17 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Comment());
                     return new TableGateway('itp_comments', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\LectureAttendanceTable' => function($sm) {
+                    $tableGateway           = $sm->get('LectureAttendanceGateway');
+                    $lectureAttendanceable  = new LectureAttendanceTable($tableGateway);
+                    return $lectureAttendanceable;
+                },
+                'LectureAttendanceGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new LectureAttendance());
+                    return new TableGateway('itp_lecture_attendance', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );

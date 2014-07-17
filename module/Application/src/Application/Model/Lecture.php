@@ -36,6 +36,7 @@ class Lecture {
         $this->minCapcity       = (!empty($data['lecture_min_capcity']))    ? $data['lecture_min_capcity']  : null;
         $this->maxCapcity       = (!empty($data['lecture_max_capcity']))    ? $data['lecture_max_capcity']  : null;
         $this->expense          = (!empty($data['lecture_expense']))        ? $data['lecture_expense']      : null;
+        $this->audience         = (!empty($data['course_audience']))    ? $data['course_audience']  : null;
         $this->brief            = (!empty($data['course_brief']))           ? $data['course_brief']         : null;
         $this->objective        = (!empty($data['course_objective']))       ? $data['course_objective']     : null;
         $this->precautions      = (!empty($data['lecture_precautions']))    ? $data['lecture_precautions']  : null;
@@ -154,6 +155,12 @@ class Lecture {
      * @var int
      */
     public $expense;
+
+    /**
+     * 课程培训对象.
+     * @var String
+     */
+    public $audience;
 
     /**
      * 课程概述.

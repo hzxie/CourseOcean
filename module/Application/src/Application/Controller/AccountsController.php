@@ -24,9 +24,11 @@ class AccountsController extends AbstractActionController
         if ( $this->isEnableAutoLogin() ) {
             return $this->sendRedirect('accounts/dashboard');
         }
-
         $this->destroySession();
+
+        $forwardUrl = $this->params()->fromQuery('forward', '/accounts/dashboard');
         return array(
+            'forwardUrl'    => $forwardUrl,
         );
     }
 
