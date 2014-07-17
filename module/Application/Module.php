@@ -19,10 +19,16 @@ use Application\Model\User;
 use Application\Model\UserTable;
 use Application\Model\Teacher;
 use Application\Model\TeacherTable;
+use Application\Model\CourseModule;
+use Application\Model\CourseModuleTable;
 use Application\Model\Course;
 use Application\Model\CourseTable;
 use Application\Model\CourseType;
 use Application\Model\CourseTypeTable;
+use Application\Model\Lecture;
+use Application\Model\LectureTable;
+use Application\Model\Comment;
+use Application\Model\CommentTable;
 
 class Module
 {
@@ -79,6 +85,17 @@ class Module
                     $resultSetPrototype->setArrayObjectPrototype(new Teacher());
                     return new TableGateway('itp_teachers', $dbAdapter, null, $resultSetPrototype);
                 },
+                'Application\Model\CourseModuleTable' => function($sm) {
+                    $tableGateway       = $sm->get('CourseModuleTableGateway');
+                    $courseModuleTable  = new CourseModuleTable($tableGateway);
+                    return $courseModuleTable;
+                },
+                'CourseModuleTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new CourseModule());
+                    return new TableGateway('itp_course_modules', $dbAdapter, null, $resultSetPrototype);
+                },
                 'Application\Model\CourseTable' => function($sm) {
                     $tableGateway       = $sm->get('CourseTableGateway');
                     $courseTable        = new CourseTable($tableGateway);
@@ -100,6 +117,28 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new CourseType());
                     return new TableGateway('itp_course_types', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\LectureTable' => function($sm) {
+                    $tableGateway       = $sm->get('LectureTableGateway');
+                    $lectureable        = new LectureTable($tableGateway);
+                    return $lectureable;
+                },
+                'LectureTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Lecture());
+                    return new TableGateway('itp_lectures', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\CommentTable' => function($sm) {
+                    $tableGateway       = $sm->get('CommentTableGateway');
+                    $commentTable       = new CommentTable($tableGateway);
+                    return $commentTable;
+                },
+                'CommentTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Comment());
+                    return new TableGateway('itp_comments', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );

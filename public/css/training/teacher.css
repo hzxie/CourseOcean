@@ -14,3 +14,7 @@ div#teacher div#detail {
 div#teacher div#detail div.section {
 	margin-bottom: 20px;
 }
+
+div#teacher div#detail div.section p {
+	color: #565656;
+}

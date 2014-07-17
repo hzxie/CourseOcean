@@ -1,0 +1,180 @@
+<?php 
+    echo $this->headTitle('近期开课 | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/style.css');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/courses.css');
+?>
+
+<div class="border-top"></div> <!-- .border-top -->
+<div id="header">
+    <div class="container row-fluid">
+        <div id="logo" class="span4">
+            <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+        </div> <!-- #logo -->
+        <div id="navigation" class="span8">
+            <ul class="inline">
+                <li><a href="<?php echo $this->basePath(); ?>/training/lectures">近期开课</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/training/courses">课程库</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/training/teachers">讲师团队</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard#requirements">需求定制</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/training/posts">培训动态</a></li>
+                <?php
+                    $session    = new Zend\Session\Container('itp_session');
+                    if ( !$session->offsetExists('isLogined') ):
+                ?>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/login"><strong>登录</strong></a></li>
+                    <li><button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">创建账户</button></li>
+                <?php else: ?>
+                    <li>您好, <a href="<?php echo $this->basePath(); ?>/accounts/dashboard"><?php echo $session->offsetGet('username'); ?></a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/logout">注销</a></li>
+                <?php endif; ?>
+            </ul>
+            <form id="search" action="<?php echo $this->basePath(); ?>/home/search">
+                <input type="text" placeholder="搜索课程或讲师" />
+                <button class="btn" type="submit">搜索</button>
+            </form>
+        </div> <!-- #navigation -->
+    </div> <!-- .container -->
+</div> <!-- #header -->
+<div id="container">
+    <div class="container">
+        <div id="sub-header">
+            <h2>近期开课</h2>
+            <p>海量课程供您选择! 选择适合您的培训课程.</p>
+            <button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/courses'">查看课程库</button>
+            <img src="<?php echo $this->basePath(); ?>/img/training/course-header.jpg" alt="Header Image">
+            <div class="border-bottom"></div> <!-- .border-bottom -->
+        </div> <!-- #sub-header -->
+        <div id="content" class="row-fluid">
+            <div class="span3">
+                <h4>筛选课程</h4>
+                <h5>授课领域</h5>
+                <ul id="course-types" class="inline">
+                    <li class="active"><a href="#all">全部领域</a></li>
+                    <?php foreach ( $courseTypes as $courseType ): ?>
+                    <li><a href="#<?php echo $courseType->courseTypeSlug; ?>"><?php echo $courseType->courseTypeName; ?></a></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div> <!-- .span3 -->
+            <div class="span9">
+                <div class="alert alert-warning hide">未找到符合要求的课程.</div>
+                <ul id="courses"></ul>
+                <div id="pagination" class="pagination pagination-centered">
+                    <ul></ul>
+                </div> <!-- #pagination-->
+            </div> <!-- .span9 -->
+        </div> <!-- .row-fluid -->
+    </div> <!-- .container -->
+</div> <!-- #container -->
+
+<script type="text/javascript">
+    $('ul#course-types > li').click(function() {
+        $('ul#course-types > li.active').removeClass('active');
+        $(this).addClass('active');
+
+        var category = $('a', this).attr('href').substring(1);
+        getCourses(category, 1);
+        getTotalPages(category, 1);
+    });
+</script>
+<script type="text/javascript">
+    function getCourses(category, pageNumber) {
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?php echo $this->basePath(); ?>/training/getLectures?category=' + category + '&page=' + pageNumber,
+            dataType: 'JSON',
+            success: function(result) {
+                $('#courses').empty();
+                if ( result['isSuccessful'] ) {
+                    $('.alert-warning').addClass('hide');
+                    displayCourses(result['lectures']);
+                } else {
+                    $('.alert-warning').removeClass('hide');
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function displayCourses(lectures) {
+        var numberOfCourses = lectures.length;
+        for ( var i = 0; i < numberOfCourses; ++ i ) {
+            $('#courses').append('<li class="course row-fluid">'
+                                + '    <div class="span3">'
+                                + '        <img src="<?php echo $this->basePath(); ?>/img/categories/' + lectures[i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />'
+                                + '    </div>'
+                                + '    <div class="span9">'
+                                + '        <h4><a href="<?php echo $this->basePath(); ?>/training/lecture?lectureId=' + lectures[i]['lectureId'] + '">' + lectures[i]['courseName'] + '</a></h4>'
+                                + '        <p class="introduction">' + lectures[i]['brief'] + '</p>'
+                                + '        <ul class="inline meta">'
+                                + '            <li><i class="icon-user"></i> <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=' + lectures[i]['teacherId'] + '">' + lectures[i]['teacherName'] + '</a></li>'
+                                + '            <li><i class="icon-tasks"></i> ' + lectures[i]['courseTypeName'] + '</li>'
+                                + '            <li><i class="icon-calendar"></i> ' + getDateTime(lectures[i]['startTime']) + '~' + getDateTime(lectures[i]['endTime']) + '</li>'
+                                + '            <li><i class="icon-map-marker"></i> ' + lectures[i]['lectureProvince'] + ' ' + lectures[i]['lectureCity'] + '</li>'
+                                + '        </ul>'
+                                + '    </div>'
+                                + '</li>');
+        }
+    }
+</script>
+<script type="text/javascript">
+    function getDateTime(dateTimeString) {
+        var year    = dateTimeString.substring(0, 4),
+            month   = dateTimeString.substring(5, 7),
+            day     = dateTimeString.substring(8, 10),
+            time    = dateTimeString.substring(11, 16);
+
+        return month + '月' + day + '日 ' + time;
+    }
+</script>
+<script type="text/javascript">
+    $('#pagination > ul').delegate('li', 'click', function(e) {
+        $('#pagination > li.active').removeClass('active');
+        $(this).addClass('active');
+
+        var category   = $('ul#course-types > li.active > a').attr('href').substring(1),
+            pageNumber = $('a', this).html();
+        getCourses(category, pageNumber);
+        getTotalPages(category, pageNumber);
+
+        e.preventDefault();
+    });
+</script>
+<script type="text/javascript">
+    function getTotalPages(category, pageNumber) {
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?php echo $this->basePath(); ?>/training/getLectureTotalPages?category=' + category,
+            dataType: 'JSON',
+            success: function(result) {
+                $('div#pagination > ul').empty();
+                if ( result['isSuccessful'] ) {
+                    $('div#pagination').removeClass('hide');
+                    displayPagination(pageNumber, result['totalPages']);
+                } else {
+                    $('div#pagination').addClass('hide');
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function displayPagination(currentPage, totalPages) {
+        var lowerBound = ( currentPage - 5 > 0 ? currentPage - 5 : 1 ),
+            upperBound = ( currentPage + 5 < totalPages ? currentPage + 5 : totalPages );
+        var paginationString  = '<li' + ( currentPage > 1 ? '>' : ' class="disabled">') + '<a href="#">&lt;</a></li>';
+
+        for ( var i = lowerBound; i <= upperBound; ++ i ) {
+            paginationString += '<li' + ( currentPage == i ? ' class="active"' : '' ) + '><a href="#">' + i + '</a></li>';
+        }
+        paginationString     += '<li' + ( currentPage < totalPages ? '>' : ' class="disabled">') + '<a href="#">&gt;</a></li>';
+        $('#pagination > ul').append(paginationString);
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        getCourses('all', 1);
+        getTotalPages('all', 1);
+    });
+</script>

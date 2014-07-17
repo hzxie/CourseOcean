@@ -41,22 +41,22 @@
             <div id="teacher" class="offset2 span8">
                 <div id="overview" class="row-fluid">
                     <div class="span3">
-                    <?php if ( $teacher->teacherAvatar == null ): ?>
+                    <?php if ( $teacher->avatar == null ): ?>
                         <img class="img-circle" src="<?php echo $this->basePath('/img/avatars/avatar.png'); ?>" alt="avatar">
                     <?php else: ?>
-                        <img class="img-circle" src="<?php echo $this->basePath($teacher->teacherAvatar); ?>" alt="avatar" />
+                        <img class="img-circle" src="<?php echo $this->basePath($teacher->avatar); ?>" alt="avatar" />
                     <?php endif; ?>
                     </div> <!-- .span3 -->
                     <div class="span9">
                         <h3><?php echo $teacher->teacherName; ?></h3>
-                        <p class="company"><?php echo $teacher->teacherCompany; ?></p>
+                        <p class="company"><?php echo $teacher->company; ?></p>
                         <button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/dashboard#requirements?teacherUid=<?php echo $teacher->uid; ?>'">预约讲师</button>
                     </div> <!-- .span9 -->
                 </div> <!-- #overview -->
                 <div id="detail">
                     <div id="introduction" class="section">
                         <h4>讲师简介</h4>
-                        <p><?php echo $teacher->teacherBrief; ?></p>
+                        <p><?php echo $teacher->brief; ?></p>
                     </div> <!-- #introduction -->
                     <div id="field" class="section">
                         <h4>授课领域</h4>
@@ -68,7 +68,9 @@
                             <p>暂无开设课程</p>
                         <?php else: ?>
                         <ul id="courses">
-
+                        <?php foreach ( $courses as $course ): ?>
+                        <li><a href="<?php echo $this->basePath(); ?>/training/course?courseId=<?php echo $course['courseId']; ?>"><?php echo $course['courseName'] ?></a></li>
+                        <?php endforeach; ?>
                         </ul>
                         <?php endif; ?>
                     </div> <!-- #courses -->

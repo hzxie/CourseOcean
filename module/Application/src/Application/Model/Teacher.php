@@ -17,18 +17,18 @@ class Teacher {
      */
     public function exchangeArray($data)
     {
-        $this->uid                  = (!empty($data['uid']))                    ? $data['uid']                  : null;
-        $this->teacherName          = (!empty($data['teacher_name']))           ? $data['teacher_name']         : null;
-        $this->teacherIsApproved    = (!empty($data['teacher_is_approved']))    ? $data['teacher_is_approved']  : null;
-        $this->teacherBrief         = (!empty($data['teacher_brief']))          ? $data['teacher_brief']        : null;
-        $this->teacherAvatar        = (!empty($data['teacher_avatar']))         ? $data['teacher_avatar']       : null;
-        $this->teachingField        = (!empty($data['teaching_field']))         ? $data['teaching_field']       : null;
-        $this->teacherRegion        = (!empty($data['teacher_region']))         ? $data['teacher_region']       : null;
-        $this->teacherProvince      = (!empty($data['teacher_province']))       ? $data['teacher_province']     : null;
-        $this->teacherCity          = (!empty($data['teacher_city']))           ? $data['teacher_city']         : null;
-        $this->teacherCompany       = (!empty($data['teacher_company']))        ? $data['teacher_company']      : null;
-        $this->teacherPhone         = (!empty($data['teacher_phone']))          ? $data['teacher_phone']        : null;
-        $this->teacherWeibo         = (!empty($data['teacher_weibo']))          ? $data['teacher_weibo']        : null;
+        $this->uid           = (!empty($data['uid']))                    ? $data['uid']                  : null;
+        $this->teacherName   = (!empty($data['teacher_name']))           ? $data['teacher_name']         : null;
+        $this->isApproved    = (!empty($data['teacher_is_approved']))    ? $data['teacher_is_approved']  : null;
+        $this->brief         = (!empty($data['teacher_brief']))          ? $data['teacher_brief']        : null;
+        $this->avatar        = (!empty($data['teacher_avatar']))         ? $data['teacher_avatar']       : null;
+        $this->teachingField = (!empty($data['teaching_field']))         ? $data['teaching_field']       : null;
+        $this->region        = (!empty($data['teacher_region']))         ? $data['teacher_region']       : null;
+        $this->province      = (!empty($data['teacher_province']))       ? $data['teacher_province']     : null;
+        $this->city          = (!empty($data['teacher_city']))           ? $data['teacher_city']         : null;
+        $this->company       = (!empty($data['teacher_company']))        ? $data['teacher_company']      : null;
+        $this->phone         = (!empty($data['teacher_phone']))          ? $data['teacher_phone']        : null;
+        $this->weibo         = (!empty($data['teacher_weibo']))          ? $data['teacher_weibo']        : null;
     }
 
     /**
@@ -47,59 +47,59 @@ class Teacher {
      * 讲师的资料是否通过审核
      * @var bool
      */
-    public $teacherIsApproved;
+    public $isApproved;
 
     /**
      * 讲师的简介.
      * @var String
      */
-    public $teacherBrief;
+    public $brief;
 
     /**
      * 讲师头像的所在路径.
      * @var String
      */
-    public $teacherAvatar;
+    public $avatar;
     
     /**
      * 讲师的授课领域
      * @var String
      */
-    public $teachingField;
+    public $field;
 
     /**
      * 讲师所在地区.
      * @var String
      */
-    public $teacherRegion;
+    public $region;
 
     /**
      * 讲师所在省份.
      * @var String
      */
-    public $teacherProvince;
+    public $province;
 
     /**
      * 讲师所在城市.
      * @var String
      */
-    public $teacherCity;
+    public $city;
 
     /**
      * 讲师现所在(或曾经就职)的公司.
      * @var String
      */
-    public $teacherCompany;
+    public $company;
 
     /**
      * 讲师的联系电话.
      * @var String
      */
-    public $teacherPhone;
+    public $phone;
 
     /**
      * 讲师的新浪微博账号.
      * @var String
      */
-    public $teacherWeibo;
+    public $weibo;
 }

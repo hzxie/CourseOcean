@@ -60,6 +60,7 @@ class CourseTable
                           'itp_courses.course_type_id = itp_course_types.course_type_id');
             $select->join('itp_teachers', 
                           'itp_courses.teacher_id = itp_teachers.uid');
+            $select->order('course_id DESC');
             $select->offset($offset);
             $select->limit($limit);
         });
@@ -67,16 +68,17 @@ class CourseTable
     }
 
     /**
-     * 使用用户的唯一标识符获取课程对象.
-     * @param  int $uid - 用户的唯一标识符
+     * 使用课程的唯一标识符获取课程对象.
+     * @param  int $courseId - 课程的唯一标识符
      * @return 一个课程对象
      */
-    public function getCourseUsingCourseId($uid)
+    public function getCourseUsingCourseId($courseId)
     {
-        $rowSet = $this->tableGateway->select(function (Select $select) use ($uid) {
+        $rowSet = $this->tableGateway->select(function (Select $select) use ($courseId) {
             $select->join('itp_course_types', 
                           'itp_courses.course_type_id = itp_course_types.course_type_id');
-            $select->where->equalTo('uid', $uid);
+            $select->where->equalTo('course_id', $courseId);
+            $select->order('course_id DESC');
         });
         return $rowSet->current();
     }
@@ -96,9 +98,23 @@ class CourseTable
             $select->join('itp_teachers', 
                           'itp_courses.teacher_id = itp_teachers.uid');
             $select->where->equalTo('itp_courses.course_type_id', $categoryId);
+            $select->order('course_id DESC');
             $select->offset($offset);
             $select->limit($limit);
         });
+        return $resultSet;
+    }
+
+    /**
+     * 使用用户的唯一标识符获取课程对象.
+     * @param  int $teacherId - 讲师用户的唯一标识符
+     * @return 一个ResultSet对象, 包含若干个Course对象
+     */
+    public function getCoursesUsingTeacherId($teacherId)
+    {
+        $resultSet = $this->tableGateway->select(array(
+            'teacher_id'    => $teacherId,
+        ));
         return $resultSet;
     }
     

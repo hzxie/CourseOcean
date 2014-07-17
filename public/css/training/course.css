@@ -1,0 +1,177 @@
+div#container div#overview {
+	border-bottom: 1px solid #b1b2b4;
+	margin-bottom: 20px;
+}
+
+div#container div#detail div.section {
+	margin-bottom: 20px;
+}
+
+div#container div#detail div.section p {
+	color: #565656;
+	padding-left: 20px;
+}
+
+div#container div#detail div.section ul.outline {
+	list-style: none;
+}
+
+div#container div#detail div.section ul.outline > li {
+	margin-bottom: 10px;
+}
+
+div#container div#detail div.section ul.outline > li > h5.heading {
+	border-bottom: 1px dotted #b1b2b4;
+	color: #2f73bc;
+	padding-bottom: 5px;
+}
+
+div#container div#detail div.section ul.outline > li span.cycle {
+	color: #333;
+}
+
+div#container div#teacher {
+	padding-top: 10px;
+	height: 100px;
+	overflow: hidden;
+}
+
+div#container div#teacher div#teacher-introduction {
+	font-size: 12px;
+	padding-left: 10px;
+}
+
+div#container ul#comments {
+	margin-top: 20px;
+	margin-left: 15px;
+}
+
+div#container ul#comments li.comment {
+	border-bottom: 1px solid #d7d7d7;
+	list-style: none;
+	margin-bottom: 10px;
+	overflow: hidden;
+	padding-bottom: 10px;
+}
+
+div#container ul#comments li.comment div.avatar {
+	float: left;
+}
+
+div#container ul#comments li.comment div.avatar img {
+	max-height: 64px;
+	max-width: 64px;
+}
+
+div#container ul#comments li.comment div.content {
+	color: #333;
+	margin-left: 80px;
+}
+
+div#container ul#comments li.comment div.content div.meta {
+	overflow: hidden;	
+}
+
+div#container ul#comments li.comment div.content span {
+	float: left;
+	font-size: 13px;
+	margin-right: 20px;
+}
+
+div#container ul#comments li.comment div.content span.ranking {
+	float: right;
+}
+
+div#container ul#comments li.comment div.content p {
+	font-size: 12px;
+	margin-top: 5px;
+	padding-left: 0;
+}
+
+div#container div.section ul.pagination {
+	float: right;
+	font-size: 12px;
+	margin: 0;
+}
+
+div#container div.section ul.pagination > li {
+	color: #9c9c9c;
+	margin-left: 8px;
+	padding: 2px 8px 4px;
+}
+
+div#container div.section ul.pagination > li > a {
+	color: #9c9c9c;
+	text-decoration: none;
+}
+
+div#container div.section ul.pagination > li:hover > a {
+	border-color: #e6edef;
+	color: #f15a23;
+}
+
+div#container div.section ul.pagination > li.active {
+	background: #e6edef;
+	color: #707070;
+	padding: 2px 7px 4px;
+}
+
+div#container div.section ul.pagination > li.disabled {
+	display: none;
+}
+
+div#container div#misc {
+	background-color: #f0efef;
+	font-size: 13px;
+	margin-bottom: 10px;
+	padding: 10px;
+}
+
+div#container div#misc ul {
+	color: #565656;
+	margin-bottom: 0;
+}
+
+div#container div#misc div#meta {
+	background-color: #faf9f9;
+	padding: 10px;
+}
+
+div#container div#misc ul.meta {
+	list-style: none;
+	margin-left: 0;
+}
+
+div#container div#misc ul.meta > li {
+	border-bottom: 1px solid #d7d7d7;
+	padding: 8px 0;
+	text-align: right;
+}
+
+div#container div#misc ul.meta > li:last-child {
+	border-bottom: none;
+}
+
+div#container div#misc ul.meta > li > span.heading {
+	float: left;
+}
+
+div#container div#misc div#lectures {
+	background-color: #e1e1e1;
+	padding: 10px;
+}
+
+div#container div#misc div#lectures h5 {
+	margin-top: 0;
+}
+
+div#container div#misc div#lectures a.trigger {
+	float: right;
+	font-size: 13px;
+	font-weight: normal;
+	margin-left: 10px;
+}
+
+div#container div#misc div#share {
+	padding: 10px 10px 0;
+}
