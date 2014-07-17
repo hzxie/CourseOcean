@@ -17,12 +17,14 @@ class CourseModule {
      */
     public function exchangeArray($data)
     {
-        $this->courseModuleId       = (!empty($data['course_module_id']))       ? $data['course_module_id']         : null;
-        $this->courseModuleName     = (!empty($data['course_module_name']))     ? $data['course_module_name']       : null;
-        $this->teacherId            = (!empty($data['teacher_id']))             ? $data['teacher_id']               : null;
-        $this->courseModuleCycle    = (!empty($data['course_module_cycle']))    ? $data['course_module_cycle']      : null;
-        $this->courseModuleBrief    = (!empty($data['course_module_brief']))    ? $data['course_module_brief']      : null;
-        $this->courseModuleOutline  = (!empty($data['course_module_outline']))  ? $data['course_module_outline']    : null;
+        $this->courseModuleId           = (!empty($data['course_module_id']))           ? $data['course_module_id']         : null;
+        $this->courseModuleName         = (!empty($data['course_module_name']))         ? $data['course_module_name']       : null;
+        $this->teacherId                = (!empty($data['teacher_id']))                 ? $data['teacher_id']               : null;
+        $this->courseModuleCycle        = (!empty($data['course_module_cycle']))        ? $data['course_module_cycle']      : null;
+        $this->courseModuleStartTime    = (!empty($data['course_module_start_time']))   ? $data['course_module_start_time'] : null;
+        $this->courseModuleEndTime      = (!empty($data['course_module_end_time']))     ? $data['course_module_end_time']   : null;
+        $this->courseModuleBrief        = (!empty($data['course_module_brief']))        ? $data['course_module_brief']      : null;
+        $this->courseModuleOutline      = (!empty($data['course_module_outline']))      ? $data['course_module_outline']    : null;
     }
 
     /**
@@ -48,6 +50,10 @@ class CourseModule {
      * @var int
      */
     public $courseModuleCycle;
+
+    public $courseModuleStartTime;
+
+    public $courseModuleEndTime;
 
     /**
      * 课程模块概述.

@@ -98,6 +98,10 @@ class TrainingController extends AbstractActionController
         return $response;
     }
 
+    /**
+     * 获取近期开课课程页面数量.
+     * @return 一个包含课程页面数量的JSON数组.
+     */
     public function getLectureTotalPagesAction()
     {
         $NUMBER_OF_COURSES_PER_PAGE     = 10;
@@ -118,6 +122,30 @@ class TrainingController extends AbstractActionController
         return $response;
     }
     
+    public function lectureAction()
+    {
+        $lectureId      = $this->params()->fromQuery('lectureId');
+        $serviceManager = $this->getServiceLocator();
+        $lectureTable   = $serviceManager->get('Application\Model\LectureTable');
+        $lecture        = $lectureTable->getLectureUsingLectureId($lectureId);
+
+        if ( $lecture == null ) {
+            return $this->notFoundAction();
+        }
+        
+        $teacherTable       = $serviceManager->get('Application\Model\TeacherTable');
+        $teacher            = $teacherTable->getTeacherUsingUid($lecture->teacherId);
+        $courseModuleTable  = $serviceManager->get('Application\Model\CourseModuleTable');
+        $courseModules      = $courseModuleTable->getCourseModulesUsingLectureId($lecture->lectureId);
+        $lectures           = $lectureTable->getLectureUsingCourseId($lecture->courseId);
+        return array(
+            'lecture'       => $lecture,
+            'teacher'       => $teacher,
+            'courseModules' => $this->getResultSetArray($courseModules),
+            'lectures'      => $this->getResultSetArray($lectures),
+        );
+    }
+
     /**
      * 显示课程库页面.
      * @return 一个包含页面所需参数的数组

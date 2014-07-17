@@ -30,6 +30,11 @@ div#container div#detail div.section ul.outline > li span.cycle {
 	color: #333;
 }
 
+div#container div#detail div.section ul.outline > li span.schedule {
+	color: #333;
+	float: right;
+}
+
 div#container div#teacher {
 	padding-top: 10px;
 	height: 100px;
@@ -154,6 +159,7 @@ div#container div#misc ul.meta > li:last-child {
 
 div#container div#misc ul.meta > li > span.heading {
 	float: left;
+	margin-right: 20px;
 }
 
 div#container div#misc div#lectures {

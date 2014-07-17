@@ -1,5 +1,5 @@
 <?php 
-    echo $this->headTitle($course->courseName.' | ');
+    echo $this->headTitle($lecture->courseName.' | ');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/style.css');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/course.css');
 ?>
@@ -39,17 +39,17 @@
     <div class="container row-fluid">
         <div class="span9">
             <div id="overview">
-                <img src="<?php echo $this->basePath(); ?>/img/categories/<?php echo $course->courseTypeSlug; ?>-large.jpg" alt="Course Type Image" />
-                <h3><?php echo $course->courseName; ?></h3>
+                <img src="<?php echo $this->basePath(); ?>/img/categories/<?php echo $lecture->courseTypeSlug; ?>-large.jpg" alt="Course Type Image" />
+                <h3><?php echo $lecture->courseName; ?></h3>
             </div> <!-- #overview -->
             <div id="detail">
                 <div class="section">
                     <h4>课程概述</h4>
-                    <p><?php echo $course->brief; ?></p>
+                    <p><?php echo $lecture->brief; ?></p>
                 </div> <!-- .section -->
                 <div class="section">
                     <h4>课程目标</h4>
-                    <p><?php echo $course->objective; ?></p>
+                    <p><?php echo $lecture->objective; ?></p>
                 </div> <!-- .section -->
                 <div class="section">
                     <h4>课程模块</h4>
@@ -58,7 +58,7 @@
                     <li>
                         <h5 class="heading">
                             <?php echo $courseModule['courseModuleName']; ?>
-                            <span class="cycle">(<?php echo $courseModule['courseModuleCycle']; ?> 分钟)</span>
+                            <span class="schedule"><?php echo date('Y年m月d日 H:i', strtotime($courseModule['courseModuleStartTime'])); ?>~<?php echo date('Y年m月d日 H:i', strtotime($courseModule['courseModuleEndTime'])); ?></span>
                         </h5>
                         <div class="detail">
                             <h5>模块概述</h5>
@@ -69,6 +69,10 @@
                     </li>
                     <?php endforeach;?>
                     </ul>
+                </div> <!-- .section -->
+                <div class="section">
+                    <h4>注意事项</h4>
+                    <p><?php echo $lecture->precautions; ?></p>
                 </div> <!-- .section -->
                 <div class="section">
                     <h4>课程评价</h4>
@@ -96,19 +100,27 @@
             <div id="misc">
                 <div id="meta">
                     <ul class="meta">
-                        <li><span class="heading">课程类别: </span><?php echo $course->courseTypeName; ?></li>
-                        <li><span class="heading">培训周期: </span><?php echo $course->courseCycle; ?> 天</li>
+                        <li><span class="heading">课程类别: </span><?php echo $lecture->courseTypeName; ?></li>
+                        <li><span class="heading">开始时间: </span><?php echo date('Y年m月d日 H:i', strtotime($lecture->startTime)); ?></li>
+                        <li><span class="heading">结束时间: </span><?php echo date('Y年m月d日 H:i', strtotime($lecture->endTime)); ?></li>
+                        <li><span class="heading">开班人数: </span><?php echo $lecture->minCapcity; ?> 人</li>
+                        <li><span class="heading">最大容量: </span><?php echo $lecture->maxCapcity; ?> 人</li>
+                        <li><span class="heading">已报人数: </span>0 人</li>
+                        <li><span class="heading">培训费用: </span><?php echo $lecture->expense; ?> 元</li>
+                        <li><span class="heading">开课地点: </span><?php echo $lecture->lectureProvince; ?> <?php echo $lecture->lectureCity; ?> <?php echo $lecture->lectureAddress; ?></li>
                     </ul>
                 </div> <!-- #meta -->
                 <div id="lectures">
                     <h5>即将开课</h5>
                     <?php if ( count($lectures) == 0 || $lectures[0]['startTime'] <= date('Y-m-d H:i:s') ): ?>
-                        <p>暂无开课记录.</p>
+                        <p>暂无可选的其他时间.</p>
                     <?php else: ?>
                         <ul class="lectures">
                         <?php for ( $i = 0; $i < count($lectures); ++ $i ): ?>
                             <?php if ( $lectures[$i]['startTime'] <= date('Y-m-d H:i:s') ): ?>
                                 <?php break; ?>
+                            <?php elseif ( $lectures[$i]['startTime'] == $lecture->startTime ) : ?>
+                                <li><?php echo date('Y年m月d日 H:i', strtotime($lectures[$i]['startTime'])); ?> (本课程)</li>
                             <?php else: ?>
                                 <li><a href="<?php echo $this->basePath(); ?>/training/lecture?lectureId=<?php echo $lectures[$i]['lectureId']; ?>"><?php echo date('Y年m月d日 H:i', strtotime($lectures[$i]['startTime'])); ?></a></li>
                             <?php endif; ?>
@@ -123,7 +135,11 @@
                     <a class="trigger" href="javascript:void(0)">展开</a></h5>
                     <ul class="lectures history hide">
                         <?php for ( ; $i < count($lectures); ++ $i ): ?>
-                            <li><a href="<?php echo $this->basePath(); ?>/training/lecture?lectureId=<?php echo $lectures[$i]['lectureId']; ?>"><?php echo date('Y年m月d日 H:i', strtotime($lectures[$i]['startTime'])); ?></a></li>
+                            <?php if ( $lectures[$i]['startTime'] == $lecture->startTime ) : ?>
+                                <li><?php echo date('Y年m月d日 H:i', strtotime($lectures[$i]['startTime'])); ?> (本课程)</li>
+                            <?php else: ?>
+                                <li><a href="<?php echo $this->basePath(); ?>/training/lecture?lectureId=<?php echo $lectures[$i]['lectureId']; ?>"><?php echo date('Y年m月d日 H:i', strtotime($lectures[$i]['startTime'])); ?></a></li>
+                            <?php endif; ?>
                         <?php endfor; ?>
                     </ul>
                     <?php endif; ?>
@@ -135,7 +151,11 @@
                     </ul>
                 </div> <!-- #share -->
             </div> <!-- #misc -->
-            <button class="btn btn-orange btn-block">预约其他时间</button>
+            <?php if ( $lecture->startTime <= date('Y-m-d H:i:s') ) : ?>
+            <button class="btn btn-orange btn-block" disabled="disabled">报名结束</button>
+            <?php else: ?>
+            <button class="btn btn-orange btn-block">报名参加</button>
+            <?php endif; ?>
         </div> <!-- .span3 -->
     </div> <!-- .container -->
 </div> <!-- #container -->
@@ -246,7 +266,7 @@
 </script>
 <script type="text/javascript">
     $(document).ready(function() {
-        var courseId    = <?php echo $course->courseId; ?>,
+        var courseId    = <?php echo $lecture->courseId; ?>,
             pageNumber  = 1;
         getComments(courseId, pageNumber);
         getCommentTotalPages(courseId, pageNumber);
@@ -255,7 +275,7 @@
 <script type="text/javascript">
     $('ul.pagination').delegate('li', 'click', function() {
         var currentPage = parseInt($('li.active > a', 'ul.pagination').html(), 10),
-            courseId    = <?php echo $course->courseId; ?>,
+            courseId    = <?php echo $lecture->courseId; ?>,
             pageNumber  = $('a', this).html();
         
         if ( pageNumber === '&lt;' ) {

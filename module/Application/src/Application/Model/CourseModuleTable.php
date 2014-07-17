@@ -67,9 +67,29 @@ class CourseModuleTable
      */
     public function getCourseModulesUsingCourseId($courseId)
     {
-        $resultSet = $this->tableGateway->select(function (Select $select) {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($courseId) {
             $select->join('itp_course_composition', 
                           'itp_course_modules.course_module_id = itp_course_composition.course_module_id');
+            $select->where->equalTo('course_id', $courseId);
+        });
+        return $resultSet;
+    }
+
+    /**
+     * 使用课程会话的唯一标识符获取课程模块对象.
+     * @param  int $lectureId - 课程会话的唯一标识符
+     * @return 一个ResultSet对象, 包含若干个CourseModule对象
+     */
+    public function getCourseModulesUsingLectureId($lectureId)
+    {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($lectureId) {
+            $select->join('itp_course_composition',
+                          'itp_course_modules.course_module_id = itp_course_composition.course_module_id');
+            $select->join('itp_lectures',
+                          'itp_lectures.course_id = itp_course_composition.course_id');
+            $select->join('itp_lecture_schedule',
+                          'itp_course_modules.course_module_id = itp_lecture_schedule.course_module_id');
+            $select->where->equalTo('itp_lectures.lecture_id', $lectureId);
         });
         return $resultSet;
     }
