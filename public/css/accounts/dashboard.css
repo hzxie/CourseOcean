@@ -1,18 +1,7 @@
 div#content div#sidebar div#profile {
 	border-bottom: 5px solid #ccc;
 	margin: 0 10px;
-	padding-bottom: 20px;
-}
-
-div#content div#sidebar div#profile img {
-	display: block;
-
-}
-
-div#content div#sidebar div#profile span {
-	display: block;
-	margin-top: 5px;
-	text-align: center;
+	padding-bottom: 10px;
 }
 
 div#content div#sidebar div#sidebar-nav {

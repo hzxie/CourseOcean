@@ -30,8 +30,8 @@
                     <li><a href="<?php echo $this->basePath(); ?>/accounts/logout">注销</a></li>
                 <?php endif; ?>
             </ul>
-            <form id="search" action="<?php echo $this->basePath(); ?>/training/search">
-                <input type="text" placeholder="搜索课程或讲师" />
+            <form id="search" action="<?php echo $this->basePath(); ?>/home/search">
+                <input name="keyword" type="text" placeholder="搜索课程或讲师" />
                 <button class="btn" type="submit">搜索</button>
             </form>
         </div> <!-- #navigation -->

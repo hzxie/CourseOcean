@@ -122,6 +122,7 @@ class LectureTable
             $select->where->equalTo('itp_courses.course_type_id', $categoryId);
             $select->offset($offset);
             $select->limit($limit);
+            $select->order('lecture_start_time DESC');
         });
         return $resultSet;
     }

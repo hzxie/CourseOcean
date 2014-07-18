@@ -5,7 +5,7 @@ html, body {
 }
 
 div#header {
-	background: url('../img/homepage/header-background.jpg') no-repeat right top #09bde2;
+	background: url('../../img/homepage/header-background.jpg') no-repeat right top #09bde2;
 	color: #fff;
 	height: 27px;
 	padding: 7px 0px 0px 0px;
@@ -22,7 +22,7 @@ div#header ul.inline > li > a {
 }
 
 div#guide {
-	background: url('../img/homepage/guide-background.jpg') no-repeat center;
+	background: url('../../img/homepage/guide-background.jpg') no-repeat center;
 	height: 616px;
 }
 
@@ -45,7 +45,7 @@ div#guide div#introduction div#slogan > h4 {
 }
 
 div#guide div#selector {
-	background: url('../img/homepage/transparent.png');
+	background: url('../../img/homepage/transparent.png');
 	border: 1px solid #69ab3e;
 	color: #333;
 	margin: 60px auto;

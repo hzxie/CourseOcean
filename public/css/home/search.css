@@ -1,3 +1,12 @@
+div#container div#content ul#category {
+	list-style: none;
+	margin-left: 0;
+}
+
+div#container div#content ul#category > li {
+	padding-top: 5px;
+}
+
 div#container div#content ul#results > li.result {
 	border-bottom: 1px dotted #ccc;
 	list-style: none;

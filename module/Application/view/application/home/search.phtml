@@ -1,7 +1,7 @@
 <?php 
     echo $this->headTitle('搜索结果 | ');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/style.css');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/search.css');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/home/search.css');
 ?>
 
 <div class="border-top"></div> <!-- .border-top -->
@@ -31,7 +31,7 @@
                 <?php endif; ?>
             </ul>
             <form id="search" action="<?php echo $this->basePath(); ?>/home/search">
-                <input type="text" placeholder="搜索课程或讲师" />
+                <input name="keyword" type="text" placeholder="搜索课程或讲师" />
                 <button class="btn" type="submit">搜索</button>
             </form>
         </div> <!-- #navigation -->
@@ -40,29 +40,105 @@
 <div id="container">
     <div class="container">
         <div id="sub-header">
-            <h2>搜索结果: 软件测试</h2>
+            <h2>搜索结果: <?php echo $keyword; ?></h2>
             <p>使用搜索可以帮助您更快地查找您所需要的信息.</p>
-            <button class="btn btn-orange">创建账户</button>
+            <button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/courses'">查看课程库</button>
             <img src="<?php echo $this->basePath(); ?>/img/training/course-header.jpg" alt="Header Image">
             <div class="border-bottom"></div> <!-- .border-bottom -->
         </div> <!-- #sub-header -->
         <div id="content" class="row-fluid">
             <div class="span3">
-                
+                <h4>筛选结果</h4>
+                <ul id="category">
+                    <li><a href="#all">所有结果</a></li>
+                    <li><a href="#course">课程</a></li>
+                    <li><a href="#teacher">讲师</a></li>
+                </ul>
             </div> <!-- .span3 -->
             <div class="span9">
-                <ul id="results">
-                    <li class="result row-fluid">
-                        <div class="span3">
-                            <img src="" alt="">
-                        </div> <!-- .span3 -->
-                        <div class="span9">
-                            <h4><a href="#">[课程]大型软件的测试与分析</a></h4>
-                            <p class="introduction">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                        </div> <!-- .span9 -->
-                    </li>
-                </ul>
+            <?php if ( $keyword == null ): ?>
+                <div class="alert alert-error">请输入搜索的关键词.</div>
+            <?php else: ?>
+                <div class="alert alert-error hide">未找到相关的结果.</div>
+                <ul id="results"></ul>
+                <div id="pagination" class="pagination pagination-centered">
+                    <ul></ul>
+                </div> <!-- #pagination-->
+            <?php endif; ?>
             </div> <!-- .span8 -->
         </div> <!-- .row-fluid -->
     </div> <!-- .container -->
 </div> <!-- #container -->
+
+<script type="text/javascript">
+    function getSearchResult(keyword, category, pageNumber) {
+
+    }
+</script>
+<script type="text/javascript">
+    function displaySearchResult(searchResult) {
+
+    }
+</script>
+<script type="text/javascript">
+    $('#pagination > ul').delegate('li', 'click', function(e) {
+        e.preventDefault();
+        if ( $(this).hasClass('disabled') ) {
+            return;
+        }
+        var currentPage = $('li.active > a', '#pagination').html();
+        
+        $('#pagination > li.active').removeClass('active');
+        $(this).addClass('active');
+        var category    = $('ul#course-types > li.active > a').attr('href').substring(1),
+            pageNumber  = $('a', this).html();
+
+        if ( pageNumber === '&lt;' ) {
+            pageNumber  = currentPage - 1;
+        } else if ( pageNumber === '&gt;' ) {
+            pageNumber  = currentPage + 1;
+        }
+        getTeachers(category, pageNumber);
+        getTotalPages(category, pageNumber);
+    });
+</script>
+<script type="text/javascript">
+    function getTotalPages(keyword, category, pageNumber) {
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?php echo $this->basePath(); ?>/home/getSearchResultTotalPages?keyword=' + keyword + '&category=' + category,
+            dataType: 'JSON',
+            success: function(result) {
+                $('div#pagination > ul').empty();
+                if ( result['isSuccessful'] ) {
+                    $('div#pagination').removeClass('hide');
+                    displayPagination(pageNumber, result['totalPages']);
+                } else {
+                    $('div#pagination').addClass('hide');
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function displayPagination(currentPage, totalPages) {
+        var lowerBound = ( currentPage - 5 > 0 ? currentPage - 5 : 1 ),
+            upperBound = ( currentPage + 5 < totalPages ? currentPage + 5 : totalPages );
+        var paginationString  = '<li' + ( currentPage > 1 ? '>' : ' class="disabled">') + '<a href="#">&lt;</a></li>';
+
+        for ( var i = lowerBound; i <= upperBound; ++ i ) {
+            paginationString += '<li' + ( currentPage == i ? ' class="active"' : '' ) + '><a href="#">' + i + '</a></li>';
+        }
+        paginationString     += '<li' + ( currentPage < totalPages ? '>' : ' class="disabled">') + '<a href="#">&gt;</a></li>';
+        $('#pagination > ul').append(paginationString);
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var keyword     = <?php echo $keyword; ?>,
+            category    = 'all';
+        getSearchResult(keyword, category, 1);
+        getTotalPages(keyword, category, 1);
+    });
+</script>

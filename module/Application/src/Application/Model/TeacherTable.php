@@ -4,6 +4,7 @@ namespace Application\Model;
 
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Select;
 use Zend\Db\TableGateway\TableGateway;
 
@@ -59,7 +60,19 @@ class TeacherTable
     public function getAllApprovedTeachers($offset, $limit)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($offset, $limit) {
+            $select->columns(array(
+                'uid'               => 'uid', 
+                'teacher_name'      => 'teacher_name', 
+                'teacher_company'   => 'teacher_company',
+                'teaching_field'    => new Expression("GROUP_CONCAT(`course_type_name` SEPARATOR ', ')"),
+            ));
+            $select->join('itp_teaching_field', 
+                          'itp_teachers.uid = itp_teaching_field.teacher_id');
+            $select->join('itp_course_types', 
+                          'itp_teaching_field.course_type_id = itp_course_types.course_type_id');
             $select->where->equalTo('teacher_is_approved', true);
+            $select->order(new Expression('CONVERT(teacher_name USING GBK)'));
+            $select->group('itp_teachers.uid');
             $select->offset($offset);
             $select->limit($limit);
         });
@@ -74,7 +87,19 @@ class TeacherTable
     public function getTeacherUsingUid($uid)
     {
         $rowSet = $this->tableGateway->select(function (Select $select) use ($uid) {
-            $select->where->equalTo('uid', $uid);
+            $select->columns(array(
+                'uid'               => 'uid', 
+                'teacher_name'      => 'teacher_name', 
+                'teacher_brief'     => 'teacher_brief',
+                'teacher_company'   => 'teacher_company',
+                'teaching_field'    => new Expression("GROUP_CONCAT(`course_type_name` SEPARATOR ', ')"),
+            ));
+            $select->join('itp_teaching_field', 
+                          'itp_teachers.uid = itp_teaching_field.teacher_id');
+            $select->join('itp_course_types', 
+                          'itp_teaching_field.course_type_id = itp_course_types.course_type_id');
+            $select->where->equalTo('itp_teachers.uid', $uid);
+            $select->group('itp_teachers.uid');
         });
         return $rowSet->current();
     }
@@ -89,10 +114,40 @@ class TeacherTable
     public function getTeachersUsingCategory($categoryId, $offset, $limit)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $offset, $limit) {
+            $select->columns(array(
+                'uid'               => 'uid', 
+                'teacher_name'      => 'teacher_name', 
+                'teacher_company'   => 'teacher_company',
+                'teaching_field'    => new Expression("GROUP_CONCAT(`course_type_name` SEPARATOR ', ')"),
+            ));
+            $select->join('itp_teaching_field', 
+                          'itp_teachers.uid = itp_teaching_field.teacher_id');
+            $select->join('itp_course_types', 
+                          'itp_teaching_field.course_type_id = itp_course_types.course_type_id');
+            $select->where->equalTo('teacher_is_approved', true);
+            $select->where->equalTo('itp_teaching_field.course_type_id', $categoryId);
+            $select->order(new Expression('CONVERT(teacher_name USING GBK)'));
+            $select->group('itp_teachers.uid');
+            $select->offset($offset);
+            $select->limit($limit);
+        });
+        return $resultSet;
+    }
+
+    /**
+     * [getTeacherUsingKeyword description]
+     * @param  [type] $keyword [description]
+     * @param  [type] $offset  [description]
+     * @param  [type] $limit   [description]
+     * @return [type]          [description]
+     */
+    public function getTeacherUsingKeyword($keyword, $offset, $limit)
+    {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($keyword, $offset, $limit) {
             $select->join('itp_teaching_field', 
                           'itp_teachers.uid = itp_teaching_field.teacher_id');
             $select->where->equalTo('teacher_is_approved', true);
-            $select->where->equalTo('course_type_id', $categoryId);
+
             $select->offset($offset);
             $select->limit($limit);
         });
