@@ -40,7 +40,13 @@ class UserTable
      */
     public function getAllUsers($offset, $limit)
     {
-
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($offset, $limit) {
+            $select->join('itp_user_groups', 
+                          'itp_users.user_group_id = itp_user_groups.user_group_id');
+            $select->offset($offset);
+            $select->limit($limit);
+        });
+        return $resultSet;
     }
 
     /**

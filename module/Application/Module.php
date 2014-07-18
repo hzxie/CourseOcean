@@ -31,6 +31,10 @@ use Application\Model\Comment;
 use Application\Model\CommentTable;
 use Application\Model\LectureAttendance;
 use Application\Model\LectureAttendanceTable;
+use Application\Model\Post;
+use Application\Model\PostTable;
+use Application\Model\PostCategory;
+use Application\Model\PostCategoryTable;
 
 class Module
 {
@@ -152,6 +156,28 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new LectureAttendance());
                     return new TableGateway('itp_lecture_attendance', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\PostTable' => function($sm) {
+                    $tableGateway   = $sm->get('PostTableGateway');
+                    $postTable      = new PostTable($tableGateway);
+                    return $postTable;
+                },
+                'PostTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Post());
+                    return new TableGateway('itp_posts', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\PostCategoryTable' => function($sm) {
+                    $tableGateway       = $sm->get('PostCategoryTableGateway');
+                    $postCategoryTable  = new PostCategoryTable($tableGateway);
+                    return $postCategoryTable;
+                },
+                'PostCategoryTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new PostCategory());
+                    return new TableGateway('itp_post_categories', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );

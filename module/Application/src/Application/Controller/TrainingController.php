@@ -533,9 +533,88 @@ class TrainingController extends AbstractActionController
         return $response;
     }
 
+    /**
+     * 通过培训动态分类的唯一英文缩写查找培训动态分类的唯一标识符.
+     * @param  String $catelogySlug - 培训动态分类的唯一英文缩写
+     * @return 培训动态分类的唯一标识符
+     */
+    private function getPostCategoryId($catelogySlug)
+    {
+        $serviceManager     = $this->getServiceLocator();
+        $postCategoryTable  = $serviceManager->get('Application\Model\PostCategoryTable');
+        $postCategory       = $postCategoryTable->getCatelogyUsingId($catelogySlug);
+
+        if ( $postCategory != null ) {
+            return $postCategory->postCategoryId;
+        } 
+        return 0;
+    }
+
+    /**
+     * 显示培训动态的页面.
+     * @return 一个包含页面所需参数的数组
+     */
     public function postsAction()
     {
+        $serviceManager     = $this->getServiceLocator();
+        $postCategoryTable  = $serviceManager->get('Application\Model\PostCategoryTable');
+        $postCategories     = $postCategoryTable->getAllPostCategories();
 
+        return array(
+            'postCategories'    => $postCategories,
+        );
+    }
+
+    /**
+     * 获取培训动态.
+     * @return 一个包含培训动态的JSON数组
+     */
+    public function getPostsAction()
+    {
+        $NUMBER_OF_POSTS_PER_PAGE       = 10;
+        $postCategorySlug               = $this->params()->fromQuery('category');
+        $pageNumber                     = $this->params()->fromQuery('page', 1);
+        $postCategoryId                 = $this->getPostCategoryId($postCategorySlug);
+        $offset                         = ($pageNumber - 1) * $NUMBER_OF_POSTS_PER_PAGE;
+
+        $serviceManager = $this->getServiceLocator();
+        $postTable      = $serviceManager->get('Application\Model\PostTable');
+        $posts          = null;
+
+        if ( $postCategorySlug === 'all' ) {
+            $posts   = $postTable->getAllPosts($offset, $NUMBER_OF_POSTS_PER_PAGE);
+        } else if ( $postCategoryId != 0 ) {
+            $posts   = $postTable->getPostsUsingCategory($postCategoryId, $offset, $NUMBER_OF_POSTS_PER_PAGE);
+        }
+
+        $result   = array(
+            'isSuccessful'  => $posts != null && $posts->count() != 0,
+            'posts'      => $this->getResultSetArray($posts),
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    public function getPostTotalPagesAction()
+    {
+        $NUMBER_OF_POSTS_PER_PAGE       = 10;
+        $postCategorySlug               = $this->params()->fromQuery('category');
+        $postCategoryId                 = $this->getPostCategoryId($postCategorySlug);
+
+        $serviceManager = $this->getServiceLocator();
+        $postTable      = $serviceManager->get('Application\Model\PostTable');
+        $totalPages     = ceil($postTable->getCount($postCategoryId) / $NUMBER_OF_POSTS_PER_PAGE);
+
+        $result   = array(
+            'isSuccessful'  => $totalPages != 0,
+            'totalPages'    => $totalPages,
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
     }
 
     public function postAction()
