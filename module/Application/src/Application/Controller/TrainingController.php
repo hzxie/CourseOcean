@@ -597,6 +597,10 @@ class TrainingController extends AbstractActionController
         return $response;
     }
 
+    /**
+     * 获取培训动态的页面数量.
+     * @return 一个包含培训动态页面数量的JSON数组
+     */
     public function getPostTotalPagesAction()
     {
         $NUMBER_OF_POSTS_PER_PAGE       = 10;
@@ -617,8 +621,44 @@ class TrainingController extends AbstractActionController
         return $response;
     }
 
+    /**
+     * 显示培训动态的详细信息.
+     * @return 一个包含页面所需参数的数组
+     */
     public function postAction()
     {
+        $postId         = $this->params()->fromQuery('postId');
+        $serviceManager = $this->getServiceLocator();
+        $postTable      = $serviceManager->get('Application\Model\PostTable');
+        $post           = $postTable->getPostUsingPostId($postId);
 
+        if ( $post == null ) {
+            return $this->notFoundAction();
+        }
+
+        $posts          = $postTable->getPostsUsingCategory($post->postCategoryId, 0, 10);
+        return array(
+            'post'      => $post,
+            'posts'     => $this->getResultSetArray($posts),
+        );
+    }
+
+    /**
+     * 获取某个培训动态的详细信息.
+     * @return 一个包含培训动态详细信息的JSON数组
+     */
+    public function getPostAction()
+    {
+        $postArray      = $this->postAction();
+
+        $result         = array(
+            'isSuccessful'  => is_array($postArray),
+            'post'          => is_array($postArray) ? $postArray['post'] : null,
+            'posts'         => is_array($postArray) ? $postArray['posts'] : null,
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
     }
 }

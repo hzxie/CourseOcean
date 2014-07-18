@@ -1,5 +1,5 @@
 <?php 
-    echo $this->headTitle('登录 | ');
+    echo $this->headTitle('个人中心 | ');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/style.css');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/dashboard.css');
 ?>
@@ -44,7 +44,7 @@
             </ul>
         </div> <!-- #navigation -->
         <form id="search" action="<?php echo $this->basePath(); ?>/home/search">
-            <input type="text" placeholder="搜索课程或讲师" />
+            <input name="keyword" type="text" placeholder="搜索课程或讲师" />
             <button class="btn btn-success" type="submit">搜索</button>
         </form>
         <div id="content" class="row-fluid">
