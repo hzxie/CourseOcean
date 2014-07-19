@@ -16,6 +16,25 @@ use Zend\View\Model\ViewModel;
 class AccountsController extends AbstractActionController
 {
     /**
+     * 将ResultSet对象转换为数组.
+     * @param  ResultSet $resultSet - 数据库查询返回的ResultSet对象
+     * @return 一个包含查询结果的数组
+     */
+    private function getResultSetArray($resultSet)
+    {
+        $returnArray = array();
+        
+        if ( $resultSet == null ) {
+            return $returnArray;
+        }
+        foreach ( $resultSet as $rowSet ) {
+            $rowArray = (array)$rowSet;
+            array_push($returnArray, $rowArray);
+        }
+        return $returnArray;
+    }
+
+    /**
      * 显示用户登录页面.
      * @return 返回一个包含页面所需参数的数组
      */
@@ -187,13 +206,19 @@ class AccountsController extends AbstractActionController
 
     }
 
+    /**
+     * 显示个人中心页面.
+     * @return 一个包含页面所需信息的数组.
+     */
     public function dashboardAction()
     {
         if ( !$this->isAllowedToAccess() ) {
             return $this->sendRedirect('accounts/login');
         }
 
-        return array();
+        return array(
+            'userGroupSlug' => $this->getUserProfile(),
+        );
     }
 
     /**
@@ -204,5 +229,77 @@ class AccountsController extends AbstractActionController
     {
         $session    = new Container('itp_session');
         return $session->offsetExists('isLogined');
+    }
+
+    public function getPageContentAction()
+    {
+        $pageName = $this->params()->fromQuery('pageName');
+
+        $profile  = $this->getUserProfile();
+        $view     = new ViewModel(array(
+            'profile'   => $this->getUserProfile(),
+        ));
+        $view->setTerminal(true);
+        $view->setTemplate("application/accounts/dashboard/$pageName.phtml");
+        return $view;
+    }
+
+    /**
+     * 获取用户所在的用户组.
+     * @return [type] [description]
+     */
+    private function getUserProfile()
+    {
+        $session    = new Container('itp_session');
+        return array(
+            'uid'           => $session->offsetGet('uid'),
+            'username'      => $session->offsetGet('username'),
+            'userGroupSlug' => $session->offsetGet('userGroupSlug'),
+        );
+    }
+
+    public function getLectureAttendanceAction()
+    {
+        $profile                    = $this->getUserProfile();
+        $NUMBER_OF_RECORDS_PER_PAGE = 10;
+        $pageNumber                 = $this->params()->fromQuery('page', 1);
+        $offset                     = ($pageNumber - 1) * $NUMBER_OF_RECORDS_PER_PAGE;
+
+        $serviceManager     = $this->getServiceLocator();
+        $attendanceTable    = $serviceManager->get('Application\Model\LectureAttendanceTable');
+        $attendanceRecords  = $attendanceTable->getLectureAttendanceUsingUid($profile['uid'], $offset, $NUMBER_OF_RECORDS_PER_PAGE);
+
+        $result   = array(
+            'isSuccessful'  => $attendanceRecords != null && $attendanceRecords->count() != 0,
+            'records'       => $this->getResultSetArray($attendanceRecords),
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    public function getLectureAttendanceTotalPagesAction()
+    {
+        $profile                    = $this->getUserProfile();
+        $NUMBER_OF_RECORDS_PER_PAGE = 10;
+
+        $serviceManager     = $this->getServiceLocator();
+        $attendanceTable    = $serviceManager->get('Application\Model\LectureAttendanceTable');
+        $totalPages         = ceil($attendanceTable->getCountUsingUid($profile['uid']) / $NUMBER_OF_RECORDS_PER_PAGE);
+
+        $result   = array(
+            'isSuccessful'  => $totalPages != 0,
+            'totalPages'    => $totalPages,
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    public function getLectureOpeningAction()
+    {
+
     }
 }

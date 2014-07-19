@@ -187,7 +187,7 @@ class TrainingController extends AbstractActionController
 
         $serviceManager             = $this->getServiceLocator();
         $lectureAttendanceTable     = $serviceManager->get('Application\Model\LectureAttendanceTable');
-        $attendance['participants'] = intval($lectureAttendanceTable->getCount($lectureId));
+        $attendance['participants'] = intval($lectureAttendanceTable->getCountUsingLectureId($lectureId));
 
         $uid = $this->getLoginUserUid();
         if ( $uid != 0 ) {
@@ -233,7 +233,7 @@ class TrainingController extends AbstractActionController
                 'remain_times'  => $participants,
             );
 
-            $alreadyParticipants    = $lectureAttendanceTable->getCount($lectureId);
+            $alreadyParticipants    = $lectureAttendanceTable->getCountUsingLectureId($lectureId);
             if ( $alreadyParticipants + $participants <= $maxCapcity ) {
                 $result['isSuccessful'] = $lectureAttendanceTable->createLectureAttendance($lectureAttendance);
             }

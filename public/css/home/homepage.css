@@ -4,6 +4,10 @@ html, body {
 	padding: 0;
 }
 
+div.container {
+	width: 70%;
+}
+
 div#header {
 	background: url('../../img/homepage/header-background.jpg') no-repeat right top #09bde2;
 	color: #fff;
@@ -28,7 +32,6 @@ div#guide {
 
 div#guide div#introduction {
 	margin: 0 auto;
-	width: 70%;
 }
 
 div#guide div#introduction div#logo {
@@ -50,7 +53,6 @@ div#guide div#selector {
 	color: #333;
 	margin: 60px auto;
 	padding: 10px;
-	width: 70%;
 	-webkit-box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, .25);
 	   -moz-box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, .25);
 			box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, .25);
@@ -95,20 +97,75 @@ div#selector div#selector-inner div.block > p {
 
 div#navigation {
 	background-color: #000;
+	overflow: hidden;
 	padding: 10px 0;
+	top: 0;
+	width: 100%;
+	z-index: 128;
 	-webkit-box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, .25);
 	   -moz-box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, .25);
 			box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, .25);
 }
 
 div#navigation ul.inline {
-	color: #999;
-	margin: 0 auto;
-	width: 70%;
+	float: left;
+	padding-top: 5px;
 }
 
 div#navigation ul.inline > li {
 	margin-right: 20px;
+}
+
+div#navigation ul.inline > li > a {
+	color: #999;
+	text-decoration: none;
+}
+
+div#navigation form#search {
+	float: right;
+}
+
+div#content div.section {
+	padding: 10px 0;
+}
+
+div#content div.section.light-background {
+	background-color: #f7f7ef;
+}
+
+div#content div#map-image {
+	color: #fff;
+	height: 630px;
+	padding: 0;
+}
+
+div#content div#map-image div.map-image {
+	background: url('../../img/homepage/map-image.png') no-repeat center;
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 630px;
+	z-index: 16;
+}
+
+div#content div#map-image div.left-background {
+	background-color: #04bcde;
+	left: 0;
+	position: absolute;
+	height: 630px;
+	width: 50%;
+}
+
+div#content div#map-image div.right-background {
+	background-color: #6eb444;
+	right: 0;
+	position: absolute;
+	height: 630px;
+	width: 50%;
+}
+
+div#content div#sign-up ul.inline {
+	margin-top: 10px;
 }
 
 div#footer {
@@ -116,7 +173,6 @@ div#footer {
 	font-size: 12px;
 	margin: 0 auto;
 	padding: 20px 0 10px;
-	width: 70%;
 }
 
 div#footer a {

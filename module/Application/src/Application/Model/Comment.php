@@ -17,13 +17,14 @@ class Comment {
      */
     public function exchangeArray($data)
     {
-        $this->commentId        = (!empty($data['comment_id']))     ? $data['comment_id']   : null;
-        $this->courseId         = (!empty($data['course_id']))      ? $data['course_id']    : null;
-        $this->reviewerUid      = (!empty($data['reviewer_uid']))   ? $data['reviewer_uid'] : null;
-        $this->reviewerUsername = (!empty($data['username']))       ? $data['username']     : null;
-        $this->commentTime      = (!empty($data['comment_time']))   ? $data['comment_time'] : null;
-        $this->ranking          = (!empty($data['ranking']))        ? $data['ranking']      : null;
-        $this->detail           = (!empty($data['detail']))         ? $data['detail']       : null;
+        $this->commentId        = (!empty($data['comment_id']))         ? $data['comment_id']       : null;
+        $this->lectureId        = (!empty($data['lecture_id']))         ? $data['lecture_id']       : null;
+        $this->courseId         = (!empty($data['course_id']))          ? $data['course_id']        : null;
+        $this->reviewerUid      = (!empty($data['reviewer_uid']))       ? $data['reviewer_uid']     : null;
+        $this->reviewerUsername = (!empty($data['username']))           ? $data['username']         : null;
+        $this->commentTime      = (!empty($data['comment_time']))       ? $data['comment_time']     : null;
+        $this->ranking          = (!empty($data['comment_ranking']))    ? $data['comment_ranking']  : null;
+        $this->detail           = (!empty($data['comment_detail']))     ? $data['comment_detail']   : null;
     }
 
     /**
@@ -31,6 +32,12 @@ class Comment {
      * @var int 
      */
     public $commentId;
+
+    /**
+     * 课程会话的唯一标识符.
+     * @var int
+     */
+    public $lectureId;
 
     /**
      * 课程唯一标识符.

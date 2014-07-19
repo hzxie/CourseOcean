@@ -38,9 +38,9 @@
                 <li><a href="<?php echo $this->basePath(); ?>/training/posts">培训动态</a></li>
             </ul>
             <ul class="inline right">
-                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard#mailbox">收件箱</a></li>
-                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard#profile">个人信息</a></li>
-                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard">我的账户</a></li>
+                <li><a href="#mailbox">收件箱</a></li>
+                <li><a href="#profile">个人信息</a></li>
+                <li class="active"><a href="<?php echo $this->basePath(); ?>/accounts/dashboard">我的账户</a></li>
             </ul>
         </div> <!-- #navigation -->
         <form id="search" action="<?php echo $this->basePath(); ?>/home/search">
@@ -49,13 +49,12 @@
         </form>
         <div id="content" class="row-fluid">
             <div id="sidebar" class="span3">
-                <div id="profile">
+                <div id="user-info">
                     <img src="<?php echo $this->basePath(); ?>/img/avatars/avatar.png" alt="avatar" class="img-circle" />
-                </div> <!-- #profile -->
+                </div> <!-- #user-info -->
                 <div id="sidebar-nav">
                     <ul id="nav">
-                        <li class="active"><a href="#lectures">我的培训课</a></li>
-                        <li><a href="#comments">我的评价</a></li>
+                        <li><a href="#lectures">我的培训课</a></li>
                         <li><a href="#requirements">我的需求</a></li>
                     </ul>
                 </div> <!-- #sidebar-nav -->
@@ -66,3 +65,67 @@
         </div> <!-- #content -->
     </div> <!-- #container -->
 </div> <!-- #wrapper -->
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var pageName = window.location.href.match(/#.*$/);
+        if ( pageName != null ) {
+            getPageContent(window.location.href.match(/#.*$/)[0].substr(1));
+        }
+    });
+</script> 
+<script type="text/javascript">
+    if ( ("onhashchange" in window) && !navigator.userAgent.toLowerCase().match(/msie/) ) {
+        $(window).on('hashchange', function() {
+            getPageContent(window.location.href.match(/#.*$/)[0].substr(1));
+        });
+    } else {
+        var prevHash = window.location.hash;
+        window.setInterval(function () {
+           if (window.location.hash != prevHash) {
+              prevHash = window.location.hash;
+              getPageContent(window.location.href.match(/#.*$/)[0].substr(1));
+           }
+        }, 100);
+    }
+</script>
+<script type="text/javascript">
+    function getPageContent(pageName){
+        var pageRequests = getPageRequests(pageName),
+            pageName     = pageRequests['pageName'],
+            pageRequest  = pageRequests['pageRequest'];
+
+        highlightNavObject(pageName);
+        $.ajax( {
+            type: 'GET',
+            url: "<?php echo $this->basePath(); ?>/accounts/getPageContent?pageName=" + pageName + '&' + pageRequest,
+            cache: false,
+            async: false,
+            success: function(pageContent) {
+                if ( pageContent !== '' ) {
+                    $("#main-content").html(pageContent);
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function getPageRequests(pageName) {
+        var pageRequests = pageName.split('?');
+        return {
+            'pageName' : pageRequests[0],
+            'pageRequest' : pageRequests[1] || ''
+        };
+    }
+</script>
+<script type="text/javascript">
+    function highlightNavObject(pageName) {
+        $('.active').removeClass('active');
+
+        var navObject = $('a[href=#' + pageName + ']');
+        if ( navObject.length == 0 ) {
+            alert('null');
+        }
+        $(navObject.parent()).addClass('active');
+    }
+</script>

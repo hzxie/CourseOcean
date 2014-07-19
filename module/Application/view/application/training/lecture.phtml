@@ -297,7 +297,7 @@
         getCommentTotalPages(courseId, pageNumber);
     });
 <?php $this->inlineScript()->captureEnd(); ?>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureStart(); ?>
     function attendLecture() {
     <?php if ( !$session->offsetExists('isLogined') ) : ?>
         window.location.href='<?php echo $this->basePath(); ?>/accounts/login?forward=/training/lecture?lectureId=<?php echo $lecture->lectureId; ?>';
@@ -323,4 +323,4 @@
         });
     <?php endif; ?>
     }
-</script>
+<?php $this->inlineScript()->captureEnd(); ?>

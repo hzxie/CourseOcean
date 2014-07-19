@@ -20,7 +20,7 @@
     </ul>
 </div> <!-- #header -->
 <div id="guide">
-    <div id="introduction">
+    <div id="introduction" class="container">
         <div id="logo">
             <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
         </div> <!-- #logo -->
@@ -29,7 +29,7 @@
             <h4>————朱少民, 曾任思科网讯QA总监</h4>
         </div> <!-- #slogan -->
     </div> <!-- #introduction -->
-    <div id="selector">
+    <div id="selector" class="container">
         <div id="selector-inner" class="row-fluid">
             <h4>选择课程或讲师</h4>
             <div id="course" class="span6">
@@ -50,12 +50,68 @@
     </div> <!-- #selector -->
 </div> <!-- #guide -->
 <div id="navigation">
-    <ul class="inline">
-        <li>热门课程</li>
-        <li>杰出讲师</li>
-        <li>培训动态</li>
-    </ul>
+    <div class="container">
+        <ul class="inline">
+            <li><a href="#lectures">热门课程</a></li>
+            <li><a href="#teachers">杰出讲师</a></li>
+            <li><a href="#posts">培训动态</a></li>
+        </ul>
+        <form id="search" class="form-search" action="<?php echo $this->basePath(); ?>/home/search">
+            <input name="keyword" type="text" placeholder="搜索课程或讲师" class="input-medium search-query" />
+            <button class="btn btn-success" type="submit">搜索</button>
+        </form>
+    </div> <!-- .container -->
 </div> <!-- #navigation -->
 <div id="content">
-    
+    <div id="lectures" class="section light-background">
+        <div class="container">
+            <h3>热门课程</h3>
+            <div class="row-fluid">                
+            </div> <!-- .row-fluid -->
+        </div> <!-- .container -->
+    </div> <!-- #lectures -->
+    <div id="teachers" class="section">
+        <div class="container">
+            <h3>杰出讲师</h3>
+            <div class="row-fluid">                
+            </div> <!-- .row-fluid -->
+        </div> <!-- .container -->
+    </div> <!-- #teachers -->
+    <div id="posts" class="section light-background">
+        <div class="container">
+            <h3>培训动态</h3>
+            <div class="row-fluid">                
+            </div> <!-- .row-fluid -->
+        </div> <!-- .container -->
+    </div> <!-- #posts -->
+    <div id="map-image" class="section">
+        <div class="map-image"></div> <!-- .map-image -->
+        <div class="left-background"></div> <!-- .left-background -->
+        <div class="right-background"></div> <!-- .right-background -->
+    </div> <!-- #map-image -->
+    <div id="sign-up" class="section light-background">
+        <div class="container row-fluid">
+            <div class="span8">
+                <h3>想获得更优质的培训服务?</h3>
+            </div> <!-- .span8 -->
+            <div class="span4">
+                <ul class="inline">
+                    <li><button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">加入我们</button></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/login">已有账号?</a></li>
+                </ul>
+            </div> <!-- .span4 -->
+        </div> <!-- .container -->
+    </div> <!-- #sign-up -->
 </div> <!-- #content -->
+
+<script type="text/javascript">
+    $(window).scroll(function() {
+        var offset = $('#content').offset().top - $('#navigation').outerHeight() - $(window).scrollTop();
+        
+        if ( offset <= 0 ) {
+            $('#navigation').css('position', 'fixed');
+        } else {
+            $('#navigation').css('position', 'relative');
+        }
+    });
+</script>

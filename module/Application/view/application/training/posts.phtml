@@ -67,14 +67,14 @@
     </div> <!-- .container -->
 </div> <!-- #container -->
 
-<script type="text/javascript">
+<?php $this->inlineScript()->captureStart(); ?>
     $('ul#category > li').click(function() {
         var category = $('a', this).attr('href').substring(1);
         getPosts(category, 1);
         getTotalPages(category, 1);
     });
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function getPosts(category, pageNumber) {
         $.ajax({
             type: 'GET',
@@ -92,8 +92,8 @@
             }
         });
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function displayPosts(posts) {
         var numberOfPosts = posts.length;
         for ( var i = 0; i < numberOfPosts; ++ i ) {
@@ -112,8 +112,8 @@
                                 + '</li>');
         }
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function getDateTime(dateTimeString) {
         var year    = dateTimeString.substring(0, 4),
             month   = dateTimeString.substring(5, 7),
@@ -122,8 +122,8 @@
 
         return year + '年' + month + '月' + day + '日 ' + time;
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     $('#pagination > ul').delegate('li', 'click', function(e) {
         e.preventDefault();
         if ( $(this).hasClass('disabled') ) {
@@ -144,8 +144,8 @@
         getTeachers(category, pageNumber);
         getTotalPages(category, pageNumber);
     });
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function getTotalPages(category, pageNumber) {
         $.ajax({
             type: 'GET',
@@ -163,8 +163,8 @@
             }
         });
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function displayPagination(currentPage, totalPages) {
         var lowerBound = ( currentPage - 5 > 0 ? currentPage - 5 : 1 ),
             upperBound = ( currentPage + 5 < totalPages ? currentPage + 5 : totalPages );
@@ -176,10 +176,10 @@
         paginationString     += '<li' + ( currentPage < totalPages ? '>' : ' class="disabled">') + '<a href="#">&gt;</a></li>';
         $('#pagination > ul').append(paginationString);
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     $(document).ready(function() {
         getPosts('all', 1);
         getTotalPages('all', 1);
     });
-</script>
+<?php $this->inlineScript()->captureEnd(); ?>

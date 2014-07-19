@@ -52,9 +52,11 @@ class CommentTable
      */
     public function getCountUsingCourseId($courseId)
     {
-        $resultSet = $this->tableGateway->select(array(
-            'course_id' => $courseId,
-        ));
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($courseId) {
+            $select->join('itp_lectures', 
+                          'itp_comments.lecture_id = itp_lectures.lecture_id');
+            $select->where->equalTo('course_id', $courseId);
+        });
         return $resultSet->count();
     }
 
@@ -68,8 +70,6 @@ class CommentTable
 	public function getCommentUsingUid($uid, $offset, $limit)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($uid, $offset, $limit) {
-            $select->join('itp_courses', 
-                          'itp_comments.course_id = itp_courses.course_id');
             $select->where->equalTo('reviewer_uid', $uid);
             $select->offset($offset);
             $select->limit($limit);
@@ -88,8 +88,10 @@ class CommentTable
     public function getCommentUsingCourseId($courseId, $offset, $limit)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($courseId, $offset, $limit) {
-            $select->join('itp_users', 
+            $select->join('itp_users',
                           'itp_comments.reviewer_uid = itp_users.uid');
+            $select->join('itp_lectures', 
+                          'itp_comments.lecture_id = itp_lectures.lecture_id');
             $select->where->equalTo('course_id', $courseId);
             $select->offset($offset);
             $select->limit($limit);

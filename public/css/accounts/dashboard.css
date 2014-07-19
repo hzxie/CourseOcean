@@ -1,4 +1,4 @@
-div#content div#sidebar div#profile {
+div#content div#sidebar div#user-info {
 	border-bottom: 5px solid #ccc;
 	margin: 0 10px;
 	padding-bottom: 10px;
@@ -29,4 +29,65 @@ div#content div#sidebar div#sidebar-nav li.active > a {
 	background: url("../../img/accounts/nav-arrow-green.png") no-repeat scroll right center #fff;
 	color: #6db33f;
 	font-weight: bold;
+}
+
+div#content div#main-content ul.pagination {
+	float: right;
+	font-size: 12px;
+	margin: 0;
+}
+
+div#content div#main-content ul.pagination > li {
+	color: #9c9c9c;
+	margin-left: 8px;
+	padding: 2px 8px 4px;
+}
+
+div#content div#main-content ul.pagination > li > a {
+	color: #9c9c9c;
+	text-decoration: none;
+}
+
+div#content div#main-content ul.pagination > li:hover > a {
+	border-color: #e6edef;
+	color: #f15a23;
+}
+
+div#content div#main-content ul.pagination > li.active {
+	background: #e6edef;
+	color: #707070;
+	padding: 2px 7px 4px;
+}
+
+div#content div#main-content ul.pagination > li.disabled {
+	display: none;
+}
+
+div#content div#main-content li.course h4 {
+	margin-top: 0;
+}
+
+div#content div#main-content ul.courses {
+	margin-top: 20px;
+	margin-left: 0;
+}
+
+div#content div#main-content ul.courses > li.course {
+	border-bottom: 1px dotted #565656;
+	color: #333;
+	font-size: 13px;
+	list-style: none;
+	margin-bottom: 20px;
+}
+
+div#content div#main-content ul.courses > li.course a {
+	color: #333;
+	text-decoration: none;
+}
+
+div#content div#main-content ul.courses > li.course h4 span.extra {
+	color: #666;
+	float: right;
+	font-size: 12px;
+	font-weight: normal;
 }

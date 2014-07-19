@@ -37,7 +37,7 @@ class LectureAttendanceTable
      * @param  int $lectureId - 课程会话的唯一标识符
      * @return 用户的参与人数
      */
-    public function getCount($lectureId)
+    public function getCountUsingLectureId($lectureId)
     {
         $rowSet = $this->tableGateway->select(function (Select $select) use ($lectureId) {
             $select->where->equalTo('lecture_id', $lectureId);
@@ -49,6 +49,19 @@ class LectureAttendanceTable
             return 0;
         }
         return $lectureAttendance->totalTimes;
+    }
+
+    /**
+     * 获取某个用户参加培训的次数.
+     * @param  int $uid - 用户的唯一标识符
+     * @return 用户参加培训的次数
+     */
+    public function getCountUsingUid($uid)
+    {
+        $resultSet = $this->tableGateway->select(array(
+            'uid'   => $uid,
+        ));
+        return $resultSet->count();
     }
 
     /**
@@ -71,11 +84,27 @@ class LectureAttendanceTable
      * @param  int $uid - 用户的唯一标识符
      * @return 一个课程会话参与对象
      */
-    public function getLectureAttendanceUsingUid($uid)
+    public function getLectureAttendanceUsingUid($uid, $offset, $limit)
     {
-        $resultSet = $this->tableGateway->select(array(
-            'uid'   => $uid,
-        ));
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($uid, $offset, $limit) {
+            $select->join('itp_lectures',
+                          'itp_lecture_attendance.lecture_id = itp_lectures.lecture_id');
+            $select->join('itp_courses',
+                          'itp_lectures.course_id = itp_courses.course_id');
+            $select->join('itp_course_types',
+                          'itp_courses.course_type_id = itp_course_types.course_type_id');
+            $select->join('itp_teachers',
+                          'itp_courses.teacher_id = itp_teachers.uid');
+            $select->join('itp_comments',
+                          'itp_lecture_attendance.lecture_id = itp_comments.lecture_id '.
+                          'AND itp_lecture_attendance.uid = itp_comments.reviewer_uid', 
+                          array('comment_ranking', 'comment_detail'), 
+                          $select::JOIN_LEFT);
+            $select->where->equalTo('itp_lecture_attendance.uid', $uid);
+            $select->offset($offset);
+            $select->limit($limit);
+            $select->order('lecture_start_time DESC');
+        });
         return $resultSet;
     }
 
