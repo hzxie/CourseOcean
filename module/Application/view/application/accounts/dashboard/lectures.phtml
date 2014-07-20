@@ -11,7 +11,6 @@
             url: '<?php echo $this->basePath(); ?>/accounts/getLectureAttendance?&page=' + pageNumber,
             dataType: 'JSON',
             success: function(result) {
-                console.log(result);
                 $('#attendance-records').empty();
                 if ( result['isSuccessful'] ) {
                     $('.no-courses').addClass('hide');
@@ -27,23 +26,46 @@
     function displayLectureAttendance(records) {
         var numberOfRecords = records.length;
         for ( var i = 0; i < numberOfRecords; ++ i ) {
-            $('#attendance-records').append('<li class="course row-fluid">'
-                                          + '    <div class="span3">'
-                                          + '        <img src="<?php echo $this->basePath(); ?>/img/categories/' + records[i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />'
-                                          + '    </div>'
-                                          + '    <div class="span9">'
-                                          + '        <h4>'
-                                          + '            <a href="<?php echo $this->basePath(); ?>/training/lecture?lectureId=' + records[i]['lectureId'] + '">' + records[i]['courseName'] + '</a>'
-                                          + '            <span class="extra">(报名序列号:' + records[i]['serialCode'] + ', 剩余次数: ' + (records[i]['remainTimes'] || '0') + '次)</span>'
-                                          + '        </h4>'
-                                          + '        <ul class="inline meta">'
-                                          + '            <li><i class="icon-user"></i> <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=' + records[i]['lectureTeacherId'] + '">' + records[i]['lectureTeacherName'] + '</a></li>'
-                                          + '            <li><i class="icon-calendar"></i> ' + getDateTime(records[i]['lectureStartTime']) + '~' + getDateTime(records[i]['lectureEndTime']) + '</li>'
-                                          + '            <li><i class="icon-map-marker"></i> ' + records[i]['lectureProvince'] + ( records[i]['lectureCity'] || '' ) + records[i]['lectureAddress'] + '</li>'
-                                          + '        </ul>'
+            var lectureString   = '',
+                commentString   = '';
 
-                                          + '    </div>'
-                                          + '</li>');
+            lectureString   = '<li class="course row-fluid">'
+                            + '    <div class="span3">'
+                            + '        <img src="<?php echo $this->basePath(); ?>/img/categories/' + records[i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />'
+                            + '    </div>'
+                            + '    <div class="span9">'
+                            + '        <h4>'
+                            + '            <a href="<?php echo $this->basePath(); ?>/training/lecture?lectureId=' + records[i]['lectureId'] + '">' + records[i]['courseName'] + '</a>'
+                            + '            <span class="extra">(报名序列号:' + records[i]['serialCode'] + ', 剩余次数: ' + (records[i]['remainTimes'] || '0') + '次)</span>'
+                            + '        </h4>'
+                            + '        <ul class="inline meta">'
+                            + '            <li><i class="icon-user"></i> <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=' + records[i]['lectureTeacherId'] + '">' + records[i]['lectureTeacherName'] + '</a></li>'
+                            + '            <li><i class="icon-calendar"></i> ' + getDateTime(records[i]['lectureStartTime']) + '~' + getDateTime(records[i]['lectureEndTime']) + '</li>'
+                            + '            <li><i class="icon-map-marker"></i> ' + records[i]['lectureProvince'] + ( records[i]['lectureCity'] || '' ) + records[i]['lectureAddress'] + '</li>'
+                            + '        </ul>'
+                            + '    </div>'
+                            + '</li>';
+            $('#attendance-records').append(lectureString);
+            
+            if ( records[i]['lectureEndTime'] < '<?php echo date("Y-m-d H:i:s"); ?>' ) {
+                if ( records[i]['commentDetail'] != null ) {
+                    commentString = getCommentString(records[i]['commentRanking'], records[i]['commentDetail']);
+                } else {
+                    commentString = '<li id="comment-' + records[i]['lectureId'] + '" class="comment row-fluid">'
+                                  + '    <div class="span3">'
+                                  + '        发表评论<br />'
+                                  + '        <span class="ranking-editable">' + getRankingString(0) + '</span>'
+                                  + '    </div>'
+                                  + '    <div class="span9">'
+                                  + '        <textarea rows="2" placeholder="请在此填写评论"></textarea>'
+                                  + '        <button class="btn btn-success btn-submit">提交</button>'
+                                  + '    </div>'
+                                  + '</li>';
+                }
+            } else {
+                commentString = '<li class="comment row-fluid"></li>';
+            }
+            $('#attendance-records').append(commentString);
         }
     }
 </script>
@@ -55,6 +77,52 @@
             time    = dateTimeString.substring(11, 16);
 
         return year + '年' + month + '月' + day + '日 ' + time;
+    }
+</script>
+<script type="text/javascript">
+    function getCommentString(commentRanking, commentDetail) {
+        commentString = '<li class="comment row-fluid">'
+                      + '    <div class="span3">'
+                      + '        我的评价<br />'
+                      + '        <span class="ranking">' + getRankingString(parseInt(commentRanking, 10)) + '</span>'
+                      + '    </div>'
+                      + '    <div class="span9">'
+                      + '        <p>' + commentDetail + '</p>'
+                      + '    </div>'
+                      + '</li>';
+        return commentString;
+    }
+</script>
+<script type="text/javascript">
+    function getRankingString(rankingLevel) {
+        var rankingImageString  = '';
+        for ( var i = 0; i < rankingLevel; ++ i ) {
+            rankingImageString += '<img src="<?php echo $this->basePath(); ?>/img/ranking/full-star.png" alt="Star" />';
+        }
+        for ( var i = rankingLevel; i < 5; ++ i ) {
+            rankingImageString += '<img src="<?php echo $this->basePath(); ?>/img/ranking/empty-star.png" alt="Star" />';
+        }
+        return rankingImageString;
+    }
+</script>
+<script type="text/javascript">
+    function getRankingLevel(rankingObject, currentObject) {
+        if ( typeof(currentObject) === 'undefined' ) {
+            return countRankingFullStars(rankingObject);
+        } else {
+            return $(currentObject, rankingObject).index() + 1;
+        }
+    }
+</script>
+<script type="text/javascript">
+    function countRankingFullStars(rankingObject) {
+        var fullStars = 0;
+        $('img', rankingObject).each(function() {
+            if ( $(this).attr('src').indexOf('full-star') > -1 ) {
+                ++ fullStars;
+            }
+        });
+        return fullStars;
     }
 </script>
 <script type="text/javascript">
@@ -109,6 +177,56 @@
         getLectureAttendance(pageNumber);
         getLectureAttendanceTotalPages(pageNumber);
     });
+</script>
+<script type="text/javascript">
+    $('ul#attendance-records').delegate('span.ranking-editable > img', 'click', function(event) {
+        var rankingObject = $(this).parent('span'),
+            currentObject = $(this);
+        $(rankingObject).html(getRankingString(getRankingLevel(rankingObject, currentObject)));
+    });
+</script>
+<script type="text/javascript">
+    $('ul#attendance-records').delegate('button.btn-submit', 'click', function() {
+        var buttonObject        = $(this),
+            commentObject       = $(this).parent().parent(),
+            lectureId           = $(commentObject).attr('id').substring(8);
+            rankingObject       = $('span.ranking-editable', commentObject),
+            commentRanking      = getRankingLevel(rankingObject),
+            commentTextObject   = $('textarea', commentObject),
+            commentDetail       = $(commentTextObject).val();
+
+        if ( commentRanking == 0 ) {
+            alert('请对课程进行评级.');
+            return;
+        } else if ( commentDetail === '' ) {
+            alert('请填写对课程的评价');
+            return;
+        }
+        return addComment(lectureId, commentRanking, commentDetail, commentObject, buttonObject);
+    });
+</script>
+<script type="text/javascript">
+    function addComment(lectureId, commentRanking, commentDetail, commentObject, buttonObject) {
+        $(buttonObject).attr('disabled', 'disabled');
+        
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?php echo $this->basePath(); ?>/accounts/addComment?lectureId=' + lectureId + 
+                 '&commentRanking=' + commentRanking + '&commentDetail=' + commentDetail,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    var commentRanking = result['commentRanking'],
+                        commentDetail  = result['commentDetail'];
+                    $(commentObject).html(getCommentString(commentRanking, commentDetail));
+                } else {
+                    alert('发生了未知错误, 请稍后再试.');
+                }
+                $(buttonObject).removeAttr('disabled');
+            }
+        });
+    }
 </script>
 
 <?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>

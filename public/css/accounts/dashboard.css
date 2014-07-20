@@ -69,15 +69,13 @@ div#content div#main-content li.course h4 {
 
 div#content div#main-content ul.courses {
 	margin-top: 20px;
+	list-style: none;
 	margin-left: 0;
 }
 
 div#content div#main-content ul.courses > li.course {
-	border-bottom: 1px dotted #565656;
 	color: #333;
 	font-size: 13px;
-	list-style: none;
-	margin-bottom: 20px;
 }
 
 div#content div#main-content ul.courses > li.course a {
@@ -90,4 +88,31 @@ div#content div#main-content ul.courses > li.course h4 span.extra {
 	float: right;
 	font-size: 12px;
 	font-weight: normal;
+}
+
+div#content div#main-content ul.courses > li.comment {
+	border-bottom: 1px dotted #565656;
+	color: #333;
+	font-size: 13px;
+	margin-bottom: 20px;
+	padding-bottom: 10px;
+}
+
+div#content div#main-content ul.courses > li.comment div.span3 {
+	text-align: right;
+}
+
+div#content div#main-content ul.courses > li.comment div.span9 {
+	color: #666;
+}
+
+div#content div#main-content ul.courses > li.comment textarea {
+	font-size: 12px;
+	resize: none;
+	width: 85%;
+}
+
+div#content div#main-content ul.courses > li.comment button.btn-submit {
+	float: right;
+	padding: 16px 10px;
 }

@@ -79,8 +79,11 @@ div#container ul#comments li.comment div.content div.meta {
 
 div#container ul#comments li.comment div.content span {
 	float: left;
-	font-size: 13px;
-	margin-right: 20px;
+	font-size: 12px;
+}
+
+div#container ul#comments li.comment div.content span.user {
+	width: 150px;
 }
 
 div#container ul#comments li.comment div.content span.ranking {

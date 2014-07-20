@@ -60,21 +60,21 @@
                 </div> <!-- #sidebar-nav -->
             </div> <!-- #sidebar -->
             <div id="main-content" class="span9">
-                
+                <h4>个人中心</h4>
             </div> <!-- .main-content -->
         </div> <!-- #content -->
     </div> <!-- #container -->
 </div> <!-- #wrapper -->
 
-<script type="text/javascript">
+<?php $this->inlineScript()->captureStart(); ?>
     $(document).ready(function() {
         var pageName = window.location.href.match(/#.*$/);
         if ( pageName != null ) {
             getPageContent(window.location.href.match(/#.*$/)[0].substr(1));
         }
     });
-</script> 
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     if ( ("onhashchange" in window) && !navigator.userAgent.toLowerCase().match(/msie/) ) {
         $(window).on('hashchange', function() {
             getPageContent(window.location.href.match(/#.*$/)[0].substr(1));
@@ -88,8 +88,8 @@
            }
         }, 100);
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function getPageContent(pageName){
         var pageRequests = getPageRequests(pageName),
             pageName     = pageRequests['pageName'],
@@ -108,8 +108,8 @@
             }
         });
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function getPageRequests(pageName) {
         var pageRequests = pageName.split('?');
         return {
@@ -117,8 +117,8 @@
             'pageRequest' : pageRequests[1] || ''
         };
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     function highlightNavObject(pageName) {
         $('.active').removeClass('active');
 
@@ -128,4 +128,4 @@
         }
         $(navObject.parent()).addClass('active');
     }
-</script>
+<?php $this->inlineScript()->captureEnd(); ?>

@@ -231,6 +231,10 @@ class AccountsController extends AbstractActionController
         return $session->offsetExists('isLogined');
     }
 
+    /**
+     * 获取所请求页面的内容.
+     * @return 包含页面内容的HTML字符串
+     */
     public function getPageContentAction()
     {
         $pageName = $this->params()->fromQuery('pageName');
@@ -246,7 +250,7 @@ class AccountsController extends AbstractActionController
 
     /**
      * 获取用户所在的用户组.
-     * @return [type] [description]
+     * @return 一个包含用户基本信息的数组
      */
     private function getUserProfile()
     {
@@ -258,6 +262,10 @@ class AccountsController extends AbstractActionController
         );
     }
 
+    /**
+     * 获取某个用户参加培训的信息.
+     * @return 一个包含用户参加培训信息的JSON数组
+     */
     public function getLectureAttendanceAction()
     {
         $profile                    = $this->getUserProfile();
@@ -269,7 +277,7 @@ class AccountsController extends AbstractActionController
         $attendanceTable    = $serviceManager->get('Application\Model\LectureAttendanceTable');
         $attendanceRecords  = $attendanceTable->getLectureAttendanceUsingUid($profile['uid'], $offset, $NUMBER_OF_RECORDS_PER_PAGE);
 
-        $result   = array(
+        $result = array(
             'isSuccessful'  => $attendanceRecords != null && $attendanceRecords->count() != 0,
             'records'       => $this->getResultSetArray($attendanceRecords),
         );
@@ -279,6 +287,10 @@ class AccountsController extends AbstractActionController
         return $response;
     }
 
+    /**
+     * 获取某个用户参加培训的信息的页面数量.
+     * @return 一个包含某个用户参加培训的信息页面数量的JSON数组
+     */
     public function getLectureAttendanceTotalPagesAction()
     {
         $profile                    = $this->getUserProfile();
@@ -288,7 +300,7 @@ class AccountsController extends AbstractActionController
         $attendanceTable    = $serviceManager->get('Application\Model\LectureAttendanceTable');
         $totalPages         = ceil($attendanceTable->getCountUsingUid($profile['uid']) / $NUMBER_OF_RECORDS_PER_PAGE);
 
-        $result   = array(
+        $result = array(
             'isSuccessful'  => $totalPages != 0,
             'totalPages'    => $totalPages,
         );
@@ -298,6 +310,68 @@ class AccountsController extends AbstractActionController
         return $response;
     }
 
+    /**
+     * 处理用户评价课程的请求.
+     * @return 包含若干标志位的JSON数组
+     */
+    public function addCommentAction()
+    {
+        $profile        = $this->getUserProfile();
+        $lectureId      = $this->params()->fromQuery('lectureId');
+        $commentRanking = $this->params()->fromQuery('commentRanking');
+        $commentDetail  = strip_tags($this->params()->fromQuery('commentDetail'));
+        $comment        = array(
+            'lecture_id'        => $lectureId,
+            'reviewer_uid'      => $profile['uid'],
+            'comment_ranking'   => $commentRanking,
+            'comment_detail'    => $commentDetail,
+        );
+
+        $isSuccessful   = $this->isCommentLegal($comment);
+        if ( $isSuccessful ) {
+            $serviceManager = $this->getServiceLocator();
+            $commentTable   = $serviceManager->get('Application\Model\CommentTable');
+            $isSuccessful   = $commentTable->createComment($comment);
+        }
+
+        $result = array(
+            'isSuccessful'  => $isSuccessful,
+            'commentRanking'=> $commentRanking,
+            'commentDetail' => $commentDetail,
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 检查所提交评论信息的合法性.
+     * @param  Array  $comment - 一个包含评论信息的数组
+     * @return 提交评论信息的合法性
+     */
+    private function isCommentLegal($comment)
+    {
+        $serviceManager     = $this->getServiceLocator();
+        $attendanceTable    = $serviceManager->get('Application\Model\LectureAttendanceTable');
+        $attendance         = $attendanceTable->getLectureAttendanceUsingUidAndLectureId($comment['reviewer_uid'], $comment['lecture_id']);
+        
+        $result = array(
+            'isSuccessful'      => false,
+            'isAttended'        => $attendance != null,
+            'hasCommented'      => $attendance != null && $attendance->commentDetail != null,
+            'isRankingLegal'    => $comment['comment_ranking'] > 0 && $comment['comment_ranking'] <= 5,
+            'isDetailEmpty'     => empty($comment['comment_detail']),
+        );
+        $result['isSuccessful'] = $result['isAttended'] && $result['isRankingLegal'] && 
+                                 !$result['hasCommented'] && !$result['isDetailEmpty'];
+        return $result['isSuccessful'];
+    }
+
+    /**
+     * 获取某个讲师用户所开设培训课的信息.
+     * @return 一个包含讲师用户所开设培训课的信息的JSON数组
+     */
     public function getLectureOpeningAction()
     {
 
