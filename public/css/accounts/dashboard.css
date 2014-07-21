@@ -74,8 +74,11 @@ div#content div#main-content ul.courses {
 }
 
 div#content div#main-content ul.courses > li.course {
+	border-bottom: 1px dotted #565656;
 	color: #333;
 	font-size: 13px;
+	margin-bottom: 20px;
+	padding-bottom: 10px;
 }
 
 div#content div#main-content ul.courses > li.course a {
@@ -90,11 +93,30 @@ div#content div#main-content ul.courses > li.course h4 span.extra {
 	font-weight: normal;
 }
 
+div#content div#main-content ul.courses > li.course p.brief {
+	color: #666;
+	font-size: 12px;
+	overflow: hidden;
+	padding-left: 5px;
+	height: 20px;
+}
+
+div#content div#main-content ul#attendance-records.courses > li.course {
+	border-bottom: none;
+	margin-bottom: 0;
+	padding: 0px;
+}
+
+div#content div#main-content ul#opening-courses.courses > li.course ul.meta a {
+	color: #6db33f;
+	font-size: 13px;
+}
+
 div#content div#main-content ul.courses > li.comment {
 	border-bottom: 1px dotted #565656;
 	color: #333;
 	font-size: 13px;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 	padding-bottom: 10px;
 }
 
@@ -115,4 +137,21 @@ div#content div#main-content ul.courses > li.comment textarea {
 div#content div#main-content ul.courses > li.comment button.btn-submit {
 	float: right;
 	padding: 16px 10px;
+}
+
+div#content div#main-content div.modal div.loading {
+	text-align: center;
+}
+
+div#content div#main-content div.modal div.row-fluid {
+	margin-bottom: 10px;
+}
+
+div#content div#main-content div.modal select.city,
+div#content div#main-content div.modal input#address {
+	margin-top: 10px;
+}
+
+div#content div#main-content div.modal textarea {
+	width: 480px;
 }

@@ -110,7 +110,7 @@ class TrainingController extends AbstractActionController
 
         $serviceManager = $this->getServiceLocator();
         $lectureTable   = $serviceManager->get('Application\Model\LectureTable');
-        $totalPages     = ceil($lectureTable->getCount($courseTypeId) / $NUMBER_OF_COURSES_PER_PAGE);
+        $totalPages     = ceil($lectureTable->getCountUsingCategory($courseTypeId) / $NUMBER_OF_COURSES_PER_PAGE);
 
         $result   = array(
             'isSuccessful'  => $totalPages != 0,
@@ -141,7 +141,7 @@ class TrainingController extends AbstractActionController
         $teacher            = $teacherTable->getTeacherUsingUid($lecture->teacherId);
         $courseModuleTable  = $serviceManager->get('Application\Model\CourseModuleTable');
         $courseModules      = $courseModuleTable->getCourseModulesUsingLectureId($lecture->lectureId);
-        $lectures           = $lectureTable->getLectureUsingCourseId($lecture->courseId);
+        $lectures           = $lectureTable->getLecturesUsingCourseId($lecture->courseId);
         return array(
             'lecture'       => $lecture,
             'teacher'       => $teacher,
@@ -234,7 +234,7 @@ class TrainingController extends AbstractActionController
             );
 
             $alreadyParticipants    = $lectureAttendanceTable->getCountUsingLectureId($lectureId);
-            if ( $alreadyParticipants + $participants <= $maxCapcity ) {
+            if ( $alreadyParticipants + $participants <= $maxCapcity && $uid != $lecture->teacherId ) {
                 $result['isSuccessful'] = $lectureAttendanceTable->createLectureAttendance($lectureAttendance);
             }
         }
@@ -314,7 +314,7 @@ class TrainingController extends AbstractActionController
 
         $serviceManager = $this->getServiceLocator();
         $courseTable    = $serviceManager->get('Application\Model\CourseTable');
-        $totalPages     = ceil($courseTable->getCount($courseTypeId) / $NUMBER_OF_COURSES_PER_PAGE);
+        $totalPages     = ceil($courseTable->getCountUsingCategory($courseTypeId) / $NUMBER_OF_COURSES_PER_PAGE);
 
         $result   = array(
             'isSuccessful'  => $totalPages != 0,
@@ -346,7 +346,7 @@ class TrainingController extends AbstractActionController
         $courseModuleTable  = $serviceManager->get('Application\Model\CourseModuleTable');
         $courseModules      = $courseModuleTable->getCourseModulesUsingCourseId($course->courseId);
         $lectureTable       = $serviceManager->get('Application\Model\LectureTable');
-        $lectures           = $lectureTable->getLectureUsingCourseId($course->courseId);
+        $lectures           = $lectureTable->getLecturesUsingCourseId($course->courseId);
         return array(
             'course'        => $course,
             'teacher'       => $teacher,

@@ -4,6 +4,7 @@ namespace Application\Model;
 
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Select;
 use Zend\Db\TableGateway\TableGateway;
 
@@ -37,7 +38,7 @@ class LectureTable
      * @param  int $categoryId - 课程会话类别的唯一标识符
      * @return 课程会话数量
      */
-    public function getCount($categoryId)
+    public function getCountUsingCategory($categoryId)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId) {
             if ( $categoryId != 0 ) {
@@ -45,6 +46,21 @@ class LectureTable
                               'itp_lectures.course_id = itp_courses.course_id');
                 $select->where->equalTo('course_type_id', $categoryId);
             }
+        });
+        return $resultSet->count();
+    }
+
+    /**
+     * 获取某个讲师用户开设课程会话的数量.
+     * @param  int $teacherId - 讲师用户的用户唯一标识符
+     * @return 课程会话数量
+     */
+    public function getCountUsingTeacherId($teacherId)
+    {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($teacherId) {
+            $select->join('itp_courses',
+                          'itp_lectures.course_id = itp_courses.course_id');
+            $select->where->equalTo('teacher_id', $teacherId);
         });
         return $resultSet->count();
     }
@@ -93,7 +109,7 @@ class LectureTable
      * @param  int $courseId - 课程的唯一标识符
      * @return 一个ResultSet对象, 包含若干个Lecture对象
      */
-    public function getLectureUsingCourseId($courseId)
+    public function getLecturesUsingCourseId($courseId)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($courseId) {
             $select->where->equalTo('course_id', $courseId);
@@ -103,11 +119,37 @@ class LectureTable
     }
 
     /**
+     * 使用讲师用户的用户唯一标识符获取课程会话对象.
+     * @param  int $teacherId - 讲师用户的用户唯一标识符 
+     * @param  int $offset    - 查询结果的Offset
+     * @param  int $limit     - 查询返回的记录数
+     * @return 一个ResultSet对象, 包含若干个Lecture对象
+     */
+    public function getLecturesUsingTeacherId($teacherId, $offset, $limit)
+    {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($teacherId, $offset, $limit) {
+            $select->columns(array(
+                '*',
+                'participants'    => new Expression("(SELECT COUNT(*) FROM itp_lecture_attendance WHERE itp_lecture_attendance.lecture_id = itp_lectures.lecture_id)"),
+            ));
+            $select->join('itp_courses',
+                          'itp_lectures.course_id = itp_courses.course_id');
+            $select->join('itp_course_types',
+                          'itp_courses.course_type_id = itp_course_types.course_type_id');
+            $select->where->equalTo('teacher_id', $teacherId);
+            $select->offset($offset);
+            $select->limit($limit);
+            $select->order('lecture_start_time DESC');
+        });
+        return $resultSet;
+    }
+
+    /**
      * @todo   添加对时间的筛选
      * 使用课程会话的课程类别获取课程会话对象.
      * @param  int $categoryId - 课程会话类别的唯一标识符
-     * @param  int $offset - 查询结果的Offset
-     * @param  int $limit  - 查询返回的记录数
+     * @param  int $offset     - 查询结果的Offset
+     * @param  int $limit      - 查询返回的记录数
      * @return 一个ResultSet对象, 包含若干个Lecture对象
      */
     public function getLecturesUsingCategory($categoryId, $offset, $limit)

@@ -1934,7 +1934,7 @@ input.search-query {
 }
 
 .control-group {
-	margin-bottom: 10px;
+	/*margin-bottom: 10px;*/
 }
 
 legend + .control-group {
@@ -2904,7 +2904,7 @@ table th[class*="span"],
 .dropdown-menu {
 	position: absolute;
 	top: 100%;
-	right: 0;
+	left: 0;
 	z-index: 1000;
 	display: none;
 	float: left;
@@ -3878,7 +3878,7 @@ input[type="submit"].btn.btn-mini {
 }
 
 .nav {
-	margin-bottom: 20px;
+	/*margin-bottom: 20px;*/
 	margin-left: 0;
 	list-style: none;
 }
@@ -4186,6 +4186,7 @@ input[type="submit"].btn.btn-mini {
 .tab-content > .tab-pane,
 .pill-content > .pill-pane {
 	display: none;
+	padding-left: 10px;
 }
 
 .tab-content > .active,
@@ -5127,7 +5128,7 @@ input[type="submit"].btn.btn-mini {
 }
 
 .modal {
-	position: fixed;
+	position: absolute;
 	top: 10%;
 	left: 50%;
 	z-index: 1050;
@@ -5177,7 +5178,7 @@ input[type="submit"].btn.btn-mini {
 
 .modal-body {
 	position: relative;
-	max-height: 400px;
+	/*max-height: 400px;*/
 	padding: 15px;
 	overflow-y: auto;
 }

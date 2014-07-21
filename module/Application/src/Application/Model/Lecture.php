@@ -35,8 +35,9 @@ class Lecture {
         $this->lectureAddress   = (!empty($data['lecture_address']))        ? $data['lecture_address']      : null;
         $this->minCapcity       = (!empty($data['lecture_min_capcity']))    ? $data['lecture_min_capcity']  : null;
         $this->maxCapcity       = (!empty($data['lecture_max_capcity']))    ? $data['lecture_max_capcity']  : null;
+        $this->participants     = (!empty($data['participants']))           ? $data['participants']         : null;
         $this->expense          = (!empty($data['lecture_expense']))        ? $data['lecture_expense']      : null;
-        $this->audience         = (!empty($data['course_audience']))    ? $data['course_audience']  : null;
+        $this->audience         = (!empty($data['course_audience']))        ? $data['course_audience']      : null;
         $this->brief            = (!empty($data['course_brief']))           ? $data['course_brief']         : null;
         $this->objective        = (!empty($data['course_objective']))       ? $data['course_objective']     : null;
         $this->precautions      = (!empty($data['lecture_precautions']))    ? $data['lecture_precautions']  : null;
@@ -149,6 +150,12 @@ class Lecture {
      * @var int
      */
     public $maxCapcity;
+
+    /**
+     * 课程会话已报名人数.
+     * @var int
+     */
+    public $participants;
 
     /**
      * 参加课程的费用.

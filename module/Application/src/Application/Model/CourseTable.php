@@ -37,13 +37,26 @@ class CourseTable
      * @param  int $categoryId - 课程类别的唯一标识符
      * @return 课程数量
      */
-    public function getCount($categoryId)
+    public function getCountUsingCategory($categoryId)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId) {
             if ( $categoryId != 0 ) {
                 $select->where->equalTo('course_type_id', $categoryId);
             }
         });
+        return $resultSet->count();
+    }
+
+    /**
+     * 获取某个讲师所开设课程的数量
+     * @param  int $teacherId - 讲师的用户唯一标识符
+     * @return 课程数量
+     */
+    public function getCountUsingTeacherId($teacherId)
+    {
+        $resultSet = $this->tableGateway->select(array(
+            'teacher_id'    => $teacherId,
+        ));
         return $resultSet->count();
     }
 
@@ -110,11 +123,18 @@ class CourseTable
      * @param  int $teacherId - 讲师用户的唯一标识符
      * @return 一个ResultSet对象, 包含若干个Course对象
      */
-    public function getCoursesUsingTeacherId($teacherId)
+    public function getCoursesUsingTeacherId($teacherId, $offset = 0, $limit = 0)
     {
-        $resultSet = $this->tableGateway->select(array(
-            'teacher_id'    => $teacherId,
-        ));
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($teacherId, $offset, $limit) {
+            $select->join('itp_course_types', 
+                          'itp_courses.course_type_id = itp_course_types.course_type_id');
+            $select->where->equalTo('teacher_id', $teacherId);
+            $select->order('course_id DESC');
+            $select->offset($offset);
+            if ( $limit != 0 ) {
+                $select->limit($limit);
+            }
+        });
         return $resultSet;
     }
     

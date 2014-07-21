@@ -217,7 +217,7 @@ class AccountsController extends AbstractActionController
         }
 
         return array(
-            'userGroupSlug' => $this->getUserProfile(),
+            'profile'   => $this->getUserProfile(),
         );
     }
 
@@ -369,10 +369,117 @@ class AccountsController extends AbstractActionController
     }
 
     /**
+     * 获取某个讲师用户所开设课程的信息.
+     * @return 一个包含讲师用户所开设课程的信息的JSON数组
+     */
+    public function getOpeningCoursesAction()
+    {
+        $profile                    = $this->getUserProfile();
+        $NUMBER_OF_COURSES_PER_PAGE = 10;
+        $pageNumber                 = $this->params()->fromQuery('page', 1);
+        $offset                     = ($pageNumber - 1) * $NUMBER_OF_COURSES_PER_PAGE;
+
+        $serviceManager     = $this->getServiceLocator();
+        $courseTable        = $serviceManager->get('Application\Model\CourseTable');
+        $courses            = $courseTable->getCoursesUsingTeacherId($profile['uid'], $offset, $NUMBER_OF_COURSES_PER_PAGE);
+
+        $result = array(
+            'isSuccessful'  => $courses != null && $courses->count() != 0,
+            'courses'       => $this->getResultSetArray($courses),
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 获取某个讲师用户所开设课程的页面数量.
+     * @return 一个包含讲师用户所开设课程的页面数量的JSON数组
+     */
+    public function getOpeningCourseTotalPagesAction()
+    {
+        $profile                    = $this->getUserProfile();
+        $NUMBER_OF_COURSES_PER_PAGE = 10;
+
+        $serviceManager     = $this->getServiceLocator();
+        $courseTable        = $serviceManager->get('Application\Model\CourseTable');
+        $totalPages         = ceil($courseTable->getCountUsingTeacherId($profile['uid']) / $NUMBER_OF_COURSES_PER_PAGE);
+
+        $result = array(
+            'isSuccessful'  => $totalPages != 0,
+            'totalPages'    => $totalPages,
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    public function addCourseAction()
+    {
+
+    }
+
+    private function isCourseLegal()
+    {
+
+    }
+
+    /**
      * 获取某个讲师用户所开设培训课的信息.
      * @return 一个包含讲师用户所开设培训课的信息的JSON数组
      */
-    public function getLectureOpeningAction()
+    public function getOpeningLecturesAction()
+    {
+        $profile                        = $this->getUserProfile();
+        $NUMBER_OF_LECTURES_PER_PAGE    = 10;
+        $pageNumber                     = $this->params()->fromQuery('page', 1);
+        $offset                         = ($pageNumber - 1) * $NUMBER_OF_LECTURES_PER_PAGE;
+
+        $serviceManager     = $this->getServiceLocator();
+        $lectureTable       = $serviceManager->get('Application\Model\LectureTable');
+        $lectures           = $lectureTable->getLecturesUsingTeacherId($profile['uid'], $offset, $NUMBER_OF_LECTURES_PER_PAGE);
+
+        $result = array(
+            'isSuccessful'  => $lectures != null && $lectures->count() != 0,
+            'lectures'      => $this->getResultSetArray($lectures),
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 获取某个讲师开设培训课的页面数量
+     * @return 一个包含讲师开设培训课的页面数量的JSON数组
+     */
+    public function getOpeningLectureTotalPagesAction()
+    {
+        $profile                        = $this->getUserProfile();
+        $NUMBER_OF_LECTURES_PER_PAGE    = 10;
+
+        $serviceManager     = $this->getServiceLocator();
+        $lectureTable       = $serviceManager->get('Application\Model\LectureTable');
+        $totalPages         = ceil($lectureTable->getCountUsingTeacherId($profile['uid']) / $NUMBER_OF_LECTURES_PER_PAGE);
+
+        $result = array(
+            'isSuccessful'  => $totalPages != 0,
+            'totalPages'    => $totalPages,
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    public function addLectureAction()
+    {
+
+    }
+
+    private function isLectureLegal()
     {
 
     }

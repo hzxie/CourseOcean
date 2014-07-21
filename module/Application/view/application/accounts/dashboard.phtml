@@ -54,8 +54,12 @@
                 </div> <!-- #user-info -->
                 <div id="sidebar-nav">
                     <ul id="nav">
-                        <li><a href="#lectures">我的培训课</a></li>
-                        <li><a href="#requirements">我的需求</a></li>
+                        <li><a href="#lecture">我的培训课</a></li>
+                        <?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
+                        <li><a href="#course">开设新课程</a></li>
+                        <li><a href="#comment">我收到的评价</a></li>
+                        <?php endif; ?>
+                        <li><a href="#requirement">我的需求</a></li>
                     </ul>
                 </div> <!-- #sidebar-nav -->
             </div> <!-- #sidebar -->
@@ -124,7 +128,7 @@
 
         var navObject = $('a[href=#' + pageName + ']');
         if ( navObject.length == 0 ) {
-            alert('null');
+            
         }
         $(navObject.parent()).addClass('active');
     }
