@@ -1,6 +1,347 @@
-<h4>开设新课程</h4>
+<h4 class="page-heading">开设新课程</h4>
+<div id="page-error" class="alert alert-error span10 hide">您没有修改本课程的权限.</div> <!-- #page-error -->
+<div class="row-fluid">
+    <div class="span6">
+        <label for="course-name">课程名称</label>
+        <input id="course-name" type="text" />
+        <input id="course-id" type="hidden" />
+    </div> <!-- .span6 -->
+    <div class="span6">
+        <label for="course-type">课程分类</label>
+        <select id="course-type"></select>
+    </div> <!-- .span6 -->
+</div> <!-- .row-fluid -->
+<div class="row-fluid">
+    <div class="span6">
+        <label for="course-cycle">课程周期</label>
+        <div class="input-append">
+            <input class="span12" id="course-cycle" type="text" />
+            <span class="add-on">天</span>
+        </div> <!-- .input-append -->
+    </div> <!-- .span6 -->
+    <div class="span6">
+        <label for="course-audience">课程听众</label>
+        <input id="course-audience" type="text" />
+    </div> <!-- .span6 -->
+</div> <!-- .row-fluid -->
+<div class="row-fluid">
+    <div class="span12">
+        <label for="course-brief">课程概述</label>
+        <textarea id="course-brief" class="span10" rows="5"></textarea>
+    </div> <!-- .span12 -->
+</div> <!-- .row-fluid -->
+<div class="row-fluid">
+    <div class="span12">
+        <label for="course-objective">课程目标</label>
+        <textarea id="course-objective" class="span10" rows="5"></textarea>
+    </div> <!-- .span12 -->
+</div> <!-- .row-fluid -->
+<div class="row-fluid">
+    <div class="span10">
+        <label for="course-modules">课程模块<span class="pull-right"><a href="javascript:void(0)" id="new-course-module">创建新模块</a></span></label>
+        <p class="no-course-modules hide">暂无可选择的课程模块.</p>
+        <ul id="course-modules" class="inline"></ul>
+    </div> <!-- .span12 -->
+</div> <!-- .row-fluid -->
+<div class="row-fluid">
+    <button class="btn btn-primary">确认</button>
+    <button class="btn">重置</button>
+</div> <!-- .row-fluid -->
+
+<div id="course-module-modal" class="modal fade hide">
+    <div class="modal-header">
+        <h4>创建课程模块</h4>
+    </div> <!-- .model-header -->
+    <div class="modal-body">
+        <div class="row-fluid">
+            <div id="course-module-error" class="alert alert-error hide"></div>
+        </div> <!-- .row-fluid -->
+        <div class="row-fluid">
+            <div class="span6">
+                <label for="course-module-name">课程模块名称</label>
+                <input id="course-module-name" type="text" />
+                <input id="course-module-id" type="hidden" />
+            </div> <!--.span6 -->
+            <div class="span6">
+                <label for="course-module-cycle">授课时间(分钟)</label>
+                <div class="input-append">
+                    <input class="span12" id="course-module-cycle" type="text" />
+                    <span class="add-on">分</span>
+                </div> <!-- .input-append -->
+            </div> <!--.span6 -->
+        </div> <!-- .row-fluid -->
+        <div class="row-fluid">
+            <div class="span12">
+                <label for="course-module-brief">课程模块概述</label>
+                <textarea id="course-module-brief" rows="3"></textarea>
+            </div> <!--.span12 -->
+        </div> <!-- .row-fluid -->
+        <div class="row-fluid">
+            <div class="span12">
+                <label for="course-module-outline">课程模块大纲</label>
+                <textarea id="course-module-outline" rows="3"></textarea>
+            </div> <!--.span12 -->
+        </div> <!-- .row-fluid -->
+    </div> <!-- .modal-body -->
+    <div class="modal-footer">
+        <button class="btn btn-primary">确认</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+    </div> <!-- .modal-footer -->
+</div>
 
 <script type="text/javascript">
-	$(document).ready(function() {
-	});
+    function getCourseTypes() {
+        $.ajax({
+            type: 'GET',
+            async: false,
+            url: '<?php echo $this->basePath(); ?>/accounts/getCourseTypes',
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    var courseTypes = result['courseTypes'];
+                    for ( var i = 0; i < courseTypes.length; ++ i ) {
+                        $('select#course-type').append('<option value="' + 
+                                                        courseTypes[i]['courseTypeSlug'] + '">' + 
+                                                        courseTypes[i]['courseTypeName'] + '</option>');
+                    }
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function getCourseModules() {
+        $.ajax({
+            type: 'GET',
+            async: false,
+            url: '<?php echo $this->basePath(); ?>/accounts/getCourseModules',
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    var courseModules = result['courseModules'];
+                    for ( var i = 0; i < courseModules.length; ++ i ) {
+                        var courseModuleId      = courseModules[i]['courseModuleId'],
+                            courseModuleName    = courseModules[i]['courseModuleName'];
+                        $('#course-modules').append('<li>' + 
+                                                         '<input id="course-module-' + courseModuleId + '" type="checkbox" />' +
+                                                         '<label for="course-module-' + courseModuleId + '">' +
+                                                             '<a href="javascript:void(0);">' + courseModuleName + '</a>' +
+                                                         '</label>' +
+                                                    '</li>');
+                    }
+                    $('.no-course-modules').addClass('hide');
+                } else {
+                    $('.no-course-modules').removeClass('hide');
+                }
+            }
+        });
+        
+    }
+</script>
+<script type="text/javascript">
+    function getCourse(courseId) {
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?php echo $this->basePath(); ?>/accounts/getCourse?&courseId=' + courseId,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    $('textarea').removeAttr('disabled');
+                    $('#page-error').addClass('hide');
+                    displayCourses(result['course']);
+                } else {                   
+                    $('input, textarea, select').attr('disabled', 'disabled');
+                    $('input, textarea, select').val('');
+                    $('#page-error').removeClass('hide');
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function displayCourses(course) {
+        $('#course-id').val(course['courseId']);
+        $('#course-name').val(course['courseName']);
+        $('#course-name').attr('disabled', 'disabled');
+        $('#course-type').val(course['courseTypeSlug']);
+        $('#course-cycle').val(course['courseCycle']);
+        $('#course-audience').val(course['audience']);
+        $('#course-brief').val(course['brief']);
+        $('#course-objective').val(course['objective']);
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var courseId = window.location.href.match(/\?.*$/);
+        getCourseTypes();
+        getCourseModules();
+
+        if ( courseId != null ) {
+            $('.page-heading').html('编辑课程');
+
+            courseId = window.location.href.match(/\?.*$/)[0].substr(10);
+            getCourse(courseId);
+        }
+    });
+</script>
+<script type="text/javascript">
+    $('#new-course-module').click(function() {
+        $('#course-module-modal h4').html('创建课程模块');
+        $('#course-module-modal #course-module-name').removeAttr('disabled');
+        $('#course-module-error').addClass('hide');
+        $('#course-module-name').val('');
+        $('#course-module-cycle').val('');
+        $('#course-module-brief').val('');
+        $('#course-module-outline').val('');
+        $('#course-module-modal').modal();
+    });
+</script>
+<script type="text/javascript">
+    $('#course-module-modal .btn-primary').click(function() {
+        var courseModuleId      = $('#course-module-id').val(),
+            courseModuleName    = $('#course-module-name').val(),
+            courseModuleCycle   = $('#course-module-cycle').val(),
+            courseModuleBrief   = $('#course-module-brief').val(),
+            courseModuleOutline = $('#course-module-outline').val();
+
+        $(this).attr('disabled', 'disabled');
+        $(this).html('正在处理...');
+
+        if ( courseModuleId === '' ) {
+            return createCourseModule(courseModuleName, courseModuleCycle, 
+                                      courseModuleBrief, courseModuleOutline);
+        } else {
+            return updateCourseModule(courseModuleId, courseModuleCycle, 
+                                      courseModuleBrief, courseModuleOutline);
+        }
+    });
+</script>
+<script type="text/javascript">
+    function createCourseModule(courseModuleName, courseModuleCycle, courseModuleBrief, courseModuleOutline) {
+        var postData = 'courseModuleName=' + courseModuleName + '&courseModuleCycle=' + courseModuleCycle + 
+                      '&courseModuleBrief=' + courseModuleBrief +  '&courseModuleOutline=' + courseModuleOutline;
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: '<?php echo $this->basePath(); ?>/accounts/createCourseModule',
+            data: postData,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    $('#course-module-error').addClass('hide');
+                    $('.no-course-modules').addClass('hide');
+                    
+                    var courseModuleId = result['courseModuleId'];
+                    $('#course-modules').append('<li>' + 
+                                                     '<input id="course-module-' + courseModuleId + '" type="checkbox" />' +
+                                                     '<label for="course-module-' + courseModuleId + '">' +
+                                                         '<a href="javascript:void(0);">' + courseModuleName + '</a>' +
+                                                     '</label>' +
+                                                '</li>');
+
+                    $('#course-module-modal').modal('hide');
+                } else {
+                    var errorMessage  = '';
+                    if ( result['isCourseModuleNameEmpty'] ) {
+                        errorMessage += '请填写课程模块名称.<br>';
+                    } else if ( !result['isCourseModuleLegal'] ) {
+                        errorMessage += '课程模块名称不能超过128个字符.<br>';
+                    }
+                    if ( result['isCourseModuleCycleEmpty'] ) {
+                        errorMessage += '请填写课程模块授课时间.<br>';
+                    } else if ( !result['isCourseModuleCycleLegal'] ) {
+                        errorMessage += '请填写合理的课程模块授课时间.<br>';
+                    }
+                    if ( result['isCourseModuleBriefEmpty'] ) {
+                        errorMessage += '请填写课程模块概述.<br>';
+                    }
+                    if ( result['isCourseModuleOutlineEmpty'] ) {
+                        errorMessage += '请填写课程模块大纲.<br>';
+                    }
+                    $('#course-module-error').html(errorMessage);
+                    $('#course-module-error').removeClass('hide');
+                }
+            }
+        });
+        $('#course-module-modal .btn-primary').html('确认');
+        $('#course-module-modal .btn-primary').removeAttr('disabled');
+    }
+</script>
+<script type="text/javascript">
+    $('#course-modules').delegate('a', 'click', function(event) {
+        var courseModuleId = $(this).parent().attr('for').substr(14);
+        getCourseModule(courseModuleId)
+        
+        $('#course-module-modal h4').html('编辑课程模块');
+        $('#course-module-modal').modal();
+    });
+</script>
+<script type="text/javascript">
+    function getCourseModule(courseModuleId) {
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?php echo $this->basePath(); ?>/accounts/getCourseModule?&courseModuleId=' + courseModuleId,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    $('textarea').removeAttr('disabled');
+                    $('#course-module-error').addClass('hide');
+                    displayCourseModule(result['courseModule']);
+                } else {                   
+                    $('input, textarea, select').attr('disabled', 'disabled');
+                    $('input, textarea, select').val('');
+                    $('#course-module-error').html('您没有修改本课程模块的权限.');
+                    $('#course-module-error').removeClass('hide');
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function displayCourseModule(courseModule) {
+        $('#course-module-id').val(courseModule['courseModuleId']);
+        $('#course-module-name').val(courseModule['courseModuleName']);
+        $('#course-module-name').attr('disabled', 'disabled');
+        $('#course-module-cycle').val(courseModule['courseModuleCycle']);
+        $('#course-module-brief').val(courseModule['courseModuleBrief']);
+        $('#course-module-outline').val(courseModule['courseModuleOutline']);
+    }
+</script>
+<script type="text/javascript">
+    function updateCourseModule(courseModuleId, courseModuleCycle, courseModuleBrief, courseModuleOutline) {
+        var postData = 'courseModuleId=' + courseModuleId + '&courseModuleCycle=' + courseModuleCycle + 
+                      '&courseModuleBrief=' + courseModuleBrief +  '&courseModuleOutline=' + courseModuleOutline;
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: '<?php echo $this->basePath(); ?>/accounts/updateCourseModule',
+            data: postData,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    $('#course-module-error').addClass('hide');
+                    $('#course-module-modal').modal('hide');
+                } else {
+                    var errorMessage  = '';
+                    if ( result['isCourseModuleCycleEmpty'] ) {
+                        errorMessage += '请填写课程模块授课时间.<br>';
+                    } else if ( !result['isCourseModuleCycleLegal'] ) {
+                        errorMessage += '请填写合理的课程模块授课时间.<br>';
+                    }
+                    if ( result['isCourseModuleBriefEmpty'] ) {
+                        errorMessage += '请填写课程模块概述.<br>';
+                    }
+                    if ( result['isCourseModuleOutlineEmpty'] ) {
+                        errorMessage += '请填写课程模块大纲.<br>';
+                    }
+                    $('#course-module-error').html(errorMessage);
+                    $('#course-module-error').removeClass('hide');
+                }
+            }
+        });
+        $('#course-module-modal .btn-primary').html('确认');
+        $('#course-module-modal .btn-primary').removeAttr('disabled');
+    }
 </script>

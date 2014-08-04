@@ -1,3 +1,7 @@
+textarea {
+	resize: none;
+}
+
 div#content div#sidebar div#user-info {
 	border-bottom: 5px solid #ccc;
 	margin: 0 10px;
@@ -29,6 +33,10 @@ div#content div#sidebar div#sidebar-nav li.active > a {
 	background: url("../../img/accounts/nav-arrow-green.png") no-repeat scroll right center #fff;
 	color: #6db33f;
 	font-weight: bold;
+}
+
+div#content div#main-content div.row-fluid {
+	margin-bottom: 10px;
 }
 
 div#content div#main-content ul.pagination {
@@ -63,6 +71,7 @@ div#content div#main-content ul.pagination > li.disabled {
 	display: none;
 }
 
+/** StyleSheet for Lecture **/
 div#content div#main-content li.course h4 {
 	margin-top: 0;
 }
@@ -130,7 +139,6 @@ div#content div#main-content ul.courses > li.comment div.span9 {
 
 div#content div#main-content ul.courses > li.comment textarea {
 	font-size: 12px;
-	resize: none;
 	width: 85%;
 }
 
@@ -143,10 +151,6 @@ div#content div#main-content div.modal div.loading {
 	text-align: center;
 }
 
-div#content div#main-content div.modal div.row-fluid {
-	margin-bottom: 10px;
-}
-
 div#content div#main-content div.modal select.city,
 div#content div#main-content div.modal input#address {
 	margin-top: 10px;
@@ -154,4 +158,35 @@ div#content div#main-content div.modal input#address {
 
 div#content div#main-content div.modal textarea {
 	width: 480px;
+}
+
+/** StyleSheet for Course **/
+div#content div#main-content div.alert {
+	margin-left: 0;
+}
+
+div#content div#main-content div#course-module-modal div.alert {
+	width: 445px;
+}
+
+div#content div#main-content ul#course-modules li {
+	margin-bottom: 5px;
+}
+
+div#content div#main-content ul#course-modules input[type=checkbox] {
+	margin-top: 0;
+}
+
+div#content div#main-content ul#course-modules label {
+	display: inline;
+	font-size: 13px;
+}
+
+div#content div#main-content ul#course-modules a {
+	color: #333;
+	text-decoration: none;
+}
+
+div#content div#main-content div#course-module-modal {
+	top: 400px;
 }

@@ -113,7 +113,7 @@ class CourseModuleTable
     public function createCourseModule($courseModule)
     {
         $this->tableGateway->insert($courseModule);
-        return true;
+        return $this->tableGateway->getAdapter()->getDriver()->getConnection()->getLastGeneratedValue();
     }
 
     /**
@@ -121,7 +121,7 @@ class CourseModuleTable
      * @param  Array $courseModule - 一个包含课程模块信息的数组
      * @return 操作是否成功完成
      */
-    public function updateCourse($courseModule)
+    public function updateCourseModule($courseModule)
     {
         $this->tableGateway->update($courseModule, array(
             'course_module_id'  => $courseModule['course_module_id'],
@@ -134,7 +134,7 @@ class CourseModuleTable
      * @param  int $courseModuleId - 课程模块的唯一标识符
      * @return 操作是否成功完成
      */
-    public function deleteCourse($courseModuleId)
+    public function deleteCourseModule($courseModuleId)
     {
         $this->tableGateway->delete(array(
             'course_module_id'  => $courseModuleId,
