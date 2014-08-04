@@ -146,7 +146,7 @@ class CourseTable
     public function createCourse($course)
     {
         $this->tableGateway->insert($course);
-        return true;
+        return $this->tableGateway->getAdapter()->getDriver()->getConnection()->getLastGeneratedValue();
     }
 
     /**

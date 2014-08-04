@@ -497,7 +497,7 @@ class AccountsController extends AbstractActionController
         return $response;
     }
 
-    public function addLectureAction()
+    public function createLectureAction()
     {
 
     }
@@ -505,64 +505,6 @@ class AccountsController extends AbstractActionController
     private function isLectureLegal()
     {
 
-    }
-
-    public function getCourseModuleAction()
-    {
-        $courseModuleId     = $this->params()->fromQuery('courseModuleId');
-
-        $serviceManager     = $this->getServiceLocator();
-        $courseModuleTable  = $serviceManager->get('Application\Model\CourseModuleTable');
-        $courseModule       = null;
-
-        if ( $courseModuleId != null ) {
-            $profile        = $this->getUserProfile();
-            $teacherId      = $profile['uid'];
-            $courseModule   = $courseModuleTable->getCoureModuleUsingCourseModuleId($courseModuleId);
-
-            if ( $courseModule == null || $courseModule->teacherId != $teacherId ) {
-                $courseModule = null;
-            }
-        }
-
-        $result = array(
-            'isSuccessful'  => $courseModule != null,
-            'courseModule'  => $courseModule,
-        );
-        $response = $this->getResponse();
-        $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
-        return $response;
-    }
-
-    /**
-     * 获取某个课程所包含的课程模块.
-     * @return 一个包含课程模块信息的JSON数组
-     */
-    public function getCourseModulesAction()
-    {
-        $courseId   = $this->params()->fromQuery('courseId');
-
-        $serviceManager     = $this->getServiceLocator();
-        $courseModuleTable  = $serviceManager->get('Application\Model\CourseModuleTable');
-        $courseModules      = null;
-        
-        if ( $courseId == null ) {
-            $profile        = $this->getUserProfile();
-            $teacherId      = $profile['uid'];
-            $courseModules  = $courseModuleTable->getCourseModulesUsingTeacherId($teacherId);
-        } else {
-            $courseModules  = $courseModuleTable->getCourseModulesUsingCourseId($courseId);
-        }
-
-        $result = array(
-            'isSuccessful'  => $courseModules != null && $courseModules->count() != 0,
-            'courseModules' => $this->getResultSetArray($courseModules),
-        );
-        $response = $this->getResponse();
-        $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
-        return $response;
     }
 
     /**
@@ -598,13 +540,184 @@ class AccountsController extends AbstractActionController
     }
 
     /**
-     * 处理讲师用户创建课程模块的请求.
-     * @return 一个包含若干标志位的JSON数组.
+     * 处理讲师用户创建课程的请求.
+     * @return 一个包含若干标志位的JSON数组
      */
-    public function addCourseModuleAction()
+    public function createCourseAction()
+    {
+        $courseName             = strip_tags($this->getRequest()->getPost('courseName'));
+        $courseTypeSlug         = strip_tags($this->getRequest()->getPost('courseTypeSlug'));
+        $courseCycle            = strip_tags($this->getRequest()->getPost('courseCycle'));
+        $courseAudience         = strip_tags($this->getRequest()->getPost('courseAudience'));
+        $courseBrief            = strip_tags($this->getRequest()->getPost('courseBrief'));
+        $courseObjective        = strip_tags($this->getRequest()->getPost('courseObjective'));
+        $courseModules          = strip_tags($this->getRequest()->getPost('courseModules'));
+        $courseTypeId           = $this->getCourseTypeId($courseTypeSlug);
+
+        $profile                = $this->getUserProfile();
+        $teacherId              = $profile['uid'];
+        $course                 = array(
+            'course_name'       => $courseName,
+            'course_type_id'    => $courseTypeId,
+            'teacher_id'        => $teacherId,
+            'course_cycle'      => $courseCycle,
+            'course_audience'   => $courseAudience,
+            'course_brief'      => $courseBrief,
+            'course_objective'  => $courseObjective,
+        );
+        $result = $this->isCourseLegal($course);
+        
+        if ( $result['isSuccessful'] ) {
+            $serviceManager     = $this->getServiceLocator();
+            $courseTable        = $serviceManager->get('Application\Model\CourseTable');
+            $courseId           = $courseTable->createCourse($course);
+        }
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    public function updateCourseAction()
+    {
+        $courseId               = $this->getRequest()->getPost('courseId');
+        $courseTypeSlug         = strip_tags($this->getRequest()->getPost('courseTypeSlug'));
+        $courseCycle            = strip_tags($this->getRequest()->getPost('courseCycle'));
+        $courseAudience         = strip_tags($this->getRequest()->getPost('courseAudience'));
+        $courseBrief            = strip_tags($this->getRequest()->getPost('courseBrief'));
+        $courseObjective        = strip_tags($this->getRequest()->getPost('courseObjective'));
+        $courseModules          = strip_tags($this->getRequest()->getPost('courseModules'));
+        $courseTypeId           = $this->getCourseTypeId($courseTypeSlug);
+        
+        $serviceManager         = $this->getServiceLocator();
+        $courseTable            = $serviceManager->get('Application\Model\CourseTable');
+        $course                 = $courseTable->getCourseUsingCourseId($courseId);
+        $profile                = $this->getUserProfile();
+        $teacherId              = $profile['uid'];
+
+        if ( $course == null || $course->teacherId != $teacherId ) {
+            return array(
+                'isSuccessful'  => false,
+            );
+        }
+        $course                 = array(
+            'course_id'         => $courseId,
+            'course_name'       => $course->courseName,
+            'course_type_id'    => $courseTypeId,
+            'teacher_id'        => $teacherId,
+            'course_cycle'      => $courseCycle,
+            'course_audience'   => $courseAudience,
+            'course_brief'      => $courseBrief,
+            'course_objective'  => $courseObjective,
+        );
+        $result = $this->isCourseLegal($course);
+        
+        if ( $result['isSuccessful'] ) {
+            $result['isSuccessful'] = $courseTable->updateCourse($course);
+        }
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 检查所提交的课程信息是否合法.
+     * @param  Array  $course - 一个包含课程信息的数组
+     * @return 一个包含若干标志位的数组
+     */
+    private function isCourseLegal($course)
+    {
+        $result = array(
+            'isCourseNameEmpty'     => empty($course['course_name']),
+            'isCourseNameLegal'     => strlen($course['course_name']) <= 128,
+            'isCourseTypeIdLegal'   => $course['course_type_id'] != 0,
+            'isCourseCycleEmpty'    => empty($course['course_cycle']),
+            'isCourseCycleLegal'    => is_numeric($course['course_cycle']) && $course['course_cycle'] > 0,
+            'isCourseAudienceEmpty' => empty($course['course_audience']),
+            'isCourseAudienceLegal' => strlen($course['course_audience']) <= 256,
+            'isCourseBriefEmpty'    => empty($course['course_brief']),
+            'isCourseObjectiveEmpty'=> empty($course['course_objective']),
+        );
+
+        $result['isSuccessful'] = !$result['isCourseNameEmpty']     &&  $result['isCourseNameLegal'] &&
+                                   $result['isCourseTypeIdLegal']   && !$result['isCourseCycleEmpty'] &&
+                                   $result['isCourseCycleLegal']    && !$result['isCourseAudienceEmpty'] &&
+                                   $result['isCourseAudienceLegal'] && !$result['isCourseBriefEmpty'] &&
+                                  !$result['isCourseObjectiveEmpty'];
+        return $result;
+    }
+
+    /**
+     * 获取某个课程模块的信息.
+     * @return 一个包含课程模块信息的数组
+     */
+    public function getCourseModuleAction()
+    {
+        $courseModuleId     = $this->params()->fromQuery('courseModuleId');
+
+        $serviceManager     = $this->getServiceLocator();
+        $courseModuleTable  = $serviceManager->get('Application\Model\CourseModuleTable');
+        $courseModule       = null;
+
+        if ( $courseModuleId != null ) {
+            $profile        = $this->getUserProfile();
+            $teacherId      = $profile['uid'];
+            $courseModule   = $courseModuleTable->getCoureModuleUsingCourseModuleId($courseModuleId);
+
+            if ( $courseModule == null || $courseModule->teacherId != $teacherId ) {
+                $courseModule = null;
+            }
+        }
+
+        $result = array(
+            'isSuccessful'  => $courseModule != null,
+            'courseModule'  => $courseModule,
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 获取某个课程所包含/某个讲师开设的课程模块.
+     * @return 一个包含课程模块信息的JSON数组
+     */
+    public function getCourseModulesAction()
+    {
+        $courseId   = $this->params()->fromQuery('courseId');
+
+        $serviceManager     = $this->getServiceLocator();
+        $courseModuleTable  = $serviceManager->get('Application\Model\CourseModuleTable');
+        $courseModules      = null;
+        
+        if ( $courseId == null ) {
+            $profile        = $this->getUserProfile();
+            $teacherId      = $profile['uid'];
+            $courseModules  = $courseModuleTable->getCourseModulesUsingTeacherId($teacherId);
+        } else {
+            $courseModules  = $courseModuleTable->getCourseModulesUsingCourseId($courseId);
+        }
+
+        $result = array(
+            'isSuccessful'  => $courseModules != null && $courseModules->count() != 0,
+            'courseModules' => $this->getResultSetArray($courseModules),
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 处理讲师用户创建课程模块的请求.
+     * @return 一个包含若干标志位的JSON数组
+     */
+    public function createCourseModuleAction()
     {
         $courseModuleName       = strip_tags($this->getRequest()->getPost('courseModuleName'));
-        $courseModuleCycle      = $this->getRequest()->getPost('courseModuleCycle');
+        $courseModuleCycle      = strip_tags($this->getRequest()->getPost('courseModuleCycle'));
         $courseModuleBrief      = strip_tags($this->getRequest()->getPost('courseModuleBrief'));
         $courseModuleOutline    = strip_tags($this->getRequest()->getPost('courseModuleOutline'));
         
@@ -633,6 +746,10 @@ class AccountsController extends AbstractActionController
         return $response;
     }
 
+    /**
+     * 修改课程模块的信息.
+     * @return 一个包含若干标志位的JSON数组
+     */
     public function updateCourseModuleAction()
     {
         $courseModuleId         = $this->getRequest()->getPost('courseModuleId');
@@ -659,7 +776,7 @@ class AccountsController extends AbstractActionController
             'course_module_brief'   => $courseModuleBrief,
             'course_module_outline' => $courseModuleOutline,
         );
-        $result                 = $this->isCourseModuleLegal($courseModule);
+        $result = $this->isCourseModuleLegal($courseModule);
         
         if ( $result['isSuccessful'] ) {
             $result['isSuccessful'] = $courseModuleTable->updateCourseModule($courseModule);
@@ -670,6 +787,11 @@ class AccountsController extends AbstractActionController
         return $response;
     }
 
+    /**
+     * 检查所提交的课程模块信息是否合法.
+     * @param  Array  $courseModule - 一个包含课程模块信息的数组
+     * @return 一个包含若干标志位的数组
+     */
     public function isCourseModuleLegal($courseModule)
     {
         $result = array(
@@ -687,15 +809,4 @@ class AccountsController extends AbstractActionController
                                   !$result['isCourseModuleBriefEmpty'] && !$result['isCourseModuleOutlineEmpty'];
         return $result;
     }
-
-    public function addCourseAction()
-    {
-
-    }
-
-    private function isCourseLegal()
-    {
-
-    }
-
 }
