@@ -568,9 +568,10 @@ class AccountsController extends AbstractActionController
         $result = $this->isCourseLegal($course);
         
         if ( $result['isSuccessful'] ) {
-            $serviceManager     = $this->getServiceLocator();
-            $courseTable        = $serviceManager->get('Application\Model\CourseTable');
-            $courseId           = $courseTable->createCourse($course);
+            $serviceManager         = $this->getServiceLocator();
+            $courseTable            = $serviceManager->get('Application\Model\CourseTable');
+            $courseId               = $courseTable->createCourse($course);
+            $result['isSuccessful'] = $courseCompositionTable->updateCourseComposition($courseId, $courseModules);
         }
         $response = $this->getResponse();
         $response->setStatusCode(200);
@@ -591,6 +592,7 @@ class AccountsController extends AbstractActionController
         
         $serviceManager         = $this->getServiceLocator();
         $courseTable            = $serviceManager->get('Application\Model\CourseTable');
+        $courseCompositionTable = $serviceManager->get('Application\Model\CourseCompositionTable');
         $course                 = $courseTable->getCourseUsingCourseId($courseId);
         $profile                = $this->getUserProfile();
         $teacherId              = $profile['uid'];
@@ -614,6 +616,7 @@ class AccountsController extends AbstractActionController
         
         if ( $result['isSuccessful'] ) {
             $result['isSuccessful'] = $courseTable->updateCourse($course);
+            $result['isSuccessful'] = $courseCompositionTable->updateCourseComposition($courseId, $courseModules);
         }
         $response = $this->getResponse();
         $response->setStatusCode(200);

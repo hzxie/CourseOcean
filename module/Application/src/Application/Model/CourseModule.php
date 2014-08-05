@@ -51,8 +51,16 @@ class CourseModule {
      */
     public $courseModuleCycle;
 
+    /**
+     * 课程模块开始时间.
+     * @var DateTime
+     */
     public $courseModuleStartTime;
 
+    /**
+     * 课程模块结束时间.
+     * @var DateTime
+     */
     public $courseModuleEndTime;
 
     /**

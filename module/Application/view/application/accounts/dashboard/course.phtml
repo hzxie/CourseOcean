@@ -136,7 +136,6 @@
                 }
             }
         });
-        
     }
 </script>
 <script type="text/javascript">
@@ -155,6 +154,25 @@
                     $('input, textarea, select').attr('disabled', 'disabled');
                     $('input, textarea, select').val('');
                     $('#page-error').removeClass('hide');
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function getCourseModulesUsingCourseId(courseId) {
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?php echo $this->basePath(); ?>/accounts/getCourseModules?courseId=' + courseId,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    var courseModules = result['courseModules'];
+                    for ( var i = 0; i < courseModules.length; ++ i ) {
+                        var courseModuleId = courseModules[i]['courseModuleId'];
+                        $('#course-module-' + courseModuleId).prop('checked', true);
+                    }
                 }
             }
         });
@@ -183,6 +201,7 @@
 
             courseId = window.location.href.match(/\?.*$/)[0].substr(10);
             getCourse(courseId);
+            getCourseModulesUsingCourseId(courseId);
         }
     });
 </script>
@@ -357,6 +376,7 @@
             courseObjective = $('#course-objective').val(),
             courseModules   = getSelectedCourseModules();
 
+        $('#page-info').addClass('hide');
         $(this).attr('disabled', 'disabled');
         $(this).html('正在处理...');
 
@@ -385,7 +405,7 @@
     function createCourse(courseName, courseTypeSlug, courseCycle, courseAudience, courseBrief, courseObjective, courseModules) {
         var postData = 'courseName=' + courseName + '&courseTypeSlug=' + courseTypeSlug + '&courseCycle=' + courseCycle + 
                       '&courseAudience=' + courseAudience + '&courseBrief=' + courseBrief + '&courseObjective=' + courseObjective + 
-                      '&courseModules' + courseModules;
+                      '&courseModules=' + courseModules;
         $.ajax({
             type: 'POST',
             async: true,
@@ -426,6 +446,7 @@
                 }
             }
         });
+        window.scrollToTop();
         $('#edit-course').html('确认');
         $('#edit-course').removeAttr('disabled');
     }
@@ -434,7 +455,7 @@
     function updateCourse(courseId, courseTypeSlug, courseCycle, courseAudience, courseBrief, courseObjective, courseModules) {
         var postData = 'courseId=' + courseId + '&courseTypeSlug=' + courseTypeSlug + '&courseCycle=' + courseCycle + 
                       '&courseAudience=' + courseAudience + '&courseBrief=' + courseBrief + '&courseObjective=' + courseObjective + 
-                      '&courseModules' + courseModules;
+                      '&courseModules=' + courseModules;
         $.ajax({
             type: 'POST',
             async: true,
@@ -443,6 +464,7 @@
             dataType: 'JSON',
             success: function(result) {
                 if ( result['isSuccessful'] ) {
+                    $('#page-error').addClass('hide');
                     $('#page-info').removeClass('hide');
                 } else {
                     var errorMessage  = '';
@@ -471,6 +493,7 @@
                 }
             }
         });
+        window.scrollToTop();
         $('#edit-course').html('确认');
         $('#edit-course').removeAttr('disabled');
     }

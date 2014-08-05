@@ -19,10 +19,12 @@ use Application\Model\User;
 use Application\Model\UserTable;
 use Application\Model\Teacher;
 use Application\Model\TeacherTable;
-use Application\Model\CourseModule;
-use Application\Model\CourseModuleTable;
 use Application\Model\Course;
 use Application\Model\CourseTable;
+use Application\Model\CourseModule;
+use Application\Model\CourseModuleTable;
+use Application\Model\CourseComposition;
+use Application\Model\CourseCompositionTable;
 use Application\Model\CourseType;
 use Application\Model\CourseTypeTable;
 use Application\Model\Lecture;
@@ -91,6 +93,17 @@ class Module
                     $resultSetPrototype->setArrayObjectPrototype(new Teacher());
                     return new TableGateway('itp_teachers', $dbAdapter, null, $resultSetPrototype);
                 },
+                'Application\Model\CourseTable' => function($sm) {
+                    $tableGateway       = $sm->get('CourseTableGateway');
+                    $courseTable        = new CourseTable($tableGateway);
+                    return $courseTable;
+                },
+                'CourseTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Course());
+                    return new TableGateway('itp_courses', $dbAdapter, null, $resultSetPrototype);
+                },
                 'Application\Model\CourseModuleTable' => function($sm) {
                     $tableGateway       = $sm->get('CourseModuleTableGateway');
                     $courseModuleTable  = new CourseModuleTable($tableGateway);
@@ -102,16 +115,16 @@ class Module
                     $resultSetPrototype->setArrayObjectPrototype(new CourseModule());
                     return new TableGateway('itp_course_modules', $dbAdapter, null, $resultSetPrototype);
                 },
-                'Application\Model\CourseTable' => function($sm) {
-                    $tableGateway       = $sm->get('CourseTableGateway');
-                    $courseTable        = new CourseTable($tableGateway);
-                    return $courseTable;
+                'Application\Model\CourseCompositionTable' => function($sm) {
+                    $tableGateway           = $sm->get('CourseCompositionTableGateway');
+                    $courseCompositionTable = new CourseCompositionTable($tableGateway);
+                    return $courseCompositionTable;
                 },
-                'CourseTableGateway' => function ($sm) {
+                'CourseCompositionTableGateway' => function ($sm) {
                     $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Course());
-                    return new TableGateway('itp_courses', $dbAdapter, null, $resultSetPrototype);
+                    $resultSetPrototype->setArrayObjectPrototype(new CourseComposition());
+                    return new TableGateway('itp_course_composition', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Application\Model\CourseTypeTable' => function($sm) {
                     $tableGateway       = $sm->get('CourseTypeTableGateway');
