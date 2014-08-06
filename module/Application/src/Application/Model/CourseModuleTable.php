@@ -83,8 +83,6 @@ class CourseModuleTable
     public function getCourseModulesUsingLectureId($lectureId)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($lectureId) {
-            $select->join('itp_course_composition',
-                          'itp_course_modules.course_module_id = itp_course_composition.course_module_id');
             $select->join('itp_lecture_schedule',
                           'itp_course_modules.course_module_id = itp_lecture_schedule.course_module_id');
             $select->where->equalTo('lecture_id', $lectureId);
