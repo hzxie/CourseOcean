@@ -32,6 +32,12 @@ class CourseCompositionTable
         $this->tableGateway = $tableGateway;
     }
 
+    /**
+     * 更新课程模块组合信息.
+     * @param  int   $courseId        - 课程的唯一标识符
+     * @param  Array $courseModuleIds - 课程模块的唯一标识符数组
+     * @return 操作是否成功完成
+     */
     public function updateCourseComposition($courseId, $courseModuleIds)
     {
         $courseModuleIdArray = split(',', $courseModuleIds);
@@ -52,6 +58,11 @@ class CourseCompositionTable
         return true;
     }
 
+    /**
+     * 删除课程模块组合信息.
+     * @param  int $courseId - 课程的唯一标识符
+     * @return 操作是否成功完成
+     */
     public function deleteCourseComposition($courseId)
     {
         $this->tableGateway->delete(array(

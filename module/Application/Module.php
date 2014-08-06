@@ -29,6 +29,8 @@ use Application\Model\CourseType;
 use Application\Model\CourseTypeTable;
 use Application\Model\Lecture;
 use Application\Model\LectureTable;
+use Application\Model\LectureSchedule;
+use Application\Model\LectureScheduleTable;
 use Application\Model\Comment;
 use Application\Model\CommentTable;
 use Application\Model\LectureAttendance;
@@ -139,14 +141,25 @@ class Module
                 },
                 'Application\Model\LectureTable' => function($sm) {
                     $tableGateway       = $sm->get('LectureTableGateway');
-                    $lectureable        = new LectureTable($tableGateway);
-                    return $lectureable;
+                    $lectureTable       = new LectureTable($tableGateway);
+                    return $lectureTable;
                 },
                 'LectureTableGateway' => function ($sm) {
                     $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Lecture());
                     return new TableGateway('itp_lectures', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\LectureScheduleTable' => function($sm) {
+                    $tableGateway           = $sm->get('LectureScheduleTableGateway');
+                    $lectureScheduleTable   = new LectureScheduleTable($tableGateway);
+                    return $lectureScheduleTable;
+                },
+                'LectureScheduleTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new LectureSchedule());
+                    return new TableGateway('itp_lecture_schedule', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Application\Model\CommentTable' => function($sm) {
                     $tableGateway       = $sm->get('CommentTableGateway');

@@ -108,7 +108,7 @@ class CourseModuleTable
     /**
      * 创建一个新课程模块.
      * @param  Array $courseModule - 一个包含课程模块信息的数组
-     * @return 操作是否成功完成
+     * @return 新创建课程的课程模块唯一标识符
      */
     public function createCourseModule($courseModule)
     {

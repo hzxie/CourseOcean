@@ -160,12 +160,27 @@ div#content div#main-content div.modal textarea {
 	width: 480px;
 }
 
+div#content div#main-content div.modal ul#lecture-modules {
+	margin-left: 0;
+}
+
+div#content div#main-content div.modal li.lecture-module {
+	border-bottom: 1px dotted #ccc;
+	list-style: none;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+}
+
+div#content div#main-content div.modal li.lecture-module div.row-fluid {
+	margin-bottom: 0;
+}
+
 /** StyleSheet for Course **/
 div#content div#main-content div.alert {
 	margin-left: 0;
 }
 
-div#content div#main-content div#course-module-modal div.alert {
+div#content div#main-content div.modal div.alert {
 	width: 445px;
 }
 

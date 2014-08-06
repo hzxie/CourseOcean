@@ -314,12 +314,13 @@ class AccountsController extends AbstractActionController
      * 处理用户评价课程的请求.
      * @return 包含若干标志位的JSON数组
      */
-    public function addCommentAction()
+    public function createCommentAction()
     {
         $profile        = $this->getUserProfile();
-        $lectureId      = $this->params()->fromQuery('lectureId');
-        $commentRanking = $this->params()->fromQuery('commentRanking');
-        $commentDetail  = strip_tags($this->params()->fromQuery('commentDetail'));
+        $lectureId      = $this->getRequest()->getPost('lectureId');
+        $commentRanking = $this->getRequest()->getPost('commentRanking');
+        $commentDetail  = strip_tags($this->getRequest()->getPost('commentDetail'));
+
         $comment        = array(
             'lecture_id'        => $lectureId,
             'reviewer_uid'      => $profile['uid'],
@@ -497,14 +498,136 @@ class AccountsController extends AbstractActionController
         return $response;
     }
 
+    /**
+     * 处理讲师用户开设课程的请求.
+     * @return 一个包含若干标志位的JSON数组
+     */
     public function createLectureAction()
     {
+        $courseId               = strip_tags($this->getRequest()->getPost('courseId'));
+        $startTime              = strip_tags($this->getRequest()->getPost('startTime'));
+        $endTime                = strip_tags($this->getRequest()->getPost('endTime'));
+        $region                 = strip_tags($this->getRequest()->getPost('region'));
+        $province               = strip_tags($this->getRequest()->getPost('province'));
+        $city                   = strip_tags($this->getRequest()->getPost('city'));
+        $address                = strip_tags($this->getRequest()->getPost('address'));
+        $minCapcity             = strip_tags($this->getRequest()->getPost('minCapcity'));
+        $maxCapcity             = strip_tags($this->getRequest()->getPost('maxCapcity'));
+        $expense                = strip_tags($this->getRequest()->getPost('expense'));
+        $precautions            = strip_tags($this->getRequest()->getPost('precautions'));
 
+        $profile                = $this->getUserProfile();
+        $teacherId              = $profile['uid'];
+        $lecture                = array(
+            'course_id'             => $courseId,
+            'lecture_start_time'    => $startTime,
+            'lecture_end_time'      => $endTime,
+            'lecture_region'        => $region,
+            'lecture_province'      => $province,
+            'lecture_city'          => $city,
+            'lecture_address'       => $address,
+            'lecture_min_capcity'   => $minCapcity,
+            'lecture_max_capcity'   => $maxCapcity,
+            'lecture_expense'       => $expense,
+            'lecture_precautions'   => $precautions,
+        );
+        $result = $this->isLectureLegal($lecture);
+
+        if ( $result['isSuccessful'] ) {
+            $serviceManager         = $this->getServiceLocator();
+            $lectureTable           = $serviceManager->get('Application\Model\LectureTable');
+            $lectureId              = $lectureTable->createLecture($lecture);
+            $result                += array(
+                'lectureId'         => $lectureId,
+            );
+        }
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
     }
 
-    private function isLectureLegal()
+    /**
+     * 检查所提交的培训课信息是否合法.
+     * @param  Array  $lecture - 一个包含培训课信息的数组
+     * @return 培训课信息是否合法
+     */
+    private function isLectureLegal($lecture)
     {
+        $result = array(
+            'isSuccessful'          => false,
+            'isCourseIdLegal'       => $this->isCourseOwner($lecture['course_id']),
+            'isStartTimeEmpty'      => empty($lecture['lecture_start_time']),
+            'isStartTimeLegal'      => strtotime($lecture['lecture_start_time']) > strtotime('now'),
+            'isEndTimeEmpty'        => empty($lecture['lecture_end_time']),
+            'isEndTimeLegal'        => strtotime($lecture['lecture_end_time']) > strtotime($lecture['lecture_start_time']),
+            'isRegionEmpty'         => empty($lecture['lecture_region']),
+            'isProvinceEmpty'       => empty($lecture['lecture_province']),
+            'isCityEmpty'           => empty($lecture['lecture_city']),
+            'isAddressEmpty'        => empty($lecture['lecture_address']),
+            'isMinCapcityEmpty'     => empty($lecture['lecture_min_capcity']),
+            'isMinCapcityLegal'     => intval($lecture['lecture_min_capcity']) && $lecture['lecture_min_capcity'] > 0,
+            'isMaxCapcityEmpty'     => empty($lecture['lecture_max_capcity']),
+            'isMaxCapcityLegal'     => intval($lecture['lecture_max_capcity']) && $lecture['lecture_max_capcity'] >= $lecture['lecture_max_capcity'],
+            'isExpenseEmpty'        => empty($lecture['lecture_expense']),
+            'isExpenseLegal'        => intval($lecture['lecture_expense']) && $lecture['lecture_expense'] > 0,
+            'isPrecautionsEmpty'    => empty($lecture['lecture_precautions']),
+        );
+        $result['isSuccessful'] = $result['isCourseIdLegal']   && !$result['isStartTimeEmpty'] &&
+                                  $result['isStartTimeLegal']  && !$result['isEndTimeEmpty'] &&
+                                  $result['isEndTimeLegal']    && !$result['isRegionEmpty'] &&
+                                 !$result['isProvinceEmpty']   && !$result['isCityEmpty'] &&
+                                 !$result['isAddressEmpty']    && !$result['isMinCapcityEmpty'] &&
+                                  $result['isMinCapcityLegal'] && !$result['isMaxCapcityEmpty'] &&
+                                  $result['isMaxCapcityLegal'] && !$result['isExpenseEmpty'] &&
+                                  $result['isExpenseLegal']    && !$result['isPrecautionsEmpty'];
+        return $result;
+    }
 
+    /**
+     * 检查讲师用户是否有编辑该课程的权限.
+     * @param  int  $courseId - 课程的唯一标识符
+     * @return 讲师用户是否有编辑该课程的权限
+     */
+    private function isCourseOwner($courseId)
+    {
+        $serviceManager = $this->getServiceLocator();
+        $courseTable    = $serviceManager->get('Application\Model\CourseTable');
+        $courseId       = $courseId;
+        $course         = $courseTable->getCourseUsingCourseId($courseId);
+        
+        $profile        = $this->getUserProfile();
+        $teacherId      = $profile['uid'];
+
+        return ( $course != null && $course->teacherId == $teacherId );
+    }
+
+    /**
+     * 处理讲师用户的创建课程计划请求.
+     * @return 一个包含若干标志位的JSON数组
+     */
+    public function createLectureScheduleAction()
+    {
+        $lectureId              = $this->getRequest()->getPost('lectureId');
+        $courseModuleId         = $this->getRequest()->getPost('courseModuleId');
+        $startTime              = $this->getRequest()->getPost('startTime');
+        $endTime                = $this->getRequest()->getPost('endTime');
+        $lectureSchedule        = array(
+            'lecture_id'                => $lectureId,
+            'course_module_id'          => $courseModuleId,
+            'course_module_start_time'  => $startTime,
+            'course_module_end_time'    => $endTime,
+        );
+
+        $serviceManager         = $this->getServiceLocator();
+        $lectureScheduleTable   = $serviceManager->get('Application\Model\LectureScheduleTable');
+        $result   = array(
+            'isSuccessful'  => $lectureScheduleTable->createLectureSchedule($lectureSchedule),
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
     }
 
     /**
@@ -597,27 +720,30 @@ class AccountsController extends AbstractActionController
         $profile                = $this->getUserProfile();
         $teacherId              = $profile['uid'];
 
+        
         if ( $course == null || $course->teacherId != $teacherId ) {
-            return array(
+            $result = array(
                 'isSuccessful'  => false,
             );
+        } else {
+            $course                 = array(
+                'course_id'         => $courseId,
+                'course_name'       => $course->courseName,
+                'course_type_id'    => $courseTypeId,
+                'teacher_id'        => $teacherId,
+                'course_cycle'      => $courseCycle,
+                'course_audience'   => $courseAudience,
+                'course_brief'      => $courseBrief,
+                'course_objective'  => $courseObjective,
+            );
+            $result = $this->isCourseLegal($course);
+            
+            if ( $result['isSuccessful'] ) {
+                $result['isSuccessful'] = $courseTable->updateCourse($course);
+                $result['isSuccessful'] = $courseCompositionTable->updateCourseComposition($courseId, $courseModules);
+            }
         }
-        $course                 = array(
-            'course_id'         => $courseId,
-            'course_name'       => $course->courseName,
-            'course_type_id'    => $courseTypeId,
-            'teacher_id'        => $teacherId,
-            'course_cycle'      => $courseCycle,
-            'course_audience'   => $courseAudience,
-            'course_brief'      => $courseBrief,
-            'course_objective'  => $courseObjective,
-        );
-        $result = $this->isCourseLegal($course);
         
-        if ( $result['isSuccessful'] ) {
-            $result['isSuccessful'] = $courseTable->updateCourse($course);
-            $result['isSuccessful'] = $courseCompositionTable->updateCourseComposition($courseId, $courseModules);
-        }
         $response = $this->getResponse();
         $response->setStatusCode(200);
         $response->setContent( Json::encode($result) );
@@ -642,7 +768,6 @@ class AccountsController extends AbstractActionController
             'isCourseBriefEmpty'    => empty($course['course_brief']),
             'isCourseObjectiveEmpty'=> empty($course['course_objective']),
         );
-
         $result['isSuccessful'] = !$result['isCourseNameEmpty']     &&  $result['isCourseNameLegal'] &&
                                    $result['isCourseTypeIdLegal']   && !$result['isCourseCycleEmpty'] &&
                                    $result['isCourseCycleLegal']    && !$result['isCourseAudienceEmpty'] &&
@@ -767,23 +892,25 @@ class AccountsController extends AbstractActionController
         $teacherId              = $profile['uid'];
 
         if ( $courseModule == null || $courseModule->teacherId != $teacherId ) {
-            return array(
+            $result = array(
                 'isSuccessful'  => false,
             );
+        } else {
+            $courseModule = array(
+                'course_module_id'      => $courseModuleId,
+                'course_module_name'    => $courseModule->courseModuleName,
+                'course_module_cycle'   => $courseModuleCycle,
+                'teacher_id'            => $teacherId,
+                'course_module_brief'   => $courseModuleBrief,
+                'course_module_outline' => $courseModuleOutline,
+            );
+            $result = $this->isCourseModuleLegal($courseModule);
+            
+            if ( $result['isSuccessful'] ) {
+                $result['isSuccessful'] = $courseModuleTable->updateCourseModule($courseModule);
+            }
         }
-        $courseModule = array(
-            'course_module_id'      => $courseModuleId,
-            'course_module_name'    => $courseModule->courseModuleName,
-            'course_module_cycle'   => $courseModuleCycle,
-            'teacher_id'            => $teacherId,
-            'course_module_brief'   => $courseModuleBrief,
-            'course_module_outline' => $courseModuleOutline,
-        );
-        $result = $this->isCourseModuleLegal($courseModule);
         
-        if ( $result['isSuccessful'] ) {
-            $result['isSuccessful'] = $courseModuleTable->updateCourseModule($courseModule);
-        }
         $response = $this->getResponse();
         $response->setStatusCode(200);
         $response->setContent( Json::encode($result) );

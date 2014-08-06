@@ -17,7 +17,7 @@
                 <li><a href="<?php echo $this->basePath(); ?>/training/lectures">近期开课</a></li>
                 <li><a href="<?php echo $this->basePath(); ?>/training/courses">课程库</a></li>
                 <li><a href="<?php echo $this->basePath(); ?>/training/teachers">讲师团队</a></li>
-                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard#requirements">需求定制</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard#requirement">需求定制</a></li>
                 <li><a href="<?php echo $this->basePath(); ?>/training/posts">培训动态</a></li>
                 <?php
                     $session    = new Zend\Session\Container('itp_session');
@@ -52,7 +52,7 @@
                     <div class="span9">
                         <h3><?php echo $teacher->teacherName; ?></h3>
                         <p class="company"><?php echo $teacher->company; ?></p>
-                        <button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/dashboard#requirements?teacherUid=<?php echo $teacher->uid; ?>'">预约讲师</button>
+                        <button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/dashboard#requirement?teacherUid=<?php echo $teacher->uid; ?>'">预约讲师</button>
                     </div> <!-- .span9 -->
                 </div> <!-- #overview -->
                 <div id="detail">

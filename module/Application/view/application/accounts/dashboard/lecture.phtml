@@ -142,7 +142,7 @@
                                                 + '            <a href="<?php echo $this->basePath(); ?>/training/lecture?lectureId=' + lectures[i]['lectureId'] + '">' + lectures[i]['courseName'] + '</a>'
                                                 + '        </h4>'
                                                 + '        <ul class="inline meta">'
-                                                + '            <li><i class="icon-calendar"></i> '+ getDateTime(lectures[i]['startTime']) + '~' + getDateTime(lectures[i]['endTime']) + '</li>'
+                                                + '            <li><i class="icon-calendar"></i> '+ formatDateTime(lectures[i]['startTime']) + '~' + formatDateTime(lectures[i]['endTime']) + '</li>'
                                                 + '            <li><i class="icon-map-marker"></i> ' + lectures[i]['lectureProvince'] + (lectures[i]['lectureCity'] || '') + lectures[i]['lectureAddress'] + '</li>'
                                                 + '            <li><i class="icon-user"></i> ' + (lectures[i]['participants'] || '0') + '/' + lectures[i]['maxCapcity'] + ' 人</li>'
                                                 + '            <li><i class="icon-jpy"></i> ' + lectures[i]['expense'] + ' 元</li>'
@@ -239,7 +239,7 @@
                                     + '        </h4>'
                                     + '        <ul class="inline meta">'
                                     + '            <li><i class="icon-user"></i> <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=' + records[i]['lectureTeacherId'] + '">' + records[i]['lectureTeacherName'] + '</a></li>'
-                                    + '            <li><i class="icon-calendar"></i> ' + getDateTime(records[i]['lectureStartTime']) + '~' + getDateTime(records[i]['lectureEndTime']) + '</li>'
+                                    + '            <li><i class="icon-calendar"></i> ' + formatDateTime(records[i]['lectureStartTime']) + '~' + formatDateTime(records[i]['lectureEndTime']) + '</li>'
                                     + '            <li><i class="icon-map-marker"></i> ' + records[i]['lectureProvince'] + ( records[i]['lectureCity'] || '' ) + records[i]['lectureAddress'] + '</li>'
                                     + '        </ul>'
                                     + '    </div>'
@@ -373,18 +373,19 @@
                     alert('请填写对课程的评价');
                     return;
                 }
-                return addComment(lectureId, commentRanking, commentDetail, commentObject, buttonObject);
+                return createComment(lectureId, commentRanking, commentDetail, commentObject, buttonObject);
             });
         </script>
         <script type="text/javascript">
-            function addComment(lectureId, commentRanking, commentDetail, commentObject, buttonObject) {
+            function createComment(lectureId, commentRanking, commentDetail, commentObject, buttonObject) {
                 $(buttonObject).attr('disabled', 'disabled');
                 
+                var postData = 'lectureId=' + lectureId + '&commentRanking=' + commentRanking + '&commentDetail=' + commentDetail;
                 $.ajax({
-                    type: 'GET',
+                    type: 'POST',
                     async: true,
-                    url: '<?php echo $this->basePath(); ?>/accounts/addComment?lectureId=' + lectureId + 
-                         '&commentRanking=' + commentRanking + '&commentDetail=' + commentDetail,
+                    url: '<?php echo $this->basePath(); ?>/accounts/createComment',
+                    data: postData,
                     dataType: 'JSON',
                     success: function(result) {
                         if ( result['isSuccessful'] ) {
@@ -408,6 +409,7 @@
             <h4>创建新培训: 培训概要</h4>
         </div> <!-- .modal-header -->
         <div class="modal-body">
+            <div id="new-lecture-error" class="alert alert-error hide"></div> <!-- #new-lecture-error -->
             <div class="row-fluid">
                 <div class="span6">
                     <label for="course-name">课程名称</label>
@@ -452,14 +454,14 @@
             </div> <!-- .row-fluid -->
             <div class="row-fluid">
                 <div class="control-group span6">
-                    <label class="start-time">课程开始时间</label>
+                    <label for="start-time">课程开始时间</label>
                     <div class="controls input-append date form_datetime" data-date-format="yyyy-mm-dd hh:ii">
                         <input id="start-time" class="span12" type="text" value="" readonly>
                         <span class="add-on"><i class="icon-th"></i></span>
                     </div> <!-- .input-append -->
                 </div> <!-- .span6 -->
                 <div class="control-group span6">
-                    <label class="end-time">课程结束时间</label>
+                    <label for="end-time">课程结束时间</label>
                     <div class="controls input-append date form_datetime" data-date-format="yyyy-mm-dd hh:ii">
                         <input id="end-time" class="span12" type="text" value="" readonly>
                         <span class="add-on"><i class="icon-th"></i></span>
@@ -486,6 +488,9 @@
             <div class="loading">
                 <img src="<?php echo $this->basePath(); ?>/img/loading.gif" alt="Loading">
             </div> <!-- .loading -->
+            <div id="schedule-error" class="alert alert-error hide"></div> <!-- #schedule-error -->
+            <ul id="lecture-modules"></ul>
+            <input id="lecture-id" type="hidden" />
         </div> <!-- .modal-body -->
         <div class="modal-footer">
             <button id="new-lecture-complete" class="btn btn-primary">完成</button>
@@ -500,23 +505,32 @@
     <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/bootstrap.datetimepicker.min.js"></script>
     <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/bootstrap.datetimepicker.zh-CN.js"></script>
     <script type="text/javascript">
-        $('.form_datetime').datetimepicker({
-            language:  'zh-CN',
-            weekStart: 1,
-            todayBtn:  1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            startDate: '<?php echo date('Y-m-d'); ?>',
-            forceParse: 0,
-            showMeridian: 1
-        });
+        function initializeDateTimePicker(startTime, endTime) {
+            if ( typeof(startTime) == 'undefined' ) {
+                startTime = '<?php echo date('Y-m-d H:i'); ?>';
+            }
+            if ( typeof(startTime) == 'undefined' ) {
+                endTime = '2099-12-31 23:59';
+            }
+            $('.form_datetime').datetimepicker({
+                language:  'zh-CN',
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                startDate: startTime,
+                endDate: endTime,
+                forceParse: 0,
+                showMeridian: 1
+            });
+        }
     </script>
     <script type="text/javascript">
         $(document).ready(function() {
             var pageNumber  = 1;
-            getOpeningLectures(pageNumber);
-            getOpeningLectureTotalPages(pageNumber);
+
+            initializeDateTimePicker();
             getOpeningCourses(pageNumber);
             getOpeningCourseTotalPages(pageNumber);
             getLectureAttendance(pageNumber);
@@ -524,17 +538,255 @@
         });
     </script>
     <script type="text/javascript">
-        $('#new-lecture-next-step').click(function() {
-            $('#new-lecture-modal-step-1').modal('hide');
-            $('#new-lecture-modal-step-2').modal({
-                'backdrop': 'static',
-            });
+        $('.nav a[href=#lectures]').click(function() {
+            var pageNumber  = 1;
+
+            getOpeningLectures(pageNumber);
+            getOpeningLectureTotalPages(pageNumber);
         });
     </script>
     <script type="text/javascript">
-        $('#new-lecture-complete').click(function() {
-            $('#new-lecture-modal-step-2').modal('hide');
+        $('#new-lecture-next-step').click(function() {
+            var courseId        = $('#course-id').val(),
+                startTime       = $('#start-time').val(),
+                endTime         = $('#end-time').val(),
+                region          = $('.region').val(),
+                province        = $('.province').val(),
+                city            = $('.city').val(),
+                address         = $('#address').val(),
+                minCapcity      = $('#min-capcity').val(),
+                maxCapcity      = $('#max-capcity').val(),
+                expense         = $('#expense').val(),
+                precautions     = $('#precautions').val();
+
+            $('#new-lecture-error').addClass('hide');
+            $(this).html('正在处理...');
+            $(this).attr('disabled', 'disabled');
+            return createLecture(courseId, startTime, endTime, region, province, city, 
+                                 address, minCapcity, maxCapcity, expense, precautions);
         });
+    </script>
+    <script type="text/javascript">
+        function createLecture(courseId, startTime, endTime, region, province, city, address, minCapcity, maxCapcity, expense, precautions) {
+            var postData = 'courseId=' + courseId + '&startTime=' + startTime + '&endTime=' + endTime + '&region=' + region + 
+                          '&province=' + province + '&city=' + city + '&address=' + address + '&minCapcity=' + minCapcity + 
+                          '&maxCapcity=' + maxCapcity + '&expense=' + expense + '&precautions=' + precautions;
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '<?php echo $this->basePath(); ?>/accounts/createLecture',
+                data: postData,
+                dataType: 'JSON',
+                success: function(result) {
+                    if ( result['isSuccessful'] ) {
+                        getCourseModules(courseId, startTime, endTime);
+                        $('#new-lecture-modal-step-1').modal('hide');
+                        $('#new-lecture-modal-step-2 #lecture-id').val(result['lectureId']);
+                        $('#new-lecture-modal-step-2').modal({
+                            'backdrop': 'static',
+                        });
+                    } else {
+                        var errorMessage  = '';
+                        if ( !result['isCourseIdLegal'] ) {
+                            errorMessage += '您没有权限创建本课程的培训课<br>'
+                        }
+                        if ( result['isExpenseEmpty'] ) {
+                            errorMessage += '请填写您培训课的培训费用<br>';
+                        } else if ( !result['isExpenseLegal'] ) {
+                            errorMessage += '培训费用必须为大于0元的整数<br>';
+                        }
+                        if ( result['isRegionEmpty'] ) {
+                            errorMessage += '请选择您培训课的开课地区<br>';
+                        }
+                        if ( result['isProvinceEmpty'] ) {
+                            errorMessage += '请选择您培训课的开课省份<br>';
+                        }
+                        if ( result['isCityEmpty'] ) {
+                            errorMessage += '请选择您培训课的开课城市<br>';
+                        }
+                        if ( result['isAddressEmpty'] ) {
+                            errorMessage += '请填写您培训课的开课地点<br>';
+                        }
+                        if ( result['isMinCapcityEmpty'] ) {
+                            errorMessage += '请填写您培训课的最小开班人数<br>';
+                        } else if ( !result['isMinCapcityLegal'] ) {
+                            errorMessage += '请填写合理的最小开班人数<br>';
+                        }
+                        if ( result['isMaxCapcityEmpty'] ) {
+                            errorMessage += '请填写您培训课的最大容纳人数<br>';
+                        } else if ( !result['isMaxCapcityLegal'] ) {
+                            errorMessage += '请填写合理的最大容纳人数<br>';
+                        }
+                        if ( result['isStartTimeEmpty'] ) {
+                            errorMessage += '请选择您培训课起始时间<br>'
+                        } else if ( !result['isStartTimeLegal'] ) {
+                            errorMessage += '您培训课起始时间不得早于当前时间<br>'
+                        }
+                        if ( result['isEndTimeEmpty'] ) {
+                            errorMessage += '请选择您培训课结束时间<br>'
+                        } else if ( !result['isEndTimeLegal'] ) {
+                            errorMessage += '您培训课结束时间不得早于起始时间<br>'
+                        }
+                        if ( result['isPrecautionsEmpty'] ) {
+                            errorMessage += '请填写参加本次培训课的注意事项<br>';
+                        }
+                        $('#new-lecture-error').html(errorMessage);
+                        $('#new-lecture-error').removeClass('hide');
+                    }
+                    $('#new-lecture-next-step').html('确认');
+                    $('#new-lecture-next-step').removeAttr('disabled');
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function getCourseModules(courseId, startTime, endTime) {
+            $('#lecture-modules').empty();
+            $.ajax({
+                type: 'GET',
+                async: true,
+                url: '<?php echo $this->basePath(); ?>/accounts/getCourseModules?courseId=' + courseId,
+                dataType: 'JSON',
+                success: function(result) {
+                    if ( result['isSuccessful'] ) {
+                        $('#new-lecture-modal-step-2 .loading').addClass('hide');
+
+                        var length = result['courseModules'].length;
+                        for ( var i = 0; i < length; ++ i ) {
+                            $('#lecture-modules').append('<li class="lecture-module">' +
+                                                         '    <div class="row-fluid">' +
+                                                         '        <div class="span6">' +
+                                                         '            <span class="module-name"><strong>' + result['courseModules'][i]['courseModuleName'] + '</strong></span>' +
+                                                         '            <span class="module-id hide">' + result['courseModules'][i]['courseModuleId'] + '</span>' +
+                                                         '        </div>' +
+                                                         '        <div class="span6">' +
+                                                         '            培训时间: <span class="module-cycle">' + result['courseModules'][i]['courseModuleCycle'] + '</span> 分钟' +
+                                                         '        </div>' +
+                                                         '    </div>' +
+                                                         '    <div class="row-fluid">' +
+                                                                 formatDateTimePicker('module-start-time', '课程模块起始时间') +
+                                                                 formatDateTimePicker('module-end-time', '课程模块结束时间') +
+                                                         '    </div>' +
+                                                         '</li>');
+                        }
+                        initializeDateTimePicker(startTime, endTime);
+                    } else {
+                        $('#new-lecture-modal-step-2 .loading').removeClass('hide');
+                        alert('发生了未知错误, 请联系技术支持人员.');
+                    }
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function formatDateTimePicker(controlClass, labelText) {
+            return '<div class="control-group span6">' +
+                   '    <label for="' + controlClass + '">' + labelText + '</label>' +
+                   '    <div class="controls input-append date form_datetime" data-date-format="yyyy-mm-dd hh:ii">' +
+                   '        <input class="' + controlClass + ' span12" type="text" readonly>' +
+                   '        <span class="add-on"><i class="icon-th"></i></span>' +
+                   '    </div>' +
+                   '</div>';
+        }
+    </script>
+    <script type="text/javascript">
+        $('#lecture-modules').delegate('.module-start-time', 'change', function() {
+            var endTimeControl  = $('.module-end-time', $(this).parent().parent().parent().parent()),
+                cycleControl    = $('.module-cycle', $(this).parent().parent().parent().parent().parent()),
+                startTime       = new Date($(this).val()),
+                cycle           = $(cycleControl).html();
+                endTime         = new Date(startTime.getTime() + parseInt(cycle, 10) * 60000);
+            $(endTimeControl).val(getDateTime(endTime));
+        });
+    </script>
+    <script type="text/javascript">
+        function getDateTime(dateTime) {
+            var year    = dateTime.getFullYear(),
+                month   = formatNumber(dateTime.getMonth() + 1),
+                day     = formatNumber(dateTime.getDate()),
+                hour    = formatNumber(dateTime.getHours()),
+                minute  = formatNumber(dateTime.getMinutes());
+            return year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
+        }
+    </script>
+    <script type="text/javascript">
+        function formatNumber(number) {
+            if ( number < 10 ) {
+                return '0' + number;
+            }
+            return number;
+        }
+    </script>
+    <script type="text/javascript">
+        $('#new-lecture-complete').click(function() {
+            $(this).html('正在处理...');
+            $(this).attr('disabled', 'disabled');
+            $('#schedule-error').addClass('hide');
+
+            if ( errorMessage = isScheduleLegal() ) {
+                $('#schedule-error').html(errorMessage);
+                $('#schedule-error').removeClass('hide');
+                
+                $(this).html('确认');
+                $(this).removeAttr('disabled');
+            } else {
+                return createLectureSchedule();
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        function createLectureSchedule() {
+            var courseModules = $('li.lecture-module').length;
+            $('li.lecture-module').each(function(index) {
+                var lectureId       = $('#lecture-id').val(),
+                    courseModuleId  = $('.module-id', $(this)).html(),
+                    startTime       = $('.module-start-time', $(this)).val(),
+                    endTime         = $('.module-end-time', $(this)).val(),
+                    postData        = 'lectureId=' + lectureId + '&courseModuleId=' + courseModuleId + 
+                                     '&startTime=' + startTime + '&endTime=' + endTime;
+                $.ajax({
+                    type: 'POST',
+                    async: false,
+                    url: '<?php echo $this->basePath(); ?>/accounts/createLectureSchedule',
+                    data: postData,
+                    dataType: 'JSON',
+                    success: function(result) {
+                        if ( result['isSuccessful'] ) {
+                        } else {
+                            alert('发生了未知错误, 请联系技术支持人员.')
+                        }
+                        if ( index == courseModules - 1 ) {
+                            $('.btn-primary', '#new-lecture-modal-step-2').html('确认');
+                            $('.btn-primary', '#new-lecture-modal-step-2').removeAttr('disabled');
+                            $('#new-lecture-modal-step-2').modal('hide');
+                        }
+                    }
+                });
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function isScheduleLegal() {
+            var errorMessage    = '';
+            $('li.lecture-module').each(function() {
+                var moduleName  = $('.module-name', $(this)).html(),
+                    startTime   = $('.module-start-time', $(this)).val(),
+                    endTime     = $('.module-end-time', $(this)).val();
+                if ( startTime.length == 0 ) {
+                    errorMessage += '请选择' + moduleName + '的培训起始时间<br>';
+                }
+                if ( endTime.length == 0 ) {
+                    errorMessage += '请选择' + moduleName + '的培训结束时间<br>';
+                }
+
+                startTime   = new Date(startTime);
+                endTime     = new Date(endTime);
+                if ( startTime.getTime() > endTime.getTime() ) {
+                    errorMessage += moduleName + '的培训结束时间不得早于起始时间<br>';
+                }
+            });
+            return errorMessage;
+        }
     </script>
 <?php else: ?>
     <script type="text/javascript">
@@ -546,12 +798,11 @@
     </script>
 <?php endif; ?>
     <script type="text/javascript">
-        function getDateTime(dateTimeString) {
+        function formatDateTime(dateTimeString) {
             var year    = dateTimeString.substring(0, 4),
                 month   = dateTimeString.substring(5, 7),
                 day     = dateTimeString.substring(8, 10),
                 time    = dateTimeString.substring(11, 16);
-
             return year + '年' + month + '月' + day + '日 ' + time;
         }
     </script>

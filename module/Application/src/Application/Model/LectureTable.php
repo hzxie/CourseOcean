@@ -172,12 +172,12 @@ class LectureTable
     /**
      * 创建一个新课程会话.
      * @param  Array $lecture - 一个包含课程会话信息的数组
-     * @return 操作是否成功完成
+     * @return 新创建课程的课程会话唯一标识符
      */
     public function createLecture($lecture)
     {
         $this->tableGateway->insert($lecture);
-        return true;
+        return $this->tableGateway->getAdapter()->getDriver()->getConnection()->getLastGeneratedValue();
     }
 
     /**
