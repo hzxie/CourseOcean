@@ -3,9 +3,11 @@ textarea {
 }
 
 div#content div#sidebar div#user-info {
-	border-bottom: 5px solid #ccc;
-	margin: 0 10px;
-	padding-bottom: 10px;
+	background: #fff;
+	border: 1px solid #efefef;
+	padding: 5px;
+	width: 80%;
+	margin: 0 auto;
 }
 
 div#content div#sidebar div#sidebar-nav {
@@ -151,11 +153,6 @@ div#content div#main-content div.modal div.loading {
 	text-align: center;
 }
 
-div#content div#main-content div.modal select.city,
-div#content div#main-content div.modal input#address {
-	margin-top: 10px;
-}
-
 div#content div#main-content div.modal textarea {
 	width: 480px;
 }
@@ -184,15 +181,18 @@ div#content div#main-content div.modal div.alert {
 	width: 445px;
 }
 
-div#content div#main-content ul#course-modules li {
+div#content div#main-content ul#course-modules li,
+div#content div#main-content ul#teaching-fields li {
 	margin-bottom: 5px;
 }
 
-div#content div#main-content ul#course-modules input[type=checkbox] {
+div#content div#main-content ul#course-modules input[type=checkbox],
+div#content div#main-content ul#teaching-fields input[type=checkbox] {
 	margin-top: 0;
 }
 
-div#content div#main-content ul#course-modules label {
+div#content div#main-content ul#course-modules label,
+div#content div#main-content ul#teaching-fields label {
 	display: inline;
 	font-size: 13px;
 }
@@ -204,4 +204,10 @@ div#content div#main-content ul#course-modules a {
 
 div#content div#main-content div#course-module-modal {
 	top: 400px;
+}
+
+/* Profile */
+div#content div#main-content div.city-picker select.city,
+div#content div#main-content div.city-picker input#address {
+	margin-top: 10px;
 }

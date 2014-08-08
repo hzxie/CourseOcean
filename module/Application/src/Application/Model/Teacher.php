@@ -65,7 +65,7 @@ class Teacher {
      * 讲师的授课领域
      * @var String
      */
-    public $field;
+    public $teachingField;
 
     /**
      * 讲师所在地区.

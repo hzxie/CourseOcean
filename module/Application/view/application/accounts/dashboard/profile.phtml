@@ -1,1 +1,261 @@
-<h4>个人信息</h4>
+<h4 class="span10">个人信息</h4>
+<div id="page-error" class="alert alert-error span10 hide"></div> <!-- #page-error -->
+<div id="page-info" class="alert alert-success span10 hide">您已成功修改您的个人资料.</div> <!-- #page-info -->
+<div id="page-warning" class="alert alert-warning span10 hide"></div> <!-- #page-warning -->
+<?php if ( $profile['userGroupSlug'] == 'teacher'  ): ?>
+    <div class="row-fluid">
+        <div class="span6">
+            <label for="teacher-name">真实姓名</label>
+            <input id="teacher-name" type="text" maxlength="16" />
+        </div> <!-- .span6 -->
+        <div class="span6">
+            <label for="teacher-company">所在公司(/曾经就职的公司)及职位</label>
+            <input id="teacher-company" type="text" maxlength="64" />
+        </div> <!-- .span6 -->
+    </div> <!-- .row-fluid -->
+    <div class="city-picker row-fluid">
+        <div class="span6">
+            <label for="teacher-region">所在地区</label>
+            <select id="teacher-region" class="region"></select>
+            <select id="teacher-city" class="city"></select>
+        </div> <!-- .span6 -->
+        <div class="span6">
+            <label for="teacher-province">&nbsp;</label>
+            <select id="teacher-province" class="province"></select>
+        </div> <!-- .span6 -->
+    </div> <!-- .row-fluid -->
+    <div class="row-fluid">
+        <div class="span6">
+            <label for="teacher-phone">移动电话<small>(仅管理员可见)</small></label>
+            <input id="teacher-phone" type="text" maxlength="16" />
+        </div> <!-- .span6 -->
+        <div class="span6">
+            <label for="teacher-weibo">微博<small>(非必填项)</small></label>
+            <input id="teacher-weibo" type="text" />
+        </div> <!-- .span6 -->
+    </div> <!-- .row-fluid -->
+    <div class="row-fluid">
+        <div class="span12">
+            <label for="teacher-brief">个人简介</label>
+            <textarea id="teacher-brief" class="span10" rows="5"></textarea>
+        </div> <!-- .span12 -->
+    </div> <!-- .row-fluid -->
+    <div class="row-fluid">
+        <div class="span10">
+            <label for="teaching-field">授课领域(至多选3项)</label>
+            <ul id="teaching-fields" class="inline"></ul>
+        </div> <!-- .span10 -->
+    </div> <!-- .row-fluid -->
+<?php else: ?>
+<?php endif; ?>
+    <div class="row-fluid">
+        <div class="span10 text-right">
+            <button id="edit-profile" class="btn btn-primary">确认</button>
+            <button class="btn">重置</button>
+        </div> <!-- .span10 -->
+        <div class="span2">&nbsp;</div> <!-- .span2 -->
+    </div> <!-- .row-fluid -->
+    <div id="password-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-header">
+            <h4>修改密码</h4>
+        </div> <!-- .modal-header -->
+        <div class="modal-body">
+            <div class="row-fluid">
+                <div class="span6">
+                    <label for="old-password">旧密码</label>
+                    <input id="old-password" type="password" maxlength="16" />
+                </div> <!-- .span6 -->
+            </div> <!-- .row-fluid -->
+            <div class="row-fluid">
+                <div class="span6">
+                    <label for="new-password">新密码</label>
+                    <input id="new-password" type="password" maxlength="16" />
+                </div> <!-- .span6 -->
+                <div class="span6">
+                    <label for="confirm-password">确认新密码</label>
+                    <input id="confirm-password" type="password" maxlength="16" />
+                </div> <!-- .span6 -->
+            </div> <!-- .row-fluid -->
+        </div> <!-- .modal-body -->
+        <div class="modal-footer">
+            <button class="btn btn-primary">确认</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+        </div> <!-- .modal-footer -->
+    </div> <!-- #password-modal -->
+<?php if ( $profile['userGroupSlug'] == 'teacher'  ): ?>
+    <!-- Java Script -->
+    <script type="text/javascript">
+        function getCourseTypes() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                url: '<?php echo $this->basePath(); ?>/accounts/getCourseTypes',
+                dataType: 'JSON',
+                success: function(result) {
+                    if ( result['isSuccessful'] ) {
+                        var courseTypes = result['courseTypes'];
+                        for ( var i = 0; i < courseTypes.length; ++ i ) {
+                            $('ul#teaching-fields').append('<li>' + 
+                                                           '    <input id="course-type-' + courseTypes[i]['courseTypeSlug'] + '" type="checkbox" value="' + courseTypes[i]['courseTypeSlug'] + '"/>' +
+                                                           '    <label for="course-type-' + courseTypes[i]['courseTypeSlug'] + '">' + courseTypes[i]['courseTypeName'] + '</label>' +
+                                                           '</li>');
+                        }
+                        return getTeachingFields();
+                    }
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function getProfile() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                url: '<?php echo $this->basePath(); ?>/accounts/getProfile',
+                dataType: 'JSON',
+                success: function(result) {
+                    if ( result['isSuccessful'] ) {
+                        if ( !result['extra']['isApproved'] ) {
+                            $('#page-warning').html('您的个人信息正在审核, 请耐心等待.');
+                            $('#page-warning').removeClass('hide');
+                        }
+                        displayProfile(result['extra']);
+                    } else {
+                        $('#page-warning').html('您尚未填写您的个人信息.');
+                        $('#page-warning').removeClass('hide');
+                    }
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function displayProfile(profile) {
+            $('#teacher-name').val(profile['teacherName']);
+            $('#teacher-name').attr('disabled', 'disabled');
+            $('#teacher-company').val(profile['company']);
+            $('#teacher-region').val(profile['region']).change();
+            $('#teacher-province').val(profile['province']).change();
+            if ( profile['city'] ) {
+                $('#teacher-city').val(profile['city']).change();
+            } else {
+                $('#teacher-city').val(profile['city'])
+                $('#teacher-city').attr('disabled', 'disabled');
+            }
+            $('#teacher-phone').val(profile['phone']);
+            $('#teacher-weibo').val(profile['weibo']);
+            $('#teacher-brief').val(profile['brief']);
+        }
+    </script>
+    <script type="text/javascript">
+        function getTeachingFields() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                url: '<?php echo $this->basePath(); ?>/accounts/getTeachingFields',
+                dataType: 'JSON',
+                success: function(result) {
+                    if ( result['isSuccessful'] ) {
+                        var length = result['teachingFields'].length;
+                        for ( var i = 0; i < length; ++ i ) {
+                            var courseTypeSlug = result['teachingFields'][i]['courseTypeSlug'];
+                            $('input[value=' + courseTypeSlug + ']').prop('checked', true);
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        $('ul#teaching-fields').delegate('li', 'click', function(event) {
+            var isSelected = $('input[type=checkbox]', $(this)).is(':checked'),
+                count      = $('input[type=checkbox]:checked', $('ul#teaching-fields')).length;
+            if ( count == 4 ) {
+                event.preventDefault();
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        $('#edit-profile').click(function() {
+            var name            = $('#teacher-name').val(),
+                company         = $('#teacher-company').val(),
+                region          = $('#teacher-region').val(),
+                province        = $('#teacher-province').val(),
+                city            = $('#teacher-city').val() || '',
+                phone           = $('#teacher-phone').val(),
+                weibo           = $('#teacher-weibo').val(),
+                brief           = $('#teacher-brief').val(),
+                teachingFields  = getSelectedTeachingFields();
+
+            $('#page-error').addClass('hide');
+            $('#page-warning').addClass('hide');
+            $('#page-info').addClass('hide');
+            $('#edit-profile').attr('disabled', 'disabled');
+            $('#edit-profile').html('正在处理...');
+            return editProfile(name, company, region, province, city, phone, weibo, brief, teachingFields);
+        });
+    </script>
+    <script type="text/javascript">
+        function getSelectedTeachingFields() {
+            var teachingFields = '';
+            $('input[type=checkbox]', '#teaching-fields').each(function() {
+                if ( $(this).is(':checked') ) {
+                    var courseTypeSlug = $(this).val();
+                    teachingFields    += courseTypeSlug + ',';
+                }
+            });
+            return teachingFields;
+        }
+    </script>
+    <script type="text/javascript">
+        function editProfile(name, company, region, province, city, phone, weibo, brief, teachingFields) {
+            var postData = 'name=' + name + '&company=' + company + '&region=' + region + '&province=' + province + 
+                          '&city=' + city + '&phone=' + phone + '&weibo=' + weibo + '&brief=' + brief + 
+                          '&teachingFields=' + teachingFields;
+            $.ajax({
+                type: 'POST',
+                async: false,
+                url: '<?php echo $this->basePath(); ?>/accounts/editProfile',
+                data: postData,
+                dataType: 'JSON',
+                success: function(result) {
+                    if ( result['isSuccessful'] ) {
+                        $('#page-warning').html('您的个人信息正在审核, 请耐心等待.');
+                        $('#page-warning').removeClass('hide');
+                        $('#page-info').removeClass('hide');
+                    }
+                    $('#edit-profile').html('确认');
+                    $('#edit-profile').removeAttr('disabled');
+                    window.scrollToTop();
+                }
+            });
+        }
+    </script>
+<?php endif; ?>
+<script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/jquery.citypicker.js"></script>
+<script type="text/javascript">
+    $('.city-picker').cityPicker();
+</script>
+<script type="text/javascript">
+    $('#change-password').click(function() {
+        $('#password-modal').modal();
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        getCourseTypes();
+        getProfile();
+    });
+</script>
+<script type="text/javascript">
+    $('#password-modal button.btn-primary').click(function() {
+        var oldPassword     = $('#old-password').val(),
+            newPassword     = $('#new-password').val(),
+            confirmPassword = $('#confirm-password').val();
+        return changePassword(oldPassword, newPassword, confirmPassword);
+    });
+</script>
+<script type="text/javascript">
+    function changePassword(oldPassword, newPassword, confirmPassword) {
+
+    }
+</script>

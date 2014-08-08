@@ -259,7 +259,181 @@ class AccountsController extends AbstractActionController
             'uid'           => $session->offsetGet('uid'),
             'username'      => $session->offsetGet('username'),
             'userGroupSlug' => $session->offsetGet('userGroupSlug'),
+            'email'         => $session->offsetGet('email'),
         );
+    }
+
+    /**
+     * 获得用户的个人资料.
+     * @return 一个包含用户个人资料的JSON数组
+     */
+    public function getProfileAction()
+    {
+        $profile    = $this->getUserProfile();
+        $uid        = $profile['uid'];
+        $userGroup  = ucfirst($profile['userGroupSlug']);
+
+        $function   = 'get'.$userGroup.'Profile';
+        $extra      = $this->$function($uid);
+
+        $result     = array(
+            'isSuccessful'  => $extra != null,
+            'profile'       => $profile,
+            'extra'         => $extra,
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 获取讲师用户的个人资料.
+     * @param  int $uid - 用户唯一标识符
+     * @return 一个Teacher对象, 包含讲师用户的个人资料
+     */
+    private function getTeacherProfile($uid)
+    {
+        $serviceManager = $this->getServiceLocator();
+        $teacherTable   = $serviceManager->get('Application\Model\TeacherTable');
+        $teacher        = $teacherTable->getTeacherUsingUid($uid);
+
+        return $teacher;
+    }
+
+    public function getTeachingFieldsAction()
+    {
+        $profile            = $this->getUserProfile();
+        $uid                = $profile['uid'];
+        $serviceManager     = $this->getServiceLocator();
+        $teachingFieldTable = $serviceManager->get('Application\Model\TeachingFieldTable');
+        $teachingFields     = $teachingFieldTable->getTeachingFieldsOfUsingUid($uid);
+
+        $result   = array(
+            'isSuccessful'      => $teachingFields != null,
+            'teachingFields'    => $this->getResultSetArray($teachingFields),
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    public function editTeachingFields()
+    {
+        
+    }
+
+    /**
+     * 编辑用户个人资料.
+     * @return 一个包含若干标志位的JSON数组
+     */
+    public function editProfileAction()
+    {
+        $profile    = $this->getUserProfile();
+        $uid        = $profile['uid'];
+        $userGroup  = ucfirst($profile['userGroupSlug']);
+        $function   = 'edit'.$userGroup.'Profile';
+
+        $result   = $this->$function($uid);
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 编辑讲师用户个人资料.
+     * @return 一个包含若干标志位的数组
+     */
+    private function editTeacherProfile()
+    {
+        $name           = strip_tags($this->getRequest()->getPost('name'));
+        $company        = strip_tags($this->getRequest()->getPost('company'));
+        $region         = strip_tags($this->getRequest()->getPost('region'));
+        $province       = strip_tags($this->getRequest()->getPost('province'));
+        $city           = strip_tags($this->getRequest()->getPost('city'));
+        $phone          = strip_tags($this->getRequest()->getPost('phone'));
+        $weibo          = strip_tags($this->getRequest()->getPost('weibo'));
+        $brief          = strip_tags($this->getRequest()->getPost('brief'));
+        $teachingFields = strip_tags($this->getRequest()->getPost('teachingFields'));
+
+        $profile        = $this->getUserProfile();
+        $uid            = $profile['uid'];
+        $teacher        = array(
+            'uid'                   => $uid,
+            'teacher_is_approved'   => false,
+            'teacher_name'          => $name,
+            'teacher_company'       => $company,
+            'teacher_region'        => $region,
+            'teacher_province'      => $province,
+            'teacher_city'          => $city,
+            'teacher_phone'         => $phone,
+            'teacher_weibo'         => $weibo,
+            'teacher_brief'         => $brief,
+        );
+        $result = $this->isTeacherProfileLegal($teacher);
+
+        if ( $result['isSuccessful'] ) {
+            $serviceManager     = $this->getServiceLocator();
+            $teacherTable       = $serviceManager->get('Application\Model\TeacherTable');
+            $teachingFieldTable = $serviceManager->get('Application\Model\TeachingFieldTable');
+            $courseTypeTable    = $serviceManager->get('Application\Model\CourseTypeTable');
+            $isTeacherExists    = $teacherTable->getTeacherUsingUid($uid);
+            $courseTypes        = $this->getCourseTypes($courseTypeTable->getAllCourseTypes());
+
+            if ( $isTeacherExists != null ) {
+                $teacherTable->updateTeacher($teacher);
+            } else {
+                $teacherTable->createTeacher($teacher);
+            }
+            $teachingFieldTable->updateTeachingField($uid, $teachingFields, $courseTypes);
+        }
+        return $result;
+    }
+
+    /**
+     * 检查讲师用户所提交的信息是否合法.
+     * @param  Array  $teacher - 一个包含讲师信息的数组
+     * @return 讲师用户所提交的信息是否合法
+     */
+    private function isTeacherProfileLegal($teacher)
+    {
+        $result = array(
+            'isSuccessful'              => false,
+            'isTeacherNameEmpty'        => empty($teacher['teacher_name']),
+            'isTeacherNameLegal'        => mb_strlen($teacher['teacher_name'], 'utf-8') <= 16,
+            'isTeacherCompanyEmpty'     => empty($teacher['teacher_company']),
+            'isTeacherCompanyLegal'     => mb_strlen($teacher['teacher_company'], 'utf-8') <= 64,
+            'isTeacherRegionEmpty'      => empty($teacher['teacher_region']),
+            'isTeacherProvinceEmpty'    => empty($teacher['teacher_province']),
+            'isTeacherPhoneEmpty'       => empty($teacher['teacher_phone']),
+            'isTeacherPhoneLegal'       => preg_match('/^[0-9+]{8,16}$/', $teacher['teacher_phone']),
+            'isTeacherWeiboLegal'       => strlen($teacher['teacher_weibo']) <= 32,
+            'isTeacherBriefEmpty'       => empty($teacher['teacher_brief']),
+            'isTeacherBriefLegal'       => mb_strlen($teacher['teacher_brief'], 'utf-8') <= 640,
+        );
+        $result['isSuccessful'] = !$result['isTeacherNameEmpty']    &&  $result['isTeacherNameLegal'] &&
+                                  !$result['isTeacherCompanyEmpty'] &&  $result['isTeacherCompanyLegal'] &&
+                                  !$result['isTeacherRegionEmpty']  && !$result['isTeacherProvinceEmpty'] &&
+                                  !$result['isTeacherPhoneEmpty']   &&  $result['isTeacherPhoneLegal'] &&  
+                                   $result['isTeacherWeiboLegal']   && !$result['isTeacherBriefEmpty'] &&
+                                   $result['isTeacherBriefLegal'];
+        return $result;
+    }
+
+    /**
+     * 获取CourseType的 CourseTypeSlug => CourseType对象 映射数组.
+     * @param  ResultSet $courseTypes - 一个ResultSet对象, 包含若干CourseType对象
+     * @return 一个CourseType的HashMap
+     */
+    private function getCourseTypes($courseTypes)
+    {
+        $hashMap = array();
+        foreach ( $courseTypes as $courseType ) {
+            $hashMap[$courseType->courseTypeSlug] = $courseType;
+        }
+        return $hashMap;
     }
 
     /**

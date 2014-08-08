@@ -19,6 +19,8 @@ use Application\Model\User;
 use Application\Model\UserTable;
 use Application\Model\Teacher;
 use Application\Model\TeacherTable;
+use Application\Model\TeachingField;
+use Application\Model\TeachingFieldTable;
 use Application\Model\Course;
 use Application\Model\CourseTable;
 use Application\Model\CourseModule;
@@ -94,6 +96,17 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Teacher());
                     return new TableGateway('itp_teachers', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\TeachingFieldTable' => function($sm) {
+                    $tableGateway       = $sm->get('TeachingFieldTableGateway');
+                    $teachingFieldTable = new TeachingFieldTable($tableGateway);
+                    return $teachingFieldTable;
+                },
+                'TeachingFieldTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new TeachingField());
+                    return new TableGateway('itp_teaching_fields', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Application\Model\CourseTable' => function($sm) {
                     $tableGateway       = $sm->get('CourseTableGateway');

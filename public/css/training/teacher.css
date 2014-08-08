@@ -3,6 +3,10 @@ div#teacher div#overview {
 	padding-bottom: 10px;
 }
 
+div#teacher div#overview div.span3 {
+	max-width: 120px;
+}
+
 div#teacher div#overview h3 {
 	margin-top: 0;
 }

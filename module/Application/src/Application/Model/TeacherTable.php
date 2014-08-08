@@ -42,8 +42,8 @@ class TeacherTable
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId) {
             if ( $categoryId != 0 ) {
-                $select->join('itp_teaching_field', 
-                              'itp_teachers.uid = itp_teaching_field.teacher_id');
+                $select->join('itp_teaching_fields', 
+                              'itp_teachers.uid = itp_teaching_fields.teacher_id');
                 $select->where->equalTo('course_type_id', $categoryId);
             }
             $select->where->equalTo('teacher_is_approved', true);
@@ -63,13 +63,14 @@ class TeacherTable
             $select->columns(array(
                 'uid'               => 'uid', 
                 'teacher_name'      => 'teacher_name', 
+                'teacher_avatar'    => 'teacher_avatar',
                 'teacher_company'   => 'teacher_company',
                 'teaching_field'    => new Expression("GROUP_CONCAT(`course_type_name` SEPARATOR ', ')"),
             ));
-            $select->join('itp_teaching_field', 
-                          'itp_teachers.uid = itp_teaching_field.teacher_id');
+            $select->join('itp_teaching_fields', 
+                          'itp_teachers.uid = itp_teaching_fields.teacher_id');
             $select->join('itp_course_types', 
-                          'itp_teaching_field.course_type_id = itp_course_types.course_type_id');
+                          'itp_teaching_fields.course_type_id = itp_course_types.course_type_id');
             $select->where->equalTo('teacher_is_approved', true);
             $select->order(new Expression('CONVERT(teacher_name USING GBK)'));
             $select->group('itp_teachers.uid');
@@ -88,16 +89,23 @@ class TeacherTable
     {
         $rowSet = $this->tableGateway->select(function (Select $select) use ($uid) {
             $select->columns(array(
-                'uid'               => 'uid', 
-                'teacher_name'      => 'teacher_name', 
-                'teacher_brief'     => 'teacher_brief',
-                'teacher_company'   => 'teacher_company',
-                'teaching_field'    => new Expression("GROUP_CONCAT(`course_type_name` SEPARATOR ', ')"),
+                'uid'                   => 'uid', 
+                'teacher_is_approved'   => 'teacher_is_approved',
+                'teacher_name'          => 'teacher_name', 
+                'teacher_brief'         => 'teacher_brief',
+                'teacher_brief'         => 'teacher_brief',
+                'teacher_region'        => 'teacher_region',
+                'teacher_province'      => 'teacher_province',
+                'teacher_city'          => 'teacher_city',
+                'teacher_company'       => 'teacher_company',
+                'teacher_phone'         => 'teacher_phone',
+                'teacher_weibo'         => 'teacher_weibo',
+                'teaching_field'        => new Expression("GROUP_CONCAT(`course_type_name` SEPARATOR ', ')"),
             ));
-            $select->join('itp_teaching_field', 
-                          'itp_teachers.uid = itp_teaching_field.teacher_id');
+            $select->join('itp_teaching_fields', 
+                          'itp_teachers.uid = itp_teaching_fields.teacher_id');
             $select->join('itp_course_types', 
-                          'itp_teaching_field.course_type_id = itp_course_types.course_type_id');
+                          'itp_teaching_fields.course_type_id = itp_course_types.course_type_id');
             $select->where->equalTo('itp_teachers.uid', $uid);
             $select->group('itp_teachers.uid');
         });
@@ -120,12 +128,12 @@ class TeacherTable
                 'teacher_company'   => 'teacher_company',
                 'teaching_field'    => new Expression("GROUP_CONCAT(`course_type_name` SEPARATOR ', ')"),
             ));
-            $select->join('itp_teaching_field', 
-                          'itp_teachers.uid = itp_teaching_field.teacher_id');
+            $select->join('itp_teaching_fields', 
+                          'itp_teachers.uid = itp_teaching_fields.teacher_id');
             $select->join('itp_course_types', 
-                          'itp_teaching_field.course_type_id = itp_course_types.course_type_id');
+                          'itp_teaching_fields.course_type_id = itp_course_types.course_type_id');
             $select->where->equalTo('teacher_is_approved', true);
-            $select->where->equalTo('itp_teaching_field.course_type_id', $categoryId);
+            $select->where->equalTo('itp_teaching_fields.course_type_id', $categoryId);
             $select->order(new Expression('CONVERT(teacher_name USING GBK)'));
             $select->group('itp_teachers.uid');
             $select->offset($offset);
@@ -144,8 +152,8 @@ class TeacherTable
     public function getTeacherUsingKeyword($keyword, $offset, $limit)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($keyword, $offset, $limit) {
-            $select->join('itp_teaching_field', 
-                          'itp_teachers.uid = itp_teaching_field.teacher_id');
+            $select->join('itp_teaching_fields', 
+                          'itp_teachers.uid = itp_teaching_fields.teacher_id');
             $select->where->equalTo('teacher_is_approved', true);
 
             $select->offset($offset);
