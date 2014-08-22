@@ -50,7 +50,13 @@
         <div id="content" class="row-fluid">
             <div id="sidebar" class="span3">
                 <div id="user-info">
-                    <img src="<?php echo $this->basePath(); ?>/img/avatars/avatar.jpg" alt="avatar" />
+                <?php if ( $profile['userGroupSlug'] == 'teacher' ): ?>
+                    <a id="upload-avatar" href="javascript:void(0);" title="单击上传照片">
+                        <img src="<?php echo $this->basePath(); ?>/img/avatars/avatar.jpg" alt="avatar" />
+                    </a>
+                <?php else: ?>
+                    <img src="http://www.gravatar.com/avatar/<?php echo md5(strtolower($profile['email'])); ?>?s=200&d=mm" alt="avatar" />
+                <?php endif; ?>
                 </div> <!-- #user-info -->
                 <div id="sidebar-nav">
                     <ul id="nav">
@@ -75,6 +81,9 @@
         if ( pageName != null ) {
             getPageContent(window.location.href.match(/#.*$/)[0].substr(1));
         }
+<?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
+        getTeacherAvatar();
+<?php endif ;?>
     });
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
@@ -132,3 +141,27 @@
         $(navObject.parent()).addClass('active');
     }
 <?php $this->inlineScript()->captureEnd(); ?>
+<?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function getTeacherAvatar() {
+        $.ajax({
+            type: 'GET',
+            url: '<?php echo $this->basePath(); ?>/accounts/getProfile',
+            cache: false,
+            async: true,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( !result['isSuccessful'] ) {
+                } else {
+                    if ( result['extra'][''] )
+                }
+            }
+        });
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<script type="text/javascript">
+    $('#upload-avatar').click(function() {
+        
+    });
+</script>
+<?php endif; ?>

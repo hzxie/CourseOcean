@@ -47,6 +47,13 @@ class TeachingFieldTable
         return $resultSet;
     }
 
+    /**
+     * 更新某个讲师的授课领域.
+     * @param  int    $teacherId       - 讲师的用户唯一标识符
+     * @param  String $courseTypeSlugs - 授课领域(课程类型)的唯一英文缩写数组
+     * @param  Array  $courseTypes     - 一个包含课程类型映射关系的数组
+     * @return 操作是否成功完成
+     */
     public function updateTeachingField($teacherId, $courseTypeSlugs, $courseTypes)
     {
         $courseTypeSlugArray = split(',', $courseTypeSlugs);
