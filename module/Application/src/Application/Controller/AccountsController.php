@@ -153,7 +153,7 @@ class AccountsController extends AbstractActionController
         }
         if ( $user == null ) {
             return null;
-        } else if ( $user->password != md5($password) ) {
+        } else if ( $user->password != $password ) {
             return null;
         }
         return $user;
@@ -196,14 +196,124 @@ class AccountsController extends AbstractActionController
         return $this->sendRedirect('accounts/login');
     }
 
+    /**
+     * 显示用户注册页面.
+     * @return 一个包含页面所需信息的数组
+     */
     public function registerAction()
     {
+        if ( $this->isEnableAutoLogin() ) {
+            return $this->sendRedirect('accounts/dashboard');
+        }
         return array();
     }
 
+    /**
+     * 处理用户的注册请求.
+     * @return 一个包含若干标志位的JSON数组
+     */
     public function doRegisterAction()
     {
+        $username       = $this->getRequest()->getPost('username');
+        $email          = $this->getRequest()->getPost('email');
+        $password       = $this->getRequest()->getPost('password');
+        $userGroupSlug  = $this->getRequest()->getPost('userGroup');
+        $userGroupId    = $this->getUserGroupId($userGroupSlug);
 
+        $user  = array(
+            'username'      => $username,
+            'email'         => $email,
+            'password'      => $password,
+            'user_group_id' => $userGroupId,
+        );
+        $result   = $this->isProfileLegal($user);
+        
+        if ( $result['isSuccessful'] ) {
+            $user['password']       = md5($user['password']);
+            $serviceManager         = $this->getServiceLocator();
+            $userTable              = $serviceManager->get('Application\Model\UserTable');
+            $result['isSuccessful'] = $userTable->createUser($user);
+        }
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 获取用户组的唯一标识符.
+     * @param  String $userGroupSlug - 用户组的唯一英文缩写
+     * @return 用户组的唯一标识符
+     */
+    private function getUserGroupId($userGroupSlug)
+    {
+        $serviceManager     = $this->getServiceLocator();
+        $userGroupTable     = $serviceManager->get('Application\Model\UserGroupTable');
+        $userGroup          = $userGroupTable->getUserGroupUsingSlug($userGroupSlug);
+
+        if ( $userGroup != null ) {
+            return $userGroup->userGroupId;
+        } 
+        return 0;
+    }
+
+    /**
+     * 检查用户提交的个人信息是否合法.
+     * @param  Array  $profile - 用户个人信息.
+     * @return 一个包含若干标志位的数组
+     */
+    private function isProfileLegal($profile)
+    {
+        $result = array(
+            'isSuccessful'      => false,
+            'isUsernameEmpty'   => empty($profile['username']),
+            'isUsernameLegal'   => preg_match('/^[A-Za-z][A-Za-z0-9_]{5,15}$/', ($profile['username'])),
+            'isUsernameExists'  => $this->isUsernameExists($profile['username']),
+            'isEmailEmpty'      => empty($profile['email']),
+            'isEmailLegal'      => preg_match('/^[A-Za-z0-9\._-]+@[A-Za-z0-9_-]+\.[A-Za-z0-9\._-]+$/', ($profile['email'])),
+            'isEmailExists'     => $this->isEmailExists($profile['email']),
+            'isPasswordEmpty'   => empty($profile['password']),
+            'isPasswordLegal'   => strlen($profile['password']) >= 6 && strlen($profile['password']) <= 16,
+            'isUserGroupLegal'  => $profile['user_group_id'] != 0,
+        );
+        $result['isSuccessful'] = !$result['isUsernameEmpty'] && $result['isUsernameLegal'] && !$result['isUsernameExists'] &&
+                                  !$result['isEmailEmpty']    && $result['isEmailLegal']    && !$result['isEmailExists'] &&
+                                  !$result['isPasswordEmpty'] && $result['isPasswordLegal'] &&  $result['isUserGroupLegal'];
+        return $result;
+    }
+
+    /**
+     * 检查用户名是否存在.
+     * @param  String  $username - 用户名
+     * @return 用户名是否存在
+     */
+    private function isUsernameExists($username)
+    {
+        $serviceManager     = $this->getServiceLocator();
+        $userTable          = $serviceManager->get('Application\Model\UserTable');
+        $user               = $userTable->getUserUsingUsername($username);
+
+        if ( $user != null ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 检查电子邮件地址是否存在.
+     * @param  String  $email - 电子邮件地址
+     * @return 电子邮件地址是否存在
+     */
+    private function isEmailExists($email)
+    {
+        $serviceManager     = $this->getServiceLocator();
+        $userTable          = $serviceManager->get('Application\Model\UserTable');
+        $user               = $userTable->getUserUsingEmail($email);
+
+        if ( $user != null ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -319,11 +429,6 @@ class AccountsController extends AbstractActionController
         return $response;
     }
 
-    public function editTeachingFields()
-    {
-        
-    }
-
     /**
      * 编辑用户个人资料.
      * @return 一个包含若干标志位的JSON数组
@@ -387,7 +492,7 @@ class AccountsController extends AbstractActionController
             } else {
                 $teacherTable->createTeacher($teacher);
             }
-            $teachingFieldTable->updateTeachingField($uid, $teachingFields, $courseTypes);
+            $teachingFieldTable->uid($updateTeachingField, $teachingFields, $courseTypes);
         }
         return $result;
     }

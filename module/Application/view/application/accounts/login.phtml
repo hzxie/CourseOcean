@@ -2,6 +2,7 @@
     echo $this->headTitle('登录 | ');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/style.css');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/login.css');
+    echo $this->headScript()->appendFile($this->basePath().'/js/md5.js');
 ?>
 
 <div id="wrapper" class="container">
@@ -64,7 +65,7 @@
                         <label for="remember-me">
                             <input id="remember-me" name="remember-me" type="checkbox" />保持登录状态
                         </label>
-                        <button class="btn btn-success btn-block" type="submit">登录</button>
+                        <button id="login-button" class="btn btn-success btn-block" type="submit">登录</button>
                     </p>
                 </form> <!-- #login-form -->
                 <p>还没有账号? <a href="<?php echo $this->basePath(); ?>/accounts/register">立即注册</a></p>
@@ -76,16 +77,17 @@
 <?php $this->inlineScript()->captureStart(); ?>
     function onSubmit() {
         var username    = $('input[name=username]').val(),
-            password    = $('input[name=password]').val(),
+            password    = md5($('input[name=password]').val()),
             rememberMe  = $('input[name=remember-me]').val();
 
         setButtonStyle(true);
+        $('input[name=password]').val(password);
         doLoginAction(username, password);
     };
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
     function setButtonStyle(isLoading) {
-        var loginButtonObject = $('#login');
+        var loginButtonObject = $('#login-button');
         if ( isLoading ) {
             loginButtonObject.html('正在登录...');
             loginButtonObject.attr('disabled', 'disabled');

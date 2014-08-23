@@ -17,6 +17,8 @@ use Zend\Mvc\MvcEvent;
 
 use Application\Model\User;
 use Application\Model\UserTable;
+use Application\Model\UserGroup;
+use Application\Model\UserGroupTable;
 use Application\Model\Teacher;
 use Application\Model\TeacherTable;
 use Application\Model\TeachingField;
@@ -85,6 +87,17 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new User());
                     return new TableGateway('itp_users', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\UserGroupTable' => function($sm) {
+                    $tableGateway   = $sm->get('UserGroupTableGateway');
+                    $userGroupTable = new UserGroupTable($tableGateway);
+                    return $userGroupTable;
+                },
+                'UserGroupTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new UserGroup());
+                    return new TableGateway('itp_user_groups', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Application\Model\TeacherTable' => function($sm) {
                     $tableGateway   = $sm->get('TeacherTableGateway');

@@ -22,7 +22,6 @@ class PostCategory {
         $this->postCategoryName     = (!empty($data['post_category_name'])) ? $data['post_category_name']   : null;
     }
 
-
     /**
      * 培训动态分类的唯一标识符.
      * @var int 

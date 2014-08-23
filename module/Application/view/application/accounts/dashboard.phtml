@@ -144,7 +144,7 @@
 <?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
 <?php $this->inlineScript()->captureStart(); ?>
     function getTeacherAvatar() {
-        $.ajax({
+        /*$.ajax({
             type: 'GET',
             url: '<?php echo $this->basePath(); ?>/accounts/getProfile',
             cache: false,
@@ -156,7 +156,7 @@
                     if ( result['extra'][''] )
                 }
             }
-        });
+        });*/
     }
 <?php $this->inlineScript()->captureEnd(); ?>
 <script type="text/javascript">
