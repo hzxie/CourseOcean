@@ -137,6 +137,28 @@ class CourseTable
         });
         return $resultSet;
     }
+
+    /**
+     * 通过关键词查找课程.
+     * @param  String $keyword - 关键词
+     * @param  int    $offset  - 查询结果的Offset
+     * @param  int    $limit   - 查询返回的记录数
+     * @return 一个ResultSet对象, 包含若干个Course对象
+     */
+    public function getCourseUsingKeyword($keyword, $offset, $limit)
+    {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($keyword, $offset, $limit) {
+            $select->join('itp_course_types', 
+                          'itp_courses.course_type_id = itp_course_types.course_type_id');
+            $select->join('itp_teachers', 
+                          'itp_courses.teacher_id = itp_teachers.uid');
+            $select->where->like('itp_courses.course_name', "%$keyword%");
+            $select->order('course_id DESC');
+            $select->offset($offset);
+            $select->limit($limit);
+        });
+        return $resultSet;
+    }
     
     /**
      * 创建一个新课程.

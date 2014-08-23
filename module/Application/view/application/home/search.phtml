@@ -31,7 +31,7 @@
                 <?php endif; ?>
             </ul>
             <form id="search" action="<?php echo $this->basePath(); ?>/home/search">
-                <input name="keyword" type="text" placeholder="搜索课程或讲师" />
+                <input name="keyword" type="text" value="<?php echo $keyword; ?>" placeholder="搜索课程或讲师" />
                 <button class="btn" type="submit">搜索</button>
             </form>
         </div> <!-- #navigation -->
@@ -59,86 +59,110 @@
             <?php if ( $keyword == null ): ?>
                 <div class="alert alert-error">请输入搜索的关键词.</div>
             <?php else: ?>
-                <div class="alert alert-error hide">未找到相关的结果.</div>
-                <ul id="results"></ul>
-                <div id="pagination" class="pagination pagination-centered">
-                    <ul></ul>
-                </div> <!-- #pagination-->
+                <div class="alert alert-warning hide">未找到相关的结果.</div>
+                <ul id="results">
+                </ul>
+                <button id="more-button" class="btn btn-block">查看更多结果</button>
             <?php endif; ?>
             </div> <!-- .span8 -->
         </div> <!-- .row-fluid -->
     </div> <!-- .container -->
 </div> <!-- #container -->
 
-<script type="text/javascript">
+<?php $this->inlineScript()->captureStart(); ?>
     function getSearchResult(keyword, category, pageNumber) {
-
-    }
-</script>
-<script type="text/javascript">
-    function displaySearchResult(searchResult) {
-
-    }
-</script>
-<script type="text/javascript">
-    $('#pagination > ul').delegate('li', 'click', function(e) {
-        e.preventDefault();
-        if ( $(this).hasClass('disabled') ) {
-            return;
-        }
-        var currentPage = $('li.active > a', '#pagination').html();
-        
-        $('#pagination > li.active').removeClass('active');
-        $(this).addClass('active');
-        var category    = $('ul#course-types > li.active > a').attr('href').substring(1),
-            pageNumber  = $('a', this).html();
-
-        if ( pageNumber === '&lt;' ) {
-            pageNumber  = currentPage - 1;
-        } else if ( pageNumber === '&gt;' ) {
-            pageNumber  = currentPage + 1;
-        }
-        getTeachers(category, pageNumber);
-        getTotalPages(category, pageNumber);
-    });
-</script>
-<script type="text/javascript">
-    function getTotalPages(keyword, category, pageNumber) {
         $.ajax({
             type: 'GET',
             async: true,
-            url: '<?php echo $this->basePath(); ?>/home/getSearchResultTotalPages?keyword=' + keyword + '&category=' + category,
+            url: '<?php echo $this->basePath(); ?>/home/getSearchResult?keyword=' + keyword + '&page=' + pageNumber,
             dataType: 'JSON',
             success: function(result) {
-                $('div#pagination > ul').empty();
                 if ( result['isSuccessful'] ) {
-                    $('div#pagination').removeClass('hide');
-                    displayPagination(pageNumber, result['totalPages']);
+                    $('.alert-warning').addClass('hide');
+                    $('#more-button').removeClass('hide');
+                    displaySearchResult(result['searchResult']);
                 } else {
-                    $('div#pagination').addClass('hide');
+                    $('.alert-warning').removeClass('hide');
+                    $('#more-button').addClass('hide');
                 }
             }
         });
     }
-</script>
-<script type="text/javascript">
-    function displayPagination(currentPage, totalPages) {
-        var lowerBound = ( currentPage - 5 > 0 ? currentPage - 5 : 1 ),
-            upperBound = ( currentPage + 5 < totalPages ? currentPage + 5 : totalPages );
-        var paginationString  = '<li' + ( currentPage > 1 ? '>' : ' class="disabled">') + '<a href="#">&lt;</a></li>';
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function displaySearchResult(result) {
+        console.log(result);
 
-        for ( var i = lowerBound; i <= upperBound; ++ i ) {
-            paginationString += '<li' + ( currentPage == i ? ' class="active"' : '' ) + '><a href="#">' + i + '</a></li>';
+        var numberOfTeachers            = result['teachers'].length,
+            numberOfCourses             = result['courses'].length,
+            NUMBER_OF_RECORDS_PER_PAGE  = 10;
+        for ( var i = 0; i < numberOfTeachers; ++ i ) {
+            $('ul#results').append('<li class="teacher row-fluid">' +
+                                   '    <div class="span3">' + 
+                                   '        <img src="<?php echo $this->basePath(); ?>/img/avatars/' + 
+                                                ( result['teachers'][i]['avatar'] === null ? 'avatar-wide.jpg' : result['teachers'][i]['avatar'] ) + '" alt="avatar" />' +
+                                   '    </div>' +
+                                   '    <div class="span9">' + 
+                                   '        <h4>[讲师] <a href="<?php echo $this->basePath()?>/training/teacher?teacherId=' + result['teachers'][i]['uid'] + '">' + result['teachers'][i]['teacherName'] + '</a></h4>' +
+                                   '        <p class="introduction">' + result['teachers'][i]['brief'] + '</p>' +
+                                   '        <ul class="inline meta">' + 
+                                   '            <li><i class="icon-share-sign"></i> ' + result['teachers'][i]['teachingField'] + '</li>' + 
+                                   '            <li><i class="icon-home"></i> ' + result['teachers'][i]['company'] + '</li>' + 
+                                   '        </ul>' +
+                                   '    </div>' +
+                                   '</li>');
         }
-        paginationString     += '<li' + ( currentPage < totalPages ? '>' : ' class="disabled">') + '<a href="#">&gt;</a></li>';
-        $('#pagination > ul').append(paginationString);
+        for ( var i = 0; i < numberOfCourses; ++ i ) {
+            $('ul#results').append('<li class="course row-fluid">' +
+                                   '    <div class="span3">' + 
+                                   '        <img src="<?php echo $this->basePath(); ?>/img/categories/' + result['courses'][i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />' +
+                                   '    </div>' +
+                                   '    <div class="span9">' + 
+                                   '        <h4>[课程] <a href="<?php echo $this->basePath()?>/training/course?courseId=' + result['courses'][i]['courseId'] + '">' + result['courses'][i]['courseName'] + '</a></h4>' +
+                                   '        <p class="introduction">' + result['courses'][i]['brief'] + '</p>' +
+                                   '        <ul class="inline meta">' + 
+                                   '            <li><i class="icon-user"></i> <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=' + result['courses'][i]['teacherId'] + '">' + result['courses'][i]['teacherName'] + '</a></li>' +
+                                   '            <li><i class="icon-tasks"></i> ' + result['courses'][i]['courseTypeName'] + '</li>' +
+                                   '        </ul>' +
+                                   '    </div>' +
+                                   '</li>');
+        }
+        if ( numberOfTeachers + numberOfCourses < NUMBER_OF_RECORDS_PER_PAGE ) {
+            $('#more-button').html('已加载全部结果');
+            $('#more-button').attr('disabled', 'disabled');
+        }
     }
-</script>
-<script type="text/javascript">
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     $(document).ready(function() {
-        var keyword     = <?php echo $keyword; ?>,
+        var keyword     = '<?php echo $keyword == '\'' ? '\'' : $keyword ; ?>',
             category    = 'all';
         getSearchResult(keyword, category, 1);
-        getTotalPages(keyword, category, 1);
     });
-</script>
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    $('ul#category a').click(function() {
+        var category = $(this).attr('href').substring(1);
+        if ( category == 'all' ) {
+            $('li.teacher').css('display', 'block');
+            $('li.course').css('display', 'block');
+        } else if ( category == 'teacher' ) {
+            $('li.teacher').css('display', 'block');
+            $('li.course').css('display', 'none');
+        } else if ( category == 'course' ) {
+            $('li.teacher').css('display', 'none');
+            $('li.course').css('display', 'block');
+        }
+    });
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    $('#more-button').click(function() {
+        var keyword     = '<?php echo $keyword == '\'' ? '\'' : $keyword ; ?>',
+            category    = 'all',
+            NUMBER_OF_RECORDS_PER_PAGE  = 10,
+            currentRecords              = $('ul#results > li').length - 1,
+            currentPage                 = Math.floor(currentRecords / NUMBER_OF_RECORDS_PER_PAGE),
+            pageNumber                  = currentPage + 1;
+        getSearchResult(keyword, category, pageNumber);
+    });
+<?php $this->inlineScript()->captureEnd(); ?>

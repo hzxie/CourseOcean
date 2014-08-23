@@ -93,7 +93,7 @@ class TeacherTable
                 'teacher_is_approved'   => 'teacher_is_approved',
                 'teacher_name'          => 'teacher_name', 
                 'teacher_brief'         => 'teacher_brief',
-                'teacher_brief'         => 'teacher_brief',
+                'teacher_avatar'        => 'teacher_avatar',
                 'teacher_region'        => 'teacher_region',
                 'teacher_province'      => 'teacher_province',
                 'teacher_city'          => 'teacher_city',
@@ -143,19 +143,29 @@ class TeacherTable
     }
 
     /**
-     * [getTeacherUsingKeyword description]
-     * @param  [type] $keyword [description]
-     * @param  [type] $offset  [description]
-     * @param  [type] $limit   [description]
-     * @return [type]          [description]
+     * 通过关键词查找讲师.
+     * @param  String $keyword - 关键词
+     * @param  int $offset - 查询结果的Offset
+     * @param  int $limit  - 查询返回的记录数
+     * @return 一个ResultSet对象, 包含若干个Teacher对象
      */
     public function getTeacherUsingKeyword($keyword, $offset, $limit)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($keyword, $offset, $limit) {
+            $select->columns(array(
+                'uid'               => 'uid', 
+                'teacher_name'      => 'teacher_name', 
+                'teacher_company'   => 'teacher_company',
+                'teacher_brief'     => 'teacher_brief',
+                'teacher_avatar'    => 'teacher_avatar',
+                'teaching_field'    => new Expression("GROUP_CONCAT(`course_type_name` SEPARATOR ', ')"),
+            ));
             $select->join('itp_teaching_fields', 
                           'itp_teachers.uid = itp_teaching_fields.teacher_id');
-            $select->where->equalTo('teacher_is_approved', true);
-
+            $select->join('itp_course_types', 
+                          'itp_teaching_fields.course_type_id = itp_course_types.course_type_id');
+            $select->where->like('itp_teachers.teacher_name', "%$keyword%");
+            $select->group('itp_teachers.uid');
             $select->offset($offset);
             $select->limit($limit);
         });

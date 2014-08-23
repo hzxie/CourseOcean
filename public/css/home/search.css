@@ -7,26 +7,46 @@ div#container div#content ul#category > li {
 	padding-top: 5px;
 }
 
-div#container div#content ul#results > li.result {
-	border-bottom: 1px dotted #ccc;
+div#container div#content ul#results {
 	list-style: none;
+	margin-left: 0;
+}
+
+div#container div#content ul#results > li {
+	border-bottom: 1px dotted #ccc;
 	padding-bottom: 10px;
 	margin-bottom: 20px;
 }
 
-div#container div#content ul#results > li.result h4 {
+div#container div#content ul#results > li h4 {
 	height: 20px;
 	margin-top: 0;
 	overflow: hidden;
 }
 
-div#container div#content ul#results > li.result h4 > a {
+div#container div#content ul#results > li h4 > a {
 	color: #333;
 	text-decoration: none;
 }
 
-div#container div#content ul#results > li.result p.introduction {
+div#container div#content ul#results > li p.introduction {
 	color: #666;
 	height: 60px;
 	overflow: hidden;
+}
+
+div#container div#content ul#results > li ul.meta {
+	color: #6db33f;
+	font-size: 13px;
+	height: 20px;
+	overflow: hidden;
+}
+
+div#container div#content ul#results > li ul.meta a {
+	color: #6db33f;
+	text-decoration: none;
+}
+
+div#container div#content ul#results > li.teacher img {
+	max-height: 120px;
 }
