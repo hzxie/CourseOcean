@@ -2,6 +2,10 @@
     echo $this->headTitle('近期开课 | ');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/style.css');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/courses.css');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/bootstrap.datetimepicker.min.css');
+    echo $this->headScript()->appendFile($this->basePath().'/js/bootstrap.datetimepicker.min.js');
+    echo $this->headScript()->appendFile($this->basePath().'/js/bootstrap.datetimepicker.zh-CN.js');
+    echo $this->headScript()->appendFile($this->basePath().'/js/jquery.citypicker.js');
 ?>
 
 <div class="border-top"></div> <!-- .border-top -->
@@ -47,7 +51,7 @@
             <div class="border-bottom"></div> <!-- .border-bottom -->
         </div> <!-- #sub-header -->
         <div id="content" class="row-fluid">
-            <div class="span3">
+            <div id="sidebar" class="span3">
                 <h4>筛选课程</h4>
                 <h5>授课领域</h5>
                 <ul id="course-types" class="inline">
@@ -55,6 +59,27 @@
                     <?php foreach ( $courseTypes as $courseType ): ?>
                     <li><a href="#<?php echo $courseType->courseTypeSlug; ?>"><?php echo $courseType->courseTypeName; ?></a></li>
                     <?php endforeach; ?>
+                </ul>
+                <h5>授课时间</h5>
+                <ul>
+                    <li>
+                        <div class="controls input-append date form_datetime" data-date-format="yyyy-mm-dd hh:ii">
+                            <input id="start-time" class="span12" type="text" value="" readonly>
+                            <span class="add-on"><i class="icon-th"></i></span>
+                        </div> <!-- .input-append -->
+                    </li>
+                    <li>
+                        <div class="controls input-append date form_datetime" data-date-format="yyyy-mm-dd hh:ii">
+                            <input id="end-time" class="span12" type="text" value="" readonly>
+                            <span class="add-on"><i class="icon-th"></i></span>
+                        </div> <!-- .input-append -->
+                    </li>
+                </ul>
+                <h5>授课地点</h5>
+                <ul class="city-picker">
+                    <li><select class="region"></select></li>
+                    <li><select class="province"></select></li>
+                    <li><select class="city"></select></li>
                 </ul>
             </div> <!-- .span3 -->
             <div class="span9">
@@ -69,21 +94,57 @@
 </div> <!-- #container -->
 
 <?php $this->inlineScript()->captureStart(); ?>
+    function getFilters(pageNumber) {
+        var category    = $('a', 'ul#course-types > li.active').attr('href').substring(1),
+            startTime   = $('input#start-time').val(),
+            endTime     = $('input#end-time').val(),
+            region      = $('select.region').val() || '',
+            province    = $('select.province').val() || '',
+            city        = $('select.city').val() || '';
+
+        getCourses(category, startTime, endTime, region, province, city, pageNumber);
+        getTotalPages(category, startTime, endTime, region, province, city, pageNumber);
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     $('ul#course-types > li').click(function() {
         $('ul#course-types > li.active').removeClass('active');
         $(this).addClass('active');
 
-        var category = $('a', this).attr('href').substring(1);
-        getCourses(category, 1);
-        getTotalPages(category, 1);
+        var pageNumber = 1;
+        return getFilters(pageNumber);
     });
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-    function getCourses(category, pageNumber) {
+    $('input#start-time').change(function() {
+        var pageNumber = 1;
+        return getFilters(pageNumber);
+    });
+    $('input#end-time').change(function() {
+        var pageNumber = 1;
+        return getFilters(pageNumber);
+    });
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    $('select.region').change(function() {
+        var pageNumber = 1;
+        return getFilters(pageNumber);
+    });
+    $('select.province').change(function() {
+        var pageNumber = 1;
+        return getFilters(pageNumber);
+    });
+    $('select.city').change(function() {
+        var pageNumber = 1;
+        return getFilters(pageNumber);
+    });
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function getCourses(category, startTime, endTime, region, province, city, pageNumber) {
         $.ajax({
             type: 'GET',
             async: true,
-            url: '<?php echo $this->basePath(); ?>/training/getLectures?category=' + category + '&page=' + pageNumber,
+            url: '<?php echo $this->basePath(); ?>/training/getLectures?category=' + category + '&startTime=' + startTime + '&endTime=' + endTime + '&region=' + region + '&province=' + province + '&city=' + city + '&page=' + pageNumber,
             dataType: 'JSON',
             success: function(result) {
                 $('#courses').empty();
@@ -147,16 +208,15 @@
         } else if ( pageNumber === '&gt;' ) {
             pageNumber  = currentPage + 1;
         }
-        getTeachers(category, pageNumber);
-        getTotalPages(category, pageNumber);
+        return getFilters(pageNumber);
     });
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-    function getTotalPages(category, pageNumber) {
+    function getTotalPages(category, startTime, endTime, region, province, city, pageNumber) {
         $.ajax({
             type: 'GET',
             async: true,
-            url: '<?php echo $this->basePath(); ?>/training/getLectureTotalPages?category=' + category,
+            url: '<?php echo $this->basePath(); ?>/training/getLectureTotalPages?category=' + category + '&startTime=' + startTime + '&endTime=' + endTime + '&region=' + region + '&province=' + province + '&city=' + city,
             dataType: 'JSON',
             success: function(result) {
                 $('div#pagination > ul').empty();
@@ -184,8 +244,29 @@
     }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
+    function initializeDateTimePicker() {
+        $('.form_datetime').datetimepicker({
+            language:  'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            startDate: '<?php echo date('Y-m-d H:i'); ?>',
+            endDate: '2099-12-31 23:59',
+            forceParse: 0,
+            showMeridian: 1
+        });
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
     $(document).ready(function() {
-        getCourses('all', 1);
-        getTotalPages('all', 1);
+        initializeDateTimePicker();
+        $('.city-picker').cityPicker({
+            required: false
+        });
+
+        var pageNumber = 1;
+        return getFilters(pageNumber);
     });
 <?php $this->inlineScript()->captureEnd(); ?>

@@ -1,3 +1,11 @@
+div#container div#content div#sidebar ul {
+	list-style: none;
+}
+
+div#container div#content div#sidebar ul.city-picker > li {
+	margin-bottom: 10px;
+}
+
 div#container div#content ul#courses > li.course {
 	border-bottom: 1px dotted #ccc;
 	list-style: none;

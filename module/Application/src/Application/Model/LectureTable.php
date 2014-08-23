@@ -38,13 +38,28 @@ class LectureTable
      * @param  int $categoryId - 课程会话类别的唯一标识符
      * @return 课程会话数量
      */
-    public function getCountUsingCategory($categoryId)
+    public function getCountUsingFilters($categoryId, $startTime, $endTime, $region, $province, $city)
     {
-        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId) {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $startTime, $endTime, $region, $province, $city) {
             if ( $categoryId != 0 ) {
                 $select->join('itp_courses',
                               'itp_lectures.course_id = itp_courses.course_id');
                 $select->where->equalTo('course_type_id', $categoryId);
+            }
+            if ( $startTime != null ) {
+                $select->where->greaterThanOrEqualTo('itp_lectures.lecture_start_time', $startTime);
+            }
+            if ( $endTime != null ) {
+                $select->where->lessThanOrEqualTo('itp_lectures.lecture_end_time', $endTime);
+            }
+            if ( $region != null ) {
+                $select->where->equalTo('itp_lectures.lecture_region', $region);
+            }
+            if ( $province != null ) {
+                $select->where->equalTo('itp_lectures.lecture_province', $province);
+            }
+            if ( $city != null ) {
+                $select->where->equalTo('itp_lectures.lecture_city', $city);
             }
         });
         return $resultSet->count();
@@ -145,23 +160,39 @@ class LectureTable
     }
 
     /**
-     * @todo   添加对时间的筛选
      * 使用课程会话的课程类别获取课程会话对象.
      * @param  int $categoryId - 课程会话类别的唯一标识符
      * @param  int $offset     - 查询结果的Offset
      * @param  int $limit      - 查询返回的记录数
      * @return 一个ResultSet对象, 包含若干个Lecture对象
      */
-    public function getLecturesUsingCategory($categoryId, $offset, $limit)
+    public function getLecturesUsingFilters($categoryId, $startTime, $endTime, $region, $province, $city, $offset, $limit)
     {
-        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $offset, $limit) {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $startTime, $endTime, $region, $province, $city, $offset, $limit) {
             $select->join('itp_courses',
                           'itp_lectures.course_id = itp_courses.course_id');
             $select->join('itp_course_types',
                           'itp_courses.course_type_id = itp_course_types.course_type_id');
             $select->join('itp_teachers', 
                           'itp_courses.teacher_id = itp_teachers.uid');
-            $select->where->equalTo('itp_courses.course_type_id', $categoryId);
+            if ( $categoryId != 0 ) {
+                $select->where->equalTo('itp_courses.course_type_id', $categoryId);
+            }
+            if ( $startTime != null ) {
+                $select->where->greaterThanOrEqualTo('itp_lectures.lecture_start_time', $startTime);
+            }
+            if ( $endTime != null ) {
+                $select->where->lessThanOrEqualTo('itp_lectures.lecture_end_time', $endTime);
+            }
+            if ( $region != null ) {
+                $select->where->equalTo('itp_lectures.lecture_region', $region);
+            }
+            if ( $province != null ) {
+                $select->where->equalTo('itp_lectures.lecture_province', $province);
+            }
+            if ( $city != null ) {
+                $select->where->equalTo('itp_lectures.lecture_city', $city);
+            }
             $select->offset($offset);
             $select->limit($limit);
             $select->order('lecture_start_time DESC');

@@ -74,19 +74,19 @@ class TrainingController extends AbstractActionController
     {
         $NUMBER_OF_COURSES_PER_PAGE     = 10;
         $courseTypeSlug                 = $this->params()->fromQuery('category');
+        $startTime                      = $this->params()->fromQuery('startTime');
+        $endTime                        = $this->params()->fromQuery('endTime');
+        $region                         = $this->params()->fromQuery('region');
+        $province                       = $this->params()->fromQuery('province');
+        $city                           = $this->params()->fromQuery('city');
         $pageNumber                     = $this->params()->fromQuery('page', 1);
         $courseTypeId                   = $this->getCourseTypeId($courseTypeSlug);
         $offset                         = ($pageNumber - 1) * $NUMBER_OF_COURSES_PER_PAGE;
 
         $serviceManager = $this->getServiceLocator();
         $lectureTable   = $serviceManager->get('Application\Model\LectureTable');
-        $lectures       = null;
-
-        if ( $courseTypeSlug === 'all' ) {
-            $lectures   = $lectureTable->getAllLectures($offset, $NUMBER_OF_COURSES_PER_PAGE);
-        } else if ( $courseTypeId != 0 ) {
-            $lectures   = $lectureTable->getLecturesUsingCategory($courseTypeId, $offset, $NUMBER_OF_COURSES_PER_PAGE);
-        }
+        $lectures       = $lectureTable->getLecturesUsingFilters($courseTypeId, $startTime, $endTime, 
+                                         $region, $province, $city, $offset, $NUMBER_OF_COURSES_PER_PAGE);
 
         $result   = array(
             'isSuccessful'  => $lectures != null && $lectures->count() != 0,
@@ -106,11 +106,17 @@ class TrainingController extends AbstractActionController
     {
         $NUMBER_OF_COURSES_PER_PAGE     = 10;
         $courseTypeSlug                 = $this->params()->fromQuery('category');
+        $startTime                      = $this->params()->fromQuery('startTime');
+        $endTime                        = $this->params()->fromQuery('endTime');
+        $region                         = $this->params()->fromQuery('region');
+        $province                       = $this->params()->fromQuery('province');
+        $city                           = $this->params()->fromQuery('city');
         $courseTypeId                   = $this->getCourseTypeId($courseTypeSlug);
 
         $serviceManager = $this->getServiceLocator();
         $lectureTable   = $serviceManager->get('Application\Model\LectureTable');
-        $totalPages     = ceil($lectureTable->getCountUsingCategory($courseTypeId) / $NUMBER_OF_COURSES_PER_PAGE);
+        $totalPages     = ceil($lectureTable->getCountUsingFilters($courseTypeId, $startTime, $endTime, 
+                                              $region, $province, $city) / $NUMBER_OF_COURSES_PER_PAGE);
 
         $result   = array(
             'isSuccessful'  => $totalPages != 0,
