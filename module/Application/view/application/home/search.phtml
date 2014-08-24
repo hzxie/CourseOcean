@@ -142,16 +142,30 @@
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
     $('ul#category a').click(function() {
-        var category = $(this).attr('href').substring(1);
+        var category            = $(this).attr('href').substring(1),
+            numberOfRecords     = $('ul#results > li').length,
+            numberOfTeachers    = $('li.teacher').length,
+            numberOfCourses     = $('li.course').length;
+
+        $('.alert-warning').addClass('hide');
+
         if ( category == 'all' ) {
             $('li.teacher').css('display', 'block');
             $('li.course').css('display', 'block');
         } else if ( category == 'teacher' ) {
             $('li.teacher').css('display', 'block');
             $('li.course').css('display', 'none');
+
+            if ( numberOfRecords == numberOfCourses ) {
+                $('.alert-warning').removeClass('hide');
+            }
         } else if ( category == 'course' ) {
             $('li.teacher').css('display', 'none');
             $('li.course').css('display', 'block');
+
+            if ( numberOfRecords == numberOfTeachers ) {
+                $('.alert-warning').removeClass('hide');
+            }
         }
     });
 <?php $this->inlineScript()->captureEnd(); ?>
