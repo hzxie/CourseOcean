@@ -325,9 +325,14 @@ class AccountsController extends AbstractActionController
         if ( !$this->isAllowedToAccess() ) {
             return $this->sendRedirect('accounts/login');
         }
+        
+        $profile = $this->getUserProfile();
 
+        if ( $profile['userGroupSlug'] == 'administrator' ) {
+            return $this->sendRedirect('administration/dashboard');
+        }
         return array(
-            'profile'   => $this->getUserProfile(),
+            'profile' => $profile,
         );
     }
 
@@ -1038,12 +1043,12 @@ class AccountsController extends AbstractActionController
     {
         $result = array(
             'isCourseNameEmpty'     => empty($course['course_name']),
-            'isCourseNameLegal'     => strlen($course['course_name']) <= 128,
+            'isCourseNameLegal'     => mb_strlen($course['course_name'], 'utf-8') <= 128,
             'isCourseTypeIdLegal'   => $course['course_type_id'] != 0,
             'isCourseCycleEmpty'    => empty($course['course_cycle']),
             'isCourseCycleLegal'    => is_numeric($course['course_cycle']) && $course['course_cycle'] > 0,
             'isCourseAudienceEmpty' => empty($course['course_audience']),
-            'isCourseAudienceLegal' => strlen($course['course_audience']) <= 256,
+            'isCourseAudienceLegal' => mb_strlen($course['course_audience'], 'utf-8') <= 256,
             'isCourseBriefEmpty'    => empty($course['course_brief']),
             'isCourseObjectiveEmpty'=> empty($course['course_objective']),
         );

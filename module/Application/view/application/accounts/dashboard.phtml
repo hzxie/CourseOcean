@@ -142,9 +142,9 @@
     }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
-<?php $this->inlineScript()->captureStart(); ?>
+<script type="text/javascript">
     function getTeacherAvatar() {
-        /*$.ajax({
+        $.ajax({
             type: 'GET',
             url: '<?php echo $this->basePath(); ?>/accounts/getProfile',
             cache: false,
@@ -153,12 +153,12 @@
             success: function(result) {
                 if ( !result['isSuccessful'] ) {
                 } else {
-                    if ( result['extra'][''] )
+                    // if ( result['extra'][''] )
                 }
             }
-        });*/
+        });
     }
-<?php $this->inlineScript()->captureEnd(); ?>
+</script>
 <script type="text/javascript">
     $('#upload-avatar').click(function() {
         

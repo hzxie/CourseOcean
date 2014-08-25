@@ -206,8 +206,42 @@ div#content div#main-content div#course-module-modal {
 	top: 400px;
 }
 
-/* Profile */
+/** StyleSheet for  Profile **/
 div#content div#main-content div.city-picker select.city,
 div#content div#main-content div.city-picker input#address {
 	margin-top: 10px;
+}
+
+/** StyleSheet for Requirement */
+div#content div#main-content h4 span.pull-right {
+	font-size: 13px;
+}
+
+div#content div#main-content h4 span.pull-right a {
+	color: #6db33f;
+	text-decoration: none;
+}
+
+div#content div#main-content div#requirement-modal div.span6 {
+	position: relative;
+}
+
+div#content div#main-content div#requirement-modal div.span6 table.hint {
+	background-color: #fff;
+	border: 1px solid #ccc;
+	display: none;
+	margin-top: -1px;
+	position: absolute;
+	top: 55px;
+	width: 220px;
+	z-index: 32;
+}
+
+div#content div#main-content div#requirement-modal div.span6 table.hint tr:hover {
+	background: #eee;
+}
+
+div#content div#main-content div#requirement-modal div.span6 table.hint img {
+	max-height: 48px;
+	max-width: 48px;
 }

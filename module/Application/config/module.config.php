@@ -52,9 +52,10 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Home'       => 'Application\Controller\HomeController',
-            'Application\Controller\Accounts'   => 'Application\Controller\AccountsController',
-            'Application\Controller\Training'   => 'Application\Controller\TrainingController',
+            'Application\Controller\Home'           => 'Application\Controller\HomeController',
+            'Application\Controller\Accounts'       => 'Application\Controller\AccountsController',
+            'Application\Controller\Training'       => 'Application\Controller\TrainingController',
+            'Application\Controller\Administration' => 'Application\Controller\AdministrationController',
         ),
     ),
     'view_manager' => array(

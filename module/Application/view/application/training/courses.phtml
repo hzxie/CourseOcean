@@ -86,7 +86,6 @@
             url: '<?php echo $this->basePath(); ?>/training/getCourses?category=' + category + '&page=' + pageNumber,
             dataType: 'JSON',
             success: function(result) {
-                console.log(result);
                 $('#courses').empty();
                 if ( result['isSuccessful'] ) {
                     $('.alert-warning').addClass('hide');

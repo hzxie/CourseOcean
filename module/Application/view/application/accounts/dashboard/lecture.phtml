@@ -2,7 +2,7 @@
 <link href="<?php echo $this->basePath(); ?>/css/bootstrap.datetimepicker.min.css" media="screen" rel="stylesheet" type="text/css">
 <ul class="nav nav-tabs">
     <li class="dropdown active">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">我开设的课程 <b class="caret"></b></a>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">我开设的课程/培训 <b class="caret"></b></a>
         <ul class="dropdown-menu">
             <li class="active"><a href="#courses" data-toggle="tab">我开设的课程</a></li>
             <li><a href="#lectures" data-toggle="tab">我开设的培训</a></li>
@@ -246,7 +246,7 @@
                                     + '</li>';
                     $('#attendance-records').append(lectureString);
                     
-                    if ( records[i]['lectureEndTime'] < '<?php echo date("Y-m-d H:i:s"); ?>' ) {
+                    if ( records[i]['lectureEndTime'] < '<?php echo date("Y-m-d H:i:s"); ?>' && records[i]['remainTimes'] != records[i]['totalTimes'] ) {
                         if ( records[i]['commentDetail'] != null ) {
                             commentString = getCommentString(records[i]['commentRanking'], records[i]['commentDetail']);
                         } else {

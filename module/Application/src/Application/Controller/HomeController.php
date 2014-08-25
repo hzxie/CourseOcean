@@ -79,6 +79,13 @@ class HomeController extends AbstractActionController
         return $searchResult;
     }
 
+    /**
+     * 通过关键词搜索讲师.
+     * @param  String $keyword  - 关键词
+     * @param  int    $offset   - 查询结果的Offset
+     * @param  int    $limit    - 查询返回的记录数
+     * @return 包含搜索结果的数组
+     */
     private function getSearchResultOfTeacher($keyword, $offset, $limit)
     {
         $keywords       = split(' ', $keyword);
@@ -97,6 +104,13 @@ class HomeController extends AbstractActionController
         return $this->getResultSetArray($resultSet);
     }
 
+    /**
+     * 通过关键词搜索课程.
+     * @param  String $keyword  - 关键词
+     * @param  int    $offset   - 查询结果的Offset
+     * @param  int    $limit    - 查询返回的记录数
+     * @return 包含搜索结果的数组
+     */
     private function getSearchResultOfCourse($keyword, $offset, $limit)
     {
         $keywords       = split(' ', $keyword);
