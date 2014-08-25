@@ -157,6 +157,21 @@
                     </ul>
                 </div> <!-- #share -->
             </div> <!-- #misc -->
+            <?php if ( $session->offsetGet('userGroupSlug') == 'company' ): ?>
+            <div class="row-fluid">
+                <div class="span4" style="padding-top: 4px;">
+                    <label for="participants"><strong>参课人数:</strong></label>
+                </div> <!-- .span4 -->
+                <div class="span8 input-append">
+                    <?php if ( $attendance['hasAttended'] ): ?>
+                    <input id="participants" class="span10 text-center" type="text" value="<?php echo $attendance['hasAttended']->totalTimes; ?>" disabled="disabled" />
+                    <?php else: ?>
+                    <input id="participants" class="span10 text-center" type="text" value="1" />
+                    <?php endif; ?>
+                    <span class="add-on">人</span>
+                </div> <!-- .span8 -->
+            </div> <!-- .row-fluid -->
+            <?php endif; ?>
             <?php if ( $attendance['hasAttended'] ): ?>
             <button class="btn btn-orange btn-block" disabled="disabled">您已报名</button>
             <?php elseif ( $session->offsetGet('uid') == $teacher->uid ): ?>
@@ -304,8 +319,16 @@
     <?php if ( !$session->offsetExists('isLogined') ) : ?>
         window.location.href='<?php echo $this->basePath(); ?>/accounts/login?forward=/training/lecture?lectureId=<?php echo $lecture->lectureId; ?>';
     <?php else: ?>
-        var lectureId       = <?php echo $lecture->lectureId; ?>,
-            participants    = 1;
+        <?php if ( $session->offsetGet('userGroupSlug') == 'company' ): ?>
+        if ( parseInt($('#participants').val(), 10) != $('#participants').val() ) {
+            alert('请填写参课人数.');
+            return;
+        }
+        var participants    = $('#participants').val(),
+        <?php else: ?>
+        var participants    = 1,
+        <?php endif; ?>
+            lectureId       = <?php echo $lecture->lectureId; ?>;
         $.ajax({
             type: 'GET',
             async: true,
