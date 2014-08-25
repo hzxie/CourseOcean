@@ -159,7 +159,7 @@
             </div> <!-- #misc -->
             <?php if ( $attendance['hasAttended'] ): ?>
             <button class="btn btn-orange btn-block" disabled="disabled">您已报名</button>
-            <?php elseif ( $session->offsetExists('isLogined') && $session->offsetExists('uid') == $teacher->uid ): ?>
+            <?php elseif ( $session->offsetGet('uid') == $teacher->uid ): ?>
             <button class="btn btn-orange btn-block" disabled="disabled">您不能参加本课程</button>
             <?php elseif ( $lecture->startTime <= date('Y-m-d H:i:s') ) : ?>
             <button class="btn btn-orange btn-block" disabled="disabled">报名结束</button>
