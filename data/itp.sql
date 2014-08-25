@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: 2014-08-22 19:34:19
+-- Generation Time: 2014-08-25 15:30:21
 -- 服务器版本： 5.6.16
 -- PHP Version: 5.5.9
 
@@ -254,7 +254,9 @@ CREATE TABLE IF NOT EXISTS `itp_lecture_attendance` (
 INSERT INTO `itp_lecture_attendance` (`uid`, `lecture_id`, `serial_code`, `total_times`, `remain_times`) VALUES
 (1001, 100, '110153c9edc9954e8', 1, 0),
 (1001, 101, '110253ca5016cbe4b', 1, 1),
-(1003, 101, '110453cb7ef36d9ff', 1, 1);
+(1001, 103, '110453fae59a65f9e', 1, 1),
+(1003, 101, '110453cb7ef36d9ff', 1, 0),
+(1004, 103, '110753fae36f73065', 100, 100);
 
 -- --------------------------------------------------------
 
@@ -398,14 +400,19 @@ INSERT INTO `itp_post_categories` (`post_category_id`, `post_category_slug`, `po
 
 CREATE TABLE IF NOT EXISTS `itp_requirements` (
   `requirement_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `requirement_is_accepted` tinyint(1) NOT NULL DEFAULT '0',
   `requirement_from_uid` bigint(20) NOT NULL,
-  `requirement_to_uid` bigint(20) NOT NULL,
-  `requirement_course_id` bigint(20) NOT NULL,
+  `requirement_to_uid` bigint(20) DEFAULT NULL,
+  `requirement_course_id` bigint(20) DEFAULT NULL,
   `requirement_create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `requirement_participants` int(4) NOT NULL,
-  `requirement_start_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `requirement_end_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `requirement_place` varchar(256) NOT NULL,
+  `requirement_start_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `requirement_end_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `requirement_region` varchar(16) NOT NULL,
+  `requirement_province` varchar(16) NOT NULL,
+  `requirement_city` varchar(16) NOT NULL,
+  `requirement_place` varchar(128) NOT NULL,
+  `requirement_expense` int(8) NOT NULL,
   `requirement_detail` text NOT NULL,
   PRIMARY KEY (`requirement_id`),
   KEY `requirement_course_id` (`requirement_course_id`),
@@ -491,7 +498,7 @@ CREATE TABLE IF NOT EXISTS `itp_users` (
   KEY `user_group_id_2` (`user_group_id`),
   KEY `user_group_id_3` (`user_group_id`),
   KEY `user_group_id_4` (`user_group_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1004 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1005 ;
 
 --
 -- 转存表中的数据 `itp_users`
@@ -521,7 +528,8 @@ INSERT INTO `itp_users` (`uid`, `username`, `email`, `password`, `user_group_id`
 (1000, 'Administrator', 'zjhzxhz@example.com', '785ee107c11dfe36de668b1ae7baacbb', 4, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (1001, 'zjhzxhz', 'zjhzxhz@gmail.com', '785ee107c11dfe36de668b1ae7baacbb', 1, '2014-07-11 07:09:33', '0000-00-00 00:00:00'),
 (1002, 'kelliany', 'a965526122@gmail.com', '25f9e794323b453885f5181f1b624d0b', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(1003, 'kerryzhu', 'zhu.kerry@gmail.com', '785ee107c11dfe36de668b1ae7baacbb', 2, '2014-07-05 03:58:30', '0000-00-00 00:00:00');
+(1003, 'kerryzhu', 'zhu.kerry@gmail.com', '785ee107c11dfe36de668b1ae7baacbb', 2, '2014-07-05 03:58:30', '0000-00-00 00:00:00'),
+(1004, 'cisco_webex', 'service@webex.com', '785ee107c11dfe36de668b1ae7baacbb', 3, '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -544,7 +552,7 @@ INSERT INTO `itp_user_groups` (`user_group_id`, `user_group_slug`, `user_group_n
 (1, 'person', '个人'),
 (2, 'teacher', '讲师'),
 (3, 'company', '企业'),
-(4, 'administrators', 'Administrators');
+(4, 'administrator', 'Administrators');
 
 --
 -- 限制导出的表
