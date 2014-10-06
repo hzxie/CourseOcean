@@ -148,10 +148,10 @@ class CommentTable
      * @param  int $commentId - 课程评论的唯一标识符
      * @return 操作是否成功完成
      */
-    public function deleteComment($uid)
+    public function deleteComment($commentId)
     {
         $this->tableGateway->delete(array(
-            'commentId' => $comment['comment_id'],
+            'commentId' => $commentId,
         ));
         return true;
     }

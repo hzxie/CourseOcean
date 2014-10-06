@@ -115,7 +115,7 @@ class AccountsController extends AbstractActionController
         );
 
         if ( !$result['isUsernameEmpty'] && !$result['isPasswordEmpty'] ) {
-            $user = $this->verifyAccount($username, $password);
+            $user = $this->verifyAccountUsingUsernameAndPassword($username, $password);
 
             if ( $user != null ) {
                 $result['isAccountValid']   = true;
@@ -136,7 +136,7 @@ class AccountsController extends AbstractActionController
      * @param  String $password - 密码
      * @return 一个用户对象或空引用
      */
-    private function verifyAccount($username, $password)
+    private function verifyAccountUsingUsernameAndPassword($username, $password)
     {
         if ( empty($username) || empty($password) ) {
             return false;
@@ -193,7 +193,235 @@ class AccountsController extends AbstractActionController
     public function logoutAction()
     {
         $this->destroySession();
-        return $this->sendRedirect('accounts/login');
+        return $this->sendRedirect('accounts/login?logout=true');
+    }
+
+    /**
+     * 处理用户的重置密码请求.
+     * @return 一个包含页面所需信息的数组.
+     */
+    public function resetPasswordAction()
+    {
+        if ( $this->isEnableAutoLogin() ) {
+            return $this->sendRedirect('accounts/dashboard');
+        }
+
+        $email      = $this->params()->fromQuery('email');
+        $keycode    = $this->params()->fromQuery('keycode');
+
+        $isConfidentialSetted = ($email != null && $keycode != null);
+        $isConfidentialValid  = $this->isConfidentialValid($email, $keycode);
+
+        return array(
+            'isConfidentialSetted'  => $isConfidentialSetted,
+            'isConfidentialValid'   => $isConfidentialValid,
+            'email'                 => $email,
+            'keycode'               => $keycode,
+        );
+    }
+
+    /**
+     * 检查密码重置凭据是否合法.
+     * @param  String $email   - 用户的电子邮件地址
+     * @param  String $keycode - 重置密码的凭据
+     * @return 密码重置凭据是否合法
+     */
+    private function isConfidentialValid($email, $keycode)
+    {
+        $serviceManager         = $this->getServiceLocator();
+        $emailValidationTable   = $serviceManager->get('Application\Model\EmailValidationTable');
+        $confidential           = $emailValidationTable->verifyConfidential($email, $keycode);
+
+        return ( $confidential != null );
+    }
+
+    /**
+     * 处理用户重设密码的请求. 用于验证用户身份的合法性.
+     * @return 一个包含验证结果的JSON数组
+     */
+    public function doConfirmConfidentialAction()
+    {
+        $username = $this->getRequest()->getPost('username');
+        $email    = $this->getRequest()->getPost('email');
+
+        $result   = array(
+            'isSuccessful'          => false,
+            'isUsernameEmpty'       => empty($username),
+            'isEmailEmpty'          => empty($email),
+            'isConfidentialValid'   => false,
+        );
+
+        if ( !$result['isUsernameEmpty'] && !$result['isEmailEmpty'] ) {
+            if ( $this->verifyAccountUsingUsernameAndEmail($username, $email) ) {
+                $result['isConfidentialValid']  = true;
+                $result['isSuccessful']         = true;
+
+                $this->sendResetPasswordEmail($username, $email);
+            }
+        }
+
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 通过验证账户有效性.
+     * @param  String $username - 用户名
+     * @param  String $email    - 电子邮件地址
+     * @return 用户名和邮件地址的二元组是否有效
+     */
+    private function verifyAccountUsingUsernameAndEmail($username, $email)
+    {
+        if ( empty($username) || empty($email) ) {
+            return false;
+        }
+
+        $serviceManager = $this->getServiceLocator();
+        $userTable      = $serviceManager->get('Application\Model\UserTable');
+        $user           = $userTable->getUserUsingUsername($username);
+
+        if ( $user == null ) {
+            return false;
+        } else if ( $user->email != $email ) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 发送重设密码的电子邮件.
+     * @param  String $username - 用户名
+     * @param  String $email    - 电子邮件地址
+     */
+    private function sendResetPasswordEmail($username, $email) {
+        $keycode    = $this->generateRandomString(32);
+        $this->saveConfidential($email, $keycode);
+
+        $data       = array(
+            'username'  => $username,
+            'email'     => $email,
+            'keycode'   => $keycode,
+        );
+
+        $view       = new \Zend\View\Renderer\PhpRenderer();
+        $resolver   = new \Zend\View\Resolver\TemplateMapResolver();
+        $resolver->setMap(array(
+            'mailTemplate' => __DIR__ . '/../../../view/mails/reset.phtml'
+        ));
+        $view->setResolver($resolver);
+
+        $viewModel  = new ViewModel();
+        $viewModel->setTemplate('mailTemplate')->setVariables(array(
+            'username'  => $username,
+            'email'     => $email,
+            'keycode'   => $keycode,
+        ));
+
+        $bodyPart = new \Zend\Mime\Message();
+        $bodyMessage    = new \Zend\Mime\Part($view->render($viewModel));
+        $bodyMessage->type = 'text/html';
+        $bodyPart->setParts(array($bodyMessage));
+
+        $message        = new \Zend\Mail\Message();
+        $message->addFrom('noreply@zjhzxhz.com', 'IT培训平台')
+                ->addTo($email)
+                ->setSubject('重置您的账户密码')
+                ->setBody($bodyPart)
+                ->setEncoding('UTF-8');
+        $transport  = new \Zend\Mail\Transport\Sendmail();
+        $transport->send($message);
+    }
+
+    /**
+     * 生成随机字符串.
+     * @param  int $length - 随机字符串的长度
+     * @return 一个指定长度的随机字符串
+     */
+    private function generateRandomString($length) {
+        return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
+    }
+
+    /**
+     * 将密码重置凭据保存至数据库.
+     * @param  String $email   - 用户的电子邮件地址
+     * @param  String $keycode - 重置密码的凭据
+     */
+    private function saveConfidential($email, $keycode) {
+        $serviceManager         = $this->getServiceLocator();
+        $emailValidationTable   = $serviceManager->get('Application\Model\EmailValidationTable');
+        $confidential           = $emailValidationTable->getConfidentialUsingEmail($email);
+
+        if ( $confidential != null ) {
+            $emailValidationTable->deleteConfidential($email);
+        }
+
+        $confidential   = array(
+            'email'     => $email,
+            'keycode'   => $keycode,
+        );
+        $emailValidationTable->createConfidential($confidential);
+    }
+
+    /**
+     * 处理用户重置密码的请求.
+     * @return 一个包含密码重置结果的JSON数组
+     */
+    public function doResetPasswordAction() {
+        $email              = $this->getRequest()->getPost('email');
+        $keycode            = $this->getRequest()->getPost('keycode');
+        $newPassword        = $this->getRequest()->getPost('newPassword');
+        $confirmPassword    = $this->getRequest()->getPost('confirmPassword');
+
+        $result = array(
+            'isSuccessful'      => false,
+            'isPasswordEmpty'   => empty($newPassword),
+            'isPasswordLegal'   => strlen($newPassword) >= 6 && strlen($newPassword) <= 16,
+            'isPasswordMatched' => $newPassword == $confirmPassword,
+            'isKeyCodeValid'    => $this->isConfidentialValid($email, $keycode),
+        );
+        $result['isSuccessful'] = !$result['isPasswordEmpty']   && $result['isPasswordLegal'] &&
+                                   $result['isPasswordMatched'] && $result['isKeyCodeValid'];
+
+        if ( $result['isSuccessful'] ) {
+            $this->removeConfidential($email);
+            $this->doResetPassword($email, $newPassword);
+        }
+
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 删除重置密码凭据.
+     * 当用户重置密码后, 删除该凭据.
+     * @param  String $email - 用户的电子邮件地址
+     */
+    private function removeConfidential($email) {
+        $serviceManager         = $this->getServiceLocator();
+        $emailValidationTable   = $serviceManager->get('Application\Model\EmailValidationTable');
+        
+        $emailValidationTable->deleteConfidential($email);
+    }
+
+    /**
+     * 处理用户重置密码的请求.
+     * @param  String $email       - 用户的电子邮件地址
+     * @param  String $newPassword - 新密码
+     */
+    private function doResetPassword($email, $newPassword) {
+        $serviceManager     = $this->getServiceLocator();
+        $userTable          = $serviceManager->get('Application\Model\UserTable');
+        $user               = $userTable->getUserUsingEmail($email);
+
+        $userArray  = array(
+            'uid'       => $user->uid,
+            'password'  => md5($newPassword),
+        );
+        $userTable->updateUser($userArray);
     }
 
     /**

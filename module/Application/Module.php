@@ -43,6 +43,9 @@ use Application\Model\Post;
 use Application\Model\PostTable;
 use Application\Model\PostCategory;
 use Application\Model\PostCategoryTable;
+use Application\Model\EmailValidation;
+use Application\Model\EmailValidationTable;
+
 
 class Module
 {
@@ -230,6 +233,17 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new PostCategory());
                     return new TableGateway('itp_post_categories', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\EmailValidationTable' => function($sm) {
+                    $tableGateway       = $sm->get('EmailValidationTableGateway');
+                    $emailValidationTable  = new EmailValidationTable($tableGateway);
+                    return $emailValidationTable;
+                },
+                'EmailValidationTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new EmailValidation());
+                    return new TableGateway('itp_email_validation', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );
