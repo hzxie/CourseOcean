@@ -299,12 +299,6 @@ class AccountsController extends AbstractActionController
         $keycode    = $this->generateRandomString(32);
         $this->saveConfidential($email, $keycode);
 
-        $data       = array(
-            'username'  => $username,
-            'email'     => $email,
-            'keycode'   => $keycode,
-        );
-
         $view       = new \Zend\View\Renderer\PhpRenderer();
         $resolver   = new \Zend\View\Resolver\TemplateMapResolver();
         $resolver->setMap(array(
@@ -498,7 +492,7 @@ class AccountsController extends AbstractActionController
             'isUsernameLegal'   => preg_match('/^[A-Za-z][A-Za-z0-9_]{5,15}$/', ($profile['username'])),
             'isUsernameExists'  => $this->isUsernameExists($profile['username']),
             'isEmailEmpty'      => empty($profile['email']),
-            'isEmailLegal'      => preg_match('/^[A-Za-z0-9\._-]+@[A-Za-z0-9_-]+\.[A-Za-z0-9\._-]+$/', ($profile['email'])),
+            'isEmailLegal'      => $this->isEmailLegal($profile['email']),
             'isEmailExists'     => $this->isEmailExists($profile['email']),
             'isPasswordEmpty'   => empty($profile['password']),
             'isPasswordLegal'   => strlen($profile['password']) >= 6 && strlen($profile['password']) <= 16,
@@ -508,6 +502,16 @@ class AccountsController extends AbstractActionController
                                   !$result['isEmailEmpty']    && $result['isEmailLegal']    && !$result['isEmailExists'] &&
                                   !$result['isPasswordEmpty'] && $result['isPasswordLegal'] &&  $result['isUserGroupLegal'];
         return $result;
+    }
+
+    /**
+     * 检查电子邮件地址是否合法.
+     * @param  String  $email - 电子邮件地址
+     * @return 电子邮件地址是否合法
+     */
+    private function isEmailLegal($email)
+    {
+        return strlen($email) <= 64 && preg_match('/^[A-Za-z0-9\._-]+@[A-Za-z0-9_-]+\.[A-Za-z0-9\._-]+$/', ($profile['email']));
     }
 
     /**
@@ -663,6 +667,53 @@ class AccountsController extends AbstractActionController
     }
 
     /**
+     * 修改用户的密码.
+     * @return 一个包含若干标志位的JSON数组
+     */
+    public function changePasswordAction()
+    {
+        $oldPassword        = $this->getRequest()->getPost('oldPassword');
+        $newPassword        = $this->getRequest()->getPost('newPassword');
+        $confirmPassword    = $this->getRequest()->getPost('confirmPassword');
+
+        $result = array(
+            'isSuccessful'              => false,
+            'isOldPasswordEmpty'        => empty($oldPassword),
+            'isOldPasswordValid'        => true,
+            'isNewPasswordEmpty'        => empty($newPassword),
+            'isNewPasswordLegal'        => strlen($newPassword) >= 6 && strlen($newPassword) <= 16,
+            'isConfirmPasswordMatched'  => $newPassword == $confirmPassword,
+        );
+        $result['isSuccessful'] = !$result['isOldPasswordEmpty'] && !$result['isNewPasswordEmpty'] &&
+                                   $result['isNewPasswordLegal'] &&  $result['isConfirmPasswordMatched'];
+        if ( $result['isSuccessful'] ) {
+            $serviceManager = $this->getServiceLocator();
+            $userTable      = $serviceManager->get('Application\Model\UserTable');
+
+            $profile        = $this->getUserProfile();
+            $uid            = $profile['uid'];
+            $user           = $userTable->getUserUsingUid($uid);
+
+            if ( $user->password == md5($oldPassword) ) {
+                $result['isOldPasswordValid']   = true;
+                $userArray                      = array(
+                    'uid'                       => $uid,
+                    'password'                  => md5($newPassword),
+                    'last_time_change_password' => date('Y-m-d H:i:s'),
+                );
+                $userTable->updateUser($userArray);
+            } else {
+                $result['isSuccessful'] = false;
+            }
+        }
+
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
      * 编辑用户个人资料.
      * @return 一个包含若干标志位的JSON数组
      */
@@ -681,6 +732,31 @@ class AccountsController extends AbstractActionController
     }
 
     /**
+     * 修改用户电子邮件地址.
+     * @return 一个包含若干标志位的数组
+     */
+    private function editEmailAddress($newEmailAddress)
+    {
+        $profile            = $this->getUserProfile();
+        $oldEmailAddress    = $profile['email'];
+
+        $result             = array(
+            'isEmailEmpty'  => empty($newEmailAddress),
+            'isEmailLegal'  => $this->isEmailLegal($newEmailAddress),
+        );
+        $isSuccessful       = !$result['isEmailEmpty'] && $result['isEmailLegal'];
+
+        if ( $isSuccessful && $oldEmailAddress != $newEmailAddress ) {
+            $profile['email']   = $newEmailAddress;
+
+            $serviceManager = $this->getServiceLocator();
+            $userTable      = $serviceManager->get('Application\Model\UserTable');
+            $userTable->updateUser($profile);
+        }
+        return $result;
+    }
+
+    /**
      * 编辑讲师用户个人资料.
      * @return 一个包含若干标志位的数组
      */
@@ -692,6 +768,7 @@ class AccountsController extends AbstractActionController
         $province       = strip_tags($this->getRequest()->getPost('province'));
         $city           = strip_tags($this->getRequest()->getPost('city'));
         $phone          = strip_tags($this->getRequest()->getPost('phone'));
+        $email          = strip_tags($this->getRequest()->getPost('email'));
         $weibo          = strip_tags($this->getRequest()->getPost('weibo'));
         $brief          = strip_tags($this->getRequest()->getPost('brief'));
         $teachingFields = strip_tags($this->getRequest()->getPost('teachingFields'));
@@ -710,7 +787,8 @@ class AccountsController extends AbstractActionController
             'teacher_weibo'         => $weibo,
             'teacher_brief'         => $brief,
         );
-        $result = $this->isTeacherProfileLegal($teacher);
+        $result     = $this->isTeacherProfileLegal($teacher);
+        $result    += $this->editEmailAddress($email);
 
         if ( $result['isSuccessful'] ) {
             $serviceManager     = $this->getServiceLocator();

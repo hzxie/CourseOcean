@@ -1,4 +1,4 @@
-<h4 class="span10">个人信息</h4>
+<h4 class="span10">个人信息<span class="pull-right"><a id="change-password" href="javascript:void(0)">修改密码</a></span></h4>
 <div id="page-error" class="alert alert-error span10 hide"></div> <!-- #page-error -->
 <div id="page-info" class="alert alert-success span10 hide">您已成功修改您的个人资料.</div> <!-- #page-info -->
 <div id="page-warning" class="alert alert-warning span10 hide"></div> <!-- #page-warning -->
@@ -29,6 +29,12 @@
             <label for="teacher-phone">移动电话<small>(仅管理员可见)</small></label>
             <input id="teacher-phone" type="text" maxlength="16" />
         </div> <!-- .span6 -->
+        <div class="span6">
+            <label for="teacher-email">电子邮件地址<small>(仅管理员可见)</small></label>
+            <input id="teacher-email" type="text"maxlength="64" />
+        </div> <!-- .span6 -->
+    </div> <!-- .row-fluid -->
+    <div class="row-fluid">
         <div class="span6">
             <label for="teacher-weibo">微博<small>(非必填项)</small></label>
             <input id="teacher-weibo" type="text" />
@@ -61,6 +67,7 @@
             <h4>修改密码</h4>
         </div> <!-- .modal-header -->
         <div class="modal-body">
+            <div class="alert alert-error hide"></div> <!-- .alert-error -->
             <div class="row-fluid">
                 <div class="span6">
                     <label for="old-password">旧密码</label>
@@ -120,7 +127,7 @@
                             $('#page-warning').html('您的个人信息正在审核, 请耐心等待.');
                             $('#page-warning').removeClass('hide');
                         }
-                        displayProfile(result['extra']);
+                        displayProfile(result['profile']['email'], result['extra']);
                     } else {
                         $('#page-warning').html('您尚未填写您的个人信息.');
                         $('#page-warning').removeClass('hide');
@@ -130,7 +137,8 @@
         }
     </script>
     <script type="text/javascript">
-        function displayProfile(profile) {
+        function displayProfile(email, profile) {
+            $('#teacher-email').val(email);
             $('#teacher-name').val(profile['teacherName']);
             $('#teacher-name').attr('disabled', 'disabled');
             $('#teacher-company').val(profile['company']);
@@ -183,6 +191,7 @@
                 province        = $('#teacher-province').val(),
                 city            = $('#teacher-city').val() || '',
                 phone           = $('#teacher-phone').val(),
+                email           = $('#teacher-email').val(),
                 weibo           = $('#teacher-weibo').val(),
                 brief           = $('#teacher-brief').val(),
                 teachingFields  = getSelectedTeachingFields();
@@ -192,7 +201,7 @@
             $('#page-info').addClass('hide');
             $('#edit-profile').attr('disabled', 'disabled');
             $('#edit-profile').html('正在处理...');
-            return editProfile(name, company, region, province, city, phone, weibo, brief, teachingFields);
+            return editProfile(name, company, region, province, city, phone, email, weibo, brief, teachingFields);
         });
     </script>
     <script type="text/javascript">
@@ -208,10 +217,10 @@
         }
     </script>
     <script type="text/javascript">
-        function editProfile(name, company, region, province, city, phone, weibo, brief, teachingFields) {
+        function editProfile(name, company, region, province, city, phone, email, weibo, brief, teachingFields) {
             var postData = 'name=' + name + '&company=' + company + '&region=' + region + '&province=' + province + 
-                          '&city=' + city + '&phone=' + phone + '&weibo=' + weibo + '&brief=' + brief + 
-                          '&teachingFields=' + teachingFields;
+                          '&city=' + city + '&phone=' + phone + '&email=' + email + '&weibo=' + weibo + 
+                          '&brief=' + brief + '&teachingFields=' + teachingFields;
             $.ajax({
                 type: 'POST',
                 async: false,
@@ -231,6 +240,12 @@
             });
         }
     </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            getCourseTypes();
+            getProfile();
+        });
+    </script>
 <?php endif; ?>
 <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/jquery.citypicker.js"></script>
 <script type="text/javascript">
@@ -238,13 +253,8 @@
 </script>
 <script type="text/javascript">
     $('#change-password').click(function() {
+        $('#password-modal input').val('');
         $('#password-modal').modal();
-    });
-</script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        getCourseTypes();
-        getProfile();
     });
 </script>
 <script type="text/javascript">
@@ -252,11 +262,49 @@
         var oldPassword     = $('#old-password').val(),
             newPassword     = $('#new-password').val(),
             confirmPassword = $('#confirm-password').val();
+
+        $('#password-modal .alert-error').addClass('hide');
         return changePassword(oldPassword, newPassword, confirmPassword);
     });
 </script>
 <script type="text/javascript">
     function changePassword(oldPassword, newPassword, confirmPassword) {
+        var postData = 'oldPassword=' + oldPassword + '&newPassword=' + newPassword + 
+                      '&confirmPassword=' + confirmPassword;
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: '<?php echo $this->basePath(); ?>/accounts/changePassword',
+            data: postData,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    $('#password-modal').modal('hide');
+                } else {
+                    displayChangePasswordErrorMessage(result);
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function displayChangePasswordErrorMessage(result) {
+        var errorMessage = '';
+        if ( result['isOldPasswordEmpty'] ) {
+            errorMessage += '请填写旧密码.<br />';
+        } else if ( !result['isOldPasswordValid'] ) {
+            errorMessage += '旧密码不正确.<br />';
+        }
+        if ( result['isNewPasswordEmpty'] ) {
+            errorMessage += '请填写新密码.<br />';
+        } else if ( !result['isNewPasswordLegal'] ) {
+            errorMessage += '新密码的长度应该在6~16个字符之间.<br />';
+        }
+        if ( !result['isConfirmPasswordMatched'] ) {
+            errorMessage += '新密码与确认密码输入不一致.<br />';
+        }
 
+        $('#password-modal .alert-error').html(errorMessage);
+        $('#password-modal .alert-error').removeClass('hide');
     }
 </script>
