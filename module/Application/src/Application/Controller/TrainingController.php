@@ -24,7 +24,7 @@ class TrainingController extends AbstractActionController
     {
         $serviceManager     = $this->getServiceLocator();
         $courseTypeTable    = $serviceManager->get('Application\Model\CourseTypeTable');
-        $courseType         = $courseTypeTable->getCatelogyUsingId($catelogySlug);
+        $courseType         = $courseTypeTable->getCatelogyUsingSlug($catelogySlug);
 
         if ( $courseType != null ) {
             return $courseType->courseTypeId;
@@ -548,7 +548,7 @@ class TrainingController extends AbstractActionController
     {
         $serviceManager     = $this->getServiceLocator();
         $postCategoryTable  = $serviceManager->get('Application\Model\PostCategoryTable');
-        $postCategory       = $postCategoryTable->getCatelogyUsingId($catelogySlug);
+        $postCategory       = $postCategoryTable->getCatelogyUsingSlug($catelogySlug);
 
         if ( $postCategory != null ) {
             return $postCategory->postCategoryId;

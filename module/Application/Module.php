@@ -19,6 +19,10 @@ use Application\Model\User;
 use Application\Model\UserTable;
 use Application\Model\UserGroup;
 use Application\Model\UserGroupTable;
+use Application\Model\Person;
+use Application\Model\PersonTable;
+use Application\Model\Position;
+use Application\Model\PositionTable;
 use Application\Model\Teacher;
 use Application\Model\TeacherTable;
 use Application\Model\TeachingField;
@@ -101,6 +105,28 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new UserGroup());
                     return new TableGateway('itp_user_groups', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\PersonTable' => function($sm) {
+                    $tableGateway   = $sm->get('PersonTableGateway');
+                    $personTable    = new PersonTable($tableGateway);
+                    return $personTable;
+                },
+                'PersonTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Person());
+                    return new TableGateway('itp_people', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\PositionTable' => function($sm) {
+                    $tableGateway   = $sm->get('PositionTableGateway');
+                    $positionTable  = new PositionTable($tableGateway);
+                    return $positionTable;
+                },
+                'PositionTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Position());
+                    return new TableGateway('itp_positions', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Application\Model\TeacherTable' => function($sm) {
                     $tableGateway   = $sm->get('TeacherTableGateway');

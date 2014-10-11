@@ -52,7 +52,45 @@
             <ul id="teaching-fields" class="inline"></ul>
         </div> <!-- .span10 -->
     </div> <!-- .row-fluid -->
-<?php else: ?>
+<?php elseif ( $profile['userGroupSlug'] == 'person'  ): ?>
+    <div class="row-fluid">
+        <div class="span6">
+            <label for="person-name">真实姓名</label>
+            <input id="person-name" type="text" maxlength="16" />
+        </div> <!-- .span6 -->
+    </div> <!-- .row-fluid -->
+    <div class="city-picker row-fluid">
+        <div class="span6">
+            <label for="person-region">所在地区</label>
+            <select id="person-region" class="region"></select>
+            <select id="person-city" class="city"></select>
+        </div> <!-- .span6 -->
+        <div class="span6">
+            <label for="person-province">&nbsp;</label>
+            <select id="person-province" class="province"></select>
+        </div> <!-- .span6 -->
+    </div> <!-- .row-fluid -->
+    <div class="row-fluid">
+        <div class="span6">
+            <label for="person-company">所在公司(/曾经就职的公司)</label>
+            <input id="person-company" type="text" maxlength="64" />
+        </div> <!-- .span6 -->
+        <div class="span6">
+            <label for="person-position">职位</label>
+            <select id="person-position"></select>
+        </div> <!-- .span6 -->
+    </div> <!-- .row-fluid -->
+    <div class="row-fluid">
+        <div class="span6">
+            <label for="person-phone">移动电话<small>(仅管理员可见)</small></label>
+            <input id="person-phone" type="text" maxlength="16" />
+        </div> <!-- .span6 -->
+        <div class="span6">
+            <label for="person-email">电子邮件地址<small>(仅管理员可见)</small></label>
+            <input id="person-email" type="text"maxlength="64" />
+        </div> <!-- .span6 -->
+    </div> <!-- .row-fluid -->
+<?php elseif ( $profile['userGroupSlug'] == 'company'  ): ?>
     
 <?php endif; ?>
     <div class="row-fluid">
@@ -90,8 +128,145 @@
             <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
         </div> <!-- .modal-footer -->
     </div> <!-- #password-modal -->
-<?php if ( $profile['userGroupSlug'] == 'teacher'  ): ?>
     <!-- Java Script -->
+    <script type="text/javascript">
+        function getProfile() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                url: '<?php echo $this->basePath(); ?>/accounts/getProfile',
+                dataType: 'JSON',
+                success: function(result) {
+                    if ( !result['isSuccessful'] ) {
+                        $('#page-warning').html('您尚未填写您的个人信息.');
+                        $('#page-warning').removeClass('hide');
+                    }
+                    displayProfile(result['profile']['email'], result['extra']);
+                }
+            });
+        }
+    </script>
+<?php if ( $profile['userGroupSlug'] == 'person'  ): ?>
+    <script type="text/javascript">
+        function getPositions() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                url: '<?php echo $this->basePath(); ?>/accounts/getPositions',
+                dataType: 'JSON',
+                success: function(result) {
+                    if ( result['isSuccessful'] ) {
+                        var length = result['positions'].length;
+                        for ( var i = 0; i < length; ++ i ) {
+                            var positionSlug = result['positions'][i]['positionSlug'],
+                                positionName = result['positions'][i]['positionName'];
+                            $('#person-position').append('<option value="' + positionSlug + '">' + positionName + '</option>');
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function displayProfile(email, profile) {
+            $('#person-email').val(email);
+            if ( profile != false ) {
+                $('#person-name').val(profile['personName']);
+                $('#person-name').attr('disabled', 'disabled');
+                $('#person-region').val(profile['region']).change();
+                $('#person-province').val(profile['province']).change();
+                if ( profile['city'] ) {
+                    $('#person-city').val(profile['city']).change();
+                } else {
+                    $('#person-city').val(profile['city'])
+                    $('#person-city').attr('disabled', 'disabled');
+                }
+                $('#person-company').val(profile['company']);
+                $('#person-position').val(profile['positionSlug']);
+                $('#person-phone').val(profile['phone']);
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            getPositions();
+            getProfile();
+        });
+    </script>
+    <script type="text/javascript">
+        $('#edit-profile').click(function() {
+            var name            = $('#person-name').val(),
+                region          = $('#person-region').val(),
+                province        = $('#person-province').val(),
+                city            = $('#person-city').val() || '',
+                company         = $('#person-company').val(),
+                position        = $('#person-position').val(),
+                phone           = $('#person-phone').val(),
+                email           = $('#person-email').val();
+
+            $('#page-error').addClass('hide');
+            $('#page-warning').addClass('hide');
+            $('#page-info').addClass('hide');
+            $('#edit-profile').attr('disabled', 'disabled');
+            $('#edit-profile').html('正在处理...');
+            return editProfile(name, region, province, city, company, position, phone, email);
+        });
+    </script>
+    <script type="text/javascript">
+        function editProfile(name, region, province, city, company, position, phone, email) {
+            var postData = 'name=' + name + '&region=' + region + '&province=' + province + '&city=' + city + 
+                          '&company=' + company + '&position=' + position + '&phone=' + phone + '&email=' + email;
+            $.ajax({
+                type: 'POST',
+                async: false,
+                url: '<?php echo $this->basePath(); ?>/accounts/editProfile',
+                data: postData,
+                dataType: 'JSON',
+                success: function(result) {
+                    if ( result['isSuccessful'] ) {
+                        $('#page-info').removeClass('hide');
+                    } else {
+                        displayErrorMessage(result);
+                    }
+                    $('#edit-profile').html('确认');
+                    $('#edit-profile').removeAttr('disabled');
+                    window.scrollToTop();
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function displayErrorMessage(result) {
+            var errorMessage = '';
+            if ( result['isPersonNameEmpty'] ) {
+                errorMessage += '请填写您的姓名.<br />';
+            } else if ( !result['isPersonNameLegal'] ) {
+                errorMessage += '您的姓名长度不能超过16个字符.<br />';
+            }
+            if ( result['isPersonRegionEmpty'] ) {
+                errorMessage += '请选择您所在的地区.<br />';
+            } 
+            if ( result['isPersonProvinceEmpty'] ) {
+                errorMessage += '请选择您所在的省份.<br />';
+            }
+            if ( result['isPersonCompanyEmpty'] ) {
+                errorMessage += '请填写您所在的公司.<br />';
+            } else if ( !result['isPersonCompanyLegal'] ) {
+                errorMessage += '公司名称的长度不能超过64个字符.<br />';
+            }
+            if( !result['isPersonPositionLegal'] ) {
+                errorMessage += '请选择您的职位.<br />';
+            }
+            if( result['isPersonPhoneEmpty'] ) {
+                errorMessage += '请填写您的移动电话.<br />';
+            } else if( !result['isPersonPhoneLegal'] ) {
+                errorMessage += '移动电话应该只包含数字.<br />';
+            }
+            $('#page-error').html(errorMessage);
+            $('#page-error').removeClass('hide');
+        }
+    </script>
+<?php elseif ( $profile['userGroupSlug'] == 'teacher'  ): ?>
     <script type="text/javascript">
         function getCourseTypes() {
             $.ajax({
@@ -115,44 +290,24 @@
         }
     </script>
     <script type="text/javascript">
-        function getProfile() {
-            $.ajax({
-                type: 'GET',
-                async: false,
-                url: '<?php echo $this->basePath(); ?>/accounts/getProfile',
-                dataType: 'JSON',
-                success: function(result) {
-                    if ( result['isSuccessful'] ) {
-                        if ( !result['extra']['isApproved'] ) {
-                            $('#page-warning').html('您的个人信息正在审核, 请耐心等待.');
-                            $('#page-warning').removeClass('hide');
-                        }
-                        displayProfile(result['profile']['email'], result['extra']);
-                    } else {
-                        $('#page-warning').html('您尚未填写您的个人信息.');
-                        $('#page-warning').removeClass('hide');
-                    }
-                }
-            });
-        }
-    </script>
-    <script type="text/javascript">
         function displayProfile(email, profile) {
             $('#teacher-email').val(email);
-            $('#teacher-name').val(profile['teacherName']);
-            $('#teacher-name').attr('disabled', 'disabled');
-            $('#teacher-company').val(profile['company']);
-            $('#teacher-region').val(profile['region']).change();
-            $('#teacher-province').val(profile['province']).change();
-            if ( profile['city'] ) {
-                $('#teacher-city').val(profile['city']).change();
-            } else {
-                $('#teacher-city').val(profile['city'])
-                $('#teacher-city').attr('disabled', 'disabled');
+            if ( profile != false ) {
+                $('#teacher-name').val(profile['teacherName']);
+                $('#teacher-name').attr('disabled', 'disabled');
+                $('#teacher-company').val(profile['company']);
+                $('#teacher-region').val(profile['region']).change();
+                $('#teacher-province').val(profile['province']).change();
+                if ( profile['city'] ) {
+                    $('#teacher-city').val(profile['city']).change();
+                } else {
+                    $('#teacher-city').val(profile['city'])
+                    $('#teacher-city').attr('disabled', 'disabled');
+                }
+                $('#teacher-phone').val(profile['phone']);
+                $('#teacher-weibo').val(profile['weibo']);
+                $('#teacher-brief').val(profile['brief']);
             }
-            $('#teacher-phone').val(profile['phone']);
-            $('#teacher-weibo').val(profile['weibo']);
-            $('#teacher-brief').val(profile['brief']);
         }
     </script>
     <script type="text/javascript">
@@ -232,6 +387,8 @@
                         $('#page-warning').html('您的个人信息正在审核, 请耐心等待.');
                         $('#page-warning').removeClass('hide');
                         $('#page-info').removeClass('hide');
+                    } else {
+                        displayErrorMessage(result);
                     }
                     $('#edit-profile').html('确认');
                     $('#edit-profile').removeAttr('disabled');
@@ -241,8 +398,50 @@
         }
     </script>
     <script type="text/javascript">
+        function displayErrorMessage(result) {
+            var errorMessage = '';
+            if ( result['isTeacherNameEmpty'] ) {
+                errorMessage += '请填写您的姓名.<br />';
+            } else if ( !result['isTeacherNameLegal'] ) {
+                errorMessage += '您的姓名长度不能超过16个字符.<br />';
+            }
+            if ( result['isTeacherCompanyEmpty'] ) {
+                errorMessage += '请填写您所在的公司及职位.<br />';
+            } else if ( !result['isTeacherCompanyLegal'] ) {
+                errorMessage += '公司和职位的总长度不能超过64个字符.<br />';
+            }
+            if ( result['isTeacherRegionEmpty'] ) {
+                errorMessage += '请选择您所在的地区.<br />';
+            } 
+            if ( result['isTeacherProvinceEmpty'] ) {
+                errorMessage += '请选择您所在的省份.<br />';
+            }
+            if( result['isTeacherPhoneEmpty'] ) {
+                errorMessage += '请填写您的电话号码.<br />';
+            } else if( !result['isTeacherPhoneLegal'] ) {
+                errorMessage += '您的电话号码应该只包含数字.<br />';
+            }
+            if ( !result['isTeacherWeiboLegal'] ) {
+                errorMessage += '微博账号的长度不应超过32个字符.<br />';
+            }
+            if( result['isTeacherBriefEmpty'] ) {
+                errorMessage += '请填写您的个人简介.<br />';
+            } else if( !result['isTeacherBriefLegal'] ) {
+                errorMessage += '个人简介的长度应不超过640个字符.<br />';
+            }
+            $('#page-error').html(errorMessage);
+            $('#page-error').removeClass('hide');
+        }
+    </script>
+    <script type="text/javascript">
         $(document).ready(function() {
             getCourseTypes();
+            getProfile();
+        });
+    </script>
+<?php elseif ( $profile['userGroupSlug'] == 'company'  ): ?>
+    <script type="text/javascript">
+        $(document).ready(function() {
             getProfile();
         });
     </script>

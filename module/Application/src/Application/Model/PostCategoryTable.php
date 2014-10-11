@@ -46,7 +46,7 @@ class PostCategoryTable
      * @param  String $catelogySlug - 培训动态分类的唯一英文缩写
      * @return 一个培训动态分类的对象
      */
-    public function getCatelogyUsingId($postCategorySlug)
+    public function getCatelogyUsingSlug($postCategorySlug)
     {
         $rowSet = $this->tableGateway->select(array(
             'post_category_slug'    => $postCategorySlug

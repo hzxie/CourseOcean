@@ -635,6 +635,40 @@ class AccountsController extends AbstractActionController
     }
 
     /**
+     * 获取个人用户的个人资料.
+     * @param  int $uid - 用户唯一标识符
+     * @return 一个Person对象, 包含个人用户的个人资料
+     */
+    private function getPersonProfile($uid)
+    {
+        $serviceManager = $this->getServiceLocator();
+        $personTable    = $serviceManager->get('Application\Model\PersonTable');
+        $person         = $personTable->getPersonUsingUid($uid);
+
+        return $person;
+    }
+
+    /**
+     * 获取全部的职位信息.
+     * @return 一个包含工作职位信息的JSON数组
+     */
+    public function getPositionsAction()
+    {
+        $serviceManager = $this->getServiceLocator();
+        $positionTable  = $serviceManager->get('Application\Model\PositionTable');
+        $positions      = $positionTable->getAllPositions();
+
+        $result   = array(
+            'isSuccessful'      => $positions != null,
+            'positions'         => $this->getResultSetArray($positions),
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
      * 获取讲师用户的个人资料.
      * @param  int $uid - 用户唯一标识符
      * @return 一个Teacher对象, 包含讲师用户的个人资料
@@ -648,6 +682,10 @@ class AccountsController extends AbstractActionController
         return $teacher;
     }
 
+    /**
+     * 获取某个讲师的授课领域.
+     * @return 一个包含授课领域信息的JSON数组
+     */
     public function getTeachingFieldsAction()
     {
         $profile            = $this->getUserProfile();
@@ -757,6 +795,94 @@ class AccountsController extends AbstractActionController
     }
 
     /**
+     * 编辑个人用户的个人资料.
+     * @return 一个包含若干标志位的JSON数组
+     */
+    public function editPersonProfile()
+    {
+        $name           = strip_tags($this->getRequest()->getPost('name'));
+        $region         = strip_tags($this->getRequest()->getPost('region'));
+        $province       = strip_tags($this->getRequest()->getPost('province'));
+        $city           = strip_tags($this->getRequest()->getPost('city'));
+        $company        = strip_tags($this->getRequest()->getPost('company'));
+        $positionSlug   = strip_tags($this->getRequest()->getPost('position'));
+        $phone          = strip_tags($this->getRequest()->getPost('phone'));
+        $email          = strip_tags($this->getRequest()->getPost('email'));
+        $positionId     = $this->getPositionId($positionSlug);
+
+        $profile        = $this->getUserProfile();
+        $uid            = $profile['uid'];
+        $person         = array(
+            'uid'                   => $uid,
+            'person_name'           => $name,
+            'person_region'         => $region,
+            'person_province'       => $province,
+            'person_city'           => $city,
+            'person_company'        => $company,
+            'person_position_id'    => $positionId,
+            'person_phone'          => $phone,
+        );
+        $result         = $this->isPersonProfileLegal($person);
+
+        if ( $result['isSuccessful'] ) {
+            $serviceManager     = $this->getServiceLocator();
+            $personTable        = $serviceManager->get('Application\Model\PersonTable');
+            $isPersonExists     = $personTable->getPersonUsingUid($uid);
+
+            if ( $isPersonExists != null ) {
+                $personTable->updatePerson($person);
+            } else {
+                $personTable->createPerson($person);
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * 通过工作职位的唯一英文缩写获取工作职位的唯一标识符.
+     * @param  String $positionSlug - 工作职位的唯一英文缩写
+     * @return 工作职位的唯一标识符
+     */
+    private function getPositionId($positionSlug)
+    {
+        $serviceManager     = $this->getServiceLocator();
+        $positionTable      = $serviceManager->get('Application\Model\PositionTable');
+        $position           = $positionTable->getPositionUsingSlug($positionSlug);
+
+        if ( $position != null ) {
+            return $position->positionId;
+        } 
+        return 0;
+    }
+
+    /**
+     * 检查个人用户所提交的信息是否合法.
+     * @param  Array  $person - 一个包含个人用户信息的数组
+     * @return 一个包含若干标志位的数组
+     */
+    private function isPersonProfileLegal($person)
+    {
+        $result = array(
+            'isSuccessful'              => false,
+            'isPersonNameEmpty'         => empty($person['person_name']),
+            'isPersonNameLegal'         => mb_strlen($person['person_name'], 'utf-8') <= 16,
+            'isPersonRegionEmpty'       => empty($person['person_region']),
+            'isPersonProvinceEmpty'     => empty($person['person_province']),
+            'isPersonCompanyEmpty'      => empty($person['person_company']),
+            'isPersonCompanyLegal'      => mb_strlen($person['person_company'], 'utf-8') <= 64,
+            'isPersonPositionLegal'     => $person['person_position_id'] != 0,
+            'isPersonPhoneEmpty'        => empty($person['person_phone']),
+            'isPersonPhoneLegal'        => preg_match('/^[0-9+-]{8,16}$/', $person['person_phone']),
+        );
+        $result['isSuccessful'] = !$result['isPersonNameEmpty']     &&  $result['isPersonNameLegal'] &&
+                                  !$result['isPersonRegionEmpty']   && !$result['isPersonProvinceEmpty'] &&
+                                  !$result['isPersonCompanyEmpty']  &&  $result['isPersonCompanyLegal'] &&
+                                   $result['isPersonPositionLegal'] && !$result['isPersonPhoneEmpty'] &&
+                                   $result['isPersonPhoneLegal'];
+        return $result;
+    }
+
+    /**
      * 编辑讲师用户个人资料.
      * @return 一个包含若干标志位的数组
      */
@@ -787,8 +913,7 @@ class AccountsController extends AbstractActionController
             'teacher_weibo'         => $weibo,
             'teacher_brief'         => $brief,
         );
-        $result     = $this->isTeacherProfileLegal($teacher);
-        $result    += $this->editEmailAddress($email);
+        $result         = $this->isTeacherProfileLegal($teacher);
 
         if ( $result['isSuccessful'] ) {
             $serviceManager     = $this->getServiceLocator();
@@ -803,7 +928,7 @@ class AccountsController extends AbstractActionController
             } else {
                 $teacherTable->createTeacher($teacher);
             }
-            $teachingFieldTable->uid($updateTeachingField, $teachingFields, $courseTypes);
+            $teachingFieldTable->updateTeachingField($uid, $teachingFields, $courseTypes);
         }
         return $result;
     }
@@ -811,7 +936,7 @@ class AccountsController extends AbstractActionController
     /**
      * 检查讲师用户所提交的信息是否合法.
      * @param  Array  $teacher - 一个包含讲师信息的数组
-     * @return 讲师用户所提交的信息是否合法
+     * @return 一个包含若干标志位的数组
      */
     private function isTeacherProfileLegal($teacher)
     {
