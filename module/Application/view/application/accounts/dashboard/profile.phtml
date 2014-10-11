@@ -129,6 +129,10 @@
         </div> <!-- .modal-footer -->
     </div> <!-- #password-modal -->
     <!-- Java Script -->
+    <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/jquery.citypicker.js"></script>
+    <script type="text/javascript">
+        $('.city-picker').cityPicker();
+    </script>
     <script type="text/javascript">
         function getProfile() {
             $.ajax({
@@ -446,10 +450,6 @@
         });
     </script>
 <?php endif; ?>
-<script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/jquery.citypicker.js"></script>
-<script type="text/javascript">
-    $('.city-picker').cityPicker();
-</script>
 <script type="text/javascript">
     $('#change-password').click(function() {
         $('#password-modal input').val('');
