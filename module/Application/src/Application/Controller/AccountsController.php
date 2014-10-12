@@ -705,6 +705,40 @@ class AccountsController extends AbstractActionController
     }
 
     /**
+     * 获取企业用户的个人资料.
+     * @param  int $uid - 用户唯一标识符
+     * @return 一个Company对象, 包含企业用户的个人资料
+     */
+    private function getCompanyProfile($uid)
+    {
+        $serviceManager = $this->getServiceLocator();
+        $companyTable   = $serviceManager->get('Application\Model\CompanyTable');
+        $company        = $companyTable->getCompanyUsingUid($uid);
+
+        return $company;
+    }
+
+    /**
+     * 获取所有公司领域的信息.
+     * @return 一个包含公司领域信息的JSON数组
+     */
+    public function getCompanyFieldsAction()
+    {
+        $serviceManager     = $this->getServiceLocator();
+        $companyFieldTable  = $serviceManager->get('Application\Model\CompanyFieldTable');
+        $companyFields      = $companyFieldTable->getAllCompanyFields();
+
+        $result   = array(
+            'isSuccessful'      => $companyFields != null,
+            'companyFields'     => $this->getResultSetArray($companyFields),
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
      * 修改用户的密码.
      * @return 一个包含若干标志位的JSON数组
      */
@@ -975,6 +1009,96 @@ class AccountsController extends AbstractActionController
             $hashMap[$courseType->courseTypeSlug] = $courseType;
         }
         return $hashMap;
+    }
+
+    /**
+     * 编辑企业用户个人资料.
+     * @return 一个包含若干标志位的数组
+     */
+    private function editCompanyProfile()
+    {
+        $name               = strip_tags($this->getRequest()->getPost('name'));
+        $region             = strip_tags($this->getRequest()->getPost('region'));
+        $province           = strip_tags($this->getRequest()->getPost('province'));
+        $city               = strip_tags($this->getRequest()->getPost('city'));
+        $address            = strip_tags($this->getRequest()->getPost('address'));
+        $companyFieldSlug   = strip_tags($this->getRequest()->getPost('companyField'));
+        $scale              = strip_tags($this->getRequest()->getPost('scale'));
+        $phone              = strip_tags($this->getRequest()->getPost('phone'));
+        $companyFieldId     = $this->getCompanyFieldId($companyFieldSlug);
+
+        $profile            = $this->getUserProfile();
+        $uid                = $profile['uid'];
+        $company             = array(
+            'uid'                   => $uid,
+            'company_name'          => $name,
+            'company_region'        => $region,
+            'company_province'      => $province,
+            'company_city'          => $city,
+            'company_address'       => $address,
+            'company_field_id'      => $companyFieldId,
+            'company_scale'         => $scale,
+            'company_phone'         => $phone,
+        );
+        $result         = $this->isCompanyProfileLegal($company);
+
+        if ( $result['isSuccessful'] ) {
+            $serviceManager     = $this->getServiceLocator();
+            $companyTable       = $serviceManager->get('Application\Model\CompanyTable');
+            $isCompanyExists    = $companyTable->getCompanyUsingUid($uid);
+
+            if ( $isCompanyExists != null ) {
+                $companyTable->updateCompany($company);
+            } else {
+                $companyTable->createCompany($company);
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * 检查企业用户所提交的信息是否合法.
+     * @param  Array  $company - 一个包含企业信息的数组
+     * @return 一个包含若干标志位的数组
+     */
+    private function isCompanyProfileLegal($company)
+    {
+        $result     = array(
+            'isSuccessful'              => false,
+            'isCompanyNameEmpty'        => empty($company['company_name']),
+            'isCompanyNameLegal'        => mb_strlen($company['company_name'], 'utf-8') <= 64,
+            'isCompanyRegionEmpty'      => empty($company['company_region']),
+            'isCompanyProvinceEmpty'    => empty($company['company_province']),
+            'isCompanyAddressEmpty'     => empty($company['company_address']),
+            'isCompanyAddressLegal'     => mb_strlen($company['company_address'], 'utf-8') <= 128,
+            'isCompanyFieldLegal'       => $company['company_field_id'] != 0,
+            'isCompanyScaleLegal'       => in_array($company['company_scale'], array(1, 10, 100, 1000, 10000)),
+            'isCompanyPhoneEmpty'       => empty($company['company_phone']),
+            'isCompanyPhoneLegal'       => preg_match('/^[0-9+-]{8,16}$/', $company['company_phone']),
+        );
+        $result['isSuccessful'] = !$result['isCompanyNameEmpty']    &&  $result['isCompanyNameLegal'] &&
+                                  !$result['isCompanyRegionEmpty']  && !$result['isCompanyProvinceEmpty'] &&
+                                  !$result['isCompanyAddressEmpty'] &&  $result['isCompanyAddressLegal'] &&  
+                                   $result['isCompanyFieldLegal']   &&  $result['isCompanyScaleLegal'] &&
+                                  !$result['isCompanyPhoneEmpty']   &&  $result['isCompanyPhoneLegal'];
+        return $result;
+    }
+
+    /**
+     * 通过公司领域的唯一英文缩写获取获取公司领域的唯一标识符.
+     * @param  String $companyFieldSlug - 公司领域的唯一英文缩写
+     * @return 公司领域的唯一标识符
+     */
+    private function getCompanyFieldId($companyFieldSlug)
+    {
+        $serviceManager     = $this->getServiceLocator();
+        $companyFieldTable  = $serviceManager->get('Application\Model\CompanyFieldTable');
+        $companyField       = $companyFieldTable->getCompanyFieldUsingSlug($companyFieldSlug);
+
+        if ( $companyField != null ) {
+            return $companyField->companyFieldId;
+        } 
+        return 0;
     }
 
     /**

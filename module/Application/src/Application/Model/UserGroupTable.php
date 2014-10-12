@@ -34,11 +34,9 @@ class UserGroupTable
 
     /**
      * 获取所有用户的信息.
-     * @param  int $offset - 查询结果的Offset
-     * @param  int $limit  - 查询返回的记录数
      * @return 一个ResultSet对象, 包含若干个User对象.
      */
-    public function getAllUserGroups($offset, $limit)
+    public function getAllUserGroups()
     {
         $resultSet = $this->tableGateway->select();
         return $resultSet;

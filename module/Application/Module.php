@@ -27,6 +27,10 @@ use Application\Model\Teacher;
 use Application\Model\TeacherTable;
 use Application\Model\TeachingField;
 use Application\Model\TeachingFieldTable;
+use Application\Model\Company;
+use Application\Model\CompanyTable;
+use Application\Model\CompanyField;
+use Application\Model\CompanyFieldTable;
 use Application\Model\Course;
 use Application\Model\CourseTable;
 use Application\Model\CourseModule;
@@ -154,6 +158,28 @@ class Module
                     $tableGateway       = $sm->get('CourseTableGateway');
                     $courseTable        = new CourseTable($tableGateway);
                     return $courseTable;
+                },
+                'Application\Model\CompanyTable' => function($sm) {
+                    $tableGateway   = $sm->get('CompanyTableGateway');
+                    $companyTable   = new CompanyTable($tableGateway);
+                    return $companyTable;
+                },
+                'CompanyTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Company());
+                    return new TableGateway('itp_companies', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\CompanyFieldTable' => function($sm) {
+                    $tableGateway       = $sm->get('CompanyFieldTableGateway');
+                    $companyFieldTable  = new CompanyFieldTable($tableGateway);
+                    return $companyFieldTable;
+                },
+                'CompanyFieldTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new CompanyField());
+                    return new TableGateway('itp_company_fields', $dbAdapter, null, $resultSetPrototype);
                 },
                 'CourseTableGateway' => function ($sm) {
                     $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');

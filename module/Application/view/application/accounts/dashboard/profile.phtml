@@ -91,7 +91,50 @@
         </div> <!-- .span6 -->
     </div> <!-- .row-fluid -->
 <?php elseif ( $profile['userGroupSlug'] == 'company'  ): ?>
-    
+    <div class="row-fluid">
+        <div class="span6">
+            <label for="company-name">公司名称</label>
+            <input id="company-name" type="text" maxlength="64" />
+        </div> <!-- .span6 -->
+    </div> <!-- .row-fluid -->
+    <div class="city-picker row-fluid">
+        <div class="span6">
+            <label for="company-region">所在地区</label>
+            <select id="company-region" class="region"></select>
+            <select id="company-city" class="city"></select>
+        </div> <!-- .span6 -->
+        <div class="span6">
+            <label for="company-province">&nbsp;</label>
+            <select id="company-province" class="province"></select>
+            <input id="company-address" type="text" maxlength="128" />
+        </div> <!-- .span6 -->
+    </div> <!-- .row-fluid -->
+    <div class="row-fluid">
+        <div class="span6">
+            <label for="company-field">公司领域</label>
+            <select id="company-field"></select>
+        </div> <!-- .span6 -->
+        <div class="span6">
+            <label for="company-scale">公司规模</label>
+            <select id="company-scale">
+                <option value="1">1~10人</option>
+                <option value="10">10~100人</option>
+                <option value="100">100~1000人</option>
+                <option value="1000">1000~10000人</option>
+                <option value="10000">10000人以上</option>
+            </select>
+        </div> <!-- .span6 -->
+    </div> <!-- .row-fluid -->
+    <div class="row-fluid">
+        <div class="span6">
+            <label for="company-phone">联系电话<small>(仅管理员可见)</small></label>
+            <input id="company-phone" type="text" maxlength="24" />
+        </div> <!-- .span6 -->
+        <div class="span6">
+            <label for="company-email">电子邮件地址<small>(仅管理员可见)</small></label>
+            <input id="company-email" type="text"maxlength="64" />
+        </div> <!-- .span6 -->
+    </div> <!-- .row-fluid -->
 <?php endif; ?>
     <div class="row-fluid">
         <div class="span10 text-right">
@@ -445,9 +488,129 @@
     </script>
 <?php elseif ( $profile['userGroupSlug'] == 'company'  ): ?>
     <script type="text/javascript">
+        function getCompanyFields() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                url: '<?php echo $this->basePath(); ?>/accounts/getCompanyFields',
+                dataType: 'JSON',
+                success: function(result) {
+                    if ( result['isSuccessful'] ) {
+                        var length = result['companyFields'].length;
+                        for ( var i = 0; i < length; ++ i ) {
+                            var companyFieldSlug = result['companyFields'][i]['companyFieldSlug'],
+                                companyFieldName = result['companyFields'][i]['companyFieldName'];
+                            $('#company-field').append('<option value="' + companyFieldSlug + '">' + companyFieldName + '</option>');
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function displayProfile(email, profile) {
+            $('#company-email').val(email);
+            if ( profile != false ) {
+                $('#company-name').val(profile['companyName']);
+                $('#company-name').attr('disabled', 'disabled');
+                $('#company-region').val(profile['region']).change();
+                $('#company-province').val(profile['province']).change();
+                if ( profile['city'] ) {
+                    $('#company-city').val(profile['city']).change();
+                } else {
+                    $('#company-city').val(profile['city'])
+                    $('#company-city').attr('disabled', 'disabled');
+                }
+                $('#company-address').val(profile['address']);
+                $('#company-field').val(profile['fieldSlug']);
+                $('#company-scale').val(profile['scale']);
+                $('#company-phone').val(profile['phone']);
+            }
+        }
+    </script>
+    <script type="text/javascript">
         $(document).ready(function() {
+            getCompanyFields();
             getProfile();
         });
+    </script>
+    <script type="text/javascript">
+        $('#edit-profile').click(function() {
+            var name            = $('#company-name').val(),
+                region          = $('#company-region').val(),
+                province        = $('#company-province').val(),
+                city            = $('#company-city').val() || '',
+                address         = $('#company-address').val(),
+                companyField    = $('#company-field').val(),
+                scale           = $('#company-scale').val(),
+                phone           = $('#company-phone').val(),
+                email           = $('#company-email').val();
+
+            $('#page-error').addClass('hide');
+            $('#page-warning').addClass('hide');
+            $('#page-info').addClass('hide');
+            $('#edit-profile').attr('disabled', 'disabled');
+            $('#edit-profile').html('正在处理...');
+            return editProfile(name, region, province, city, address, companyField, scale, phone, email);
+        });
+    </script>
+    <script type="text/javascript">
+        function editProfile(name, region, province, city, address, companyField, scale, phone, email) {
+            var postData = 'name=' + name + '&region=' + region + '&province=' + province + '&city=' + city + 
+                          '&address=' + address + '&companyField=' + companyField + '&scale=' + scale + 
+                          '&phone=' + phone + '&email=' + email;
+            $.ajax({
+                type: 'POST',
+                async: false,
+                url: '<?php echo $this->basePath(); ?>/accounts/editProfile',
+                data: postData,
+                dataType: 'JSON',
+                success: function(result) {
+                    if ( result['isSuccessful'] ) {
+                        $('#page-info').removeClass('hide');
+                    } else {
+                        displayErrorMessage(result);
+                    }
+                    $('#edit-profile').html('确认');
+                    $('#edit-profile').removeAttr('disabled');
+                    window.scrollToTop();
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function displayErrorMessage(result) {
+            var errorMessage = '';
+            if ( result['isCompanyNameEmpty'] ) {
+                errorMessage += '请填写贵公司的名称.<br />';
+            } else if ( !result['isCompanyNameLegal'] ) {
+                errorMessage += '公司名称的长度不能超过64个字符.<br />';
+            }
+            if ( result['isCompanyRegionEmpty'] ) {
+                errorMessage += '请选择您所在的地区.<br />';
+            } 
+            if ( result['isCompanyProvinceEmpty'] ) {
+                errorMessage += '请选择您所在的省份.<br />';
+            }
+            if ( result['isCompanyAddressEmpty'] ) {
+                errorMessage += '请填写公司所在的地址.<br />';
+            } else if ( !result['isCompanyAddressLegal'] ) {
+                errorMessage += '公司地址的长度不能超过128个字符.<br />';
+            }
+            if( !result['isCompanyFieldLegal'] ) {
+                errorMessage += '请选择贵公司的经营领域.<br />';
+            }
+            if( !result['isCompanyScaleLegal'] ) {
+                errorMessage += '请选择贵公司的规模.<br />';
+            }
+            if( result['isCompanyPhoneEmpty'] ) {
+                errorMessage += '请填写您的联系电话.<br />';
+            } else if( !result['isCompanyPhoneLegal'] ) {
+                errorMessage += '联系电话应该只包含数字.<br />';
+            }
+            $('#page-error').html(errorMessage);
+            $('#page-error').removeClass('hide');
+        }
     </script>
 <?php endif; ?>
 <script type="text/javascript">
