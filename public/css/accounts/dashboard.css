@@ -208,6 +208,7 @@ div#content div#main-content div#course-module-modal {
 
 /** StyleSheet for  Profile **/
 div#content div#main-content div.city-picker select.city,
+div#content div#main-content div.city-picker input#address,
 div#content div#main-content div.city-picker input#company-address {
 	margin-top: 10px;
 }

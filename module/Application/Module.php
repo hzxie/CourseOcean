@@ -47,6 +47,8 @@ use Application\Model\Comment;
 use Application\Model\CommentTable;
 use Application\Model\LectureAttendance;
 use Application\Model\LectureAttendanceTable;
+use Application\Model\Requirement;
+use Application\Model\RequirementTable;
 use Application\Model\Post;
 use Application\Model\PostTable;
 use Application\Model\PostCategory;
