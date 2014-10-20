@@ -1778,4 +1778,149 @@ class AccountsController extends AbstractActionController
                                   !$result['isCourseModuleBriefEmpty'] && !$result['isCourseModuleOutlineEmpty'];
         return $result;
     }
+
+    public function getRequirementsAction()
+    {
+        $profile        = $this->getUserProfile();
+        $uid            = $profile['uid'];
+        $userGroupSlug  = $profile['userGroupSlug'];
+    }
+
+    public function getRequirementAction()
+    {
+        $requirementId  = $this->params()->fromQuery('requirementId');
+    }
+
+    /**
+     * 处理用户创建需求的请求.
+     * @return 一个包含若干标志位的JSON数组
+     */
+    public function createRequirementAction()
+    {
+        $teacherId      = strip_tags($this->getRequest()->getPost('teacherId'));
+        $courseId       = strip_tags($this->getRequest()->getPost('courseId'));
+        $participants   = strip_tags($this->getRequest()->getPost('participants'));
+        $startTime      = strip_tags($this->getRequest()->getPost('startTime'));
+        $endTime        = strip_tags($this->getRequest()->getPost('endTime'));
+        $region         = strip_tags($this->getRequest()->getPost('region'));
+        $province       = strip_tags($this->getRequest()->getPost('province'));
+        $city           = strip_tags($this->getRequest()->getPost('city'));
+        $address        = strip_tags($this->getRequest()->getPost('address'));
+        $detail         = strip_tags($this->getRequest()->getPost('detail'));
+
+        $profile        = $this->getUserProfile();
+        $uid            = $profile['uid'];
+        $userGroupSlug  = $profile['userGroupSlug'];
+        $requirement    = array(
+            'requirement_from_uid'      => $uid,
+            'requirement_to_uid'        => ($teacherId == null ? null : $teacherId),
+            'requirement_course_id'     => ($courseId == null ? null : $courseId),
+            'requirement_participants'  => $participants,
+            'requirement_start_time'    => $startTime,
+            'requirement_end_time'      => $endTime,
+            'requirement_region'        => $region,
+            'requirement_province'      => $province,
+            'requirement_city'          => $city,
+            'requirement_address'       => $address,
+            'requirement_detail'        => $detail,
+        );
+        $result         = $this->isRequirementLegal($requirement, $userGroupSlug);
+
+        if ( $result['isSuccessful'] ) {
+            $serviceManager     = $this->getServiceLocator();
+            $requirementTable   = $serviceManager->get('Application\Model\RequirementTable');
+            $requirementId      = $requirementTable->createRequirement($requirement);
+            $result            += array(
+                'requirementId' => $requirementId,
+            );         
+        }
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 检查用户所提交的需求信息是否合法.
+     * @param  Array  $requirement - 一个包含用户需求信息的数组
+     * @return 一个包含若干标志位的数组
+     */
+    private function isRequirementLegal($requirement, $userGroupSlug)
+    {
+        $result                     = array(
+            'isSuccessful'          => false,
+            'isTeacherIdEmpty'      => empty($requirement['requirement_to_uid']),
+            'isTeacherExists'       => $this->isTeacherExists($requirement['requirement_to_uid']),
+            'isCourseIdEmpty'       => empty($requirement['requirement_course_id']),
+            'isCourseExists'        => $this->isCourseExists($requirement['requirement_course_id'], $requirement['requirement_to_uid']),
+            'isStartTimeEmpty'      => empty($requirement['requirement_start_time']),
+            'isStartTimeLegal'      => strtotime($requirement['requirement_start_time']) > strtotime('now'),
+            'isEndTimeEmpty'        => empty($requirement['requirement_end_time']),
+            'isEndTimeLegal'        => strtotime($requirement['requirement_end_time']) > strtotime($requirement['requirement_start_time']),
+            'isParticipantsEmpty'   => empty($requirement['requirement_participants']),
+            'isParticipantsLegal'   => intval($requirement['requirement_participants']) && $requirement['requirement_participants'] > 0,
+            'isRegionEmpty'         => empty($requirement['requirement_region']),
+            'isProvinceEmpty'       => empty($requirement['requirement_province']),
+            'isAddressEmpty'        => empty($requirement['requirement_address']),
+            'isAddressLegal'        => mb_strlen($requirement['requirement_address'], 'utf-8') <= 128,
+            'isDetailEmpty'         => empty($requirement['requirement_detail']),
+        );
+
+        if ( $userGroupSlug == 'company' ) {
+            $result['isSuccessful'] =  $result['isTeacherExists']     &&  $result['isCourseExists'] &&
+                                      !$result['isStartTimeEmpty']    &&  $result['isStartTimeLegal'] &&
+                                      !$result['isParticipantsEmpty'] &&  $result['isParticipantsLegal'] &&
+                                      !$result['isEndTimeEmpty']      &&  $result['isEndTimeLegal'] &&
+                                      !$result['isRegionEmpty']       && !$result['isProvinceEmpty'] &&
+                                      !$result['isAddressEmpty']      &&  $result['isAddressLegal'] &&
+                                      !$result['isDetailEmpty'];
+        } else {
+            $result['isSuccessful'] = !$result['isTeacherIdEmpty']  &&  $result['isTeacherExists'] &&
+                                      !$result['isCourseIdEmpty']   &&  $result['isCourseExists'] &&
+                                      !$result['isStartTimeEmpty']  &&  $result['isStartTimeLegal'] &&
+                                      !$result['isEndTimeEmpty']    &&  $result['isEndTimeLegal'] &&
+                                      !$result['isRegionEmpty']     && !$result['isProvinceEmpty'];
+        }
+        return $result;
+    }
+
+    /**
+     * 检查用户所提交的讲师是否存在.
+     * @param  int  $teacherId - 讲师的用户唯一标识符
+     * @return 用户所提交的讲师是否存在
+     */
+    private function isTeacherExists($teacherId)
+    {
+        if ( $teacherId == null ) {
+            return true;
+        }
+
+        $serviceManager     = $this->getServiceLocator();
+        $teacherTable       = $serviceManager->get('Application\Model\TeacherTable');
+        $teacher            = $teacherTable->getTeacherUsingUid($teacherId);
+
+        return ($teacher != null);
+    }
+
+    /**
+     * 检查用户所提交的课程唯一标识符是否存在以及与讲师信息是否匹配.
+     * @param  int  $courseId  - 课程的唯一标识符
+     * @param  int  $teacherId - 讲师的用户唯一标识符
+     * @return 用户所提交的课程唯一标识符是否存在
+     */
+    private function isCourseExists($courseId, $teacherId)
+    {
+        if ( $courseId == null ) {
+            return true;
+        }
+
+        $serviceManager     = $this->getServiceLocator();
+        $courseTable        = $serviceManager->get('Application\Model\CourseTable');
+        $course             = $courseTable->getCourseUsingCourseId($courseId);
+
+        if ( $course != null && $course->teacherId == $teacherId ) {
+            return true;
+        }
+        return false;
+    }
 }

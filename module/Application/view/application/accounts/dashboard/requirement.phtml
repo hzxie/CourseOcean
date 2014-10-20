@@ -9,7 +9,22 @@
 <?php else: ?>
     <h4>我的需求<span class="pull-right"><a id="new-requirement" href="javascript:void(0);"><i class="icon-plus"></i> 新需求</a></span></h4>
     <p class="no-requirements">暂无需求定制记录.</p>
-    <ul id="requirements"></ul>
+    <ul id="requirements">
+        <li class="requirement row-fluid">
+            <div class="span3">
+                <img src="<?php echo $this->basePath(); ?>/img/categories/testing-automation-small.jpg" alt="Course Type Slug">
+            </div> <!-- .span3 -->
+            <div class="span9">
+                <h4><a href="#">Hello World</a><span class="pull-right"><a href="#">详细信息</a></span></h4>
+                <ul class="inline meta">
+                    <li><i class="icon-user"></i> 朱少民</li>
+                    <li><i class="icon-calendar"></i> 2014年09月20日~2014年09月21日</li>
+                    <li><i class="icon-yen"></i> 6000元</li>
+                    <li><i class="icon-map-marker"></i> 浙江省杭州市浙江大学紫金港校区</li>
+                </ul>
+            </div> <!-- .span9 -->
+        </li>
+    </ul>
     <!-- Modals -->
     <div id="requirement-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-header">
@@ -45,10 +60,11 @@
                         $MAX_MONTH  = 12;
                     ?>
                     <?php for ( $i = $month; $i <= $MAX_MONTH; ++ $i ): ?>
-                        <option value="<?php echo $i; ?>"><?php echo $year; ?>年<?php echo sprintf('%02d', $i); ?>月</option>
+                        <option value="<?php echo "$year-$i"; ?>"><?php echo $year; ?>年<?php echo sprintf('%02d', $i); ?>月</option>
                     <?php endfor; ?>
-                    <?php for ( $i = $MIN_MONTH; $i < $month; ++ $i ): ?>
-                        <option value="<?php echo $i; ?>"><?php echo $year + 1; ?>年<?php echo sprintf('%02d', $i); ?>月</option>
+                    <?php ++ $year;
+                          for ( $i = $MIN_MONTH; $i < $month; ++ $i ): ?>
+                        <option value="<?php echo "$year-$i"; ?>"><?php echo $year; ?>年<?php echo sprintf('%02d', $i); ?>月</option>
                     <?php endfor; ?>
                     </select>
                 </div> <!-- .span6 -->
@@ -72,7 +88,7 @@
                     <label>&nbsp;</label>
                     <select class="province"></select>
                 <?php if ( $profile['userGroupSlug'] === 'company' ): ?>
-                    <input id="address" type="text" placeholder="详细地址" />
+                    <input id="lecture-address" type="text" placeholder="详细地址" />
                 <?php endif; ?>
                 </div> <!-- .span6 -->
             </div> <!-- .row-fluid -->
@@ -97,13 +113,157 @@
     </script>
     <script type="text/javascript">
         $('#new-requirement').click(function() {
+            $('#requirement-modal input').val('');
             $('#requirement-modal').modal();
         });
     </script>
     <script type="text/javascript">
+        function getPostData() {
+        <?php if ( $profile['userGroupSlug'] === 'company' ): ?>
+            var teacherId       = $('#teacher-uid').val(),
+                courseId        = $('#course-id').val(),
+                participants    = $('#lecture-participants').val(),
+                startTime       = $('#lecture-time').val() + '-' + getStartDayOfMonth($('#lecture-time').val()) + ' 00:00',
+                endTime         = $('#lecture-time').val() + '-' + getEndDayOfMonth($('#lecture-time').val()) + ' 23:59',
+                region          = $('.region').val(),
+                province        = $('.province').val(),
+                city            = $('.city').val() || '',
+                address         = $('#lecture-address').val(),
+                detail          = $('#requirement-detail').val(),
+                postData        = 'teacherId=' + teacherId + '&courseId=' + courseId + '&participants=' + participants + 
+                                    '&startTime=' + startTime + '&endTime=' + endTime + '&region=' + region + '&province=' + province + 
+                                    '&city=' + city + '&address=' + address + '&detail=' + detail;
+        <?php else: ?>
+            var teacherId       = $('#teacher-uid').val(),
+                courseId        = $('#course-id').val(),
+                startTime       = $('#lecture-time').val() + '-' + getStartDayOfMonth($('#lecture-time').val()) + ' 00:00',
+                endTime         = $('#lecture-time').val() + '-' + getEndDayOfMonth($('#lecture-time').val()) + ' 23:59',
+                region          = $('.region').val(),
+                province        = $('.province').val(),
+                city            = $('.city').val() || '',
+                postData        = 'teacherId=' + teacherId + '&courseId=' + courseId + '&startTime=' + startTime + '&endTime=' + endTime + 
+                                    '&region=' + region + '&province=' + province + '&city=' + city;
+        <?php endif; ?>
+            return postData;
+        }
+    </script>
+    <script type="text/javascript">
+        function getStartDayOfMonth(dateString) {
+            var dateArray = dateString.split('-'),
+                year      = dateArray[0],
+                month     = dateArray[1],
+                thisYear  = <?php echo date('Y'); ?>,
+                thisMonth = <?php echo date('m'); ?>,
+                thisDay   = <?php echo date('d'); ?>;
+            if ( year == thisYear && month == thisMonth ) {
+                return thisDay + 1;
+            } else {
+                return 1;
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function getEndDayOfMonth(dateString) {
+            var dateArray   = dateString.split('-'),
+                year        = dateArray[0],
+                month       = dateArray[1];
+
+            var monthOfDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            if ( year % 4 == 0 ) {
+                monthOfDays[1] = 29;
+            }
+            return monthOfDays[month - 1];
+        }
+    </script>
+    <script type="text/javascript">
         $('#requirement-modal button.btn-primary').click(function() {
-            $('#requirement-modal').modal('hide');
+            $(this).html('正在处理...');
+            $(this).attr('disabled', 'disabled');
+
+            $('#requirement-modal .alert-error').addClass('hide');
+            createNewRequirement(getPostData());
         });
+    </script>
+    <script type="text/javascript">
+        function createNewRequirement(postData) {
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '<?php echo $this->basePath(); ?>/accounts/createRequirement',
+                data: postData,
+                dataType: 'JSON',
+                success: function(result) {
+                    if ( result['isSuccessful'] ) {
+                        $('#requirement-modal').modal('hide');
+                    } else {
+                        displayRequirementErrorMessage(result);
+                    }
+
+                    var buttonObject = $('#requirement-modal button.btn-primary');
+                    $(buttonObject).html('确认');
+                    $(buttonObject).removeAttr('disabled', 'disabled');
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function displayRequirementErrorMessage(result) {
+            var errorMessage  = '';
+        <?php if ( $profile['userGroupSlug'] === 'company' ): ?>
+            if ( !result['isTeacherExists'] ) {
+                errorMessage += '您所选择讲师的不存在.<br />';
+            }
+            if ( !result['isCourseExists'] ) {
+                errorMessage += '您所选择的课程不存在.<br />';
+            }
+            if ( result['isStartTimeEmpty'] || result['isEndTimeEmpty'] ) {
+                errorMessage += '请选择期望的开课时间.<br />';
+            }
+            if ( !result['isStartTimeLegal'] || !result['isEndTimeLegal'] ) {
+                errorMessage += '无法在所选择的开课时间开课.<br />';
+            }
+            if ( result['isParticipantsEmpty'] ) {
+                errorMessage += '请填写参课人数.<br />';
+            } else if ( !result['isParticipantsLegal'] ) {
+                errorMessage += '参课人数应该是一个大于0的整数.<br />';
+            }
+            if ( result['isRegionEmpty'] ) {
+                errorMessage += '请选择期望的开课地区.<br />';
+            }
+            if ( result['isProvinceEmpty'] ) {
+                errorMessage += '请选择期望的开课省份.<br />';
+            }
+            if ( result['isAddressEmpty'] ) {
+                errorMessage += '请选择期望的开课地址.<br />';
+            } else if ( !result['isAddressLegal'] ) {
+                errorMessage += '期望开课的地址长度不能超过128个字符.<br />';
+            }
+            if ( result['isDetailEmpty'] ) {
+                errorMessage += '请填写需求的详细描述.<br />';
+            }
+        <?php else: ?>
+            if ( result['isTeacherIdEmpty'] || !result['isTeacherExists'] ) {
+                errorMessage += '您所选择讲师的不存在.<br />';
+            }
+            if ( result['isCourseIdEmpty'] || !result['isCourseExists'] ) {
+                errorMessage += '您所选择的课程不存在.<br />';
+            }
+            if ( result['isStartTimeEmpty'] || result['isEndTimeEmpty'] ) {
+                errorMessage += '请选择期望的开课时间.<br />';
+            }
+            if ( !result['isStartTimeLegal'] || !result['isEndTimeLegal'] ) {
+                errorMessage += '无法在所选择的开课时间开课.<br />';
+            }
+            if ( result['isRegionEmpty'] ) {
+                errorMessage += '请选择期望的开课地区.<br />';
+            }
+            if ( result['isProvinceEmpty'] ) {
+                errorMessage += '请选择期望的开课省份.<br />';
+            }
+        <?php endif; ?>
+            $('#requirement-modal .alert-error').html(errorMessage);
+            $('#requirement-modal .alert-error').removeClass('hide');
+        }
     </script>
     <script type="text/javascript">
         $('#teacher-name').keyup(function() {
@@ -172,7 +332,7 @@
             for ( var i = 0; i < numberOfCourses; ++ i ) {
                 $('#course-hint').append('<tr>' +
                                          '    <td class="hide">' + result[i]['courseId'] + '</td>' +
-                                         '    <td>' + result[i]['courseName'] + '</td>' +
+                                         '    <td>' + result[i]['courseName'] + '(' + result[i]['teacherName'] + ')</td>' +
                                          '    <td class="hide">' + result[i]['teacherId'] + '</td>' +
                                          '    <td class="hide">' + result[i]['teacherName'] + '</td>' +
                                          '</tr>');
@@ -189,14 +349,12 @@
             
             $('#course-id').val(courseId);
             $('#course-name').val(courseName);
-            $('#teacher-id').val(teacherId);
+            $('#teacher-uid').val(teacherId);
             $('#teacher-name').val(teacherName);
             $('#course-hint').css('display', 'none');
         });
     </script>
 <?php endif; ?>
-
-<!-- JavaScript -->
 <script type="text/javascript">
     function getTeacher(teacherId) {
         $.ajax({

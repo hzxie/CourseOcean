@@ -46,7 +46,7 @@ class CourseTypeTable
      * @param  String $catelogySlug - 课程类型的唯一英文缩写
      * @return 一个课程类型的对象
      */
-    public function getCatelogyUsingId($courseTypeSlug)
+    public function getCatelogyUsingSlug($courseTypeSlug)
     {
         $rowSet = $this->tableGateway->select(array(
             'course_type_slug'  => $courseTypeSlug

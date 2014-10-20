@@ -266,6 +266,17 @@ class Module
                     $resultSetPrototype->setArrayObjectPrototype(new LectureAttendance());
                     return new TableGateway('itp_lecture_attendance', $dbAdapter, null, $resultSetPrototype);
                 },
+                'Application\Model\RequirementTable' => function($sm) {
+                    $tableGateway       = $sm->get('RequirementTableGateway');
+                    $requirementTable   = new RequirementTable($tableGateway);
+                    return $requirementTable;
+                },
+                'RequirementTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Requirement());
+                    return new TableGateway('itp_requirements', $dbAdapter, null, $resultSetPrototype);
+                },
                 'Application\Model\PostTable' => function($sm) {
                     $tableGateway   = $sm->get('PostTableGateway');
                     $postTable      = new PostTable($tableGateway);

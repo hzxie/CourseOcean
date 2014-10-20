@@ -23,6 +23,8 @@ class Requirement {
         $this->toUid            = (!empty($data['requirement_to_uid']))         ? $data['requirement_to_uid']           : null;
         $this->courseId         = (!empty($data['requirement_course_id']))      ? $data['requirement_course_id']        : null;
         $this->courseName       = (!empty($data['course_name']))                ? $data['course_name']                  : null;
+        $this->courseTypeId     = (!empty($data['course_type_id']))             ? $data['course_type_id']               : null;
+        $this->courseTypeSlug   = (!empty($data['course_type_slug']))           ? $data['course_type_slug']             : null;
         $this->teacherId        = (!empty($data['teacher_id']))                 ? $data['teacher_id']                   : null;
         $this->teacherName      = (!empty($data['teacher_name']))               ? $data['teacher_name']                 : null;
         $this->createTime       = (!empty($data['requirement_create_time']))    ? $data['requirement_create_time']      : null;

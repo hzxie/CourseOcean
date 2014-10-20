@@ -208,7 +208,7 @@ div#content div#main-content div#course-module-modal {
 
 /** StyleSheet for  Profile **/
 div#content div#main-content div.city-picker select.city,
-div#content div#main-content div.city-picker input#address,
+div#content div#main-content div.city-picker input#lecture-address,
 div#content div#main-content div.city-picker input#company-address {
 	margin-top: 10px;
 }
@@ -220,6 +220,23 @@ div#content div#main-content h4 span.pull-right {
 
 div#content div#main-content h4 span.pull-right a {
 	color: #6db33f;
+	text-decoration: none;
+}
+
+div#content div#main-content ul#requirements {
+	list-style: none;
+	margin-left: 0;
+}
+
+div#content div#main-content ul#requirements li.requirement {
+	border-bottom: 1px dotted #565656;
+	color: #333;
+	font-size: 13px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+}
+
+div#content div#main-content ul#requirements li.requirement a {
 	text-decoration: none;
 }
 

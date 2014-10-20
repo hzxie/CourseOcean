@@ -34,27 +34,42 @@ class RequirementTable
     }
 
     /**
-     * 使用用户的唯一标识符获取培训需求对象.
-     * @param  int $uid - 用户的唯一标识符
+     * 使用用户的唯一标识符获取培训需求的ResultSet.
+     * @param  int $uid         - 用户的唯一标识符
+     * @param  bool $isTeacher  - 用户是否为讲师用户
+     * @param  int $offset      - 查询结果的Offset
+     * @param  int $limit       - 查询返回的记录数
      * @return 一个培训需求对象
      */
-    public function getRequirementUsingUid($uid)
+    public function getRequirementUsingUid($uid, $isTeacher, $offset, $limit)
     {
-        $rowSet = $this->tableGateway->select(function (Select $select) use ($uid) {
-            $select->where->equalTo('itp_companies.uid', $uid);
+        $rowSet = $this->tableGateway->select(function (Select $select) use ($uid, $offset, $limit) {
+            $select->join('itp_courses', 
+                          'itp_requirements.requirement_course_id = itp_courses.requirement_course_id');
+            $select->join('itp_course_types', 
+                          'itp_courses.course_type_id = itp_course_types.course_type_id');
+            if ( $isTeacher ) {
+                $select->where->equalTo('itp_requirements.requirement_to_uid', $uid);
+            } else {
+                $select->join('itp_teachers', 
+                              'itp_requirements.requirement_to_uid = itp_teachers.uid');
+                $select->where->equalTo('itp_requirements.requirement_from_uid', $uid);
+            }
+            $select->offset($offset);
+            $select->limit($limit);
         });
-        return $rowSet->current();
+        return $rowSet;
     }
 
     /**
      * 创建一个新培训需求.
      * @param  Array $requirement - 一个包含培训需求信息的数组
-     * @return 操作是否成功完成
+     * @return 新创建需求的唯一标识符
      */
     public function createRequirement($requirement)
     {
         $this->tableGateway->insert($requirement);
-        return true;
+        return $this->tableGateway->getAdapter()->getDriver()->getConnection()->getLastGeneratedValue();
     }
 
     /**
