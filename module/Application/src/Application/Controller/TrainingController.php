@@ -595,7 +595,7 @@ class TrainingController extends AbstractActionController
 
         $result   = array(
             'isSuccessful'  => $posts != null && $posts->count() != 0,
-            'posts'      => $this->getResultSetArray($posts),
+            'posts'         => $this->getResultSetArray($posts),
         );
         $response = $this->getResponse();
         $response->setStatusCode(200);

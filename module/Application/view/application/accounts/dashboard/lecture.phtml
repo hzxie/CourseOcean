@@ -700,12 +700,13 @@
         });
     </script>
     <script type="text/javascript">
-        function getDateTime(dateTime) {
-            var year    = dateTime.getFullYear(),
-                month   = formatNumber(dateTime.getMonth() + 1),
-                day     = formatNumber(dateTime.getDate()),
-                hour    = formatNumber(dateTime.getHours()),
-                minute  = formatNumber(dateTime.getMinutes());
+        function getDateTime(dateTimeString) {
+            var dateTime = 
+                year     = dateTime.getFullYear(),
+                month    = formatNumber(dateTime.getMonth() + 1),
+                day      = formatNumber(dateTime.getDate()),
+                hour     = formatNumber(dateTime.getHours()),
+                minute   = formatNumber(dateTime.getMinutes());
             return year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
         }
     </script>

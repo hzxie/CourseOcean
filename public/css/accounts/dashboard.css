@@ -237,6 +237,7 @@ div#content div#main-content ul#requirements li.requirement {
 }
 
 div#content div#main-content ul#requirements li.requirement a {
+	color: #333;
 	text-decoration: none;
 }
 

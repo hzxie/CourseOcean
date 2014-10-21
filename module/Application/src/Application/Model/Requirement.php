@@ -17,15 +17,14 @@ class Requirement {
      */
     public function exchangeArray($data)
     {
-        $this->requirementId    = (!empty($data['comment_id']))                 ? $data['comment_id']                   : null;
+        $this->requirementId    = (!empty($data['requirement_id']))             ? $data['requirement_id']               : null;
         $this->isAccepted       = (!empty($data['requirement_is_accepted']))    ? $data['requirement_is_accepted']      : null;
         $this->fromUid          = (!empty($data['requirement_from_uid']))       ? $data['requirement_from_uid']         : null;
         $this->toUid            = (!empty($data['requirement_to_uid']))         ? $data['requirement_to_uid']           : null;
         $this->courseId         = (!empty($data['requirement_course_id']))      ? $data['requirement_course_id']        : null;
         $this->courseName       = (!empty($data['course_name']))                ? $data['course_name']                  : null;
-        $this->courseTypeId     = (!empty($data['course_type_id']))             ? $data['course_type_id']               : null;
         $this->courseTypeSlug   = (!empty($data['course_type_slug']))           ? $data['course_type_slug']             : null;
-        $this->teacherId        = (!empty($data['teacher_id']))                 ? $data['teacher_id']                   : null;
+        $this->companyName      = (!empty($data['company_name']))               ? $data['company_name']                 : null;
         $this->teacherName      = (!empty($data['teacher_name']))               ? $data['teacher_name']                 : null;
         $this->createTime       = (!empty($data['requirement_create_time']))    ? $data['requirement_create_time']      : null;
         $this->participants     = (!empty($data['requirement_participants']))   ? $data['requirement_participants']     : null;
@@ -76,10 +75,10 @@ class Requirement {
     public $courseName;
 
     /**
-     * 讲师的唯一标识符.
-     * @var int
+     * 课程分类的唯一英文缩写.
+     * @var String
      */
-    public $teacherId;
+    public $courseTypeSlug;
 
     /**
      * 讲师的姓名.

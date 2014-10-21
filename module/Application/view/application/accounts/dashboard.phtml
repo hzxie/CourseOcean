@@ -68,9 +68,7 @@
                     </ul>
                 </div> <!-- #sidebar-nav -->
             </div> <!-- #sidebar -->
-            <div id="main-content" class="span9">
-                <h4>个人中心</h4>
-            </div> <!-- .main-content -->
+            <div id="main-content" class="span9"></div> <!-- .main-content -->
         </div> <!-- #content -->
     </div> <!-- #container -->
 </div> <!-- #wrapper -->
@@ -80,10 +78,20 @@
         var pageName = window.location.href.match(/#.*$/);
         if ( pageName != null ) {
             getPageContent(window.location.href.match(/#.*$/)[0].substr(1));
-        }
-<?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
+        } else {
+    <?php if ( $extra ): ?>
+        <?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
+            window.location.href = '#requirement';
+        <?php else: ?>
+            window.location.href = '#lecture';
+        <?php endif; ?>
+    <?php else: ?>
+            window.location.href = '#profile';
+    <?php endif; ?>
+        }    
+    <?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
         getTeacherAvatar();
-<?php endif ;?>
+    <?php endif ;?>
     });
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>

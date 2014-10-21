@@ -558,14 +558,12 @@ class AccountsController extends AbstractActionController
             return $this->sendRedirect('accounts/login');
         }
         
-        $profile = $this->getUserProfile();
+        $profile = $this->getProfile();
 
-        if ( $profile['userGroupSlug'] == 'administrator' ) {
+        if ( $profile['profile']['userGroupSlug'] == 'administrator' ) {
             return $this->sendRedirect('administration/dashboard');
         }
-        return array(
-            'profile' => $profile,
-        );
+        return $profile;
     }
 
     /**
@@ -588,7 +586,7 @@ class AccountsController extends AbstractActionController
 
         $profile  = $this->getUserProfile();
         $view     = new ViewModel(array(
-            'profile'   => $this->getUserProfile(),
+            'profile'   => $profile,
         ));
         $view->setTerminal(true);
         $view->setTemplate("application/accounts/dashboard/$pageName.phtml");
@@ -596,7 +594,28 @@ class AccountsController extends AbstractActionController
     }
 
     /**
-     * 获取用户所在的用户组.
+     * 获取用户的个人信息.
+     * @return 一个包含用户个人信息的数组
+     */
+    private function getProfile()
+    {
+        $profile    = $this->getUserProfile();
+        $uid        = $profile['uid'];
+        $userGroup  = ucfirst($profile['userGroupSlug']);
+
+        $function   = 'get'.$userGroup.'Profile';
+        $extra      = $this->$function($uid);
+
+        $result     = array(
+            'isSuccessful'  => $extra != null,
+            'profile'       => $profile,
+            'extra'         => $extra,
+        );
+        return $result;
+    }
+
+    /**
+     * 获取用户的基本信息.
      * @return 一个包含用户基本信息的数组
      */
     private function getUserProfile()
@@ -616,18 +635,7 @@ class AccountsController extends AbstractActionController
      */
     public function getProfileAction()
     {
-        $profile    = $this->getUserProfile();
-        $uid        = $profile['uid'];
-        $userGroup  = ucfirst($profile['userGroupSlug']);
-
-        $function   = 'get'.$userGroup.'Profile';
-        $extra      = $this->$function($uid);
-
-        $result     = array(
-            'isSuccessful'  => $extra != null,
-            'profile'       => $profile,
-            'extra'         => $extra,
-        );
+        $result   = $this->getProfile();
         $response = $this->getResponse();
         $response->setStatusCode(200);
         $response->setContent( Json::encode($result) );
@@ -1541,6 +1549,10 @@ class AccountsController extends AbstractActionController
         return $response;
     }
 
+    /**
+     * 处理讲师用户更新课程信息的请求.
+     * @return 一个包含若干标识位的JSON数组
+     */
     public function updateCourseAction()
     {
         $courseId               = $this->getRequest()->getPost('courseId');
@@ -1779,16 +1791,53 @@ class AccountsController extends AbstractActionController
         return $result;
     }
 
+    /**
+     * 加载用户的需求列表.
+     * @return 一个包含用户需求列表的JSON数组
+     */
     public function getRequirementsAction()
     {
-        $profile        = $this->getUserProfile();
-        $uid            = $profile['uid'];
-        $userGroupSlug  = $profile['userGroupSlug'];
+        $NUMBER_OF_REQUIREMENT_PER_PAGE     = 10;
+        $profile                            = $this->getUserProfile();
+        $uid                                = $profile['uid'];
+        $userGroupSlug                      = $profile['userGroupSlug'];
+        $isTeacher                          = ($userGroupSlug == 'teacher');
+        $pageNumber                         = $this->params()->fromQuery('page', 1);
+        $offset                             = ($pageNumber - 1) * $NUMBER_OF_REQUIREMENT_PER_PAGE;
+
+        $serviceManager                     = $this->getServiceLocator();
+        $requirementTable                   = $serviceManager->get('Application\Model\RequirementTable');
+        $requirements                       = $requirementTable->getRequirementUsingUid($uid, $isTeacher, $offset, $NUMBER_OF_REQUIREMENT_PER_PAGE);
+        $result                             = array(
+            'isSuccessful'                  => $requirements != null && $requirements->count() != 0,
+            'requirements'                  => $this->getResultSetArray($requirements),
+        );
+
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
     }
 
+    /**
+     * 通过培训需求的唯一标识符获取培训需求对象.
+     * @return 一个包含培训需求对象信息的JSON数组
+     */
     public function getRequirementAction()
     {
-        $requirementId  = $this->params()->fromQuery('requirementId');
+        $requirementId      = $this->params()->fromQuery('requirementId');
+        $serviceManager     = $this->getServiceLocator();
+        $requirementTable   = $serviceManager->get('Application\Model\RequirementTable');
+        $requirement        = $requirementTable->getRequirementUsingRequirementId($requirementId);
+
+        $result   = array(
+            'isSuccessful'  => $requirement != null,
+            'requirement'   => $requirement,
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
     }
 
     /**

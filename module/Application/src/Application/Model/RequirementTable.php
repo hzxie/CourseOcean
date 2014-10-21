@@ -34,31 +34,61 @@ class RequirementTable
     }
 
     /**
+     * 通过培训需求的唯一标识符获取培训需求对象.
+     * @param  int $requirementId - 培训需求的唯一标识符
+     * @return 一个培训需求对象
+     */
+    public function getRequirementUsingRequirementId($requirementId)
+    {
+        $rowSet = $this->tableGateway->select(function (Select $select) use ($requirementId) {
+            $select->join('itp_teachers', 
+                          'itp_requirements.requirement_to_uid = itp_teachers.uid',
+                          array('teacher_name'),
+                          $select::JOIN_LEFT);
+            $select->join('itp_courses', 
+                          'itp_requirements.requirement_course_id = itp_courses.course_id',
+                          array('course_name'),
+                          $select::JOIN_LEFT);
+            $select->where->equalTo('requirement_id', $requirementId);
+        });
+        return $rowSet->current();
+    }
+
+    /**
      * 使用用户的唯一标识符获取培训需求的ResultSet.
      * @param  int $uid         - 用户的唯一标识符
      * @param  bool $isTeacher  - 用户是否为讲师用户
      * @param  int $offset      - 查询结果的Offset
      * @param  int $limit       - 查询返回的记录数
-     * @return 一个培训需求对象
+     * @return 一个ResultSet对象, 包含若干个培训需求对象
      */
     public function getRequirementUsingUid($uid, $isTeacher, $offset, $limit)
     {
-        $rowSet = $this->tableGateway->select(function (Select $select) use ($uid, $offset, $limit) {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($uid, $isTeacher, $offset, $limit) {
             $select->join('itp_courses', 
-                          'itp_requirements.requirement_course_id = itp_courses.requirement_course_id');
+                          'itp_requirements.requirement_course_id = itp_courses.course_id',
+                          array('course_name'),
+                          $select::JOIN_LEFT);
             $select->join('itp_course_types', 
-                          'itp_courses.course_type_id = itp_course_types.course_type_id');
+                          'itp_courses.course_type_id = itp_course_types.course_type_id',
+                          array('course_type_slug'),
+                          $select::JOIN_LEFT);
             if ( $isTeacher ) {
+                $select->join('itp_companies', 
+                              'itp_requirements.requirement_from_uid = itp_companies.uid');
                 $select->where->equalTo('itp_requirements.requirement_to_uid', $uid);
             } else {
                 $select->join('itp_teachers', 
-                              'itp_requirements.requirement_to_uid = itp_teachers.uid');
+                              'itp_requirements.requirement_to_uid = itp_teachers.uid',
+                              array('teacher_name'),
+                              $select::JOIN_LEFT);
                 $select->where->equalTo('itp_requirements.requirement_from_uid', $uid);
             }
+            $select->order('requirement_start_time DESC');
             $select->offset($offset);
             $select->limit($limit);
         });
-        return $rowSet;
+        return $resultSet;
     }
 
     /**
