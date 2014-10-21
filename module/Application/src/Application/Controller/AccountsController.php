@@ -1830,6 +1830,16 @@ class AccountsController extends AbstractActionController
         $requirementTable   = $serviceManager->get('Application\Model\RequirementTable');
         $requirement        = $requirementTable->getRequirementUsingRequirementId($requirementId);
 
+        $profile            = $this->getUserProfile();
+        $uid                = $profile['uid'];
+        $userGroupSlug      = $profile['userGroupSlug'];
+
+        if ( $userGroupSlug == 'teacher' && $requirement->toUid != $uid ) {
+            $requirement    = null;
+        } else if ( $userGroupSlug != 'teacher' && $requirement->fromUid != $uid ) {
+            $requirement    = null;
+        }
+
         $result   = array(
             'isSuccessful'  => $requirement != null,
             'requirement'   => $requirement,
