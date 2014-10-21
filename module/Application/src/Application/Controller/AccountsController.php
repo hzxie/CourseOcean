@@ -589,7 +589,17 @@ class AccountsController extends AbstractActionController
             'profile'   => $profile,
         ));
         $view->setTerminal(true);
-        $view->setTemplate("application/accounts/dashboard/$pageName.phtml");
+
+        $template = "application/accounts/dashboard/$pageName.phtml";
+        $resolver = $this->getEvent()
+                         ->getApplication()
+                         ->getServiceManager()
+                         ->get('Zend\View\Resolver\TemplatePathStack');
+        
+        if ( !$resolver->resolve($template) ) {
+            return $this->notFoundAction();
+        }
+        $view->setTemplate($template);
         return $view;
     }
 
