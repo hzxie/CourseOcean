@@ -60,6 +60,7 @@ class PostTable
         $resultSet = $this->tableGateway->select(function (Select $select) use ($offset, $limit) {
             $select->join('itp_post_categories', 
                           'itp_posts.post_category_id = itp_post_categories.post_category_id');
+            $select->order('post_id DESC');
             $select->offset($offset);
             $select->limit($limit);
         });
@@ -96,6 +97,7 @@ class PostTable
             $select->where->equalTo('itp_posts.post_category_id', $categoryId);
             $select->offset($offset);
             $select->limit($limit);
+            $select->order('post_id DESC');
         });
         return $resultSet;
     }

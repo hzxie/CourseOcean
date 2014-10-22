@@ -195,7 +195,7 @@ class LectureTable
             }
             $select->offset($offset);
             $select->limit($limit);
-            $select->order('lecture_start_time DESC');
+            $select->order('lecture_start_time ASC');
         });
         return $resultSet;
     }

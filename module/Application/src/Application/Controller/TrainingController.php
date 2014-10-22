@@ -75,6 +75,7 @@ class TrainingController extends AbstractActionController
         $NUMBER_OF_COURSES_PER_PAGE     = 10;
         $courseTypeSlug                 = $this->params()->fromQuery('category');
         $startTime                      = $this->params()->fromQuery('startTime');
+        $startTime                      = ( $startTime ? $startTime : date('Y-m-d H:i:s') );
         $endTime                        = $this->params()->fromQuery('endTime');
         $region                         = $this->params()->fromQuery('region');
         $province                       = $this->params()->fromQuery('province');
@@ -107,6 +108,7 @@ class TrainingController extends AbstractActionController
         $NUMBER_OF_COURSES_PER_PAGE     = 10;
         $courseTypeSlug                 = $this->params()->fromQuery('category');
         $startTime                      = $this->params()->fromQuery('startTime');
+        $startTime                      = ( $startTime ? $startTime : date('Y-m-d H:i:s') );
         $endTime                        = $this->params()->fromQuery('endTime');
         $region                         = $this->params()->fromQuery('region');
         $province                       = $this->params()->fromQuery('province');

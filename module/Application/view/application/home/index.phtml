@@ -65,26 +65,81 @@
     <div id="lectures" class="section light-background">
         <div class="container">
             <h3>热门课程</h3>
-            <div class="row-fluid">                
+            <div class="row-fluid">
+            <?php if ( $lectures ): ?>
+                <ul>
+                <?php foreach ( $lectures as $lecture ): ?>
+                    <li class="lecture span6">
+                        <h4><a href="<?php echo $this->basePath(); ?>/training/lecture?lectureId=<?php echo $lecture['lectureId']; ?>"><?php echo $lecture['courseName']; ?></a></h4>
+                        <ul class="inline">
+                            <li><i class="icon-user"></i> <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=<?php echo $lecture['teacherId']; ?>"><?php echo $lecture['teacherName']; ?></a></li>
+                            <li><i class="icon-calendar"></i> <?php echo date('Y年m月d日', strtotime($lecture['startTime'])); ?>~<?php echo date('Y年m月d日', strtotime($lecture['endTime'])); ?></li>
+                        </ul>
+                        <p class="introduction"><?php echo $lecture['brief']; ?></p>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
             </div> <!-- .row-fluid -->
         </div> <!-- .container -->
     </div> <!-- #lectures -->
     <div id="teachers" class="section">
         <div class="container">
             <h3>杰出讲师</h3>
-            <div class="row-fluid">                
+            <div class="row-fluid">
+            <? if ( $teachers ): ?>
+                <ul>
+                <?php foreach ( $teachers as $teacher ): ?>
+                    <li class="teacher span2">
+                        <div class="thumbnail">
+                            <div class="avatar" style="background-color: #427fed">
+                               <img data-src="holder.js/150x150" src="<?php echo $this->basePath(); ?>/img/avatars/<?php echo ( $teacher['avatar'] ? $teacher['avatar'] : 'silhouette.png' ); ?>" alt="Avatar" />
+                            </div>
+                            <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=<?php echo $teacher['uid']; ?>">
+                                <h5><?php echo $teacher['teacherName']; ?></h5>
+                            </a>
+                            <div class="company"><?php echo $teacher['company']; ?></div>
+                            <div class="field"><?php echo $teacher['teachingField']; ?></div>
+                            <div class="reserve">
+                                <button class="btn btn-success btn-block" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/dashboard#requirement?teacherUid=<?php echo $teacher['uid']; ?>'">预约</button>
+                            </div>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
             </div> <!-- .row-fluid -->
         </div> <!-- .container -->
     </div> <!-- #teachers -->
     <div id="posts" class="section light-background">
         <div class="container">
             <h3>培训动态</h3>
-            <div class="row-fluid">                
+            <div class="row-fluid">    
+            <?php if ( $posts ): ?>
+                <ul>
+                <?php foreach ( $posts as $post ): ?>
+                    <li class="post span6">
+                        <h4><a href="<?php echo $this->basePath(); ?>/training/post?postId=<?php echo $post['postId']; ?>"><?php echo $post['postTitle']; ?></a></h4>
+                        <ul class="inline">
+                            <li><i class="icon-th-list"></i> <?php echo $post['postCategoryName']; ?></li>
+                            <li><i class="icon-calendar"></i> <?php echo date('Y年m月d日', strtotime($post['postDate'])); ?></li>
+                        </ul>
+                        <p class="introduction"><?php echo $post['postContent']; ?></p>
+                    </li>
+
+                <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
             </div> <!-- .row-fluid -->
         </div> <!-- .container -->
     </div> <!-- #posts -->
     <div id="map-image" class="section">
-        <div class="map-image"></div> <!-- .map-image -->
+        <div id="slogan-container">
+            <div id="slogan">
+                <h1>截止目前, 我们已为100+家企业提供培训服务.</h1>
+                <h2>这些企业遍布中国18个省份.</h2>
+            </div> <!-- #slogan -->
+        </div> <!-- #slogan-container -->
         <div class="left-background"></div> <!-- .left-background -->
         <div class="right-background"></div> <!-- .right-background -->
     </div> <!-- #map-image -->

@@ -21,7 +21,92 @@ class HomeController extends AbstractActionController
      */
     public function indexAction()
     {
-        return array();
+        $lectures       = $this->getRecommendLectures();
+        $teachers       = $this->getRecommendTeachers();
+        $posts          = $this->getRecommendPosts();
+
+        return array(
+            'lectures'  => $lectures,
+            'teachers'  => $teachers,
+            'posts'     => $posts,
+        );
+    }
+
+    /**
+     * 将ResultSet对象转换为数组.
+     * @param  ResultSet $resultSet - 数据库查询返回的ResultSet对象
+     * @return 一个包含查询结果的数组
+     */
+    private function getResultSetArray($resultSet)
+    {
+        $returnArray = array();
+        
+        if ( $resultSet == null ) {
+            return $returnArray;
+        }
+        foreach ( $resultSet as $rowSet ) {
+            $rowArray = (array)$rowSet;
+            array_push($returnArray, $rowArray);
+        }
+        return $returnArray;
+    }
+
+    /**
+     * 根据用户所在地定向推荐培训课程(Lecture).
+     * @return 一个包含培训课程信息的数组
+     */
+    private function getRecommendLectures()
+    {
+        $serviceManager = $this->getServiceLocator();
+        $lectureTable   = $serviceManager->get('Application\Model\LectureTable');
+
+        $courseTypeId   = null;
+        $startTime      = date('Y-m-d H:i');
+        $endTime        = null;
+        $region         = null;
+        $province       = null; 
+        $city           = null;
+        $offset         = 0;
+        $limit          = 10;
+
+        $lectures       = $lectureTable->getLecturesUsingFilters($courseTypeId, $startTime, $endTime, 
+                                         $region, $province, $city, $offset, $limit);
+        return $this->getResultSetArray($lectures);
+    }
+
+    /**
+     * 根据用户职位/公司经营领域等定向推荐讲师.
+     * @return 一个包含讲师个人信息的数组
+     */
+    private function getRecommendTeachers()
+    {
+        $serviceManager = $this->getServiceLocator();
+        $teacherTable   = $serviceManager->get('Application\Model\TeacherTable');
+
+        $categoryId     = 0;
+        $limit          = 12;
+        $totalTeachers  = $teacherTable->getCount($categoryId);
+        
+        $offset         = ($totalTeachers <= $limit ? 0 : rand(0, $totalTeachers - $limit));
+        $teachers       = $teacherTable->getAllApprovedTeachers($offset, $limit);
+
+        return $this->getResultSetArray($teachers);
+    }
+
+    /**
+     * 获取近期培训动态.
+     * @return 一个包含培训动态信息的数组.
+     */
+    private function getRecommendPosts()
+    {
+        $serviceManager = $this->getServiceLocator();
+        $postTable      = $serviceManager->get('Application\Model\PostTable');
+        
+        $offset         = 0;
+        $limit          = 10;
+        $posts          = $postTable->getAllPosts($offset, $limit);
+
+        return $this->getResultSetArray($posts);
     }
 
     /**
@@ -99,9 +184,9 @@ class HomeController extends AbstractActionController
                 continue;
             }
             $teachers   = $teacherTable->getTeacherUsingKeyword($keyword, $offset, $limit);
-            $resultSet += $this->getResultSetArray($teachers, 'teacher');
+            $resultSet += $this->getSearchResultSetArray($teachers, 'teacher');
         }
-        return $this->getResultSetArray($resultSet);
+        return $this->getSearchResultSetArray($resultSet);
     }
 
     /**
@@ -124,9 +209,9 @@ class HomeController extends AbstractActionController
                 continue;
             }
             $courses    = $courseTable->getCourseUsingKeyword($keyword, $offset, $limit);
-            $resultSet += $this->getResultSetArray($courses, 'course');
+            $resultSet += $this->getSearchResultSetArray($courses, 'course');
         }
-        return $this->getResultSetArray($resultSet);
+        return $this->getSearchResultSetArray($resultSet);
     }
 
     /**
@@ -134,7 +219,7 @@ class HomeController extends AbstractActionController
      * @param  ResultSet $resultSet - 数据库查询返回的ResultSet对象
      * @return 一个包含查询结果的数组
      */
-    private function getResultSetArray($resultSet, $category = null)
+    private function getSearchResultSetArray($resultSet, $category = null)
     {
         $returnArray = array();
         
