@@ -1,0 +1,110 @@
+html, body {
+	background-color: #f2f4f8;
+	font-family: "Microsoft YaHei", "Sogoe UI";
+	margin: 0;
+	padding: 0;
+}
+
+div#sidebar {
+	background-color: #303641;
+	border-color: #000;
+	color: #fff;
+	position: fixed;
+	left: 0;
+	top: 0;
+	bottom: 0;
+}
+
+div#sidebar div#logo {
+	background-color: #fff;
+	height: 36px;
+	max-height: 36px;
+	padding: 5px 20px;
+	width: 200px;
+}
+
+div#sidebar div#logo img {
+	max-height: 36px;
+	max-width: 200px;
+}
+
+div#sidebar ul#sidebar-menu {
+	margin-top: 40px;
+}
+
+div#sidebar ul#sidebar-menu li a {
+	color: #fff;
+	display: block;
+	padding: 10px 15px;
+	position: relative;
+	text-decoration: none;
+}
+
+div#sidebar ul#sidebar-menu li a:hover,
+div#sidebar ul#sidebar-menu li.active a {
+	background-color: #18bc9c;
+}
+
+div#container {
+	margin-left: 240px;
+}
+
+div#container div#header {
+	background-color: #fff;
+	border-left: 1px solid #eee;
+	color: #636e7b;
+	height: 46px;
+}
+
+div#container div#header a#navbar-toggle {
+	border-right: 1px solid #eee;
+	color: #1d2939;
+	display: block;
+	float: left;
+	font-size: 22px;
+	padding: 12px;
+	text-decoration: none;
+	width: 22px;
+	height: 46px;
+}
+
+div#container div#header a#navbar-toggle:hover {
+	background-color: #f7f7f7;
+}
+
+div#container div#header ul#nav-bar {
+	float: right;
+	margin-right: 20px;
+	padding-top: 10px;
+}
+
+div#container div#header ul#nav-bar a {
+	color: #636e7b;
+	text-decoration: none;
+}
+
+div#container div#header ul#nav-bar img {
+	border: 2px solid #0c6251;
+	margin-left: 5px;
+	max-height: 25px;
+	max-width: 25px;
+}
+
+div#container div#header ul#nav-bar ul.dropdown-menu {
+	background-color: #34495e;
+	color: #fff;
+	font-size: 13px;
+	padding: 0 3px 3px;
+}
+
+div#container div#content {
+	padding: 20px 15px;
+}
+
+div#footer {
+	display: none;
+}
+
+@media (max-width: 767px) {
+	
+}

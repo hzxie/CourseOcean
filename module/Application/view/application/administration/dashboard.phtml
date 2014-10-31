@@ -1,0 +1,64 @@
+<?php 
+    echo $this->headTitle('仪表盘 | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/administration/style.css');
+?>
+
+<div id="sidebar">
+    <div id="logo">
+        <a href="<?php echo $this->basePath(); ?>">
+        	<img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="logo" />
+        </a>
+    </div> <!-- #logo -->
+    <div id="sidebar-collapse">
+        <ul id="sidebar-menu" class="nav">
+            <li class="active"><a href="#dashboard"><i class="icon-dashboard"></i> 仪表盘</a></li>
+            <li><a href="#exercises"><i class="icon-user"></i> 用户管理</a></li>
+            <li><a href="#exams"><i class="icon-tasks"></i> 课程管理</a></li>
+            <li><a href="#scores"><i class="icon-desktop"></i> 需求管理</a></li>
+            <li><a href="#settings"><i class="icon-cogs"></i> 系统设置</a></li>
+        </ul>
+    </div> <!-- #navigation -->
+</div> <!-- #sidebar -->
+<div id="container">
+    <div id="header">
+    	<a id="navbar-toggle" href="javascript:void(0)">
+	        <i class="icon-reorder"></i>
+	    </a> <!-- #navbar-toggle -->
+        <ul id="nav-bar" class="inline">
+            <li>
+                <div class="dropdown">
+                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+                        <span id="user-name"><?php echo $profile['username']; ?></span>
+                        <span id="user-avatar"><img src="<?php echo $this->basePath(); ?>/img/avatars/avatar.jpg" alt="avatar" class="img-circle" /></span>
+                        <span id="dropdown-toggle"><i class="icon-angle-down"></i></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a tabindex="-1" href="<?php echo $this->basePath(); ?>/accounts/logout"><i class="icon-signout"></i> 注销</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div> <!-- #header -->
+    <div id="content">
+        <noscript>
+            <p>您的浏览器不支持 JavaScript 或 JavaScript 已停用.</p>
+            <p>由于您的浏览器不支持 JavaScript 或已经停用 JavaScript, 因此我们无法显示请求的网页.</p>
+        </noscript>
+    </div> <!-- #content -->
+</div> <!-- #container -->
+<!-- JavaScript -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript">
+    $('#navbar-toggle').click(function() {
+        if ( !$('#sidebar-menu').is(':visible') ) {
+        	$('#sidebar').removeClass('hide');
+        	$('#container').css('margin-left', 240);
+        } else {
+        	$('#sidebar').addClass('hide');
+        	$('#container').css('margin-left', 0);
+        }
+    });
+</script>
+<script type="text/javascript">
+    
+</script>

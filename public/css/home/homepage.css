@@ -5,7 +5,8 @@ html, body {
 }
 
 div.container {
-	width: 70%;
+	margin: 0 auto;
+	width: 960px;
 }
 
 div#header {
@@ -47,50 +48,50 @@ div#guide div#introduction div#slogan > h4 {
 	margin-left: 100px;
 }
 
-div#guide div#selector {
+div#guide div#selector-container {
 	background: url('../../img/homepage/transparent.png');
 	border: 1px solid #69ab3e;
 	color: #333;
 	margin: 60px auto;
-	padding: 10px;
 	-webkit-box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, .25);
 	   -moz-box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, .25);
 			box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, .25);
 }
 
-div#guide div#selector div#selector-inner {
+div#guide div#selector-container div#selector {
+	padding: 10px;
+}
+
+div#guide div#selector-container div#selector h4 {
+	text-align: center;
+}
+
+div#guide div#selector-container div#selector div.row-fluid {
 	background: transparent;
 	border: 2px solid #aecf99;
 	overflow: hidden;
 	padding: 10px 0;
-	position: relative;
 	text-align: center;
-	height: 180px;
 }
 
-div#selector div#selector-inner div.span6 {
-	margin-left: 5px;
-	margin-right: 5px;
-}
-
-div#selector div#selector-inner div.block {
+div#guide div#selector-container div#selector div.block {
 	border: 1px solid #c8c8c8;
-	margin: 20px;
+	margin: 20px 20px 10px;
 	padding: 5px 0 20px;
 	position: relative;
 	text-align: center;
 }
 
-div#selector div#selector-inner div.block > h4 {
+div#guide div#selector-container div#selector div.block > h4 {
 	color: #00bce4;
 	margin-top: -15px;
 }
 
-div#selector div#selector-inner div.block > h4 > span {
+div#guide div#selector-container div#selector div.block > h4 > span {
 	color: #8cc63f;
 }
 
-div#selector div#selector-inner div.block > p {
+div#guide div#selector-container div#selector div.block > p {
 	color: #666;
 	margin-top: 20px;
 }
@@ -159,6 +160,12 @@ div#content div.section li.lecture p.introduction {
 	overflow: hidden;
 }
 
+div#content div.section ul.teachers {
+	clear: both;
+    margin: 0;
+    overflow: hidden;
+}
+
 div#content div.section li.teacher a {
     color: #333;
     text-decoration: none;
@@ -166,9 +173,17 @@ div#content div.section li.teacher a {
 
 div#content div.section li.teacher {
     color: #565656;
+    float: left;
     font-size: 13px;
-    margin-left: 0;
-    margin-right: 19px;
+    list-style: none;
+    margin: 0 10px 10px 0;
+    width: 150px;
+}
+
+div#content div.section li.teacher div.avatar {
+	margin: 0 auto;
+	max-height: 150px;
+	max-width: 150px;
 }
 
 div#content div.section li.teacher div.company {
@@ -291,4 +306,50 @@ div#footer div#introduction img {
 
 div#footer div.span4 {
 	text-align: right;
+}
+
+/* Smaller than standard 960 (devices and browsers) */
+@media only screen and (max-width: 959px) {
+}
+
+/* Tablet Portrait size to standard 960 (devices and browsers) */
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+    div.container {
+        width: 768px;
+    }
+
+    div#content div.section li.teacher {
+	    width: 143px;
+	}
+}
+
+/* All Mobile Sizes (devices and browser) */
+@media only screen and (max-width: 767px) {
+	div#guide div#introduction div#slogan {
+		margin-top: 40px;
+	}
+
+	div#guide div#selector-container {
+		margin-top: 20px;
+	}
+
+	div#navigation ul.inline,
+	div#navigation form#search {
+		float: none;
+		text-align: center;
+	}
+}
+
+/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+    div.container {
+        width: 480px;
+    }
+}
+
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
+@media only screen and (max-width: 479px) {
+    div.container {
+        width: 320px;
+    }
 }

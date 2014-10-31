@@ -23,6 +23,7 @@ div#container div#detail div.section ul.outline > li {
 div#container div#detail div.section ul.outline > li > h5.heading {
 	border-bottom: 1px dotted #b1b2b4;
 	color: #2f73bc;
+	overflow: hidden;
 	padding-bottom: 5px;
 }
 
@@ -37,13 +38,19 @@ div#container div#detail div.section ul.outline > li span.schedule {
 
 div#container div#teacher {
 	padding-top: 10px;
-	height: 100px;
 	overflow: hidden;
+}
+
+div#container div#teacher img {
+	max-width: 100%;
 }
 
 div#container div#teacher div#teacher-introduction {
 	font-size: 12px;
-	padding-left: 10px;
+}
+
+div#container div#teacher div#teacher-introduction h5 {
+	margin: 0;
 }
 
 div#container ul#comments {
@@ -183,4 +190,27 @@ div#container div#misc div#lectures a.trigger {
 
 div#container div#misc div#share {
 	padding: 10px 10px 0;
+}
+
+/* Smaller than standard 960 (devices and browsers) */
+@media only screen and (max-width: 959px) {
+}
+
+/* Tablet Portrait size to standard 960 (devices and browsers) */
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+}
+
+/* All Mobile Sizes (devices and browser) */
+@media only screen and (max-width: 767px) {
+	div#container div#teacher img {
+		max-width: 100px;
+	}
+}
+
+/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+}
+
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
+@media only screen and (max-width: 479px) {
 }

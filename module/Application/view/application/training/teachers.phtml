@@ -58,7 +58,7 @@
             </div> <!-- .span3 -->
             <div class="span9">
                 <div class="alert alert-warning hide">未找到符合要求的讲师.</div>
-                <ul id="teachers" class="thumbnails"></ul> <!-- .thumbnails -->
+                <ul id="teachers"></ul> <!-- .thumbnails -->
                 <div id="pagination" class="pagination pagination-centered">
                     <ul></ul>
                 </div> <!-- #pagination-->
@@ -98,11 +98,12 @@
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
     function displayTeachers(teachers) {
-        var numberOfTeachers = teachers.length;
+        var colors = ['#427fed', '#f4b400', '#53a93f', '#e94d20'],
+            numberOfTeachers = teachers.length;
         for ( var i = 0; i < numberOfTeachers; ++ i ) {
-            $('#teachers').append('<li class="teacher span2">'
+            $('#teachers').append('<li class="teacher">'
                                 + '<div class="thumbnail">'
-                                + '    <div class="avatar" style="background-color: #427fed">'
+                                + '    <div class="avatar" style="background-color: ' + colors[Math.floor(Math.random() * 4)] + '">'
                                 + '       <img data-src="holder.js/150x150" src="<?php echo $this->basePath(); ?>/img/avatars/' + 
                                               ( teachers[i]['avatar'] === null ? 'silhouette.png' : teachers[i]['avatar'] ) + '" alt="Avatar" />'
                                 + '    </div>' 

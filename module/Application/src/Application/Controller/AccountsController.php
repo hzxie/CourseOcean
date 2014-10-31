@@ -757,6 +757,16 @@ class AccountsController extends AbstractActionController
     }
 
     /**
+     * 获取管理员的个人信息.
+     * (FakeFunction, 仅供getProfile()函数调用).
+     * @return 一个包含管理员个人信息的数组
+     */
+    private function getAdministratorProfile()
+    {
+        return array();
+    }
+
+    /**
      * 修改用户的密码.
      * @return 一个包含若干标志位的JSON数组
      */

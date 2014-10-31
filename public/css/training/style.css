@@ -82,11 +82,16 @@ div#container div#sub-header p {
 	color: #6db33f;
 }
 
+div#container div#sub-header {
+	position: relative;
+}
+
 div#container div#sub-header img {
 	max-height: 200px;
 	position: absolute;
 	top: 0;
 	right: 0;
+	z-index: -1;
 }
 
 div#container div#content ul#course-types li {
@@ -143,32 +148,47 @@ div#footer div.span4 {
 	text-align: right;
 }
 
+/* Smaller than standard 1200 (devices and browsers) */
+@media only screen and (max-width: 1199px) {
+}
+
+/* Portrait size to standard 1200 (devices and browsers) */
 @media only screen and (min-width: 960px) and (max-width: 1199px) {
-	div.container {
-		width: 960px;
-	}
+    div.container {
+        width: 960px;
+    }
 }
 
+/* Smaller than standard 960 (devices and browsers) */
+@media only screen and (max-width: 959px) {
+}
+
+/* Tablet Portrait size to standard 960 (devices and browsers) */
 @media only screen and (min-width: 768px) and (max-width: 959px) {
-	div.container {
-		width: 480px;
+    div.container {
+        width: 768px;
+    }
+}
+
+/* All Mobile Sizes (devices and browser) */
+@media only screen and (max-width: 767px) {
+	div#header div#logo,
+	div#header div#navigation {
+		margin-bottom: 20px;
+		text-align: center;
 	}
 }
 
-@media only screen and (min-width: 480px) and (max-width: 767px){
-	div.container {
-		width: 480px;
-	}
+/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+    div.container {
+        width: 480px;
+    }
 }
 
-@media only screen and (min-width: 480px) and (max-width: 767px){
-	div.container {
-		width: 480px;
-	}
-}
-
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
 @media only screen and (max-width: 479px) {
-	div.container {
-		width: 320px;
-	}
+    div.container {
+        width: 320px;
+    }
 }

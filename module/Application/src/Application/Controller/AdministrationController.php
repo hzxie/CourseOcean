@@ -21,6 +21,62 @@ class AdministrationController extends AbstractActionController
      */
     public function dashboardAction()
     {
-        return array();
+    	if ( !$this->isAllowedToAccess() ) {
+            return $this->sendRedirect('accounts/dashboard');
+        }
+
+        return array(
+        	'profile'	=> $this->getUserProfile(),
+        );
+    }
+
+    /**
+     * 检查用户是否已经登录.
+     * @return 用户是否已经登录
+     */
+    private function isAllowedToAccess()
+    {
+        $session    = new Container('itp_session');
+        return $session->offsetExists('isLogined');
+    }
+
+    /**
+     * HTTP重定向请求.
+     * @param  String $redirectPath - 重定向的相对路径
+     * @return HTTP重定向请求的对象
+     */
+    private function sendRedirect($redirectPath)
+    {
+        $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
+        $url = $renderer->basePath($redirectPath);
+        $redirect = $this->plugin('redirect');
+
+        return $redirect->toUrl($url);
+    }
+
+    /**
+     * 获取网站的基础路径(如localhost/itp).
+     * @return 网站的基础路径
+     */
+    private function basePath()
+    {
+        $renderer   = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
+        $url        = $renderer->basePath();
+        return $url;
+    }
+
+    /**
+     * 获取用户的基本信息.
+     * @return 一个包含用户基本信息的数组
+     */
+    private function getUserProfile()
+    {
+        $session    = new Container('itp_session');
+        return array(
+            'uid'           => $session->offsetGet('uid'),
+            'username'      => $session->offsetGet('username'),
+            'userGroupSlug' => $session->offsetGet('userGroupSlug'),
+            'email'         => $session->offsetGet('email'),
+        );
     }
 }
