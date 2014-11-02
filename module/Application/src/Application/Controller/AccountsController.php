@@ -1293,7 +1293,7 @@ class AccountsController extends AbstractActionController
     {
         $serviceManager     = $this->getServiceLocator();
         $courseTypeTable    = $serviceManager->get('Application\Model\CourseTypeTable');
-        $courseType         = $courseTypeTable->getCatelogyUsingId($catelogySlug);
+        $courseType         = $courseTypeTable->getCatelogyUsingSlug($catelogySlug);
 
         if ( $courseType != null ) {
             return $courseType->courseTypeId;
@@ -1430,12 +1430,11 @@ class AccountsController extends AbstractActionController
             'isEndTimeLegal'        => strtotime($lecture['lecture_end_time']) > strtotime($lecture['lecture_start_time']),
             'isRegionEmpty'         => empty($lecture['lecture_region']),
             'isProvinceEmpty'       => empty($lecture['lecture_province']),
-            'isCityEmpty'           => empty($lecture['lecture_city']),
             'isAddressEmpty'        => empty($lecture['lecture_address']),
             'isMinCapcityEmpty'     => empty($lecture['lecture_min_capcity']),
             'isMinCapcityLegal'     => intval($lecture['lecture_min_capcity']) && $lecture['lecture_min_capcity'] > 0,
             'isMaxCapcityEmpty'     => empty($lecture['lecture_max_capcity']),
-            'isMaxCapcityLegal'     => intval($lecture['lecture_max_capcity']) && $lecture['lecture_max_capcity'] >= $lecture['lecture_max_capcity'],
+            'isMaxCapcityLegal'     => intval($lecture['lecture_max_capcity']) && $lecture['lecture_max_capcity'] >= $lecture['lecture_min_capcity'],
             'isExpenseEmpty'        => empty($lecture['lecture_expense']),
             'isExpenseLegal'        => intval($lecture['lecture_expense']) && $lecture['lecture_expense'] > 0,
             'isPrecautionsEmpty'    => empty($lecture['lecture_precautions']),
@@ -1443,11 +1442,11 @@ class AccountsController extends AbstractActionController
         $result['isSuccessful'] = $result['isCourseIdLegal']   && !$result['isStartTimeEmpty'] &&
                                   $result['isStartTimeLegal']  && !$result['isEndTimeEmpty'] &&
                                   $result['isEndTimeLegal']    && !$result['isRegionEmpty'] &&
-                                 !$result['isProvinceEmpty']   && !$result['isCityEmpty'] &&
-                                 !$result['isAddressEmpty']    && !$result['isMinCapcityEmpty'] &&
-                                  $result['isMinCapcityLegal'] && !$result['isMaxCapcityEmpty'] &&
-                                  $result['isMaxCapcityLegal'] && !$result['isExpenseEmpty'] &&
-                                  $result['isExpenseLegal']    && !$result['isPrecautionsEmpty'];
+                                 !$result['isProvinceEmpty']   && !$result['isAddressEmpty'] && 
+                                 !$result['isMinCapcityEmpty'] &&  $result['isMinCapcityLegal'] && 
+                                 !$result['isMaxCapcityEmpty'] &&  $result['isMaxCapcityLegal'] && 
+                                 !$result['isExpenseEmpty']    &&  $result['isExpenseLegal'] && 
+                                 !$result['isPrecautionsEmpty'];
         return $result;
     }
 
@@ -1561,6 +1560,7 @@ class AccountsController extends AbstractActionController
             $serviceManager         = $this->getServiceLocator();
             $courseTable            = $serviceManager->get('Application\Model\CourseTable');
             $courseId               = $courseTable->createCourse($course);
+            $courseCompositionTable = $serviceManager->get('Application\Model\CourseCompositionTable');
             $result['isSuccessful'] = $courseCompositionTable->updateCourseComposition($courseId, $courseModules);
         }
         $response = $this->getResponse();

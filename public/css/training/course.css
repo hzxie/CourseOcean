@@ -37,6 +37,7 @@ div#container div#detail div.section ul.outline > li span.schedule {
 }
 
 div#container div#teacher {
+	margin-bottom: 10px;
 	padding-top: 10px;
 	overflow: hidden;
 }
@@ -204,6 +205,22 @@ div#container div#misc div#share {
 @media only screen and (max-width: 767px) {
 	div#container div#teacher img {
 		max-width: 100px;
+	}
+
+	div#container div#teacher div#avatar {
+		float: left;
+		width: 31.623931623931625%;
+	}
+
+	div#container div#teacher div#teacher-introduction {
+		float: left;
+		margin-left: 2.127659574468085%;
+		width: 65.81196581196582%;
+	}
+
+	div#container div#detail div.section ul.outline > li span.schedule {
+		display: block;
+		float: none;
 	}
 }
 

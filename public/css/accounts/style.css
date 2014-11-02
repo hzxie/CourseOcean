@@ -7,7 +7,7 @@ html, body {
 
 div.container {
 	padding: 20px;
-	width: 960px;
+	width: 920px;
 }
 
 div#wrapper {
@@ -139,4 +139,59 @@ div#footer div#introduction img {
 
 div#footer div.span4 {
 	text-align: right;
+}
+
+/* Smaller than standard 960 (devices and browsers) */
+@media only screen and (max-width: 959px) {
+}
+
+/* Tablet Portrait size to standard 960 (devices and browsers) */
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+	div.container {
+		width: 728px;
+	}
+}
+
+/* All Mobile Sizes (devices and browser) */
+@media only screen and (max-width: 767px) {
+	div.container {
+		padding: 20px 0;
+	}
+	
+	div#header div#logo, 
+	div#header div#accounts {
+		text-align: center;
+	}
+
+	div#container {
+		margin-top: 0;
+	}
+
+	div#container div#navigation ul.left {
+		float: none;
+		text-align: center;
+	}
+
+	div#container div#navigation ul.right {
+		float: none;
+		text-align: center;
+	}
+}
+
+/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+	div.container {
+		width: 480px;
+	}
+}
+
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
+@media only screen and (max-width: 479px) {
+	div.container {
+		width: 320px;
+	}
+
+	div#container div#navigation ul.inline > li {
+		padding: 5px 8px;
+	}
 }

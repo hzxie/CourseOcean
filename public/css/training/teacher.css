@@ -33,6 +33,16 @@ div#teacher div#detail div.section p {
 
 /* All Mobile Sizes (devices and browser) */
 @media only screen and (max-width: 767px) {
+	div#teacher div#overview div.span3 {
+		float: left;
+		width: 23.404255319148934%;
+	}
+
+	div#container div#teacher div.span9 {
+		float: left;
+		margin-left: 2.127659574468085%;
+		width: 74.46808510638297%;
+	}
 }
 
 /* Mobile Landscape Size to Tablet Portrait (devices and browsers) */

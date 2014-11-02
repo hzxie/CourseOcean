@@ -6,7 +6,7 @@ div#content div#sidebar div#user-info {
 	background: #fff;
 	border: 1px solid #efefef;
 	padding: 5px;
-	width: 80%;
+	max-width: 200px;
 	margin: 0 auto;
 }
 
@@ -97,6 +97,14 @@ div#content div#main-content ul.courses > li.course a {
 	text-decoration: none;
 }
 
+div#content div#main-content ul.courses > li.course h4 {
+	overflow: hidden;
+}
+
+div#content div#main-content ul.courses > li.course h4 a {
+	float: left;
+}
+
 div#content div#main-content ul.courses > li.course h4 span.extra {
 	color: #666;
 	float: right;
@@ -174,11 +182,11 @@ div#content div#main-content div.modal li.lecture-module div.row-fluid {
 
 /** StyleSheet for Course **/
 div#content div#main-content div.alert {
-	margin-left: 0;
+	margin: 0 0 20px;
 }
 
-div#content div#main-content div.modal div.alert {
-	width: 445px;
+div#content div.modal div.alert {
+	margin: 0;
 }
 
 div#content div#main-content ul#course-modules li,
@@ -207,6 +215,16 @@ div#content div#main-content div#course-module-modal {
 }
 
 /** StyleSheet for  Profile **/
+div#content div#main-content div.city-picker select.region, 
+div#content div#main-content div.city-picker select.city {
+	margin-right: 125px;
+}
+
+div#content div.modal div.city-picker select.region, 
+div#content div.modal div.city-picker select.city {
+	margin-right: 45px !important;
+}
+
 div#content div#main-content div.city-picker select.city,
 div#content div#main-content div.city-picker input#lecture-address,
 div#content div#main-content div.city-picker input#company-address {
@@ -228,12 +246,20 @@ div#content div#main-content ul#requirements {
 	margin-left: 0;
 }
 
-div#content div#main-content ul#requirements li.requirement {
+div#content div#main-content ul#requirements > li.requirement {
 	border-bottom: 1px dotted #565656;
 	color: #333;
 	font-size: 13px;
 	margin-bottom: 10px;
 	padding-bottom: 10px;
+}
+
+div#content div#main-content ul#requirements > li.requirement h4 {
+	overflow: hidden;
+}
+
+div#content div#main-content ul#requirements > li.requirement h4 a {
+	float: left;
 }
 
 div#content div#main-content ul#requirements li.requirement a {
@@ -263,4 +289,76 @@ div#content div#main-content div#requirement-modal div.span6 table.hint tr:hover
 div#content div#main-content div#requirement-modal div.span6 table.hint img {
 	max-height: 48px;
 	max-width: 48px;
+}
+
+/* Smaller than standard 960 (devices and browsers) */
+@media only screen and (max-width: 959px) {
+	div#content div#main-content ul.courses > li.course h4 a {
+		float: none;
+	}
+
+	div#content div#main-content ul.courses > li.course h4 span.extra {
+		display: block;
+		float: none;
+	}
+}
+
+/* Tablet Portrait size to standard 960 (devices and browsers) */
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+	div#content div#main-content div.city-picker select.region, 
+	div#content div#main-content div.city-picker select.city {
+		margin-right: 70px;
+	}
+}
+
+/* All Mobile Sizes (devices and browser) */
+@media only screen and (max-width: 767px) {
+	div#content div#main-content {
+		padding: 0 20px;
+	}
+
+	div#content div#main-content ul.courses > li.course div.span3,
+	div#content div#main-content ul#requirements > li.requirement div.span3 {
+		display: none;
+	}
+
+	div#content div#main-content ul.courses > li.comment {
+		margin-top: 10px;
+		padding-bottom: 0;
+	}
+
+	div#content div#main-content ul.courses > li.comment div.span3 {
+		font-weight: bold;
+		text-align: left;
+	}
+
+	div#content div#main-content div.city-picker select.region,
+	div#content div#main-content div.city-picker select.province,
+	div#content div#main-content div.city-picker select.city,
+	div#content div#main-content div.city-picker input#lecture-address,
+	div#content div#main-content div.city-picker input#company-address {
+		margin-top: 10px;
+		margin-right: 0;
+	}
+
+	div#content div.modal div.city-picker select.region,
+	div#content div.modal div.city-picker select.province,
+	div#content div.modal div.city-picker select.city,
+	div#content div.modal div.city-picker input#lecture-address {
+		display: block;
+		margin-top: 10px;
+		margin-right: 0;
+	}
+
+	div#content div#main-content div.modal textarea {
+		width: 205px;
+	}
+}
+
+/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+}
+
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
+@media only screen and (max-width: 479px) {
 }

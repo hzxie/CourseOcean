@@ -419,35 +419,32 @@
                 <div class="span6">
                     <label for="expense">培训费用</label>
                     <div class="input-append">
-                        <input class="span12" id="expense" type="text">
+                        <input id="expense" type="text">
                         <span class="add-on">元</span>
                     </div> <!-- .input-append -->
                 </div> <!-- .span6 -->
             </div> <!-- .row-fluid -->
             <div class="city-picker row-fluid">
-                <div class="span6">
-                    <label for="lecture-address">开课地点</label>
+                <div class="span12">
+                    <label for="lecture-region">开课地点</label>
                     <select class="region"></select>
-                    <select class="city"></select>
-                </div> <!-- .span6 -->
-                <div class="span6">
-                    <label>&nbsp;</label>
                     <select class="province"></select>
-                    <input id="address" type="text" placeholder="详细地址" />
-                </div> <!-- .span6 -->
+                    <select class="city"></select>
+                    <input id="lecture-address" type="text" placeholder="详细地址" />
+                </div> <!-- .span12 -->
             </div> <!-- .row-fluid -->
             <div class="row-fluid">
                 <div class="span6">
                     <label for="min-capcity">最小开班人数</label>
                     <div class="input-append">
-                        <input class="span12" id="min-capcity" type="text">
+                        <input id="min-capcity" type="text">
                         <span class="add-on">人</span>
                     </div> <!-- .input-append -->
                 </div> <!-- .span6 -->
                 <div class="span6">
                     <label for="max-capcity">课程最大容量</label>
                     <div class="input-append">
-                        <input class="span12" id="max-capcity" type="text">
+                        <input id="max-capcity" type="text">
                         <span class="add-on">人</span>
                     </div> <!-- .input-append -->
                 </div> <!-- .span6 -->
@@ -456,14 +453,14 @@
                 <div class="control-group span6">
                     <label for="start-time">课程开始时间</label>
                     <div class="controls input-append date form_datetime" data-date-format="yyyy-mm-dd hh:ii">
-                        <input id="start-time" class="span12" type="text" value="" readonly>
+                        <input id="start-time" type="text" value="" readonly>
                         <span class="add-on"><i class="icon-th"></i></span>
                     </div> <!-- .input-append -->
                 </div> <!-- .span6 -->
                 <div class="control-group span6">
                     <label for="end-time">课程结束时间</label>
                     <div class="controls input-append date form_datetime" data-date-format="yyyy-mm-dd hh:ii">
-                        <input id="end-time" class="span12" type="text" value="" readonly>
+                        <input id="end-time" type="text" value="" readonly>
                         <span class="add-on"><i class="icon-th"></i></span>
                     </div> <!-- .input-append -->
                 </div> <!-- .span6 -->
@@ -498,6 +495,7 @@
         </div> <!-- .modal-footer -->
     </div> <!-- #new-lecture-modal-step-2 -->
     <!-- JavaScript -->
+    <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/date-zh-CN.js"></script>
     <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/jquery.citypicker.js"></script>
     <script type="text/javascript">
         $('.city-picker').cityPicker();
@@ -538,12 +536,13 @@
         });
     </script>
     <script type="text/javascript">
-        $('.nav a[href=#lectures]').click(function() {
-            var pageNumber  = 1;
+        /* Fix bug on IE 7 */
+        $('.nav .dropdown-menu li:nth-child(2) > a').click(function() {
+            var pageNumber = 1;
 
             getOpeningLectures(pageNumber);
             getOpeningLectureTotalPages(pageNumber);
-        });
+        })
     </script>
     <script type="text/javascript">
         $('#new-lecture-next-step').click(function() {
@@ -552,8 +551,8 @@
                 endTime         = $('#end-time').val(),
                 region          = $('.region').val(),
                 province        = $('.province').val(),
-                city            = $('.city').val(),
-                address         = $('#address').val(),
+                city            = $('.city').val() || '',
+                address         = $('#lecture-address').val(),
                 minCapcity      = $('#min-capcity').val(),
                 maxCapcity      = $('#max-capcity').val(),
                 expense         = $('#expense').val(),
@@ -583,7 +582,7 @@
                         $('#new-lecture-modal-step-1').modal('hide');
                         $('#new-lecture-modal-step-2 #lecture-id').val(result['lectureId']);
                         $('#new-lecture-modal-step-2').modal({
-                            'backdrop': 'static',
+                            'backdrop': 'static'
                         });
                     } else {
                         var errorMessage  = '';
@@ -683,7 +682,7 @@
             return '<div class="control-group span6">' +
                    '    <label for="' + controlClass + '">' + labelText + '</label>' +
                    '    <div class="controls input-append date form_datetime" data-date-format="yyyy-mm-dd hh:ii">' +
-                   '        <input class="' + controlClass + ' span12" type="text" readonly>' +
+                   '        <input class="' + controlClass + '" type="text" readonly>' +
                    '        <span class="add-on"><i class="icon-th"></i></span>' +
                    '    </div>' +
                    '</div>';
@@ -692,30 +691,16 @@
     <script type="text/javascript">
         $('#lecture-modules').delegate('.module-start-time', 'change', function() {
             var endTimeControl  = $('.module-end-time', $(this).parent().parent().parent().parent()),
-                cycleControl    = $('.module-cycle', $(this).parent().parent().parent().parent().parent()),
-                startTime       = new Date($(this).val()),
-                cycle           = $(cycleControl).html();
-                endTime         = new Date(startTime.getTime() + parseInt(cycle, 10) * 60000);
-            $(endTimeControl).val(getDateTime(endTime));
+                cycleControl    = $('.module-cycle', $(this).parent().parent().parent().parent());
+            var startTime       = $(this).val(),
+                cycle           = parseInt($(cycleControl).html(), 10),
+                endTime         = getEndTime(startTime, cycle);
+            $(endTimeControl).val(endTime);
         });
     </script>
     <script type="text/javascript">
-        function getDateTime(dateTimeString) {
-            var dateTime = 
-                year     = dateTime.getFullYear(),
-                month    = formatNumber(dateTime.getMonth() + 1),
-                day      = formatNumber(dateTime.getDate()),
-                hour     = formatNumber(dateTime.getHours()),
-                minute   = formatNumber(dateTime.getMinutes());
-            return year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
-        }
-    </script>
-    <script type="text/javascript">
-        function formatNumber(number) {
-            if ( number < 10 ) {
-                return '0' + number;
-            }
-            return number;
+        function getEndTime(startTime, cycle) {
+            return Date.parse(startTime).add(cycle).minutes().toString('yyyy-MM-dd HH:mm');
         }
     </script>
     <script type="text/javascript">
@@ -747,7 +732,6 @@
                                      '&startTime=' + startTime + '&endTime=' + endTime;
                 $.ajax({
                     type: 'POST',
-                    async: false,
                     url: '<?php echo $this->basePath(); ?>/accounts/createLectureSchedule',
                     data: postData,
                     dataType: 'JSON',
@@ -757,7 +741,7 @@
                             alert('发生了未知错误, 请联系技术支持人员.')
                         }
                         if ( index == courseModules - 1 ) {
-                            $('.btn-primary', '#new-lecture-modal-step-2').html('确认');
+                            $('.btn-primary', '#new-lecture-modal--2').html('确认');
                             $('.btn-primary', '#new-lecture-modal-step-2').removeAttr('disabled');
                             $('#new-lecture-modal-step-2').modal('hide');
                         }
@@ -780,9 +764,9 @@
                     errorMessage += '请选择' + moduleName + '的培训结束时间<br>';
                 }
 
-                startTime   = new Date(startTime);
-                endTime     = new Date(endTime);
-                if ( startTime.getTime() > endTime.getTime() ) {
+                startTime       = Date.parse(startTime);
+                endTime         = Date.parse(endTime);
+                if ( Date.compare(startTime, endTime) != -1 ) {
                     errorMessage += moduleName + '的培训结束时间不得早于起始时间<br>';
                 }
             });
