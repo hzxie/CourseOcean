@@ -2,7 +2,6 @@
 /**
  * Zend Framework (http://framework.zend.com/)
  *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
  * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
@@ -55,6 +54,8 @@ use Application\Model\PostCategory;
 use Application\Model\PostCategoryTable;
 use Application\Model\EmailValidation;
 use Application\Model\EmailValidationTable;
+use Application\Model\Option;
+use Application\Model\OptionTable;
 
 
 class Module
@@ -308,6 +309,17 @@ class Module
                     $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new EmailValidation());
+                    return new TableGateway('itp_email_validation', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Application\Model\OptionTable' => function($sm) {
+                    $tableGateway       = $sm->get('OptionTableGateway');
+                    $optionTable        = new OptionTable($tableGateway);
+                    return $optionTable;
+                },
+                'OptionTableGateway' => function ($sm) {
+                    $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Option());
                     return new TableGateway('itp_email_validation', $dbAdapter, null, $resultSetPrototype);
                 },
             ),

@@ -1,0 +1,129 @@
+<?php 
+    echo $this->headTitle('仪表盘 | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/administration/style.css');
+?>
+
+<div id="sidebar">
+    <div id="logo">
+        <a href="<?php echo $this->basePath(); ?>">
+        	<img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="logo" />
+        </a>
+    </div> <!-- #logo -->
+    <div id="sidebar-collapse">
+        <ul id="sidebar-menu" class="nav">
+            <li class="active"><a href="#dashboard"><i class="icon-dashboard"></i> <span>仪表盘</span></a></li>
+            <li><a href="#users"><i class="icon-user"></i> <span>用户管理</span></a></li>
+            <li><a href="#courses"><i class="icon-tasks"></i> <span>课程管理</span></a></li>
+            <li><a href="#requirements"><i class="icon-desktop"></i> <span>需求管理</span></a></li>
+            <li><a href="#settings"><i class="icon-cogs"></i> <span>系统设置</span></a></li>
+        </ul>
+    </div> <!-- #navigation -->
+</div> <!-- #sidebar -->
+<div id="container">
+    <div id="header">
+    	<a id="navbar-toggle" class="toggle" href="javascript:void(0)">
+	        <i class="icon-reorder"></i>
+	    </a> <!-- #navbar-toggle -->
+        <form id="search" action="<?php echo $this->basePath(); ?>/home/search">
+            <input name="keyword" type="text" placeholder="请输入搜索关键词" />
+            <i class="icon icon-search"></i>
+        </form>
+        <ul class="inline">
+            <li><a class="toggle" href="javascript:void(0)"><i class="icon icon-user"></i><span class="badge badge-important">1</span></a></li>
+            <li><a class="toggle" href="javascript:void(0)"><i class="icon icon-bell-alt"></i></a></li>
+            <li><a class="toggle" href="javascript:void(0)"><i class="icon icon-envelope"></i></a></li>
+            <li id="profile">
+                <a href="javascript:void(0)">
+                    <span><?php echo $profile['username']; ?></span>
+                    <img class="img-circle" src="<?php echo $this->basePath(); ?>/img/avatars/avatar.jpg" alt="avatar" />
+                </a>
+            </li>
+        </ul>
+    </div> <!-- #header -->
+    <div id="content">
+        <noscript>
+            <p>您的浏览器不支持 JavaScript 或 JavaScript 已停用.</p>
+            <p>由于您的浏览器不支持 JavaScript 或已经停用 JavaScript, 因此我们无法显示请求的网页.</p>
+        </noscript>
+    </div> <!-- #content -->
+</div> <!-- #container -->
+<!-- JavaScript -->
+<!-- Placed at the end of the document so the pages load faster -->
+<?php $this->inlineScript()->captureStart(); ?>
+    $('#navbar-toggle').click(function() {
+        if ( !$('#sidebar-menu').is(':visible') ) {
+        	$('#sidebar').css('display', 'block');
+        	$('#container').css('margin-left', 240);
+        } else {
+        	$('#sidebar').css('display', 'none');
+        	$('#container').css('margin-left', 0);
+        }
+    });
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    $(document).ready(function() {
+        var pageName = window.location.href.match(/#.*$/);
+        if ( pageName != null ) {
+            getPageContent(window.location.href.match(/#.*$/)[0].substr(1));
+        } else {
+            window.location.href = '#dashboard';
+        }    
+    });
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    if ( ("onhashchange" in window) && !navigator.userAgent.toLowerCase().match(/msie/) ) {
+        $(window).on('hashchange', function() {
+            getPageContent(window.location.href.match(/#.*$/)[0].substr(1));
+        });
+    } else {
+        var prevHash = window.location.hash;
+        window.setInterval(function () {
+           if (window.location.hash != prevHash) {
+              prevHash = window.location.hash;
+              getPageContent(window.location.href.match(/#.*$/)[0].substr(1));
+           }
+        }, 100);
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function getPageContent(pageName) {
+        var pageRequests = getPageRequests(pageName),
+            pageName     = pageRequests['pageName'],
+            pageRequest  = pageRequests['pageRequest'];
+
+        highlightNavObject(pageName);
+        $.ajax({
+            type: 'GET',
+            url: "<?php echo $this->basePath(); ?>/administration/getPageContent?pageName=" + pageName + '&' + pageRequest,
+            cache: false,
+            async: false,
+            success: function(pageContent) {
+                if ( pageContent !== '' ) {
+                    $("#content").html(pageContent);
+                }
+            }
+        });
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function getPageRequests(pageName) {
+        var pageRequests = pageName.split('?');
+        return {
+            'pageName' : pageRequests[0],
+            'pageRequest' : pageRequests[1] || ''
+        };
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function highlightNavObject(pageName) {
+        $('.active').removeClass('active');
+
+        var navObject = $('a[href=#' + pageName + ']');
+        if ( navObject.length != 0 ) {
+            $(navObject.parent()).addClass('active');
+
+            var windowTitle = $('span', navObject).html();
+            document.title = windowTitle + ' | IT培训平台';
+        }
+    }
+<?php $this->inlineScript()->captureEnd(); ?>

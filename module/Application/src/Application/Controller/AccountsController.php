@@ -561,7 +561,7 @@ class AccountsController extends AbstractActionController
         $profile = $this->getProfile();
 
         if ( $profile['profile']['userGroupSlug'] == 'administrator' ) {
-            return $this->sendRedirect('administration/dashboard');
+            return $this->sendRedirect('administration');
         }
         return $profile;
     }

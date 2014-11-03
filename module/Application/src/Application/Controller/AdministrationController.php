@@ -19,7 +19,7 @@ class AdministrationController extends AbstractActionController
      * 显示系统管理页面.
      * @return 一个包含页面所需信息的数组
      */
-    public function dashboardAction()
+    public function indexAction()
     {
     	if ( !$this->isAllowedToAccess() ) {
             return $this->sendRedirect('accounts/dashboard');
@@ -78,5 +78,28 @@ class AdministrationController extends AbstractActionController
             'userGroupSlug' => $session->offsetGet('userGroupSlug'),
             'email'         => $session->offsetGet('email'),
         );
+    }
+
+    /**
+     * 获取所请求页面的内容.
+     * @return 包含页面内容的HTML字符串
+     */
+    public function getPageContentAction()
+    {
+        $pageName = $this->params()->fromQuery('pageName');
+        $view     = new ViewModel(array());
+        $view->setTerminal(true);
+
+        $template = "application/administration/dashboard/$pageName.phtml";
+        $resolver = $this->getEvent()
+                         ->getApplication()
+                         ->getServiceManager()
+                         ->get('Zend\View\Resolver\TemplatePathStack');
+        
+        if ( !$resolver->resolve($template) ) {
+            return $this->notFoundAction();
+        }
+        $view->setTemplate($template);
+        return $view;
     }
 }

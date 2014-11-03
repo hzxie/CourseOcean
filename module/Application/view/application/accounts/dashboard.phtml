@@ -126,26 +126,6 @@
         });
     }
 <?php $this->inlineScript()->captureEnd(); ?>
-<script type="text/javascript">
-    function getPageContent(pageName) {
-        var pageRequests = getPageRequests(pageName),
-            pageName     = pageRequests['pageName'],
-            pageRequest  = pageRequests['pageRequest'];
-
-        highlightNavObject(pageName);
-        $.ajax({
-            type: 'GET',
-            url: "/itp/public/accounts/getPageContent?pageName=" + pageName + '&' + pageRequest,
-            cache: false,
-            async: false,
-            success: function(pageContent) {
-                if ( pageContent !== '' ) {
-                    $("#main-content").html(pageContent);
-                }
-            }
-        });
-    }
-</script>
 <?php $this->inlineScript()->captureStart(); ?>
     function getPageRequests(pageName) {
         var pageRequests = pageName.split('?');
@@ -160,9 +140,8 @@
         $('.active').removeClass('active');
 
         var navObject = $('a[href=#' + pageName + ']');
-        if ( navObject.length == 0 ) {
-            
+        if ( navObject.length != 0 ) {
+            $(navObject.parent()).addClass('active');
         }
-        $(navObject.parent()).addClass('active');
     }
 <?php $this->inlineScript()->captureEnd(); ?>

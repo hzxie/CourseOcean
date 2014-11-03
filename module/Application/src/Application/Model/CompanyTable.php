@@ -25,7 +25,7 @@ class CompanyTable
     protected $tableGateway;
 
     /**
-     * TeacherTable类的构造函数.
+     * CompanyTable类的构造函数.
      * @param TableGateway $tableGateway 
      */
     public function __construct(TableGateway $tableGateway)
@@ -61,7 +61,7 @@ class CompanyTable
 
     /**
      * 更新企业用户的信息.
-     * @param  Array $company - 一个包含讲师信息的数组
+     * @param  Array $company - 一个包含企业信息的数组
      * @return 操作是否成功完成
      */
     public function updateCompany($company)
