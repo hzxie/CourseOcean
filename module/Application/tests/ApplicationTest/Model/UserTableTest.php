@@ -1,4 +1,5 @@
 <?php
+namespace Application\Model;
 namespace ApplicationTest\Module;
 
 use PHPUnit_Framework_TestCase;
