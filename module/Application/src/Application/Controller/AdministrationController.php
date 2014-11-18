@@ -16,6 +16,25 @@ use Zend\View\Model\ViewModel;
 class AdministrationController extends AbstractActionController
 {
     /**
+     * 将ResultSet对象转换为数组.
+     * @param  ResultSet $resultSet - 数据库查询返回的ResultSet对象
+     * @return 一个包含查询结果的数组
+     */
+    private function getResultSetArray($resultSet)
+    {
+        $returnArray = array();
+        
+        if ( $resultSet == null ) {
+            return $returnArray;
+        }
+        foreach ( $resultSet as $rowSet ) {
+            $rowArray = (array)$rowSet;
+            array_push($returnArray, $rowArray);
+        }
+        return $returnArray;
+    }
+
+    /**
      * 显示系统管理页面.
      * @return 一个包含页面所需信息的数组
      */
@@ -26,7 +45,8 @@ class AdministrationController extends AbstractActionController
         }
 
         return array(
-        	'profile'	=> $this->getUserProfile(),
+            'profile'           => $this->getUserProfile(),
+            'uncheckUsers'      => $this->getUncheckUsers(),
         );
     }
 
@@ -87,7 +107,8 @@ class AdministrationController extends AbstractActionController
     public function getPageContentAction()
     {
         $pageName = $this->params()->fromQuery('pageName');
-        $view     = new ViewModel(array());
+        $pageData = $this->getPageData($pageName);
+        $view     = new ViewModel($pageData);
         $view->setTerminal(true);
 
         $template = "application/administration/dashboard/$pageName.phtml";
@@ -101,5 +122,99 @@ class AdministrationController extends AbstractActionController
         }
         $view->setTemplate($template);
         return $view;
+    }
+
+    /**
+     * [getPageData description]
+     * @param  [type] $pageName [description]
+     * @return [type]           [description]
+     */
+    private function getPageData($pageName)
+    {
+        $pageName   = ucfirst($pageName);
+        $function   = 'get'.$pageName.'PageData';
+
+        return $this->$function();
+    }
+
+    private function getDashboardPageData()
+    {
+
+    }
+
+    /**
+     * 获取用户管理页面所需数据.
+     * @return 一个包含用户管理页面所需数据的数组
+     */
+    private function getUsersPageData()
+    {
+        return array(
+            'totalUsers'        => $this->getTotalUsers(),
+            'uncheckUsers'      => $this->getUncheckUsers(),
+        );
+    }
+
+    private function getCoursesPageData()
+    {
+
+    }
+
+    private function getLecturesPageData()
+    {
+        
+    }
+
+    private function getRequirementsPageData()
+    {
+        
+    }
+
+    private function getSettingsPageData()
+    {
+        
+    }
+
+    /**
+     * 获取所有用户的数量.
+     * @return 所有用户的数量
+     */
+    private function getTotalUsers()
+    {
+        $serviceManager = $this->getServiceLocator();
+        $userTable      = $serviceManager->get('Application\Model\UserTable');
+
+        return $userTable->getCount();
+    }
+
+    /**
+     * 获取未审核的讲师用户的数量.
+     * @return 未审核的讲师用户的数量
+     */
+    private function getUncheckUsers()
+    {
+        $serviceManager = $this->getServiceLocator();
+        $teacherTable   = $serviceManager->get('Application\Model\TeacherTable');
+
+        return $teacherTable->getUncheckedCount();
+    }
+
+    public function getUsersAction()
+    {
+        $NUMBER_OF_USERS_PER_PAGE   = 10;
+        $pageNumber                 = $this->params()->fromQuery('page', 1);
+        $offset                     = ($pageNumber - 1) * $NUMBER_OF_USERS_PER_PAGE;
+
+        $serviceManager = $this->getServiceLocator();
+        $userTable      = $serviceManager->get('Application\Model\UserTable');
+        $users          = $userTable->getAllUsers($offset, $NUMBER_OF_USERS_PER_PAGE);
+
+        $result   = array(
+            'isSuccessful'  => $users != null && $users->count() != 0,
+            'users'         => $this->getResultSetArray($users),
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
     }
 }

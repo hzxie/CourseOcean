@@ -37,7 +37,7 @@ class OptionTable
      * 获取所有系统设置选项的对象.
      * @return 一个ResultSet对象, 包含若干个Option对象
      */
-    public function getAllOptions($offset, $limit)
+    public function getAllOptions()
     {
         $resultSet = $this->tableGateway->select();
         return $resultSet;

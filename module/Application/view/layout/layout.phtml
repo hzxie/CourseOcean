@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <?php echo $this->headTitle('IT培训平台') ?>
+    <?php echo $this->headTitle($this->layout()->options['itp_name']) ?>
     <?php echo $this->headMeta()
         ->appendName('viewport', 'width=device-width, initial-scale=1.0')
         ->appendHttpEquiv('X-UA-Compatible', 'IE=edge, chrome=1')
@@ -37,7 +37,7 @@
                 </ul>
                 <div id="introduction">
                     <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo">
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                    <p><?php echo $this->layout()->options['itp_introduction']; ?></p>
                 </div> <!-- #introduction -->
             </div> <!-- .span8 -->
             <div class="span4">
@@ -45,7 +45,7 @@
                     <li><a href="#"><img src="<?php echo $this->basePath(); ?>/img/social/weibo.png" alt="WeiBo"></a></li>
                     <li><a href="#"><img src="<?php echo $this->basePath(); ?>/img/social/wechat.png" alt="WeChat"></a></li>
                 </ul>
-                <p id="copyright">Copyright&copy; <?php echo date('Y'); ?> IT培训平台. All rights reserved.</p>
+                <p id="copyright">Copyright&copy; <?php echo date('Y'); ?> <?php echo $this->layout()->options['itp_name']; ?>. All rights reserved.</p>
                 <ul>
                     <li><a href="#">服务条款</a></li>
                     <li><a href="#">隐私声明</a></li>

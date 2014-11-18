@@ -13,8 +13,10 @@
         <ul id="sidebar-menu" class="nav">
             <li class="active"><a href="#dashboard"><i class="icon-dashboard"></i> <span>仪表盘</span></a></li>
             <li><a href="#users"><i class="icon-user"></i> <span>用户管理</span></a></li>
-            <li><a href="#courses"><i class="icon-tasks"></i> <span>课程管理</span></a></li>
+            <li><a href="#courses"><i class="icon-book"></i> <span>课程管理</span></a></li>
+            <li><a href="#lectures"><i class="icon-tasks"></i> <span>培训管理</span></a></li>
             <li><a href="#requirements"><i class="icon-desktop"></i> <span>需求管理</span></a></li>
+            <li><a href="#requirements"><i class="icon-desktop"></i> <span>培训动态管理</span></a></li>
             <li><a href="#settings"><i class="icon-cogs"></i> <span>系统设置</span></a></li>
         </ul>
     </div> <!-- #navigation -->
@@ -29,7 +31,14 @@
             <i class="icon icon-search"></i>
         </form>
         <ul class="inline">
-            <li><a class="toggle" href="javascript:void(0)"><i class="icon icon-user"></i><span class="badge badge-important">1</span></a></li>
+            <li>
+                <a class="toggle" href="javascript:void(0)">
+                    <i class="icon icon-user"></i>
+                <?php if ( $this->uncheckUsers != 0 ): ?>
+                    <span class="badge badge-important"><?php echo $this->uncheckUsers; ?></span>
+                <?php endif; ?>
+                </a>
+            </li>
             <li><a class="toggle" href="javascript:void(0)"><i class="icon icon-bell-alt"></i></a></li>
             <li><a class="toggle" href="javascript:void(0)"><i class="icon icon-envelope"></i></a></li>
             <li id="profile">
@@ -54,9 +63,11 @@
         if ( !$('#sidebar-menu').is(':visible') ) {
         	$('#sidebar').css('display', 'block');
         	$('#container').css('margin-left', 240);
+            $('#header').css('left', 240);
         } else {
         	$('#sidebar').css('display', 'none');
-        	$('#container').css('margin-left', 0);
+            $('#container').css('margin-left', 0);
+        	$('#header').css('left', 0);
         }
     });
 <?php $this->inlineScript()->captureEnd(); ?>
@@ -98,7 +109,7 @@
             cache: false,
             async: false,
             success: function(pageContent) {
-                if ( pageContent !== '' ) {
+                if ( pageContent != '' ) {
                     $("#content").html(pageContent);
                 }
             }
@@ -120,10 +131,12 @@
 
         var navObject = $('a[href=#' + pageName + ']');
         if ( navObject.length != 0 ) {
+            var windowTitle = $('span', navObject).html();
             $(navObject.parent()).addClass('active');
 
-            var windowTitle = $('span', navObject).html();
-            document.title = windowTitle + ' | IT培训平台';
+            if ( typeof(windowTitle) != 'undefined' ) {
+                document.title = windowTitle + ' | <?php echo $this->layout()->options['itp_name']; ?>';
+            }
         }
     }
 <?php $this->inlineScript()->captureEnd(); ?>

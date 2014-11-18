@@ -33,6 +33,16 @@ class UserTable
 	}
 
     /**
+     * 获取所有用户的数量.
+     * @return 所有用户的数量
+     */
+    public function getCount()
+    {
+        $resultSet = $this->tableGateway->select();
+        return $resultSet->count();
+    }
+
+    /**
      * 获取所有用户的信息.
      * @param  int $offset - 查询结果的Offset
      * @param  int $limit  - 查询返回的记录数
@@ -45,6 +55,7 @@ class UserTable
                           'itp_users.user_group_id = itp_user_groups.user_group_id');
             $select->offset($offset);
             $select->limit($limit);
+            $select->order('uid DESC');
         });
         return $resultSet;
     }

@@ -1,0 +1,27 @@
+div#content div.row-fluid ul#filter {
+	margin: 10px 0 0 0;
+}
+
+div#content div.row-fluid ul#filter > li {
+	padding-left: 0;
+}
+
+div#content div.row-fluid ul#filter a {
+	text-decoration: none;
+}
+
+div#content div.row-fluid div.pagination {
+	margin: 15px 0 0;
+}
+
+div#content table.table {
+	background-color: #fff;
+	box-shadow: 0 3px 0 rgba(12,12,12,0.03);
+	color: #636e7b;
+	margin-top: 20px;
+}
+
+div#content table.table thead {
+	border-bottom: 2px solid #ddd;
+	color: #444;
+}

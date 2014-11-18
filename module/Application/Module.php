@@ -65,6 +65,24 @@ class Module
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+
+        $serviceManager      = $e->getApplication()->getServiceManager();
+        $optionTable         = $serviceManager->get('Application\Model\OptionTable');
+        $viewModel           = $e->getApplication()->getMvcEvent()->getViewModel();
+        $viewModel->options  = $this->getResultSetArray($optionTable->getAllOptions());
+    }
+
+    private function getResultSetArray($resultSet)
+    {
+        $returnArray = array();
+        
+        if ( $resultSet == null ) {
+            return $returnArray;
+        }
+        foreach ( $resultSet as $rowSet ) {
+            $returnArray[$rowSet->optionKey] = $rowSet->optionValue;
+        }
+        return $returnArray;
     }
 
     public function getConfig()
@@ -320,7 +338,7 @@ class Module
                     $dbAdapter          = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Option());
-                    return new TableGateway('itp_email_validation', $dbAdapter, null, $resultSetPrototype);
+                    return new TableGateway('itp_options', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );

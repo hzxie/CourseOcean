@@ -11,6 +11,7 @@ button.btn.btn-orange {
 }
 
 ul.inline > li:first-child {
+	min-width: 60px;
 	padding-left: 0;
 }
 

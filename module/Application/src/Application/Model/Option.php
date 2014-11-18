@@ -7,7 +7,7 @@ namespace Application\Model;
  * 
  * @author 谢浩哲 <zjhzxhz@gmail.com>
  */
-class Options {
+class Option {
     /**
      * This method simply copies the data from the passed in array to our 
      * entitys properties.

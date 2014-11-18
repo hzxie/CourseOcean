@@ -449,7 +449,7 @@ class TrainingController extends AbstractActionController
      */
     public function getTeachersAction()
     {
-        $NUMBER_OF_TEACHERS_PER_PAGE    = 18;
+        $NUMBER_OF_TEACHERS_PER_PAGE    = 20;
         $courseTypeSlug                 = $this->params()->fromQuery('category');
         $pageNumber                     = $this->params()->fromQuery('page', 1);
         $courseTypeId                   = $this->getCourseTypeId($courseTypeSlug);
@@ -481,7 +481,7 @@ class TrainingController extends AbstractActionController
      */
     public function getTeacherTotalPagesAction()
     {
-        $NUMBER_OF_TEACHERS_PER_PAGE    = 18;
+        $NUMBER_OF_TEACHERS_PER_PAGE    = 20;
         $courseTypeSlug                 = $this->params()->fromQuery('category');
         $courseTypeId                   = $this->getCourseTypeId($courseTypeSlug);
 

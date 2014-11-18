@@ -1,12 +1,18 @@
 html, body {
-	background-color: #f2f4f8;
+	background-color: #e4e7ea;
 	font-family: "Microsoft YaHei", "Sogoe UI";
 	margin: 0;
 	padding: 0;
 }
 
+select, 
+input[type=text] {
+	border-radius: 0;
+	outline: none;
+}
+
 div#sidebar {
-	background-color: #303641;
+	background-color: #1d2939;
 	border-color: #000;
 	color: #fff;
 	position: fixed;
@@ -66,7 +72,12 @@ div#container div#header {
 	border-left: 1px solid #eee;
 	color: #636e7b;
 	height: 46px;
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 240px;
 	overflow: hidden;
+	z-index: 256;
 }
 
 div#container div#header a.toggle {
@@ -143,7 +154,12 @@ div#container div#header ul.inline img {
 }
 
 div#container div#content {
-	padding: 20px 15px;
+	margin-top: 46px;
+	padding: 10px 15px;
+}
+
+div#container div#content div.alert {
+	margin-bottom: 10px;
 }
 
 div#footer {

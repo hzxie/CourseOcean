@@ -1,1 +1,101 @@
-<h1>Users</h1>
+<link href="<?php echo $this->basePath(); ?>/css/administration/users.css" media="screen" rel="stylesheet" type="text/css" />
+<h3>用户管理</h3>
+<div class="row-fluid">
+    <div class="span6">
+        <ul id="filter" class="inline">
+            <li><a href="#">全部用户</a>(<?php echo $this->totalUsers; ?>)</li>
+            <li><a href="#">未审核用户</a>(<?php echo $this->uncheckUsers; ?>)</li>
+        </ul>
+    </div> <!-- .span6 -->
+    <div class="span6 text-right">
+        <form onSubmit="return false;">
+            <input id="keyword" type="text" />
+            <button class="btn">搜索用户</button>
+        </form>
+    </div> <!-- .span6 -->
+</div> <!-- .row-fluid -->
+<div class="row-fluid">
+    <div class="span6">
+        <form class="row-fluid" onSubmit="return false;">
+            <select name="user-group" class="span3">
+                <option value="all">全部用户组</option>
+                <option value="person">个人用户</option>
+                <option value="teacher">讲师用户</option>
+                <option value="company">企业用户</option>
+            </select>
+            <select name="user-status" class="span3">
+                <option value="all">全部用户</option>
+                <option value="checked">已审核用户</option>
+                <option value="unchecked">未审核用户</option>
+            </select>
+            <button class="btn" type="submit">筛选</button>
+        </form>
+    </div> <!-- .span6 -->
+    <div id="pagination" class="span6 text-right">
+        <div class="pagination">
+            <ul></ul>
+        </div> <!-- .pagination -->
+    </div> <!-- #pagination -->
+</div> <!-- .row-fluid -->
+<table id="users" class="table table-striped">
+    <thead>
+        <th>#</th>
+        <th>用户状态</th>
+        <th>用户名</th>
+        <th>电子邮件</th>
+        <th>用户组</th>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<!-- Java Script -->
+<script type="text/javascript">
+    function getUsers(pageNumber) {
+        $.ajax({
+            type: 'GET',
+            url: "<?php echo $this->basePath(); ?>/administration/getUsers?pageNumber=" + pageNumber,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    $('#users tbody').empty();
+                    displayUsers(result['users']);
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var pageNumber = 1;
+
+        getUsers(pageNumber);
+    });
+</script>
+<script type="text/javascript">
+    function displayUsers(users) {
+        var totalUsers = users.length;
+
+        for ( var i = 0; i < totalUsers; ++ i ) {
+            $('#users tbody').append('<tr>'
+                                  + '    <td>' + users[i]['uid'] + '</td>'
+                                  + '    <td>N/a</td>'
+                                  + '    <td>' + users[i]['username'] + '</td>'
+                                  + '    <td>' + users[i]['email'] + '</td>'
+                                  + '    <td>' + users[i]['userGroupName'] + '</td>'
+                                  + '</tr>');
+        }
+    }
+</script>
+<script type="text/javascript">
+    function displayPagination(currentPage, totalPages) {
+        var lowerBound = ( currentPage - 5 > 0 ? currentPage - 5 : 1 ),
+            upperBound = ( currentPage + 5 < totalPages ? currentPage + 5 : totalPages );
+        var paginationString  = '<li' + ( currentPage > 1 ? '>' : ' class="disabled">') + '<a href="#">&lt;</a></li>';
+
+        for ( var i = lowerBound; i <= upperBound; ++ i ) {
+            paginationString += '<li' + ( currentPage == i ? ' class="active"' : '' ) + '><a href="#">' + i + '</a></li>';
+        }
+        paginationString     += '<li' + ( currentPage < totalPages ? '>' : ' class="disabled">') + '<a href="#">&gt;</a></li>';
+        $('.pagination > ul').append(paginationString);
+    }
+</script>

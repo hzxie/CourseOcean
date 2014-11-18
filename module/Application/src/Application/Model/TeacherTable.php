@@ -52,6 +52,18 @@ class TeacherTable
     }
 
     /**
+     * 获取未审核的讲师用户的数量.
+     * @return 未审核的讲师用户的数量
+     */
+    public function getUncheckedCount()
+    {
+        $resultSet = $this->tableGateway->select(array(
+            'teacher_is_approved'   => false,
+        ));
+        return $resultSet->count();
+    }
+
+    /**
      * 获取所有用户的信息.
      * @param  int $offset - 查询结果的Offset
      * @param  int $limit  - 查询返回的记录数
