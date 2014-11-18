@@ -1,5 +1,5 @@
 <?php 
-    echo $this->headTitle('近期开课 | ');
+    echo $this->headTitle('近期培训 | ');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/style.css');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/courses.css');
     echo $this->headLink()->appendStylesheet($this->basePath().'/css/bootstrap.datetimepicker.min.css');
@@ -18,7 +18,7 @@
         </div> <!-- #logo -->
         <div id="navigation" class="span8">
             <ul class="inline">
-                <li><a href="<?php echo $this->basePath(); ?>/training/lectures">近期开课</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/training/lectures">近期培训</a></li>
                 <li><a href="<?php echo $this->basePath(); ?>/training/courses">课程库</a></li>
                 <li><a href="<?php echo $this->basePath(); ?>/training/teachers">讲师团队</a></li>
                 <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard#requirement">需求定制</a></li>
@@ -44,7 +44,7 @@
 <div id="container">
     <div class="container">
         <div id="sub-header">
-            <h2>近期开课</h2>
+            <h2>近期培训</h2>
             <p>海量课程供您选择! 选择适合您的培训课程.</p>
             <button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/courses'">查看课程库</button>
             <img src="<?php echo $this->basePath(); ?>/img/training/lecture-header.jpg" alt="Header Image">

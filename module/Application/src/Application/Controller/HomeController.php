@@ -22,11 +22,13 @@ class HomeController extends AbstractActionController
     public function indexAction()
     {
         $lectures       = $this->getRecommendLectures();
+        $courses        = $this->getRecommendCourses();
         $teachers       = $this->getRecommendTeachers();
         $posts          = $this->getRecommendPosts();
 
         return array(
             'lectures'  => $lectures,
+            'courses'   => $courses,
             'teachers'  => $teachers,
             'posts'     => $posts,
         );
@@ -52,7 +54,7 @@ class HomeController extends AbstractActionController
     }
 
     /**
-     * 根据用户所在地定向推荐培训课程(Lecture).
+     * 根据用户职位和所在地定向推荐培训课程(Lecture).
      * @return 一个包含培训课程信息的数组
      */
     private function getRecommendLectures()
@@ -72,6 +74,23 @@ class HomeController extends AbstractActionController
         $lectures       = $lectureTable->getLecturesUsingFilters($courseTypeId, $startTime, $endTime, 
                                          $region, $province, $city, $offset, $limit);
         return $this->getResultSetArray($lectures);
+    }
+
+    /**
+     * 根据用户职位定向推荐培训课程(Course).
+     * @return 一个包含课程信息的数组
+     */
+    private function getRecommendCourses()
+    {
+        $serviceManager = $this->getServiceLocator();
+        $courseTable    = $serviceManager->get('Application\Model\CourseTable');
+
+        $courseTypeId   = 0;
+        $offset         = 0;
+        $limit          = 10;
+        
+        $courses        = $courseTable->getCoursesUsingCategory($courseTypeId, $offset, $limit);
+        return $this->getResultSetArray($courses);
     }
 
     /**

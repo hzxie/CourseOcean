@@ -110,7 +110,9 @@ class CourseTable
                           'itp_courses.course_type_id = itp_course_types.course_type_id');
             $select->join('itp_teachers', 
                           'itp_courses.teacher_id = itp_teachers.uid');
-            $select->where->equalTo('itp_courses.course_type_id', $categoryId);
+            if ( $categoryId != 0 ) {
+                $select->where->equalTo('itp_courses.course_type_id', $categoryId);
+            }
             $select->order('course_id DESC');
             $select->offset($offset);
             $select->limit($limit);
