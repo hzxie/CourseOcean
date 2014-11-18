@@ -1,10 +1,10 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.2
+-- version 4.2.10.1
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 02, 2014 at 04:13 AM
--- Server version: 5.6.16
+-- Host: localhost
+-- Generation Time: 2014-11-19 00:14:25
+-- 服务器版本： 5.6.16
 -- PHP Version: 5.5.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -23,7 +23,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_comments`
+-- 表的结构 `itp_comments`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_comments` (
@@ -33,10 +33,10 @@ CREATE TABLE IF NOT EXISTS `itp_comments` (
   `comment_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `comment_ranking` int(2) NOT NULL,
   `comment_detail` text
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_comments`
+-- 转存表中的数据 `itp_comments`
 --
 
 INSERT INTO `itp_comments` (`comment_id`, `lecture_id`, `reviewer_uid`, `comment_time`, `comment_ranking`, `comment_detail`) VALUES
@@ -47,7 +47,7 @@ INSERT INTO `itp_comments` (`comment_id`, `lecture_id`, `reviewer_uid`, `comment
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_companies`
+-- 表的结构 `itp_companies`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_companies` (
@@ -60,10 +60,10 @@ CREATE TABLE IF NOT EXISTS `itp_companies` (
   `company_field_id` int(4) NOT NULL,
   `company_scale` int(8) NOT NULL,
   `company_phone` varchar(24) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1005 ;
+) ENGINE=InnoDB AUTO_INCREMENT=1005 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_companies`
+-- 转存表中的数据 `itp_companies`
 --
 
 INSERT INTO `itp_companies` (`uid`, `company_name`, `company_region`, `company_province`, `company_city`, `company_address`, `company_field_id`, `company_scale`, `company_phone`) VALUES
@@ -72,17 +72,17 @@ INSERT INTO `itp_companies` (`uid`, `company_name`, `company_region`, `company_p
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_company_fields`
+-- 表的结构 `itp_company_fields`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_company_fields` (
 `company_field_id` int(4) NOT NULL,
   `company_field_slug` varchar(64) NOT NULL,
   `company_field_name` varchar(64) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=47 ;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_company_fields`
+-- 转存表中的数据 `itp_company_fields`
 --
 
 INSERT INTO `itp_company_fields` (`company_field_id`, `company_field_slug`, `company_field_name`) VALUES
@@ -136,7 +136,7 @@ INSERT INTO `itp_company_fields` (`company_field_id`, `company_field_slug`, `com
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_courses`
+-- 表的结构 `itp_courses`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_courses` (
@@ -149,22 +149,23 @@ CREATE TABLE IF NOT EXISTS `itp_courses` (
   `course_audience` varchar(256) NOT NULL,
   `course_brief` text NOT NULL,
   `course_objective` text NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=104 ;
+) ENGINE=InnoDB AUTO_INCREMENT=105 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_courses`
+-- 转存表中的数据 `itp_courses`
 --
 
 INSERT INTO `itp_courses` (`course_id`, `course_name`, `course_is_public`, `course_type_id`, `teacher_id`, `course_cycle`, `course_audience`, `course_brief`, `course_objective`) VALUES
 (100, '技术管理者训练营', 1, 21, 100, 3, '软件行业新上岗一线经理、拟提拔一线经理、二线经理、项目经理', '“猛将必发于卒伍，宰相必起于州郡”，软件企业中的技术管理者通常从优秀的技术骨干中提拔，然而对新上任的管理者来说，与升职的欣喜相伴而来的常常是大量棘手的问题： 为什么大家的主动性总是不够，怎样激励团队成员？ 怎样安排工作才更高效合理？ 碰到团队中的“牛人”该怎么处理？ 怎么处理与周边团队的争端？ 领导的指示经常变化怎么办？ 为什么我这么辛苦的工作，但下属却很轻松？ 我该怎样培养下属，让他们尽快能独当一面？ 怎么样指出下属的不足又不挫伤他的积极性？ 为什么团队总是犯相同的错误？ 杂事太多，很难静下心来做事，该怎么办？ 在新的岗位上感觉心力交瘁，我是不是不适合做管理工作？ ………… 从技术骨干成长为技术管理者并不是简单的工作年限积累的结果，期间要经历思维视角、知识技能、自身修养等多重转换，对管理者的要求与对技术人员的要求是截然不同的。', ' 本培训课程将诠释优秀经理们的成长规律，对学员进行有针对性的、系统化的指导和培训，可以显著加快管理者的成长，降低试错成本，有效的帮助新上岗主管完成从技术到管理的“华丽转身”。 '),
 (101, '软件测试方法与策略高级培训', 1, 7, 1003, 2, '测试工程师', '系统地讲解软件测试的概念、方法及其应用，帮助学员全面掌握软件测试的理论及方法。\n将业界先进的软件测试理念和国际一流的软件测试流程、最佳实践，与知识点融合在一起进行介绍，帮助学员提升对软件测试的认识，并在将来实践中能把握正确的方向，不断深入，获得长足进步。', '更好地理解软件测试和软件开发、软件测试和质量管理等之间的关系。\n更好地和其它团队合作，开发出更高质量的软件产品。\n更好地开展自动化测试工作，更有效地进行软件测试的管理，提供测试效率。'),
 (102, '软件测试分析、设计与流程', 1, 6, 1003, 2, '高级测试工程师', '本课程侧重软件测试的需求分析和测试用例设计，兼顾测试思想、流程与方法；\n本课程起点较高，不介绍软件测试的基本概念和方法，而是讲解如何将测试方法应用于实际的项目中，注重培养学员的逻辑思维能力，即授之以渔；\n着重通过具体的案例来讨论和分析所涉及的主题，手把手地给学员一些辅导，力争达到教练式培训的效果，真正能够解决实际工作中的问题；\n加强与学员的交互，力争使课程生动，使学员轻视学习、理解所学的内容；\n分享多年在国际一流企业的管理实践和经验，深入浅出地分析软件测试实际工作中所遇到的问题，使学员少走弯路，力争使学员一步到位，达到较高的测试业务水准；\n不仅讲解要做好测试管理需要做什么，更注重讲解怎么做、为什么这样做。', '系统地理解软件需求的不同层次和不同方面，掌握测试需求的分析方法，并能应用于实际的工作之中，能够有效地将软件需求转化为测试需求。 \n能够针对测试需求以及可能存在的测试风险，制定出有效的测试策略，降低测试风险，并能缩短测试周期或降低测试的成本 \n能够构建结构合理的、易维护的测试用例框架，并利用有效的测试方法设计出高质量的测试用例。 \n掌握软件测试涉及的关键技术，包括静态测试技术和动态测试技术、功能测试和非功能测试、持续测试等。 \n掌握测试用例设计的不同层次方法，能真正提高测试的有效性和效率， \n有效地监控测试过程, 及时对执行结果进行分析,持续改进测试活动,最终达到事先预定的目标。 \n掌握国际化标准测试流程的建立思路，高效率软件测试的标准及规范，从而有效地进行软件测试过程改进，持续改进企业内部的测试流程。 \n能够发现团队的问题，激励团队士气，做好团队和个人发展的规划，构建优秀的团队。\n打造一个好的工作平台，这个工作平台能给团队中的成员带来综合能力的提升。'),
-(103, '《敏捷测试的流程、方法与实践》高级培训', 1, 8, 1003, 2, '测试工程师', '了解如何启动和开展敏捷测试活动，或如何从传统的测试方法向敏捷测试方法转化。\n知道如何适应公司整个的软件开发流程，制定敏捷测试流程，包括针对TDD、ATDD、BDD、FDD等测试流程的调整与改进。', '通过课程学习，掌握敏捷测试的思想、价值观和原则，从而知道如何在组织文化、开发流程等方面支持敏捷测试的实施。\n掌握敏捷测试的具体方法，包括基于上下文驱动的测试方法、基于风险的测试方法和基于需求验证的测试方法，以及探索式测试方法。\n掌握在敏捷测试流程中，如何引入和实施自动化测试，包括自动化测试策略、选择合适的敏捷测试自动化工具和建立灵活的敏捷测试自动化框架。\n掌握敏捷测试团队的管理方法，包括敏捷环境下团队的绩效考核、跨部门协调、团队建设。\n更好地实施敏捷测试，包括持续集成、持续测试、缺陷管理和测试质量的评估等。');
+(103, '《敏捷测试的流程、方法与实践》高级培训', 1, 8, 1003, 2, '测试工程师', '了解如何启动和开展敏捷测试活动，或如何从传统的测试方法向敏捷测试方法转化。\n知道如何适应公司整个的软件开发流程，制定敏捷测试流程，包括针对TDD、ATDD、BDD、FDD等测试流程的调整与改进。', '通过课程学习，掌握敏捷测试的思想、价值观和原则，从而知道如何在组织文化、开发流程等方面支持敏捷测试的实施。\n掌握敏捷测试的具体方法，包括基于上下文驱动的测试方法、基于风险的测试方法和基于需求验证的测试方法，以及探索式测试方法。\n掌握在敏捷测试流程中，如何引入和实施自动化测试，包括自动化测试策略、选择合适的敏捷测试自动化工具和建立灵活的敏捷测试自动化框架。\n掌握敏捷测试团队的管理方法，包括敏捷环境下团队的绩效考核、跨部门协调、团队建设。\n更好地实施敏捷测试，包括持续集成、持续测试、缺陷管理和测试质量的评估等。'),
+(104, '微软软件项目管理专场峰会', 1, 19, 101, 2, '项目经理', '作为微软公司内部产品开发及管理的高端内训课程，World-Class Software Development服务于其各个产品线的研发工作， 注重个体的技能提升与职业发展，研发团队的管理与协作，强调优秀的人、方法论、过程和工具的有机结合，切实关注软件品质的创新和超越，正是微软软件项目管理的精髓所在。', '通过优秀的软件赋予人们在任何时间、任何地点、通过任何设备进行沟通和创造的能力，是微软30年对于客户价值的品质定义。 ');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_course_composition`
+-- 表的结构 `itp_course_composition`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_course_composition` (
@@ -173,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `itp_course_composition` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_course_composition`
+-- 转存表中的数据 `itp_course_composition`
 --
 
 INSERT INTO `itp_course_composition` (`course_id`, `course_module_id`) VALUES
@@ -196,7 +197,7 @@ INSERT INTO `itp_course_composition` (`course_id`, `course_module_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_course_modules`
+-- 表的结构 `itp_course_modules`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_course_modules` (
@@ -206,10 +207,10 @@ CREATE TABLE IF NOT EXISTS `itp_course_modules` (
   `course_module_cycle` int(4) NOT NULL,
   `course_module_brief` text NOT NULL,
   `course_module_outline` text NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=114 ;
+) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_course_modules`
+-- 转存表中的数据 `itp_course_modules`
 --
 
 INSERT INTO `itp_course_modules` (`course_module_id`, `course_module_name`, `teacher_id`, `course_module_cycle`, `course_module_brief`, `course_module_outline`) VALUES
@@ -231,7 +232,7 @@ INSERT INTO `itp_course_modules` (`course_module_id`, `course_module_name`, `tea
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_course_types`
+-- 表的结构 `itp_course_types`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_course_types` (
@@ -239,10 +240,10 @@ CREATE TABLE IF NOT EXISTS `itp_course_types` (
   `course_type_slug` varchar(32) NOT NULL,
   `course_type_name` varchar(32) NOT NULL,
   `course_type_parent` int(4) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_course_types`
+-- 转存表中的数据 `itp_course_types`
 --
 
 INSERT INTO `itp_course_types` (`course_type_id`, `course_type_slug`, `course_type_name`, `course_type_parent`) VALUES
@@ -274,7 +275,7 @@ INSERT INTO `itp_course_types` (`course_type_id`, `course_type_slug`, `course_ty
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_email_validation`
+-- 表的结构 `itp_email_validation`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_email_validation` (
@@ -283,16 +284,16 @@ CREATE TABLE IF NOT EXISTS `itp_email_validation` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_email_validation`
+-- 转存表中的数据 `itp_email_validation`
 --
 
 INSERT INTO `itp_email_validation` (`email`, `keycode`) VALUES
-('zjhzxhz@gmail.com', 'C1agAeHbF4RwlMN0Jn7UB6rshfO5op3I');
+('zjhzxhz@gmail.com', 'mAKIZUk8Lec95vQngz6BlYqXSx3Jw2oy');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_lectures`
+-- 表的结构 `itp_lectures`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_lectures` (
@@ -309,10 +310,10 @@ CREATE TABLE IF NOT EXISTS `itp_lectures` (
   `lecture_max_capcity` int(8) NOT NULL,
   `lecture_expense` int(8) NOT NULL,
   `lecture_precautions` text NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=105 ;
+) ENGINE=InnoDB AUTO_INCREMENT=105 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_lectures`
+-- 转存表中的数据 `itp_lectures`
 --
 
 INSERT INTO `itp_lectures` (`lecture_id`, `course_id`, `lecture_create_time`, `lecture_start_time`, `lecture_end_time`, `lecture_region`, `lecture_province`, `lecture_city`, `lecture_address`, `lecture_min_capcity`, `lecture_max_capcity`, `lecture_expense`, `lecture_precautions`) VALUES
@@ -320,12 +321,12 @@ INSERT INTO `itp_lectures` (`lecture_id`, `course_id`, `lecture_create_time`, `l
 (101, 100, '2014-10-22 12:33:37', '2014-11-16 08:30:00', '2014-11-18 17:00:00', '华北地区', '北京市', '', '清华大学', 20, 200, 5800, '请自行解决住宿问题'),
 (102, 101, '2014-10-22 12:33:27', '2015-01-22 08:00:00', '2015-01-24 17:00:00', '华东地区', '上海市', '', '同济大学嘉定校区', 20, 100, 5800, '参加培训的注意事项'),
 (103, 102, '2014-10-22 12:32:41', '2015-02-28 08:00:00', '2015-03-02 17:00:00', '华东地区', '山东省', '济南市', '山东大学', 20, 200, 5800, '请自理食宿.'),
-(104, 103, '2014-11-02 01:21:48', '2014-12-11 08:00:00', '2014-12-12 17:00:00', '华东地区', '上海市', '', '普软大厦', 20, 200, 5800, '请自理食宿');
+(104, 103, '2014-11-01 17:21:48', '2014-12-11 08:00:00', '2014-12-12 17:00:00', '华东地区', '上海市', '', '普软大厦', 20, 200, 5800, '请自理食宿');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_lecture_attendance`
+-- 表的结构 `itp_lecture_attendance`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_lecture_attendance` (
@@ -337,7 +338,7 @@ CREATE TABLE IF NOT EXISTS `itp_lecture_attendance` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_lecture_attendance`
+-- 转存表中的数据 `itp_lecture_attendance`
 --
 
 INSERT INTO `itp_lecture_attendance` (`uid`, `lecture_id`, `serial_code`, `total_times`, `remain_times`) VALUES
@@ -350,7 +351,7 @@ INSERT INTO `itp_lecture_attendance` (`uid`, `lecture_id`, `serial_code`, `total
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_lecture_schedule`
+-- 表的结构 `itp_lecture_schedule`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_lecture_schedule` (
@@ -361,7 +362,7 @@ CREATE TABLE IF NOT EXISTS `itp_lecture_schedule` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_lecture_schedule`
+-- 转存表中的数据 `itp_lecture_schedule`
 --
 
 INSERT INTO `itp_lecture_schedule` (`lecture_id`, `course_module_id`, `course_module_start_time`, `course_module_end_time`) VALUES
@@ -382,7 +383,7 @@ INSERT INTO `itp_lecture_schedule` (`lecture_id`, `course_module_id`, `course_mo
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_messages`
+-- 表的结构 `itp_messages`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_messages` (
@@ -396,7 +397,27 @@ CREATE TABLE IF NOT EXISTS `itp_messages` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_people`
+-- 表的结构 `itp_options`
+--
+
+CREATE TABLE IF NOT EXISTS `itp_options` (
+`option_id` bigint(20) NOT NULL,
+  `option_key` varchar(64) NOT NULL,
+  `option_value` text NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `itp_options`
+--
+
+INSERT INTO `itp_options` (`option_id`, `option_key`, `option_value`) VALUES
+(1, 'itp_name', 'IT培训平台'),
+(2, 'itp_introduction', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry''s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `itp_people`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_people` (
@@ -408,10 +429,10 @@ CREATE TABLE IF NOT EXISTS `itp_people` (
   `person_company` varchar(64) NOT NULL,
   `person_position_id` int(4) NOT NULL,
   `person_phone` varchar(24) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1002 ;
+) ENGINE=InnoDB AUTO_INCREMENT=1002 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_people`
+-- 转存表中的数据 `itp_people`
 --
 
 INSERT INTO `itp_people` (`uid`, `person_name`, `person_region`, `person_province`, `person_city`, `person_company`, `person_position_id`, `person_phone`) VALUES
@@ -420,17 +441,17 @@ INSERT INTO `itp_people` (`uid`, `person_name`, `person_region`, `person_provinc
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_positions`
+-- 表的结构 `itp_positions`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_positions` (
 `position_id` int(4) NOT NULL,
   `position_slug` varchar(32) NOT NULL,
   `position_name` varchar(32) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_positions`
+-- 转存表中的数据 `itp_positions`
 --
 
 INSERT INTO `itp_positions` (`position_id`, `position_slug`, `position_name`) VALUES
@@ -448,7 +469,7 @@ INSERT INTO `itp_positions` (`position_id`, `position_slug`, `position_name`) VA
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_posts`
+-- 表的结构 `itp_posts`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_posts` (
@@ -457,10 +478,10 @@ CREATE TABLE IF NOT EXISTS `itp_posts` (
   `post_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `post_title` varchar(128) NOT NULL,
   `post_content` text NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_posts`
+-- 转存表中的数据 `itp_posts`
 --
 
 INSERT INTO `itp_posts` (`post_id`, `post_category_id`, `post_date`, `post_title`, `post_content`) VALUES
@@ -469,17 +490,17 @@ INSERT INTO `itp_posts` (`post_id`, `post_category_id`, `post_date`, `post_title
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_post_categories`
+-- 表的结构 `itp_post_categories`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_post_categories` (
 `post_category_id` int(4) NOT NULL,
   `post_category_slug` varchar(32) NOT NULL,
   `post_category_name` varchar(64) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_post_categories`
+-- 转存表中的数据 `itp_post_categories`
 --
 
 INSERT INTO `itp_post_categories` (`post_category_id`, `post_category_slug`, `post_category_name`) VALUES
@@ -488,7 +509,7 @@ INSERT INTO `itp_post_categories` (`post_category_id`, `post_category_slug`, `po
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_requirements`
+-- 表的结构 `itp_requirements`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_requirements` (
@@ -507,10 +528,10 @@ CREATE TABLE IF NOT EXISTS `itp_requirements` (
   `requirement_address` varchar(128) DEFAULT NULL,
   `requirement_expense` int(8) DEFAULT NULL,
   `requirement_detail` text
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_requirements`
+-- 转存表中的数据 `itp_requirements`
 --
 
 INSERT INTO `itp_requirements` (`requirement_id`, `requirement_is_accepted`, `requirement_from_uid`, `requirement_to_uid`, `requirement_course_id`, `requirement_create_time`, `requirement_participants`, `requirement_start_time`, `requirement_end_time`, `requirement_region`, `requirement_province`, `requirement_city`, `requirement_address`, `requirement_expense`, `requirement_detail`) VALUES
@@ -522,7 +543,7 @@ INSERT INTO `itp_requirements` (`requirement_id`, `requirement_is_accepted`, `re
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_teachers`
+-- 表的结构 `itp_teachers`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_teachers` (
@@ -540,20 +561,21 @@ CREATE TABLE IF NOT EXISTS `itp_teachers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_teachers`
+-- 转存表中的数据 `itp_teachers`
 --
 
 INSERT INTO `itp_teachers` (`uid`, `teacher_is_approved`, `teacher_name`, `teacher_brief`, `teacher_avatar`, `teacher_region`, `teacher_province`, `teacher_city`, `teacher_company`, `teacher_phone`, `teacher_weibo`) VALUES
-(100, 1, '杨锋镝', '杨锋镝是一位有着十余年从业经验的软件工程专家、资深技术管理者、培训师、咨询师. \r\n他先后在UTStarcom、华为等企业从事过软件研发过程中涉及的大部分岗位：需求、设计、开发、测试、实施、维护、项目管理、团队管理、敏捷教练、人力资源管理, 同时还是多项技术专利的发明人. 丰富的职业跨界经历使他深刻体会各岗位的痛点, 能贴合客户需求提供务实的咨询服务. \r\n近年来, 他研发了敏捷软件开发、从技术到管理等系列课程, 曾为三星电子、招商信诺、风行网和拓维信息等企业提供咨询服务, 辅导客户实施敏捷组织转型, 并曾为顺丰航空、国航、中国移动、Oracle、东软集团、普华永道等数十家企业提供培训服务. \r\n此外, 他还受邀担任中国过程改进大会、敏捷中国大会、Scrum Gathering等大会的评委和主持人, 并经常在全球软件案例研究峰会、亚太软件研发管理峰会、中国软件工程大会、中国软件技术大会、中国过程改进大会、CSDN CTO俱乐部、QClub、敏捷之旅等发表演讲. ', '', '', '上海市', '', '麦思博有限公司资深敏捷咨询顾问', '', ''),
+(100, 1, '杨锋镝', '杨锋镝是一位有着十余年从业经验的软件工程专家、资深技术管理者、培训师、咨询师. 他先后在UTStarcom、华为等企业从事过软件研发过程中涉及的大部分岗位：需求、设计、开发、测试、实施、维护、项目管理、团队管理、敏捷教练、人力资源管理, 同时还是多项技术专利的发明人. 丰富的职业跨界经历使他深刻体会各岗位的痛点, 能贴合客户需求提供务实的咨询服务. 近年来, 他研发了敏捷软件开发、从技术到管理等系列课程, 曾为三星电子、招商信诺、风行网和拓维信息等企业提供咨询服务, 辅导客户实施敏捷组织转型, 并曾为顺丰航空、国航、中国移动、Oracle、东软集团、普华永道等数十家企业提供培训服务. 此外, 他还受邀担任中国过程改进大会、敏捷中国大会、Scrum Gathering等大会的评委和主持人, 并经常在全球软件案例研究峰会、亚太软件研发管理峰会、中国软件工程大会、中国软件技术大会、中国过程改进大会、CSDN CTO俱乐部、QClub、敏捷之旅等发表演讲. ', '', '', '上海市', '', '麦思博有限公司资深敏捷咨询顾问', '', ''),
 (101, 1, '王剑', '毕业后加盟微软雷德蒙总部。1999年1月-2000年5月在Windows CE组工作。2000年5月-2001年5月在NetDocs组工作。2001年5月-2003年6月 在Windows RTC 组工作。2001年7月加入微软亚洲研究院筹备微软亚洲工程院。2001年11月微软亚洲工程院成立他是20多创始人之一。工程院成立后他领导多个团队成功的发布多个产品，包括网络模拟器（Network Emulator），Office Communicator Web Access, Live Meeting Recording。', '', '', '北京市', '', '微软技术资深专家 微软亚洲院创始人之一', '', ''),
 (102, 1, '刘大双', '清华大学国际工程项目管理研究院特聘教授，国家职业技能鉴定专家委员会委员。\r\n微软项目管理顾问及Microsoft MVP，PMP（PMI，2003年）。\r\n北京大学理学士，美国Fordham 大学商学院工商管理硕士。\r\n1989年8月至1992年8月于北京大学任教。1992年8月加入IT行业，先后服务于美国SAS软件研究所、中国惠普有限公司等全球著名的IT企业。2001年10月至2004年9月担任微软（中国）有限公司Microsoft Project产品经理。', '', '', '北京市', '', 'Microsoft MVP, PMP', '', ''),
 (103, 1, '吴淏', '现任微软（中国）平台及开发合作部开发经理。目前专注于研究WCF,Office 2007 System,SaaS(Software as a Service)架构;负责微软SaaS架构技术在中国的应用推广，苏州SaaS孵化期，SaaS商务平台等。', '', '', '北京市', '', '微软开发合作部SaaS开发经理', '', ''),
+(104, 1, '王家林', 'TML5的软硬整合、HTML5和云计算的整合、HTML5游戏项目、HTML5的Web项目、 Android手机卫士、Android移植工作、Android上特定硬件的垂直整合、编写Java虚拟机、Android框架修改、Android娱乐多媒体软件（针对酷六、优酷、土豆等类型的网站）、大型B2C电子商务网站、大型SNS网站等.', '', '', '', '', '致力于HTML5和软、硬、云整合，智慧家庭，智能城市，精通Android安全', '', ''),
 (1003, 1, '朱少民', '中国科技大学软件学院教指委委员、中国软件测试认证委员会(CSTQB )资深专家、Certified ScrumMaster. 从事教育、研发和技术管理近二十年, 其中从事软件测试已有十多年, 参与多项重大科研项目的研究和几十个软件项目的产品开发, 获得多项省、市科技进步奖, 发表 多部著作, 其中有六本大学教材. 并且具有丰富的软件开发、测试的工程实践经验, 包括在海外工作和国际性一流软件企业的工作经历, 以及具有良好的教学和培训经验.', '', '华东地区', '上海市', '', '曾任思科—网迅 (中国)软件有限公司资深QA总监', '13909596672', 'kerryzhu');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_teaching_fields`
+-- 表的结构 `itp_teaching_fields`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_teaching_fields` (
@@ -562,20 +584,24 @@ CREATE TABLE IF NOT EXISTS `itp_teaching_fields` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_teaching_fields`
+-- 转存表中的数据 `itp_teaching_fields`
 --
 
 INSERT INTO `itp_teaching_fields` (`teacher_id`, `course_type_id`) VALUES
+(104, 3),
 (1003, 6),
 (1003, 7),
 (1003, 8),
+(103, 16),
 (100, 19),
+(101, 19),
+(102, 19),
 (100, 20);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_users`
+-- 表的结构 `itp_users`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_users` (
@@ -583,63 +609,61 @@ CREATE TABLE IF NOT EXISTS `itp_users` (
   `username` varchar(16) NOT NULL,
   `email` varchar(64) NOT NULL,
   `password` varchar(32) NOT NULL,
-  `user_group_id` int(4) NOT NULL,
-  `last_time_signin` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
-  `last_time_change_password` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1005 ;
+  `user_group_id` int(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=1005 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_users`
+-- 转存表中的数据 `itp_users`
 --
 
-INSERT INTO `itp_users` (`uid`, `username`, `email`, `password`, `user_group_id`, `last_time_signin`, `last_time_change_password`) VALUES
-(100, 'user-100', 'user-100@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2, '2014-07-21 02:39:23', '0000-00-00 00:00:00'),
-(101, 'user-101', 'user-101@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(102, 'user-102', 'user-102@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(103, 'user-103', 'user-103@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(104, 'user-104', 'user-104@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(105, 'user-105', 'user-105@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(106, 'user-106', 'user-106@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(107, 'user-107', 'user-107@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(108, 'user-108', 'user-108@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(109, 'user-109', 'user-109@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(110, 'user-110', 'user-110@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(111, 'user-111', 'user-111@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(112, 'user-112', 'user-112@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(113, 'user-113', 'user-113@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(114, 'user-114', 'user-114@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(115, 'user-115', 'user-115@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(116, 'user-116', 'user-116@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(117, 'user-117', 'user-117@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(118, 'user-118', 'user-118@zjhzxhz.com', 'password', 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(119, 'user-119', 'user-119@zjhzxhz.com', '25f9e794323b453885f5181f1b624d0b', 2, '2014-10-20 14:09:42', '0000-00-00 00:00:00'),
-(1000, 'Administrator', 'zjhzxhz@example.com', '785ee107c11dfe36de668b1ae7baacbb', 4, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(1001, 'zjhzxhz', 'zjhzxhz@gmail.com', '785ee107c11dfe36de668b1ae7baacbb', 1, '2014-10-08 07:52:19', '2014-10-08 01:52:19'),
-(1002, 'kelliany', 'a965526122@gmail.com', '785ee107c11dfe36de668b1ae7baacbb', 1, '2014-10-20 14:09:46', '0000-00-00 00:00:00'),
-(1003, 'kerryzhu', 'zhu.kerry@gmail.com', '785ee107c11dfe36de668b1ae7baacbb', 2, '2014-07-05 03:58:30', '0000-00-00 00:00:00'),
-(1004, 'cisco_webex', 'service@webex.com', '785ee107c11dfe36de668b1ae7baacbb', 3, '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+INSERT INTO `itp_users` (`uid`, `username`, `email`, `password`, `user_group_id`) VALUES
+(100, 'user-100', 'user-100@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(101, 'user-101', 'user-101@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(102, 'user-102', 'user-102@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(103, 'user-103', 'user-103@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(104, 'user-104', 'user-104@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(105, 'user-105', 'user-105@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(106, 'user-106', 'user-106@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(107, 'user-107', 'user-107@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(108, 'user-108', 'user-108@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(109, 'user-109', 'user-109@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(110, 'user-110', 'user-110@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(111, 'user-111', 'user-111@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(112, 'user-112', 'user-112@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(113, 'user-113', 'user-113@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(114, 'user-114', 'user-114@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(115, 'user-115', 'user-115@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(116, 'user-116', 'user-116@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(117, 'user-117', 'user-117@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(118, 'user-118', 'user-118@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(119, 'user-119', 'user-119@zjhzxhz.com', '25f9e794323b453885f5181f1b624d0b', 2),
+(1000, 'Administrator', 'webmaster@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 4),
+(1001, 'zjhzxhz', 'zjhzxhz@gmail.com', '785ee107c11dfe36de668b1ae7baacbb', 1),
+(1002, 'kelliany', 'a965526122@gmail.com', '785ee107c11dfe36de668b1ae7baacbb', 1),
+(1003, 'kerryzhu', 'zhu.kerry@gmail.com', '785ee107c11dfe36de668b1ae7baacbb', 2),
+(1004, 'cisco_webex', 'service@webex.com', '785ee107c11dfe36de668b1ae7baacbb', 3);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `itp_user_groups`
+-- 表的结构 `itp_user_groups`
 --
 
 CREATE TABLE IF NOT EXISTS `itp_user_groups` (
 `user_group_id` int(4) NOT NULL,
   `user_group_slug` varchar(24) NOT NULL,
   `user_group_name` varchar(24) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `itp_user_groups`
+-- 转存表中的数据 `itp_user_groups`
 --
 
 INSERT INTO `itp_user_groups` (`user_group_id`, `user_group_slug`, `user_group_name`) VALUES
 (1, 'person', '个人'),
 (2, 'teacher', '讲师'),
 (3, 'company', '企业'),
-(4, 'administrator', 'Administrators');
+(4, 'administrator', '管理员');
 
 --
 -- Indexes for dumped tables
@@ -718,6 +742,12 @@ ALTER TABLE `itp_messages`
  ADD PRIMARY KEY (`message_id`), ADD KEY `message_from_uid` (`message_from_uid`,`message_to_uid`), ADD KEY `message_to_uid` (`message_to_uid`);
 
 --
+-- Indexes for table `itp_options`
+--
+ALTER TABLE `itp_options`
+ ADD PRIMARY KEY (`option_id`), ADD UNIQUE KEY `option_key` (`option_key`);
+
+--
 -- Indexes for table `itp_people`
 --
 ALTER TABLE `itp_people`
@@ -794,7 +824,7 @@ MODIFY `company_field_id` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=47;
 -- AUTO_INCREMENT for table `itp_courses`
 --
 ALTER TABLE `itp_courses`
-MODIFY `course_id` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=104;
+MODIFY `course_id` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=105;
 --
 -- AUTO_INCREMENT for table `itp_course_modules`
 --
@@ -810,6 +840,11 @@ MODIFY `course_type_id` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=25;
 --
 ALTER TABLE `itp_lectures`
 MODIFY `lecture_id` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=105;
+--
+-- AUTO_INCREMENT for table `itp_options`
+--
+ALTER TABLE `itp_options`
+MODIFY `option_id` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `itp_people`
 --
@@ -846,91 +881,91 @@ MODIFY `uid` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1005;
 ALTER TABLE `itp_user_groups`
 MODIFY `user_group_id` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
--- Constraints for dumped tables
+-- 限制导出的表
 --
 
 --
--- Constraints for table `itp_comments`
+-- 限制表 `itp_comments`
 --
 ALTER TABLE `itp_comments`
 ADD CONSTRAINT `itp_comments_ibfk_1` FOREIGN KEY (`lecture_id`) REFERENCES `itp_lectures` (`lecture_id`),
 ADD CONSTRAINT `itp_comments_ibfk_2` FOREIGN KEY (`reviewer_uid`) REFERENCES `itp_users` (`uid`);
 
 --
--- Constraints for table `itp_companies`
+-- 限制表 `itp_companies`
 --
 ALTER TABLE `itp_companies`
 ADD CONSTRAINT `itp_companies_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `itp_users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE,
 ADD CONSTRAINT `itp_companies_ibfk_2` FOREIGN KEY (`company_field_id`) REFERENCES `itp_company_fields` (`company_field_id`);
 
 --
--- Constraints for table `itp_courses`
+-- 限制表 `itp_courses`
 --
 ALTER TABLE `itp_courses`
 ADD CONSTRAINT `itp_courses_ibfk_1` FOREIGN KEY (`course_type_id`) REFERENCES `itp_course_types` (`course_type_id`),
 ADD CONSTRAINT `itp_courses_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `itp_teachers` (`uid`);
 
 --
--- Constraints for table `itp_course_composition`
+-- 限制表 `itp_course_composition`
 --
 ALTER TABLE `itp_course_composition`
 ADD CONSTRAINT `itp_course_composition_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `itp_courses` (`course_id`),
 ADD CONSTRAINT `itp_course_composition_ibfk_2` FOREIGN KEY (`course_module_id`) REFERENCES `itp_course_modules` (`course_module_id`);
 
 --
--- Constraints for table `itp_course_modules`
+-- 限制表 `itp_course_modules`
 --
 ALTER TABLE `itp_course_modules`
 ADD CONSTRAINT `itp_course_modules_ibfk_1` FOREIGN KEY (`teacher_id`) REFERENCES `itp_teachers` (`uid`);
 
 --
--- Constraints for table `itp_email_validation`
+-- 限制表 `itp_email_validation`
 --
 ALTER TABLE `itp_email_validation`
 ADD CONSTRAINT `itp_email_validation_ibfk_1` FOREIGN KEY (`email`) REFERENCES `itp_users` (`email`);
 
 --
--- Constraints for table `itp_lectures`
+-- 限制表 `itp_lectures`
 --
 ALTER TABLE `itp_lectures`
 ADD CONSTRAINT `itp_lectures_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `itp_courses` (`course_id`);
 
 --
--- Constraints for table `itp_lecture_attendance`
+-- 限制表 `itp_lecture_attendance`
 --
 ALTER TABLE `itp_lecture_attendance`
 ADD CONSTRAINT `itp_lecture_attendance_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `itp_users` (`uid`),
 ADD CONSTRAINT `itp_lecture_attendance_ibfk_2` FOREIGN KEY (`lecture_id`) REFERENCES `itp_lectures` (`lecture_id`);
 
 --
--- Constraints for table `itp_lecture_schedule`
+-- 限制表 `itp_lecture_schedule`
 --
 ALTER TABLE `itp_lecture_schedule`
 ADD CONSTRAINT `itp_lecture_schedule_ibfk_1` FOREIGN KEY (`lecture_id`) REFERENCES `itp_lectures` (`lecture_id`),
 ADD CONSTRAINT `itp_lecture_schedule_ibfk_2` FOREIGN KEY (`course_module_id`) REFERENCES `itp_course_modules` (`course_module_id`);
 
 --
--- Constraints for table `itp_messages`
+-- 限制表 `itp_messages`
 --
 ALTER TABLE `itp_messages`
 ADD CONSTRAINT `itp_messages_ibfk_1` FOREIGN KEY (`message_from_uid`) REFERENCES `itp_users` (`uid`),
 ADD CONSTRAINT `itp_messages_ibfk_2` FOREIGN KEY (`message_to_uid`) REFERENCES `itp_users` (`uid`);
 
 --
--- Constraints for table `itp_people`
+-- 限制表 `itp_people`
 --
 ALTER TABLE `itp_people`
 ADD CONSTRAINT `itp_people_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `itp_users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE,
 ADD CONSTRAINT `itp_people_ibfk_2` FOREIGN KEY (`person_position_id`) REFERENCES `itp_positions` (`position_id`);
 
 --
--- Constraints for table `itp_posts`
+-- 限制表 `itp_posts`
 --
 ALTER TABLE `itp_posts`
 ADD CONSTRAINT `itp_posts_ibfk_1` FOREIGN KEY (`post_category_id`) REFERENCES `itp_post_categories` (`post_category_id`);
 
 --
--- Constraints for table `itp_requirements`
+-- 限制表 `itp_requirements`
 --
 ALTER TABLE `itp_requirements`
 ADD CONSTRAINT `itp_requirements_ibfk_1` FOREIGN KEY (`requirement_from_uid`) REFERENCES `itp_users` (`uid`),
@@ -938,20 +973,20 @@ ADD CONSTRAINT `itp_requirements_ibfk_2` FOREIGN KEY (`requirement_to_uid`) REFE
 ADD CONSTRAINT `itp_requirements_ibfk_3` FOREIGN KEY (`requirement_course_id`) REFERENCES `itp_courses` (`course_id`);
 
 --
--- Constraints for table `itp_teachers`
+-- 限制表 `itp_teachers`
 --
 ALTER TABLE `itp_teachers`
 ADD CONSTRAINT `itp_teachers_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `itp_users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `itp_teaching_fields`
+-- 限制表 `itp_teaching_fields`
 --
 ALTER TABLE `itp_teaching_fields`
 ADD CONSTRAINT `itp_teaching_fields_ibfk_1` FOREIGN KEY (`teacher_id`) REFERENCES `itp_teachers` (`uid`),
 ADD CONSTRAINT `itp_teaching_fields_ibfk_2` FOREIGN KEY (`course_type_id`) REFERENCES `itp_course_types` (`course_type_id`);
 
 --
--- Constraints for table `itp_users`
+-- 限制表 `itp_users`
 --
 ALTER TABLE `itp_users`
 ADD CONSTRAINT `itp_users_ibfk_1` FOREIGN KEY (`user_group_id`) REFERENCES `itp_user_groups` (`user_group_id`);
