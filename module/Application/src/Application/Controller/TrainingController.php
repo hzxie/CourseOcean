@@ -292,13 +292,7 @@ class TrainingController extends AbstractActionController
 
         $serviceManager = $this->getServiceLocator();
         $courseTable    = $serviceManager->get('Application\Model\CourseTable');
-        $courses        = null;
-
-        if ( $courseTypeSlug === 'all' ) {
-            $courses    = $courseTable->getAllCourses($offset, $NUMBER_OF_COURSES_PER_PAGE);
-        } else if ( $courseTypeId != 0 ) {
-            $courses    = $courseTable->getCoursesUsingCategory($courseTypeId, $offset, $NUMBER_OF_COURSES_PER_PAGE);
-        }
+        $courses        = $courseTable->getCoursesUsingCategory($courseTypeId, $offset, $NUMBER_OF_COURSES_PER_PAGE);
 
         $result   = array(
             'isSuccessful'  => $courses != null && $courses->count() != 0,
