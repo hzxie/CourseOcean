@@ -1,7 +1,7 @@
 <?php 
     echo $this->headTitle('页面未找到 | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/style.css');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/404.css');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/style.css')
+                          ->appendStylesheet($this->basePath().'/css/404.css');
 ?>
 
 <div class="border-top"></div> <!-- .border-top -->

@@ -1,11 +1,11 @@
 <?php 
     echo $this->headTitle('近期培训 | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/style.css');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/courses.css');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/bootstrap.datetimepicker.min.css');
-    echo $this->headScript()->appendFile($this->basePath().'/js/bootstrap.datetimepicker.min.js');
-    echo $this->headScript()->appendFile($this->basePath().'/js/bootstrap.datetimepicker.zh-CN.js');
-    echo $this->headScript()->appendFile($this->basePath().'/js/jquery.citypicker.js');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/style.css')
+                          ->appendStylesheet($this->basePath().'/css/training/courses.css')
+                          ->appendStylesheet($this->basePath().'/css/bootstrap.datetimepicker.min.css');
+    echo $this->headScript()->appendFile($this->basePath().'/js/bootstrap.datetimepicker.min.js')
+                            ->appendFile($this->basePath().'/js/bootstrap.datetimepicker.zh-CN.js')
+                            ->appendFile($this->basePath().'/js/jquery.citypicker.js');
 ?>
 
 <div class="border-top"></div> <!-- .border-top -->

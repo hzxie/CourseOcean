@@ -1,7 +1,7 @@
 <?php 
     echo $this->headTitle('登录 | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/style.css');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/login.css');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/style.css')
+                          ->appendStylesheet($this->basePath().'/css/accounts/login.css');
     echo $this->headScript()->appendFile($this->basePath().'/js/md5.js');
 ?>
 
@@ -99,8 +99,11 @@
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
     function doLoginAction(username, password, rememberMe) {
-        var postData = 'username=' + username + '&password=' + password +
-                       '&remember_me=' + rememberMe;
+        var postData = {
+            'username': username,
+            'passowrd': password,
+            'remember_me': rememberMe
+        };
         $.ajax({
             type: 'POST',
             async: false,

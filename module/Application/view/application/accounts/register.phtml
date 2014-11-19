@@ -1,7 +1,7 @@
 <?php 
     echo $this->headTitle('注册 | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/style.css');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/register.css');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/accounts/style.css')
+                          ->appendStylesheet($this->basePath().'/css/accounts/register.css');
     echo $this->headScript()->appendFile($this->basePath().'/js/md5.js');
 ?>
 

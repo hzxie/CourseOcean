@@ -29,11 +29,11 @@
         <div class="container row-fluid">
             <div class="span8">
                 <ul class="inline">
-                    <li><a href="#">关于我们</a></li>
-                    <li><a href="#">合作伙伴</a></li>
-                    <li><a href="#">诚招英才</a></li>
-                    <li><a href="#">联系我们</a></li>
-                    <li><a href="#">网站地图</a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/about">关于我们</a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/about/partner">合作伙伴</a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/about/join">诚招英才</a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/about/contact">联系我们</a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/about/sitemap">网站地图</a></li>
                 </ul>
                 <div id="introduction">
                     <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo">
@@ -47,8 +47,8 @@
                 </ul>
                 <p id="copyright">Copyright&copy; <?php echo date('Y'); ?> <?php echo $this->layout()->options['itp_name']; ?>. All rights reserved.</p>
                 <ul>
-                    <li><a href="#">服务条款</a></li>
-                    <li><a href="#">隐私声明</a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/about/term">服务条款</a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/about/privacy">隐私声明</a></li>
                 </ul>
             </div> <!-- .span4 -->
         </div> <!-- .container -->

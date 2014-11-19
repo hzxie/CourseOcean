@@ -52,6 +52,26 @@ class TrainingController extends AbstractActionController
     }
 
     /**
+     * 获取课程类别的分类信息.
+     * @return 一个包含课程类别分类信息的JSON数组
+     */
+    public function getCourseTypesAction()
+    {
+        $serviceManager     = $this->getServiceLocator();
+        $courseTypeTable    = $serviceManager->get('Application\Model\CourseTypeTable');
+        $courseTypes        = $courseTypeTable->getAllCourseTypes();
+
+        $result   = array(
+            'isSuccessful'  => $courseTypes != null && $courseTypes->count() != 0,
+            'courseTypes'   => $this->getResultSetArray($courseTypes),
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
      * 显示近期开课页面.
      * @return 一个包含页面所需参数的数组
      */
@@ -163,7 +183,7 @@ class TrainingController extends AbstractActionController
      * 获取课程会话的的详细信息.
      * @return 一个包含课程会话详细信息的JSON数组
      */
-    private function getLectureAction()
+    public function getLectureAction()
     {
         $lectureArray   = $this->lectureAction();
 

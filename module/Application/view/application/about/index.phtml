@@ -1,0 +1,26 @@
+<?php 
+    echo $this->headTitle('关于我们 | ');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/about/style.css')
+                          ->appendStylesheet($this->basePath().'/css/about/about.css');
+?>
+
+<div id="header">
+    <ul class="inline">
+    <?php
+        $session    = new Zend\Session\Container('itp_session');
+        if ( !$session->offsetExists('isLogined') ):
+    ?>
+        <li><a href="<?php echo $this->basePath(); ?>/accounts/register">注册</a></li>
+        <li>|</li>
+        <li><a href="<?php echo $this->basePath(); ?>/accounts/login">登录</a></li>
+    <?php else: ?>
+        <li>您好, <a href="<?php echo $this->basePath(); ?>/accounts/dashboard"><?php echo $session->OffsetGet('username'); ?></a></li>
+        <li>|</li>
+        <li><a href="<?php echo $this->basePath(); ?>/accounts/logout">注销</a></li>
+    <?php endif; ?>
+    </ul>
+</div> <!-- #header -->
+<div id="container">
+    <div class="container">
+    </div> <!-- .container -->
+</div> <!-- #container -->

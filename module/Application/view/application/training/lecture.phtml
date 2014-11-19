@@ -1,7 +1,7 @@
 <?php 
     echo $this->headTitle($lecture->courseName.' | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/style.css');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/course.css');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/style.css')
+                          ->appendStylesheet($this->basePath().'/css/training/course.css');
 ?>
 
 <div class="border-top"></div> <!-- .border-top -->
