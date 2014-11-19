@@ -78,11 +78,11 @@
     function onSubmit() {
         var username    = $('input[name=username]').val(),
             password    = md5($('input[name=password]').val()),
-            rememberMe  = $('input[name=remember-me]').val();
+            rememberMe  = $('input[name=remember-me]').is(':checked');
 
         setButtonStyle(true);
         $('input[name=password]').val(password);
-        doLoginAction(username, password);
+        doLoginAction(username, password, rememberMe);
     };
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
@@ -101,8 +101,8 @@
     function doLoginAction(username, password, rememberMe) {
         var postData = {
             'username': username,
-            'passowrd': password,
-            'remember_me': rememberMe
+            'password': password,
+            'rememberMe': rememberMe
         };
         $.ajax({
             type: 'POST',

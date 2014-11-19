@@ -105,7 +105,7 @@ class AccountsController extends AbstractActionController
     {
         $username       = $this->getRequest()->getPost('username');
         $password       = $this->getRequest()->getPost('password');
-        $allowAutoLogin = $this->getRequest()->getPost('remember_me');
+        $allowAutoLogin = $this->getRequest()->getPost('rememberMe');
 
         $result     = array(
             'isSuccessful'      => false,
