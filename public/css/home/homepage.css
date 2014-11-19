@@ -27,8 +27,15 @@ div#header ul.inline > li > a {
 }
 
 div#guide {
+	height: 616px;
+	position: relative;
+}
+
+div#guide div.full-width {
 	background: url('../../img/homepage/guide-background.jpg') no-repeat center;
 	height: 616px;
+	position: relative;
+	z-index: 16;
 }
 
 div#guide div#introduction {
@@ -94,6 +101,24 @@ div#guide div#selector-container div#selector div.block > h4 > span {
 div#guide div#selector-container div#selector div.block > p {
 	color: #666;
 	margin-top: 20px;
+}
+
+div#guide div.left-background {
+	background-color: #6bbad9;
+	top: 0;
+	left: 0;
+	position: absolute;
+	height: 616px;
+	width: 50%;
+}
+
+div#guide div.right-background {
+	background-color: #a9dcf5;
+	top: 0;
+	right: 0;
+	position: absolute;
+	height: 616px;
+	width: 50%;
 }
 
 div#navigation {

@@ -1,0 +1,99 @@
+html, body {
+	font-family: "Microsoft YaHei", "Sogoe UI";
+	margin: 0;
+	padding: 0;
+}
+
+div.container {
+	margin: 0 auto;
+	width: 960px;
+}
+
+div#header {
+	background: url('../../img/about/header-background.jpg') no-repeat right top #09bde2;
+	color: #fff;
+	height: 27px;
+	padding: 7px 0px 0px 0px;
+	text-align: right;
+}
+
+div#header ul.inline {
+	margin-right: 20px;
+}
+
+div#header ul.inline > li > a {
+	color: #fff;
+	font-size: 12px;
+}
+
+div#container {
+	background: url('../../img/accounts/register-background.jpg') no-repeat;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+div#container div#content {
+	margin-top: 20px;
+}
+
+div#footer {
+	color: #808080;
+	font-size: 12px;
+	margin: 0 auto;
+	padding: 20px 0 10px;
+}
+
+div#footer a {
+	color: #00aacc;
+	text-decoration: none;
+}
+
+div#footer ul {
+	list-style: none;
+}
+
+div#footer ul.inline {
+	font-size: 14px;
+}
+
+div#footer div#introduction img {
+	border-right: 1px solid #808080;
+	float: left;
+	max-width: 100px;
+	margin-right: 20px;
+	padding-right: 20px;
+	padding-bottom: 40px;
+}
+
+div#footer div.span4 {
+	text-align: right;
+}
+
+/* Smaller than standard 960 (devices and browsers) */
+@media only screen and (max-width: 959px) {
+}
+
+/* Tablet Portrait size to standard 960 (devices and browsers) */
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+    div.container {
+        width: 768px;
+    }
+}
+
+/* All Mobile Sizes (devices and browser) */
+@media only screen and (max-width: 767px) {
+}
+
+/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+    div.container {
+        width: 480px;
+    }
+}
+
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
+@media only screen and (max-width: 479px) {
+    div.container {
+        width: 320px;
+    }
+}
