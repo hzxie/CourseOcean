@@ -1,13 +1,8 @@
 <?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
 <link href="<?php echo $this->basePath(); ?>/css/bootstrap.datetimepicker.min.css" media="screen" rel="stylesheet" type="text/css">
 <ul class="nav nav-tabs">
-    <li class="dropdown active">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">我开设的课程/培训 <b class="caret"></b></a>
-        <ul class="dropdown-menu">
-            <li class="active"><a href="#courses" data-toggle="tab">我开设的课程</a></li>
-            <li><a href="#lectures" data-toggle="tab">我开设的培训</a></li>
-        </ul>
-    </li>
+    <li class="active"><a href="#courses" data-toggle="tab">我开设的课程</a></li>
+    <li><a href="#lectures" data-toggle="tab">我开设的培训</a></li>
     <li><a href="#attendance" data-toggle="tab">我参加的课程</a></li>
 </ul>
 <div class="tab-content">
@@ -537,7 +532,7 @@
     </script>
     <script type="text/javascript">
         /* Fix bug on IE 7 */
-        $('.nav .dropdown-menu li:nth-child(2) > a').click(function() {
+        $('.nav li:nth-child(2) > a').click(function() {
             var pageNumber = 1;
 
             getOpeningLectures(pageNumber);
@@ -764,9 +759,9 @@
                     errorMessage += '请选择' + moduleName + '的培训结束时间<br>';
                 }
 
-                startTime       = Date.parse(startTime);
-                endTime         = Date.parse(endTime);
-                if ( Date.compare(startTime, endTime) != -1 ) {
+                var startTime   = Date.parse(startTime),
+                    endTime     = Date.parse(endTime);
+                if ( startTime.compareTo(endTime) != -1 ) {
                     errorMessage += moduleName + '的培训结束时间不得早于起始时间<br>';
                 }
             });
