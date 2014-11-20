@@ -55,111 +55,469 @@
         <div id="content" class="span9">
             <section id="models">
                 <h1 class="page-header">基础数据结构</h1>
-                <h2 id="course-type">课程类别/授课领域(Course Type)</h2>
+                <h2 id="course-type-model">课程类别/授课领域(Course Type)</h2>
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>名称</th>
-                            <th>类型</th>
-                            <th>描述</th>
+                            <th class="width-25">名称</th>
+                            <th class="width-10">类型</th>
+                            <th class="width-25">示例值</th>
+                            <th class="width-40">描述</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                            <td>courseTypeId</td>
+                            <td>Integer</td>
+                            <td><code>1</code></td>
+                            <td>课程类别的ID, 仅供数据库索引使用.</td>
+                        </tr>
+                        <tr>
+                            <td>courseTypeSlug</td>
+                            <td>String</td>
+                            <td><code>web-development</code></td>
+                            <td>课程类别的唯一英文简写, 多用于查询和筛选.</td>
+                        </tr>
+                        <tr>
+                            <td>courseTypeName</td>
+                            <td>String</td>
+                            <td><code>Web开发</code></td>
+                            <td>课程类别的名称.</td>
                         </tr>
                     </tbody>
                 </table>
-                <h2 id="lecture">培训课(Lecture)</h2>
+                <h2 id="lecture-model">培训课(Lecture)</h2>
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>名称</th>
-                            <th>类型</th>
-                            <th>描述</th>
+                            <th class="width-25">名称</th>
+                            <th class="width-10">类型</th>
+                            <th class="width-25">示例值</th>
+                            <th class="width-40">描述</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                            <td>lectureId</td>
+                            <td>Integer</td>
+                            <td><code>100</code></td>
+                            <td>培训课的ID.</td>
+                        </tr>
+                        <tr>
+                            <td>createTime</td>
+                            <td>DateTime</td>
+                            <td><code>2014-07-21 09:38:51</code></td>
+                            <td>培训课的创建时间.</td>
+                        </tr>
+                        <tr>
+                            <td>courseId</td>
+                            <td>Integer</td>
+                            <td><code>100</code></td>
+                            <td>培训课对应的课程ID.</td>
+                        </tr>
+                        <tr>
+                            <td>courseName</td>
+                            <td>String</td>
+                            <td><code>技术管理者训练营</code></td>
+                            <td>课程名称.</td>
+                        </tr>
+                        <tr>
+                            <td>isPublic</td>
+                            <td>Boolean</td>
+                            <td><code>1</code></td>
+                            <td>是否为公开课.</td>
+                        </tr>
+                        <tr>
+                            <td>courseTypeId</td>
+                            <td>Integer</td>
+                            <td><code>21</code></td>
+                            <td>课程类别的ID.</td>
+                        </tr>
+                        <tr>
+                            <td>courseTypeSlug</td>
+                            <td>String</td>
+                            <td><code>team-management</code></td>
+                            <td>课程类别的唯一英文简写.</td>
+                        </tr>
+                        <tr>
+                            <td>courseTypeName</td>
+                            <td>String</td>
+                            <td><code>团队管理</code></td>
+                            <td>课程类别的名称.</td>
+                        </tr>
+                        <tr>
+                            <td>teacherId</td>
+                            <td>Integer</td>
+                            <td><code>100</code></td>
+                            <td>讲师的用户ID.</td>
+                        </tr>
+                        <tr>
+                            <td>teacherName</td>
+                            <td>String</td>
+                            <td><code>杨锋镝</code></td>
+                            <td>讲师的姓名.</td>
+                        </tr>
+                        <tr>
+                            <td>startTime</td>
+                            <td>DateTime</td>
+                            <td><code>2014-07-16 08:30:00</code></td>
+                            <td>培训课的开始时间.</td>
+                        </tr>
+                        <tr>
+                            <td>endTime</td>
+                            <td>DateTime</td>
+                            <td><code>2014-07-18 17:00:00</code></td>
+                            <td>培训课的结束时间.</td>
+                        </tr>
+                        <tr>
+                            <td>lectureRegion</td>
+                            <td>String</td>
+                            <td><code>华东地区</code></td>
+                            <td>培训课的开课地点所在地区.</td>
+                        </tr>
+                        <tr>
+                            <td>lectureProvince</td>
+                            <td>String</td>
+                            <td><code>浙江省</code></td>
+                            <td>培训课的开课地点所在省份(或直辖市).</td>
+                        </tr>
+                        <tr>
+                            <td>lectureCity</td>
+                            <td>String</td>
+                            <td><code>杭州市</code></td>
+                            <td>培训课的开课地点所在城市(对直辖市, 该值为null).</td>
+                        </tr>
+                        <tr>
+                            <td>lectureAddress</td>
+                            <td>String</td>
+                            <td><code>浙江大学紫金港校区</code></td>
+                            <td>培训课开课地点的具体地址.</td>
+                        </tr>
+                        <tr>
+                            <td>minCapcity</td>
+                            <td>Integer</td>
+                            <td><code>20</code></td>
+                            <td>培训课的最小开班人数.</td>
+                        </tr>
+                        <tr>
+                            <td>maxCapcity</td>
+                            <td>Integer</td>
+                            <td><code>200</code></td>
+                            <td>培训课的最大容纳人数.</td>
+                        </tr>
+                        <tr>
+                            <td>participants</td>
+                            <td>Integer</td>
+                            <td><code>10</code></td>
+                            <td>当前培训的报名人数, 当调用部分API时, 该值为null.</td>
+                        </tr>
+                        <tr>
+                            <td>expense</td>
+                            <td>Integer</td>
+                            <td><code>5800</code></td>
+                            <td>参加培训课的费用.</td>
+                        </tr>
+                        <tr>
+                            <td>audience</td>
+                            <td>String</td>
+                            <td><code>项目经理</code></td>
+                            <td>课程的推荐听众.</td>
+                        </tr>
+                        <tr>
+                            <td>brief</td>
+                            <td>String</td>
+                            <td></td>
+                            <td>课程的概述.</td>
                         </tr>
                     </tbody>
                 </table>
-                <h2 id="course">课程(Course)</h2>
+                <h2 id="course-model">课程(Course)</h2>
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>名称</th>
-                            <th>类型</th>
-                            <th>描述</th>
+                            <th class="width-25">名称</th>
+                            <th class="width-10">类型</th>
+                            <th class="width-25">示例值</th>
+                            <th class="width-40">描述</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                            <td>courseId</td>
+                            <td>Integer</td>
+                            <td><code>100</code></td>
+                            <td>培训课对应的课程ID.</td>
+                        </tr>
+                        <tr>
+                            <td>courseName</td>
+                            <td>String</td>
+                            <td><code>技术管理者训练营</code></td>
+                            <td>课程名称.</td>
+                        </tr>
+                        <tr>
+                            <td>isPublic</td>
+                            <td>Boolean</td>
+                            <td><code>1</code></td>
+                            <td>是否为公开课.</td>
+                        </tr>
+                        <tr>
+                            <td>courseTypeId</td>
+                            <td>Integer</td>
+                            <td><code>21</code></td>
+                            <td>课程类别的ID.</td>
+                        </tr>
+                        <tr>
+                            <td>courseTypeSlug</td>
+                            <td>String</td>
+                            <td><code>team-management</code></td>
+                            <td>课程类别的唯一英文简写.</td>
+                        </tr>
+                        <tr>
+                            <td>courseTypeName</td>
+                            <td>String</td>
+                            <td><code>团队管理</code></td>
+                            <td>课程类别的名称.</td>
+                        </tr>
+                        <tr>
+                            <td>teacherId</td>
+                            <td>Integer</td>
+                            <td><code>100</code></td>
+                            <td>讲师的用户ID.</td>
+                        </tr>
+                        <tr>
+                            <td>teacherName</td>
+                            <td>String</td>
+                            <td><code>杨锋镝</code></td>
+                            <td>讲师的姓名.</td>
+                        </tr>
+                        <tr>
+                            <td>courseCycle</td>
+                            <td>Integer</td>
+                            <td><code>2</code></td>
+                            <td>课程的培训周期, 即开始到结束的时间(单位: 天).</td>
+                        </tr>
+                        <tr>
+                            <td>audience</td>
+                            <td>String</td>
+                            <td><code>项目经理</code></td>
+                            <td>课程的推荐听众.</td>
+                        </tr>
+                        <tr>
+                            <td>brief</td>
+                            <td>String</td>
+                            <td></td>
+                            <td>课程的概述.</td>
                         </tr>
                     </tbody>
                 </table>
-                <h2 id="course-module">课程模块(Course Module)</h2>
+                <h2>课程模块(Course Module)</h2>
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>名称</th>
-                            <th>类型</th>
-                            <th>描述</th>
+                            <th class="width-25">名称</th>
+                            <th class="width-10">类型</th>
+                            <th class="width-25">示例值</th>
+                            <th class="width-40">描述</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                            <td>courseModuleId</td>
+                            <td>Integer</td>
+                            <td><code>100</code></td>
+                            <td>课程模块的ID.</td>
+                        </tr>
+                        <tr>
+                            <td>courseModuleName</td>
+                            <td>String</td>
+                            <td><code>技术管理者的角色认知</code></td>
+                            <td>课程模块的名称.</td>
+                        </tr>
+                        <tr>
+                            <td>teacherId</td>
+                            <td>Integer</td>
+                            <td><code>100</code></td>
+                            <td>讲师的用户ID.</td>
+                        </tr>
+                        <tr>
+                            <td>courseModuleCycle</td>
+                            <td>Integer</td>
+                            <td><code>120</code></td>
+                            <td>课程模块的培训周期, 即开始到结束的时间(单位: 分钟).</td>
+                        </tr>
+                        <tr>
+                            <td>courseModuleStartTime</td>
+                            <td>DateTime</td>
+                            <td><code>2014-07-16 08:30:00</code></td>
+                            <td>课程模块开始时间, 在[课程]中为null.</td>
+                        </tr>
+                        <tr>
+                            <td>courseModuleEndTime</td>
+                            <td>DateTime</td>
+                            <td><code>2014-07-16 10:30:00</code></td>
+                            <td>课程模块结束时间, 在[课程]中为null.</td>
+                        </tr>
+                        <tr>
+                            <td>courseModuleBrief</td>
+                            <td>String</td>
+                            <td></td>
+                            <td>课程模块的概述.</td>
+                        </tr>
+                        <tr>
+                            <td>courseModuleOutline</td>
+                            <td>String</td>
+                            <td></td>
+                            <td>课程模块的大纲.</td>
                         </tr>
                     </tbody>
                 </table>
-                <h2 id="teacher">讲师(Teacher)</h2>
+                <h2>讲师(Teacher)</h2>
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>名称</th>
-                            <th>类型</th>
-                            <th>描述</th>
+                            <th class="width-25">名称</th>
+                            <th class="width-10">类型</th>
+                            <th class="width-25">示例值</th>
+                            <th class="width-40">描述</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                            <td>uid</td>
+                            <td>Integer</td>
+                            <td><code>1003</code></td>
+                            <td>讲师的用户ID.</td>
+                        </tr>
+                        <tr>
+                            <td>teacherName</td>
+                            <td>String</td>
+                            <td><code>朱少民</code></td>
+                            <td>讲师的姓名.</td>
+                        </tr>
+                        <tr>
+                            <td>isApproved</td>
+                            <td>Boolean</td>
+                            <td><code>1</code></td>
+                            <td>讲师资料是否已通过审核.</td>
+                        </tr>
+                        <tr>
+                            <td>brief</td>
+                            <td>String</td>
+                            <td></td>
+                            <td>讲师的自我简介.</td>
+                        </tr>
+                        <tr>
+                            <td>avatar</td>
+                            <td>String</td>
+                            <td><code>/img/avatars/u-1003.jpg</code></td>
+                            <td>讲师用户头像的路径.</td>
+                        </tr>
+                        <tr>
+                            <td>region</td>
+                            <td>String</td>
+                            <td><code>华东地区</code></td>
+                            <td>讲师所在地区; 该值一般情况下为null.</td>
+                        </tr>
+                        <tr>
+                            <td>province</td>
+                            <td>String</td>
+                            <td><code>上海市</code></td>
+                            <td>讲师所在省份(或直辖市); 该值一般情况下为null.</td>
+                        </tr>
+                        <tr>
+                            <td>city</td>
+                            <td>String</td>
+                            <td><code>null</code></td>
+                            <td>讲师所在城市(对直辖市, 该值为null); 该值一般情况下为null.</td>
+                        </tr>
+                        <tr>
+                            <td>company</td>
+                            <td>String</td>
+                            <td><code>曾任思科网讯QA总监</code></td>
+                            <td>讲师所在公司或曾就职的公司及职位</td>
+                        </tr>
+                        <tr>
+                            <td>phone</td>
+                            <td>String</td>
+                            <td></td>
+                            <td>讲师的移动电话; 该值一般情况下为null.</td>
+                        </tr>
+                        <tr>
+                            <td>weibo</td>
+                            <td>String</td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
-                <h2 id="post">培训动态(Post)</h2>
+                <h2>培训动态(Post)</h2>
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>名称</th>
-                            <th>类型</th>
-                            <th>描述</th>
+                            <th class="width-25">名称</th>
+                            <th class="width-10">类型</th>
+                            <th class="width-25">示例值</th>
+                            <th class="width-40">描述</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                            <td>postId</td>
+                            <td>Integer</td>
+                            <td><code>1</code></td>
+                            <td>培训动态的ID.</td>
+                        </tr>
+                        <tr>
+                            <td>postCategoryId</td>
+                            <td>Integer</td>
+                            <td><code>1</code></td>
+                            <td>培训动态分类的ID.</td>
+                        </tr>
+                        <tr>
+                            <td>postCategorySlug</td>
+                            <td>String</td>
+                            <td><code>uncategorized</code></td>
+                            <td>培训动态分类的唯一英文简写.</td>
+                        </tr>
+                        <tr>
+                            <td>postCategoryName</td>
+                            <td>String</td>
+                            <td><code>未分类</code></td>
+                            <td>培训动态分类的名称.</td>
+                        </tr>
+                        <tr>
+                            <td>postDate</td>
+                            <td>DateTime</td>
+                            <td><code>2014-07-05 23:59:15</code></td>
+                            <td>培训动态的发布时间.</td>
+                        </tr>
+                        <tr>
+                            <td>postTitle</td>
+                            <td>String</td>
+                            <td></td>
+                            <td>培训动态的标题.</td>
+                        </tr>
+                        <tr>
+                            <td>postContent</td>
+                            <td>String</td>
+                            <td></td>
+                            <td>培训动态的正文内容.</td>
                         </tr>
                     </tbody>
                 </table>
             </section> <!-- #models -->
             <section id="lectures">
                 <h1 class="page-header">培训课API</h1>
+                <h2>筛选培训课</h2>
+                <div class="api-overview">
+                    <ul>
+                        <li>描述: 根据培训课筛选条件筛选出符合条件的课程.</li>
+                        <li>URL: <?php echo $this->serverUrl(); ?><?php echo $this->basePath(); ?>/training/getLectures</li>
+                        <li>数据格式: JSON</li>
+                        <li>方法: HTTP GET</li>
+                    </ul>
+                </div> <!-- .api-overview -->
+                <div class="api-detail">
+                </div> <!-- .api-detail -->
             </section> <!-- #lectures -->
             <section id="courses">
                 <h1 class="page-header">课程API</h1>
