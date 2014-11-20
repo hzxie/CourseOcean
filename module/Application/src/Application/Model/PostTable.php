@@ -94,7 +94,10 @@ class PostTable
         $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $offset, $limit) {
             $select->join('itp_post_categories', 
                           'itp_posts.post_category_id = itp_post_categories.post_category_id');
-            $select->where->equalTo('itp_posts.post_category_id', $categoryId);
+       
+            if ( $categoryId != 0 ) {
+                $select->where->equalTo('itp_posts.post_category_id', $categoryId);
+            }
             $select->offset($offset);
             $select->limit($limit);
             $select->order('post_id DESC');

@@ -595,13 +595,7 @@ class TrainingController extends AbstractActionController
 
         $serviceManager = $this->getServiceLocator();
         $postTable      = $serviceManager->get('Application\Model\PostTable');
-        $posts          = null;
-
-        if ( $postCategorySlug === 'all' ) {
-            $posts   = $postTable->getAllPosts($offset, $NUMBER_OF_POSTS_PER_PAGE);
-        } else if ( $postCategoryId != 0 ) {
-            $posts   = $postTable->getPostsUsingCategory($postCategoryId, $offset, $NUMBER_OF_POSTS_PER_PAGE);
-        }
+        $posts          = $postTable->getPostsUsingCategory($postCategoryId, $offset, $NUMBER_OF_POSTS_PER_PAGE);
 
         $result   = array(
             'isSuccessful'  => $posts != null && $posts->count() != 0,
