@@ -471,15 +471,9 @@ class TrainingController extends AbstractActionController
 
         $serviceManager = $this->getServiceLocator();
         $teacherTable   = $serviceManager->get('Application\Model\TeacherTable');
-        $teachers       = null;
+        $teachers       = $teacherTable->getTeachersUsingCategory($courseTypeId, $offset, $NUMBER_OF_TEACHERS_PER_PAGE);
 
-        if ( $courseTypeSlug === 'all' ) {
-            $teachers   = $teacherTable->getAllApprovedTeachers($offset, $NUMBER_OF_TEACHERS_PER_PAGE);
-        } else if ( $courseTypeId != 0 ) {
-            $teachers   = $teacherTable->getTeachersUsingCategory($courseTypeId, $offset, $NUMBER_OF_TEACHERS_PER_PAGE);
-        }
-
-        $result   = array(
+        $result         = array(
             'isSuccessful'  => $teachers != null && $teachers->count() != 0,
             'teachers'      => $this->getResultSetArray($teachers),
         );

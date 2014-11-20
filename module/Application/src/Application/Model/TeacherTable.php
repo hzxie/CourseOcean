@@ -64,12 +64,12 @@ class TeacherTable
     }
 
     /**
-     * 获取所有用户的信息.
+     * 获取所有讲师的信息.
      * @param  int $offset - 查询结果的Offset
      * @param  int $limit  - 查询返回的记录数
      * @return 一个ResultSet对象, 包含若干个Teacher对象
      */
-    public function getAllApprovedTeachers($offset, $limit)
+    public function getAllTeachers($offset, $limit)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($offset, $limit) {
             $select->columns(array(
@@ -83,7 +83,6 @@ class TeacherTable
                           'itp_teachers.uid = itp_teaching_fields.teacher_id');
             $select->join('itp_course_types', 
                           'itp_teaching_fields.course_type_id = itp_course_types.course_type_id');
-            $select->where->equalTo('teacher_is_approved', true);
             $select->order(new Expression('CONVERT(teacher_name USING GBK)'));
             $select->group('itp_teachers.uid');
             $select->offset($offset);
@@ -144,8 +143,12 @@ class TeacherTable
                           'itp_teachers.uid = itp_teaching_fields.teacher_id');
             $select->join('itp_course_types', 
                           'itp_teaching_fields.course_type_id = itp_course_types.course_type_id');
+
+            if ( $categoryId != 0 ) {
+                $select->where->equalTo('itp_teaching_fields.course_type_id', $categoryId);
+            }
             $select->where->equalTo('teacher_is_approved', true);
-            $select->where->equalTo('itp_teaching_fields.course_type_id', $categoryId);
+
             $select->order(new Expression('CONVERT(teacher_name USING GBK)'));
             $select->group('itp_teachers.uid');
             $select->offset($offset);
