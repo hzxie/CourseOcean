@@ -517,6 +517,110 @@
                     </ul>
                 </div> <!-- .api-overview -->
                 <div class="api-detail">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#get-lectures-params">请求参数</a></li>
+                        <li><a href="#get-lectures-result">返回结果</a></li>
+                        <li><a href="#get-lectures-sample">样例结果</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="get-lectures-params">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-15">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-15">是否必需</th>
+                                        <th class="width-20">默认值</th>
+                                        <th class="width-40">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>category</td>
+                                        <td>String</td>
+                                        <td>否</td>
+                                        <td><code>all</code></td>
+                                        <td>课程类别, 取值请参见<a href="#course-type-model">CourseType</a>数据结构</td>
+                                    </tr>
+                                    <tr>
+                                        <td>startTime</td>
+                                        <td>DateTime</td>
+                                        <td>否</td>
+                                        <td>当前时间(<code><?php echo date('Y-m-d H:i'); ?></code>)</td>
+                                        <td>培训开始时间</td>
+                                    </tr>
+                                    <tr>
+                                        <td>endTime</td>
+                                        <td>DateTime</td>
+                                        <td>否</td>
+                                        <td></td>
+                                        <td>培训结束时间</td>
+                                    </tr>
+                                    <tr>
+                                        <td>region</td>
+                                        <td>String</td>
+                                        <td>否</td>
+                                        <td></td>
+                                        <td>培训开设地区</td>
+                                    </tr>
+                                    <tr>
+                                        <td>province</td>
+                                        <td>String</td>
+                                        <td>否</td>
+                                        <td></td>
+                                        <td>培训开设省份(或直辖市)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>city</td>
+                                        <td>String</td>
+                                        <td>否</td>
+                                        <td></td>
+                                        <td>培训开设城市(对直辖市, 该值为null)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>page</td>
+                                        <td>Integer</td>
+                                        <td>否</td>
+                                        <td><code>1</code></td>
+                                        <td>查询结果页码, 用于分页显示查询结果.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-lectures-params -->
+                        <div class="tab-pane" id="get-lectures-result">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>名称</th>
+                                        <th>类型</th>
+                                        <th>描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>isSuccessful</td>
+                                        <td>Boolean</td>
+                                        <td>查询是否成功, 若查询失败或结果为空, 则为false.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>lectures</td>
+                                        <td>Array</td>
+                                        <td>一个包含若干<a href="#lecture-model">Lecture</a>对象的数组</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-lectures-result -->
+                        <div class="tab-pane" id="get-lectures-sample">
+                            <pre></pre>
+                            <script type="text/javascript">
+                                $(function() {
+                                    var sampleJson = '{"isSuccessful":true,"lectures":[{"lectureId":"104","createTime":"2014-11-02 01:21:48","courseId":"103","courseName":"《敏捷测试的流程、方法与实践》高级培训","isPublic":"1","courseTypeId":"8","courseTypeSlug":"agile-testing","courseTypeName":"敏捷测试","teacherId":"1003","teacherName":"朱少民","startTime":"2014-12-11 08:00:00","endTime":"2014-12-12 17:00:00","lectureRegion":"华东地区","lectureProvince":"上海市","lectureCity":null,"lectureAddress":"普软大厦","minCapcity":"20","maxCapcity":"200","participants":null,"expense":"5800","audience":"测试工程师","brief":"课程概述","objective":"课程目标","precautions":"请自理食宿"}]}';
+
+                                    $('#get-lectures-sample > pre').html(JSON.stringify(JSON.parse(sampleJson), null, 4));
+                                });
+                            </script>
+                        </div> <!-- #get-lectures-sample -->
+                    </div>
                 </div> <!-- .api-detail -->
             </section> <!-- #lectures -->
             <section id="courses">
@@ -541,7 +645,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         // Initialize Sidebar
-        $('.nav').affix({
+        $('#sidebar > .nav').affix({
             'offset': 200
         });
         // Register Scroll Event
@@ -549,8 +653,14 @@
         $('body').attr('data-target', '#sidebar');
 
         // Highlight.js
-        $('pre').each(function(i, bloc ) {
+        $('pre').each(function(i, block) {
             hljs.highlightBlock(block);
         });
     });
+</script>
+<script type="text/javascript">
+    $('.nav-tabs a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    })
 </script>

@@ -107,7 +107,7 @@ class HomeController extends AbstractActionController
         $totalTeachers  = $teacherTable->getCount($categoryId);
         
         $offset         = ($totalTeachers <= $limit ? 0 : rand(0, $totalTeachers - $limit));
-        $teachers       = $teacherTable->getAllApprovedTeachers($offset, $limit);
+        $teachers       = $teacherTable->getTeachersUsingCategory($categoryId, $offset, $limit);
 
         return $this->getResultSetArray($teachers);
     }
