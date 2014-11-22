@@ -61,7 +61,7 @@
             <li><a href="#courses">热门课程</a></li>
             <li><a href="#teachers">杰出讲师</a></li>
             <li><a href="#posts">培训动态</a></li>
-            <li><a href="#posts">培训动态</a></li>
+            <li><a href="#manual">使用指南</a></li>
         </ul>
         <form id="search" class="form-search" action="<?php echo $this->basePath(); ?>/home/search">
             <input name="keyword" type="text" placeholder="搜索课程或讲师" class="input-medium search-query" />
@@ -72,7 +72,7 @@
 <div id="content">
     <div id="lectures" class="section light-background">
         <div class="container">
-            <h3>近期培训</h3>
+            <h3>近期培训 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/lectures'">查看全部培训</button></h3>
             <div class="row-fluid">
             <?php if ( $lectures ): ?>
                 <ul>
@@ -80,8 +80,8 @@
                     <li class="lecture span6">
                         <h4><a href="<?php echo $this->basePath(); ?>/training/lecture?lectureId=<?php echo $lecture['lectureId']; ?>"><?php echo $lecture['courseName']; ?></a></h4>
                         <ul class="inline">
-                            <li><i class="icon-user"></i> <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=<?php echo $lecture['teacherId']; ?>"><?php echo $lecture['teacherName']; ?></a></li>
-                            <li><i class="icon-calendar"></i> <?php echo date('Y年m月d日', strtotime($lecture['startTime'])); ?>~<?php echo date('Y年m月d日', strtotime($lecture['endTime'])); ?></li>
+                            <li><i class="fa fa-user"></i> <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=<?php echo $lecture['teacherId']; ?>"><?php echo $lecture['teacherName']; ?></a></li>
+                            <li><i class="fa fa-calendar"></i> <?php echo date('Y年m月d日', strtotime($lecture['startTime'])); ?>~<?php echo date('Y年m月d日', strtotime($lecture['endTime'])); ?></li>
                         </ul>
                         <p class="introduction"><?php echo $lecture['brief']; ?></p>
                     </li>
@@ -93,7 +93,7 @@
     </div> <!-- #lectures -->
     <div id="courses" class="section">
         <div class="container">
-            <h3>热门课程</h3>
+            <h3>热门课程 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/courses'">查看全部课程</button></h3>
             <div class="row-fluid">
             <?php if ( $courses ): ?>
                 <ul>
@@ -101,8 +101,8 @@
                     <li class="lecture span6">
                         <h4><a href="<?php echo $this->basePath(); ?>/training/course?courseId=<?php echo $course['courseId']; ?>"><?php echo $course['courseName']; ?></a></h4>
                         <ul class="inline">
-                            <li><i class="icon-user"></i> <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=<?php echo $course['teacherId']; ?>"><?php echo $course['teacherName']; ?></a></li>
-                            <li><i class="icon-tasks"></i> <?php echo $course['courseTypeName']; ?></li>
+                            <li><i class="fa fa-user"></i> <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=<?php echo $course['teacherId']; ?>"><?php echo $course['teacherName']; ?></a></li>
+                            <li><i class="fa fa-tasks"></i> <?php echo $course['courseTypeName']; ?></li>
                         </ul>
                         <p class="introduction"><?php echo $course['brief']; ?></p>
                     </li>
@@ -114,7 +114,7 @@
     </div> <!-- #courses -->
     <div id="teachers" class="section light-background">
         <div class="container">
-            <h3>杰出讲师</h3>
+            <h3>杰出讲师 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/teachers'">查看全部讲师</button></h3>
             <div class="row-fluid">
             <?php if ( $teachers ): ?>
                 <ul>
@@ -144,16 +144,16 @@
     </div> <!-- #teachers -->
     <div id="posts" class="section">
         <div class="container">
-            <h3>培训动态</h3>
-            <div class="row-fluid">    
+            <h3>培训动态 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/posts'">查看全部动态</button></h3>
+            <div class="row-fluid">
             <?php if ( $posts ): ?>
                 <ul>
                 <?php foreach ( $posts as $post ): ?>
                     <li class="post span6">
                         <h4><a href="<?php echo $this->basePath(); ?>/training/post?postId=<?php echo $post['postId']; ?>"><?php echo $post['postTitle']; ?></a></h4>
                         <ul class="inline">
-                            <li><i class="icon-th-list"></i> <?php echo $post['postCategoryName']; ?></li>
-                            <li><i class="icon-calendar"></i> <?php echo date('Y年m月d日', strtotime($post['postDate'])); ?></li>
+                            <li><i class="fa fa-th-list"></i> <?php echo $post['postCategoryName']; ?></li>
+                            <li><i class="fa fa-calendar"></i> <?php echo date('Y年m月d日', strtotime($post['postDate'])); ?></li>
                         </ul>
                         <p class="introduction"><?php echo $post['postContent']; ?></p>
                     </li>
@@ -174,7 +174,26 @@
         <div class="left-background"></div> <!-- .left-background -->
         <div class="right-background"></div> <!-- .right-background -->
     </div> <!-- #map-image -->
-    <div id="sign-up" class="section light-background">
+    <div id="manual" class="section light-background">
+        <div class="container">
+            <h3>使用指南</h3>
+            <div id="manual-content" class="row-fluid">
+                <div id="recipient-manual" class="span6">
+                    <h4>我需要接受 <span>培训</span></h4>
+                </div> <!-- .span6 -->
+                <div id="provider-manual"  class="span6">
+                    <h4>我可以提供 <span>培训</span></h4>
+                </div> <!-- .span6 -->
+            </div> <!-- #manual-content -->
+            <div class="row-fluid">
+                <div id="responsive-ready" class="span12">
+                    <h4>全新的响应式设计, 为移动设备带来更好的用户体验!</h4>
+                    <img src="<?php echo $this->basePath(); ?>/img/homepage/responsive-ready.png" alt="Responsive Ready">
+                </div> <!-- .span12 -->
+            </div> <!-- .row-fluid -->
+        </div> <!-- .container -->
+    </div> <!-- #manual -->
+    <div id="sign-up" class="section">
         <div class="container row-fluid">
             <div class="span8">
                 <h3>想获得更优质的培训服务?</h3>

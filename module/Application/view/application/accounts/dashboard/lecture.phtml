@@ -44,8 +44,8 @@
                                                + '        </h4>'
                                                + '        <p class="brief">' + courses[i]['brief'] + '</p>'
                                                + '        <ul class="inline meta">'
-                                               + '            <li><a href="#course?courseId=' + courses[i]['courseId'] + '"><i class="icon-plus"></i> 编辑课程信息</a></li>'
-                                               + '            <li><a href="javascript:void(0)" class="new-lecture"><i class="icon-pencil"></i> 创建新培训</a></li>'
+                                               + '            <li><a href="#course?courseId=' + courses[i]['courseId'] + '"><i class="fa fa-plus"></i> 编辑课程信息</a></li>'
+                                               + '            <li><a href="javascript:void(0)" class="new-lecture"><i class="fa fa-pencil"></i> 创建新培训</a></li>'
                                                + '        </ul>'
                                                + '    </div>'
                                                + '</li>');
@@ -137,10 +137,10 @@
                                                 + '            <a href="<?php echo $this->basePath(); ?>/training/lecture?lectureId=' + lectures[i]['lectureId'] + '">' + lectures[i]['courseName'] + '</a>'
                                                 + '        </h4>'
                                                 + '        <ul class="inline meta">'
-                                                + '            <li><i class="icon-calendar"></i> '+ formatDateTime(lectures[i]['startTime']) + '~' + formatDateTime(lectures[i]['endTime']) + '</li>'
-                                                + '            <li><i class="icon-map-marker"></i> ' + lectures[i]['lectureProvince'] + (lectures[i]['lectureCity'] || '') + lectures[i]['lectureAddress'] + '</li>'
-                                                + '            <li><i class="icon-user"></i> ' + (lectures[i]['participants'] || '0') + '/' + lectures[i]['maxCapcity'] + ' 人</li>'
-                                                + '            <li><i class="icon-jpy"></i> ' + lectures[i]['expense'] + ' 元</li>'
+                                                + '            <li><i class="fa fa-calendar"></i> '+ formatDateTime(lectures[i]['startTime']) + '~' + formatDateTime(lectures[i]['endTime']) + '</li>'
+                                                + '            <li><i class="fa fa-map-marker"></i> ' + lectures[i]['lectureProvince'] + (lectures[i]['lectureCity'] || '') + lectures[i]['lectureAddress'] + '</li>'
+                                                + '            <li><i class="fa fa-user"></i> ' + (lectures[i]['participants'] || '0') + '/' + lectures[i]['maxCapcity'] + ' 人</li>'
+                                                + '            <li><i class="fa fa-jpy"></i> ' + lectures[i]['expense'] + ' 元</li>'
                                                 + '            <li></li>'
                                                 + '        </ul>'
                                                 + '    </div>'
@@ -233,9 +233,9 @@
                                     + '            <span class="extra">(报名序列号:' + records[i]['serialCode'] + ', 剩余次数: ' + (records[i]['remainTimes'] || '0') + '次)</span>'
                                     + '        </h4>'
                                     + '        <ul class="inline meta">'
-                                    + '            <li><i class="icon-user"></i> <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=' + records[i]['lectureTeacherId'] + '">' + records[i]['lectureTeacherName'] + '</a></li>'
-                                    + '            <li><i class="icon-calendar"></i> ' + formatDateTime(records[i]['lectureStartTime']) + '~' + formatDateTime(records[i]['lectureEndTime']) + '</li>'
-                                    + '            <li><i class="icon-map-marker"></i> ' + records[i]['lectureProvince'] + ( records[i]['lectureCity'] || '' ) + records[i]['lectureAddress'] + '</li>'
+                                    + '            <li><i class="fa fa-user"></i> <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=' + records[i]['lectureTeacherId'] + '">' + records[i]['lectureTeacherName'] + '</a></li>'
+                                    + '            <li><i class="fa fa-calendar"></i> ' + formatDateTime(records[i]['lectureStartTime']) + '~' + formatDateTime(records[i]['lectureEndTime']) + '</li>'
+                                    + '            <li><i class="fa fa-map-marker"></i> ' + records[i]['lectureProvince'] + ( records[i]['lectureCity'] || '' ) + records[i]['lectureAddress'] + '</li>'
                                     + '        </ul>'
                                     + '    </div>'
                                     + '</li>';
@@ -658,8 +658,8 @@
                                                          '        </div>' +
                                                          '    </div>' +
                                                          '    <div class="row-fluid">' +
-                                                                 formatDateTimePicker('module-start-time', '课程模块起始时间') +
-                                                                 formatDateTimePicker('module-end-time', '课程模块结束时间') +
+                                                                 getDateTimePickerControl('module-start-time', '课程模块起始时间') +
+                                                                 getDateTimePickerControl('module-end-time', '课程模块结束时间') +
                                                          '    </div>' +
                                                          '</li>');
                         }
@@ -673,7 +673,7 @@
         }
     </script>
     <script type="text/javascript">
-        function formatDateTimePicker(controlClass, labelText) {
+        function getDateTimePickerControl(controlClass, labelText) {
             return '<div class="control-group span6">' +
                    '    <label for="' + controlClass + '">' + labelText + '</label>' +
                    '    <div class="controls input-append date form_datetime" data-date-format="yyyy-mm-dd hh:ii">' +

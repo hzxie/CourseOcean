@@ -15,10 +15,10 @@
                 '    <div class="span9">' +
                 '        <h4><a href="' + ( result['requirements'][i]['courseId'] ? ('<?php echo $this->basePath(); ?>/training/course?courseId=' + result['requirements'][i]['courseId']) : 'javascript:void(0);' ) + '">' + (result['requirements'][i]['courseName'] || '等待您开设相应课程') + '</a><span class="pull-right"><a href="javascript:void(0)">详细信息</a></span></h4>' +
                 '        <ul class="inline meta">' +
-                '            <li><i class="icon-user"></i> ' + result['requirements'][i]['companyName'] + '</li>' +
-                '            <li><i class="icon-calendar"></i> ' + formatDateTime(result['requirements'][i]['startTime']) + '~' +  formatDateTime(result['requirements'][i]['endTime']) + '</li>' +
-                '            <li><i class="icon-yen"></i> '+ (result['requirements'][i]['expense'] || 'N/a') + '元</li>' +
-                '            <li><i class="icon-map-marker"></i> ' + result['requirements'][i]['province'] + (result['requirements'][i]['city'] || '') + (result['requirements'][i]['address'] || '') + '</li>' +
+                '            <li><i class="fa fa-user"></i> ' + result['requirements'][i]['companyName'] + '</li>' +
+                '            <li><i class="fa fa-calendar"></i> ' + formatDateTime(result['requirements'][i]['startTime']) + '~' +  formatDateTime(result['requirements'][i]['endTime']) + '</li>' +
+                '            <li><i class="fa fa-yen"></i> '+ (result['requirements'][i]['expense'] || 'N/a') + '元</li>' +
+                '            <li><i class="fa fa-map-marker"></i> ' + result['requirements'][i]['province'] + (result['requirements'][i]['city'] || '') + (result['requirements'][i]['address'] || '') + '</li>' +
                 '        </ul>' +
                 '    </div> <!-- .span9 -->' +
                 '</li>');
@@ -26,7 +26,7 @@
     }
 </script>
 <?php else: ?>
-<h4>我的需求<span class="pull-right"><a id="new-requirement" href="javascript:void(0);"><i class="icon-plus"></i> 新需求</a></span></h4>
+<h4>我的需求<span class="pull-right"><a id="new-requirement" href="javascript:void(0);"><i class="fa fa-plus"></i> 新需求</a></span></h4>
 <p class="no-requirements">暂无需求定制记录.</p>
 <ul id="requirements"></ul>
 <!-- Java Script -->
@@ -206,10 +206,10 @@
                 '    <div class="span9">' +
                 '        <h4><a href="<?php echo $this->basePath(); ?>/training/course?courseId=' + result['requirements'][i]['courseId'] + '">' + (result['requirements'][i]['courseName'] || '等待讲师开设相应课程') + '</a><span class="pull-right"><a href="javascript:void(0)">详细信息</a></span></h4>' +
                 '        <ul class="inline meta">' +
-                '            <li><i class="icon-user"></i> ' + result['requirements'][i]['teacherName'] + '</li>' +
-                '            <li><i class="icon-calendar"></i> ' + formatDateTime(result['requirements'][i]['startTime']) + '~' +  formatDateTime(result['requirements'][i]['endTime']) + '</li>' +
-                '            <li><i class="icon-yen"></i> '+ (result['requirements'][i]['expense'] || 'N/a') + '元</li>' +
-                '            <li><i class="icon-map-marker"></i> ' + result['requirements'][i]['province'] + (result['requirements'][i]['city'] || '') + (result['requirements'][i]['address'] || '') + '</li>' +
+                '            <li><i class="fa fa-user"></i> ' + result['requirements'][i]['teacherName'] + '</li>' +
+                '            <li><i class="fa fa-calendar"></i> ' + formatDateTime(result['requirements'][i]['startTime']) + '~' +  formatDateTime(result['requirements'][i]['endTime']) + '</li>' +
+                '            <li><i class="fa fa-yen"></i> '+ (result['requirements'][i]['expense'] || 'N/a') + '元</li>' +
+                '            <li><i class="fa fa-map-marker"></i> ' + result['requirements'][i]['province'] + (result['requirements'][i]['city'] || '') + (result['requirements'][i]['address'] || '') + '</li>' +
                 '        </ul>' +
                 '    </div> <!-- .span9 -->' +
                 '</li>');
