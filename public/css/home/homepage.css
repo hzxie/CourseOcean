@@ -304,14 +304,52 @@ div#content div#manual div#manual-content h4 {
 	text-align: center;
 }
 
+div#content div#manual div#recipient-manual h4 > span,
+div#content div#manual div#provider-manual h4 > span {
+	font-size: 24px;
+}
+
 div#content div#manual div#recipient-manual h4 > span {
 	color: #00bce4;
-	font-size: 24px;
 }
 
 div#content div#manual div#provider-manual h4 > span {
 	color: #6db33f;
-	font-size: 24px;
+}
+
+div#content div#manual div#recipient-manual,
+div#content div#manual div#provider-manual {
+	position: relative;
+}
+
+div#content div#manual div.manual-block {
+	text-align: center;
+	margin-bottom: 40px;
+}
+
+div#content div#manual div.manual-block h5 {
+	font-size: 16px;
+}
+
+div#content div#manual div#recipient-manual div.manual-block h5 {
+	color: #00bce4;
+}
+
+div#content div#manual div#provider-manual div.manual-block h5 {
+	color: #6db33f;
+}
+
+div#content div#manual div.manual-block h5 i.fa {
+	font-size: 20px;
+}
+
+div#content div#manual div.manual-block p {
+	color: #999;
+}
+
+div#content div#manual div.manual-block a {
+	color: #666;
+	text-decoration: none;
 }
 
 div#content div#manual div#responsive-ready {
@@ -395,6 +433,15 @@ div#footer div.span4 {
 	div#navigation form#search {
 		float: none;
 		text-align: center;
+	}
+
+	div#content div#sign-up div.span8,
+	div#content div#sign-up div.span4 {
+		text-align: center;
+	}
+
+	div#content div#sign-up div.span4 ul.inline {
+		display: inline;
 	}
 }
 

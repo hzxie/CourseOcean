@@ -43,19 +43,19 @@ class AboutController extends AbstractActionController
     }
 
     /**
-     * 加载[联系我们]页面.
+     * 加载[帮助中心]页面.
      * @return 一个包含页面所需信息的数组
      */
-    public function contactAction() 
+    public function supportAction() 
     {
         return array();
     }
 
     /**
-     * 加载[网站地图]页面.
+     * 加载[意见反馈]页面.
      * @return 一个包含页面所需信息的数组
      */
-    public function sitemapAction() 
+    public function feedbackAction()
     {
         return array();
     }
