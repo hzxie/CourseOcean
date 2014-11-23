@@ -105,7 +105,7 @@ class AccountsController extends AbstractActionController
     {
         $username       = $this->getRequest()->getPost('username');
         $password       = $this->getRequest()->getPost('password');
-        $allowAutoLogin = $this->getRequest()->getPost('rememberMe');
+        $allowAutoLogin = $this->getRequest()->getPost('rememberMe', false);
 
         $result     = array(
             'isSuccessful'      => false,
@@ -473,7 +473,8 @@ class AccountsController extends AbstractActionController
         $userGroupTable     = $serviceManager->get('Application\Model\UserGroupTable');
         $userGroup          = $userGroupTable->getUserGroupUsingSlug($userGroupSlug);
 
-        if ( $userGroup != null ) {
+        // 管理员用户不允许被注册
+        if ( $userGroup != null && $userGroupSlug != 'administrator' ) {
             return $userGroup->userGroupId;
         } 
         return 0;
@@ -511,7 +512,7 @@ class AccountsController extends AbstractActionController
      */
     private function isEmailLegal($email)
     {
-        return strlen($email) <= 64 && preg_match('/^[A-Za-z0-9\._-]+@[A-Za-z0-9_-]+\.[A-Za-z0-9\._-]+$/', ($profile['email']));
+        return strlen($email) <= 64 && preg_match('/^[A-Za-z0-9\._-]+@[A-Za-z0-9_-]+\.[A-Za-z0-9\._-]+$/', ($email));
     }
 
     /**

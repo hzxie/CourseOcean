@@ -193,6 +193,10 @@ div#content div.api-overview ul {
 	padding: 0;
 }
 
+div#content div.api-overview li.notice {
+	color: #d14;
+}
+
 div#content div.api-detail {
 	margin-top: 20px;
 }

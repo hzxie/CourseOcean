@@ -47,10 +47,10 @@
                 <li><a href="#lectures">培训课API</a></li>
                 <li><a href="#courses">课程API</a></li>
                 <li><a href="#comments">评论API</a></li>
-                <li><a href="#teacher">讲师API</a></li>
+                <li><a href="#teachers">讲师API</a></li>
                 <li><a href="#posts">培训动态API</a></li>
                 <li><a href="#accounts">用户API</a></li>
-                <li><a href="#other">其他API</a></li>
+                <li><a href="#others">其他API</a></li>
             </ul>
         </div> <!-- .span3 -->
         <div id="content" class="span9">
@@ -567,13 +567,44 @@
                         </tr>
                     </tbody>
                 </table>
+                <h2 id="post-category-model">培训动态分类(Post Category)</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="width-25">名称</th>
+                            <th class="width-10">类型</th>
+                            <th class="width-25">示例值</th>
+                            <th class="width-40">描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>postCategoryId</td>
+                            <td>Integer</td>
+                            <td><code>1</code></td>
+                            <td>培训动态分类的ID, 仅供数据库索引使用.</td>
+                        </tr>
+                        <tr>
+                            <td>postCategorySlug</td>
+                            <td>String</td>
+                            <td><code>uncatalogued</code></td>
+                            <td>培训动态分类的唯一英文简写, 多用于查询和筛选.</td>
+                        </tr>
+                        <tr>
+                            <td>postCategoryName</td>
+                            <td>String</td>
+                            <td><code>未分类</code></td>
+                            <td>培训动态分类的名称.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </section> <!-- #models -->
             <section id="lectures">
                 <h1 class="page-header">培训课API</h1>
                 <h2>筛选培训课</h2>
                 <div class="api-overview">
                     <ul>
-                        <li>描述: 根据培训课筛选条件筛选出符合条件的课程.</li>
+                        <li>描述: 根据培训课筛选条件筛选出符合条件的培训课.</li>
                         <li>URL: <?php echo $this->serverUrl(); ?><?php echo $this->basePath(); ?>/training/getLectures</li>
                         <li>数据格式: JSON</li>
                         <li>方法: HTTP GET</li>
@@ -781,6 +812,7 @@
                 <h2>参加培训课</h2>
                 <div class="api-overview">
                     <ul>
+                        <li class="notice">该API仅限已登录的用户使用.</li>
                         <li>描述: 报名参加某培训课.</li>
                         <li>URL: <?php echo $this->serverUrl(); ?><?php echo $this->basePath(); ?>/training/attendLecture</li>
                         <li>数据格式: JSON</li>
@@ -856,19 +888,925 @@
             </section> <!-- #lectures -->
             <section id="courses">
                 <h1 class="page-header">课程API</h1>
+                <h2>筛选课程</h2>
+                <div class="api-overview">
+                    <ul>
+                        <li>描述: 根据课程筛选条件筛选出符合条件的课程.</li>
+                        <li>URL: <?php echo $this->serverUrl(); ?><?php echo $this->basePath(); ?>/training/getCourses</li>
+                        <li>数据格式: JSON</li>
+                        <li>方法: HTTP GET</li>
+                    </ul>
+                </div> <!-- .api-overview -->
+                <div class="api-detail">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#get-courses-params">请求参数</a></li>
+                        <li><a href="#get-courses-result">返回结果</a></li>
+                        <li><a href="#get-courses-sample">样例结果</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="get-courses-params">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-15">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-15">是否必需</th>
+                                        <th class="width-20">默认值</th>
+                                        <th class="width-40">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>category</td>
+                                        <td>String</td>
+                                        <td>否</td>
+                                        <td><code>all</code></td>
+                                        <td>课程类别, 取值请参见<a href="#course-type-model">CourseType</a>数据结构.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>page</td>
+                                        <td>Integer</td>
+                                        <td>否</td>
+                                        <td><code>1</code></td>
+                                        <td>查询结果页码, 用于分页显示查询结果.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-courses-params -->
+                        <div class="tab-pane" id="get-courses-result">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-20">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-65">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>isSuccessful</td>
+                                        <td>Boolean</td>
+                                        <td>查询是否成功, 若查询失败或结果为空, 则为false.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>courses</td>
+                                        <td>Array</td>
+                                        <td>一个包含若干<a href="#course-model">Course(课程)</a>对象的数组.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-courses-result -->
+                        <div class="tab-pane" id="get-courses-sample">
+                            <pre></pre>
+                            <script type="text/javascript">
+                                $(function() {
+                                    var sampleJson = '{"isSuccessful":true,"courses":[{"courseId":"100","courseName":"技术管理者训练营","isPublic":"1","courseTypeId":"21","courseTypeSlug":"team-management","courseTypeName":"团队管理","teacherId":"100","teacherName":"杨锋镝","courseCycle":"3","audience":"软件行业新上岗一线经理、拟提拔一线经理、二线经理、项目经理","brief":"课程描述"}]}';
+
+                                    $('#get-courses-sample > pre').html(JSON.stringify(JSON.parse(sampleJson), null, 4));
+                                });
+                            </script>
+                        </div> <!-- #get-courses-sample -->
+                    </div> <!-- .tab-content -->
+                </div> <!-- .api-detail -->
+                <h2>获取课程详细信息</h2>
+                <div class="api-overview">
+                    <ul>
+                        <li>描述: 根据课程ID获取该课程的详细信息.</li>
+                        <li>URL: <?php echo $this->serverUrl(); ?><?php echo $this->basePath(); ?>/training/getCourse</li>
+                        <li>数据格式: JSON</li>
+                        <li>方法: HTTP GET</li>
+                    </ul>
+                </div> <!-- .api-overview -->
+                <div class="api-detail">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#get-course-params">请求参数</a></li>
+                        <li><a href="#get-course-result">返回结果</a></li>
+                        <li><a href="#get-course-sample">样例结果</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="get-course-params">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-15">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-15">是否必需</th>
+                                        <th class="width-20">默认值</th>
+                                        <th class="width-40">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>courseId</td>
+                                        <td>Integer</td>
+                                        <td>是</td>
+                                        <td></td>
+                                        <td>课程的ID.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-course-params -->
+                        <div class="tab-pane" id="get-course-result">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-20">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-65">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>isSuccessful</td>
+                                        <td>Boolean</td>
+                                        <td>查询是否成功, 若查询失败或结果为空, 则为false.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>course</td>
+                                        <td>Course</td>
+                                        <td>一个<a href="#course-model">Course(课程)</a>对象, 包含对该课程的描述信息(其中的teacherName字段为总是为<code>null</code>).</td>
+                                    </tr>
+                                    <tr>
+                                        <td>teacher</td>
+                                        <td>Teacher</td>
+                                        <td>一个<a href="#teacher-model">Teacher(讲师)</a>对象, 包含对该课程讲师的描述信息.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>courseModules</td>
+                                        <td>Array</td>
+                                        <td>一个<a href="#course-module-model">Course Module(课程模块)</a>对象的数组, 其中课程模块的起始和结束时间始终为<code>null</code>.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>lectures</td>
+                                        <td>Array</td>
+                                        <td>一个包含若干<a href="#lecture-model">Lecture(培训课)</a>对象的数组, 表示该课程在过去及将来的其他培训课.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-course-result -->
+                        <div class="tab-pane" id="get-course-sample">
+                            <pre></pre>
+                            <script type="text/javascript">
+                                $(function() {
+                                    var sampleJson = '{"isSuccessful":true,"course":{"courseId":"101","courseName":"软件测试方法与策略高级培训","isPublic":"1","courseTypeId":"7","courseTypeSlug":"test-management","courseTypeName":"测试管理","teacherId":"1003","teacherName":null,"courseCycle":"2","audience":"测试工程师","brief":"课程概述"},"teacher":{"uid":"1003","teacherName":"朱少民","isApproved":"1","brief":"讲师简介","avatar":null,"teachingField":"自动化测试, 测试管理, 敏捷测试","region":"华东地区","province":"上海市","city":null,"company":"曾任思科—网迅 (中国)软件有限公司资深QA总监","phone":null,"weibo":"kerryzhu"},"courseModules":[{"courseModuleId":"103","courseModuleName":"深入理解软件测试","teacherId":"1003","courseModuleCycle":"100","courseModuleStartTime":null,"courseModuleEndTime":null,"courseModuleBrief":"课程模块概述","courseModuleOutline":"课程模块大纲"}],"lectures":[{"lectureId":"102","createTime":"2014-10-22 20:33:27","courseId":"101","courseName":null,"isPublic":null,"courseTypeId":null,"courseTypeSlug":null,"courseTypeName":null,"teacherId":null,"teacherName":null,"startTime":"2015-01-22 08:00:00","endTime":"2015-01-24 17:00:00","lectureRegion":"华东地区","lectureProvince":"上海市","lectureCity":null,"lectureAddress":"同济大学嘉定校区","minCapcity":"20","maxCapcity":"100","participants":null,"expense":"5800","audience":null,"brief":null,"objective":null,"precautions":"参加培训的注意事项"}]}';
+
+                                    $('#get-course-sample > pre').html(JSON.stringify(JSON.parse(sampleJson), null, 4));
+                                });
+                            </script>
+                        </div> <!-- #get-course-sample -->
+                    </div> <!-- .tab-content -->
+                </div> <!-- .api-detail -->
+            </section> <!-- #courses -->
+            <section id="comments">
+                <h1 class="page-header">评论API</h1>
+                <h2>获取课程评价</h2>
+                <div class="api-overview">
+                    <ul>
+                        <li>描述: 根据课程ID获取该课程的评论信息.</li>
+                        <li>URL: <?php echo $this->serverUrl(); ?><?php echo $this->basePath(); ?>/training/getComments</li>
+                        <li>数据格式: JSON</li>
+                        <li>方法: HTTP GET</li>
+                    </ul>
+                </div> <!-- .api-overview -->
+                <div class="api-detail">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#get-comments-params">请求参数</a></li>
+                        <li><a href="#get-comments-result">返回结果</a></li>
+                        <li><a href="#get-comments-sample">样例结果</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="get-comments-params">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-15">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-15">是否必需</th>
+                                        <th class="width-20">默认值</th>
+                                        <th class="width-40">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>courseId</td>
+                                        <td>Integer</td>
+                                        <td>是</td>
+                                        <td></td>
+                                        <td>课程的ID.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>page</td>
+                                        <td>Integer</td>
+                                        <td>否</td>
+                                        <td><code>1</code></td>
+                                        <td>查询结果页码, 用于分页显示查询结果.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-comments-params -->
+                        <div class="tab-pane" id="get-comments-result">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-20">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-65">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>isSuccessful</td>
+                                        <td>Boolean</td>
+                                        <td>查询是否成功, 若查询失败或结果为空, 则为false.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>comments</td>
+                                        <td>Array</td>
+                                        <td>一个包含若干<a href="#comment-model">Comment(评论)</a>对象的数组.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-comments-result -->
+                        <div class="tab-pane" id="get-comments-sample">
+                            <pre></pre>
+                            <script type="text/javascript">
+                                $(function() {
+                                    var sampleJson = '{"isSuccessful":true,"comments":[{"commentId":"1","lectureId":"100","courseId":"100","reviewerUid":"1003","reviewerUsername":"kerryzhu","commentTime":"2014-06-16 13:22:55","ranking":"4","detail":"非常赞的课程!"}]}';
+
+                                    $('#get-comments-sample > pre').html(JSON.stringify(JSON.parse(sampleJson), null, 4));
+                                });
+                            </script>
+                        </div> <!-- #get-comments-sample -->
+                    </div> <!-- .tab-content -->
+                </div> <!-- .api-detail -->
             </section>
-            <section id="teacher">
+            <section id="teachers">
                 <h1 class="page-header">讲师API</h1>
-            </section>
+                <h2>筛选讲师</h2>
+                <div class="api-overview">
+                    <ul>
+                        <li>描述: 根据讲师的筛选条件筛选出符合条件的讲师.</li>
+                        <li>URL: <?php echo $this->serverUrl(); ?><?php echo $this->basePath(); ?>/training/getTeachers</li>
+                        <li>数据格式: JSON</li>
+                        <li>方法: HTTP GET</li>
+                    </ul>
+                </div> <!-- .api-overview -->
+                <div class="api-detail">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#get-teachers-params">请求参数</a></li>
+                        <li><a href="#get-teachers-result">返回结果</a></li>
+                        <li><a href="#get-teachers-sample">样例结果</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="get-teachers-params">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-15">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-15">是否必需</th>
+                                        <th class="width-20">默认值</th>
+                                        <th class="width-40">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>category</td>
+                                        <td>String</td>
+                                        <td>否</td>
+                                        <td><code>all</code></td>
+                                        <td>授课领域, 取值请参见<a href="#course-type-model">CourseType</a>数据结构.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>page</td>
+                                        <td>Integer</td>
+                                        <td>否</td>
+                                        <td><code>1</code></td>
+                                        <td>查询结果页码, 用于分页显示查询结果.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-teachers-params -->
+                        <div class="tab-pane" id="get-teachers-result">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-20">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-65">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>isSuccessful</td>
+                                        <td>Boolean</td>
+                                        <td>查询是否成功, 若查询失败或结果为空, 则为false.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>teachers</td>
+                                        <td>Array</td>
+                                        <td>一个包含若干<a href="#teacher-model">Teacher(讲师)</a>对象的数组, 仅包含uid(用户ID), teacherName(讲师姓名), teachingField(授课领域), company(公司及职位)字段.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-teachers-result -->
+                        <div class="tab-pane" id="get-teachers-sample">
+                            <pre></pre>
+                            <script type="text/javascript">
+                                $(function() {
+                                    var sampleJson = '{"isSuccessful":true,"teachers":[{"uid":"101","teacherName":"王剑","isApproved":null,"brief":null,"avatar":null,"teachingField":"项目管理","region":null,"province":null,"city":null,"company":"微软技术资深专家 微软亚洲院创始人之一","phone":null,"weibo":null}]}';
+
+                                    $('#get-teachers-sample > pre').html(JSON.stringify(JSON.parse(sampleJson), null, 4));
+                                });
+                            </script>
+                        </div> <!-- #get-teachers-sample -->
+                    </div> <!-- .tab-content -->
+                </div> <!-- .api-detail -->
+                <h2>获取讲师详细信息</h2>
+                <div class="api-overview">
+                    <ul>
+                        <li>描述: 根据讲师的用户ID获取该讲师的详细信息.</li>
+                        <li>URL: <?php echo $this->serverUrl(); ?><?php echo $this->basePath(); ?>/training/getTeacher</li>
+                        <li>数据格式: JSON</li>
+                        <li>方法: HTTP GET</li>
+                    </ul>
+                </div> <!-- .api-overview -->
+                <div class="api-detail">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#get-teacher-params">请求参数</a></li>
+                        <li><a href="#get-teacher-result">返回结果</a></li>
+                        <li><a href="#get-teacher-sample">样例结果</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="get-teacher-params">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-15">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-15">是否必需</th>
+                                        <th class="width-20">默认值</th>
+                                        <th class="width-40">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>teacherId</td>
+                                        <td>Integer</td>
+                                        <td>是</td>
+                                        <td></td>
+                                        <td>讲师的用户ID.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-teacher-params -->
+                        <div class="tab-pane" id="get-teacher-result">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-20">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-65">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>isSuccessful</td>
+                                        <td>Boolean</td>
+                                        <td>查询是否成功, 若查询失败或结果为空, 则为false.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>teacher</td>
+                                        <td>Teacher</td>
+                                        <td>一个<a href="#teacher-model">Teacher(讲师)</a>对象, 包含对该课程讲师的描述信息.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>course</td>
+                                        <td>Course</td>
+                                        <td>一个<a href="#course-model">Course(课程)</a>对象, 包含对该课程的描述信息(其中的teacherName字段为总是为<code>null</code>).</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-teacher-result -->
+                        <div class="tab-pane" id="get-teacher-sample">
+                            <pre></pre>
+                            <script type="text/javascript">
+                                $(function() {
+                                    var sampleJson = '{"isSuccessful":true,"teacher":{"uid":"1003","teacherName":"朱少民","isApproved":"1","brief":"讲师简介","avatar":null,"teachingField":"自动化测试, 测试管理, 敏捷测试","region":"华东地区","province":"上海市","city":null,"company":"曾任思科—网迅 (中国)软件有限公司资深QA总监","phone":null,"weibo":"kerryzhu"},"courses":[{"courseId":"101","courseName":"软件测试方法与策略高级培训","isPublic":"1","courseTypeId":"7","courseTypeSlug":"test-management","courseTypeName":"测试管理","teacherId":"1003","teacherName":null,"courseCycle":"2","audience":"测试工程师","brief":"课程概述","objective":"课程目标"}]}';
+
+                                    $('#get-teacher-sample > pre').html(JSON.stringify(JSON.parse(sampleJson), null, 4));
+                                });
+                            </script>
+                        </div> <!-- #get-teacher-sample -->
+                    </div> <!-- .tab-content -->
+                </div> <!-- .api-detail -->
+            </section> <!-- #teachers -->
             <section id="posts">
                 <h1 class="page-header">培训动态API</h1>
-            </section>
+                <h2>筛选培训动态</h2>
+                <div class="api-overview">
+                    <ul>
+                        <li>描述: 根据培训动态筛选条件筛选出符合条件的培训动态.</li>
+                        <li>URL: <?php echo $this->serverUrl(); ?><?php echo $this->basePath(); ?>/training/getPosts</li>
+                        <li>数据格式: JSON</li>
+                        <li>方法: HTTP GET</li>
+                    </ul>
+                </div> <!-- .api-overview -->
+                <div class="api-detail">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#get-posts-params">请求参数</a></li>
+                        <li><a href="#get-posts-result">返回结果</a></li>
+                        <li><a href="#get-posts-sample">样例结果</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="get-posts-params">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-15">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-15">是否必需</th>
+                                        <th class="width-20">默认值</th>
+                                        <th class="width-40">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>category</td>
+                                        <td>String</td>
+                                        <td>否</td>
+                                        <td><code>all</code></td>
+                                        <td>培训动态分类, 取值请参见<a href="#post-category-model">PostCategory</a>数据结构.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>page</td>
+                                        <td>Integer</td>
+                                        <td>否</td>
+                                        <td><code>1</code></td>
+                                        <td>查询结果页码, 用于分页显示查询结果.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-posts-params -->
+                        <div class="tab-pane" id="get-posts-result">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-20">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-65">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>isSuccessful</td>
+                                        <td>Boolean</td>
+                                        <td>查询是否成功, 若查询失败或结果为空, 则为false.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>posts</td>
+                                        <td>Array</td>
+                                        <td>一个包含若干<a href="#post-model">Post(培训动态)</a>对象的数组.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-posts-result -->
+                        <div class="tab-pane" id="get-posts-sample">
+                            <pre></pre>
+                            <script type="text/javascript">
+                                $(function() {
+                                    var sampleJson = '{"isSuccessful":true,"posts":[{"postId":"1","postCategoryId":"1","postCategorySlug":"uncatalogued","postCategoryName":"未分类","postDate":"2014-07-05 23:59:15","postTitle":"培训动态标题","postContent":"培训动态正文内容"}]}';
+
+                                    $('#get-posts-sample > pre').html(JSON.stringify(JSON.parse(sampleJson), null, 4));
+                                });
+                            </script>
+                        </div> <!-- #get-posts-sample -->
+                    </div> <!-- .tab-content -->
+                </div> <!-- .api-detail -->
+                <h2>获取培训动态详细信息</h2>
+                <div class="api-overview">
+                    <ul>
+                        <li>描述: 根据培训动态ID获取该培训动态的详细信息.</li>
+                        <li>URL: <?php echo $this->serverUrl(); ?><?php echo $this->basePath(); ?>/training/getPost</li>
+                        <li>数据格式: JSON</li>
+                        <li>方法: HTTP GET</li>
+                    </ul>
+                </div> <!-- .api-overview -->
+                <div class="api-detail">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#get-post-params">请求参数</a></li>
+                        <li><a href="#get-post-result">返回结果</a></li>
+                        <li><a href="#get-post-sample">样例结果</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="get-post-params">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-15">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-15">是否必需</th>
+                                        <th class="width-20">默认值</th>
+                                        <th class="width-40">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>postId</td>
+                                        <td>Integer</td>
+                                        <td>是</td>
+                                        <td></td>
+                                        <td>培训动态的ID.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-post-params -->
+                        <div class="tab-pane" id="get-post-result">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-20">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-65">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>isSuccessful</td>
+                                        <td>Boolean</td>
+                                        <td>查询是否成功, 若查询失败或结果为空, 则为false.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>post</td>
+                                        <td>Post</td>
+                                        <td>一个<a href="#post-model">Post(培训动态)</a>对象, 包含对该培训动态的描述信息(其中的teacherName字段为总是为<code>null</code>).</td>
+                                    </tr>
+                                    <tr>
+                                        <td>posts</td>
+                                        <td>Array</td>
+                                        <td>一个包含若干<a href="#post-model">Post(培训动态)</a>对象的数组, 表示与该培训动态相关的其他培训动态.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-post-result -->
+                        <div class="tab-pane" id="get-post-sample">
+                            <pre></pre>
+                            <script type="text/javascript">
+                                $(function() {
+                                    var sampleJson = '{"isSuccessful":true,"post":{"postId":"1","postCategoryId":"1","postCategorySlug":"uncatalogued","postCategoryName":"未分类","postDate":"2014-07-05 23:59:15","postTitle":"培训动态标题","postContent":"培训动态正文内容"},"posts":[{"postId":"1","postCategoryId":"1","postCategorySlug":"uncatalogued","postCategoryName":"未分类","postDate":"2014-07-05 23:59:15","postTitle":"培训动态标题","postContent":"培训动态正文内容"}]}';
+
+                                    $('#get-post-sample > pre').html(JSON.stringify(JSON.parse(sampleJson), null, 4));
+                                });
+                            </script>
+                        </div> <!-- #get-post-sample -->
+                    </div> <!-- .tab-content -->
+                </div> <!-- .api-detail -->
+            </section> <!-- #posts -->
             <section id="accounts">
                 <h1 class="page-header">用户API</h1>
-            </section>
-            <section id="other">
+                <h2>用户登录</h2>
+                <div class="api-overview">
+                    <ul>
+                        <li>描述: 处理用户登录请求.</li>
+                        <li>URL: <?php echo $this->serverUrl(); ?><?php echo $this->basePath(); ?>/accounts/doLogin</li>
+                        <li>数据格式: JSON</li>
+                        <li>方法: HTTP Post</li>
+                    </ul>
+                </div> <!-- .api-overview -->
+                <div class="api-detail">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#get-login-params">请求参数</a></li>
+                        <li><a href="#get-login-result">返回结果</a></li>
+                        <li><a href="#get-login-sample">样例结果</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="get-login-params">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-15">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-15">是否必需</th>
+                                        <th class="width-20">默认值</th>
+                                        <th class="width-40">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>username</td>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td></td>
+                                        <td>用户名或电子邮件地址.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>password</td>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td></td>
+                                        <td>密码, 请使用MD5加密后传输.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>rememberMe</td>
+                                        <td>Boolean</td>
+                                        <td>否</td>
+                                        <td><code>false</code></td>
+                                        <td>是否长时间保存登录状态.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-login-params -->
+                        <div class="tab-pane" id="get-login-result">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-20">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-65">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>isSuccessful</td>
+                                        <td>Boolean</td>
+                                        <td>登录是否成功, 若登录失败, 则为false.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isUsernameEmpty</td>
+                                        <td>Boolean</td>
+                                        <td>用户名是否为空</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isPasswordEmpty</td>
+                                        <td>Boolean</td>
+                                        <td>密码是否为空</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isAccountValid</td>
+                                        <td>Boolean</td>
+                                        <td>用户名和密码是否正确</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-login-result -->
+                        <div class="tab-pane" id="get-login-sample">
+                            <pre></pre>
+                            <script type="text/javascript">
+                                $(function() {
+                                    var sampleJson = '{"isSuccessful":false,"isUsernameEmpty":false,"isPasswordEmpty":false,"isAccountValid":false}';
+
+                                    $('#get-login-sample > pre').html(JSON.stringify(JSON.parse(sampleJson), null, 4));
+                                });
+                            </script>
+                        </div> <!-- #get-login-sample -->
+                    </div> <!-- .tab-content -->
+                </div> <!-- .api-detail -->
+                <h2>用户注册</h2>
+                <div class="api-overview">
+                    <ul>
+                        <li>描述: 处理用户注册请求.</li>
+                        <li>URL: <?php echo $this->serverUrl(); ?><?php echo $this->basePath(); ?>/accounts/doRegister</li>
+                        <li>数据格式: JSON</li>
+                        <li>方法: HTTP Post</li>
+                    </ul>
+                </div> <!-- .api-overview -->
+                <div class="api-detail">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#get-register-params">请求参数</a></li>
+                        <li><a href="#get-register-result">返回结果</a></li>
+                        <li><a href="#get-register-sample">样例结果</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="get-register-params">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-15">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-15">是否必需</th>
+                                        <th class="width-20">默认值</th>
+                                        <th class="width-40">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>username</td>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td></td>
+                                        <td>用户名. 长度在6~16字符之间, 由数字字母和下划线组成.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>email</td>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td></td>
+                                        <td>电子邮件地址. 长度不超过64个字符.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>password</td>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td></td>
+                                        <td>密码, 长度在6~16个字符之间. (传输时请不要使用MD5加密)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>userGroup</td>
+                                        <td>String</td>
+                                        <td>是</td>
+                                        <td></td>
+                                        <td>用户组, 仅为以下三个值之一: { person, teacher, company }.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-register-params -->
+                        <div class="tab-pane" id="get-register-result">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-20">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-65">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>isSuccessful</td>
+                                        <td>Boolean</td>
+                                        <td>注册是否成功, 若注册失败, 则为false.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isUsernameEmpty</td>
+                                        <td>Boolean</td>
+                                        <td>用户名是否为空.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isUsernameLegal</td>
+                                        <td>Boolean</td>
+                                        <td>用户名是否合法.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isUsernameExists</td>
+                                        <td>Boolean</td>
+                                        <td>用户名是否已存在.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isEmailEmpty</td>
+                                        <td>Boolean</td>
+                                        <td>电子邮件地址是否为空.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isEmailLegal</td>
+                                        <td>Boolean</td>
+                                        <td>电子邮件地址是否合法.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isEmailExists</td>
+                                        <td>Boolean</td>
+                                        <td>电子邮件地址是否已存在.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isPasswordEmpty</td>
+                                        <td>Boolean</td>
+                                        <td>密码是否为空.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isPasswordLegal</td>
+                                        <td>Boolean</td>
+                                        <td>密码是否合法.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isUserGroupLegal</td>
+                                        <td>Boolean</td>
+                                        <td>用户组是否合法.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-register-result -->
+                        <div class="tab-pane" id="get-register-sample">
+                            <pre></pre>
+                            <script type="text/javascript">
+                                $(function() {
+                                    var sampleJson = '{"isSuccessful":false,"isUsernameEmpty":false,"isUsernameLegal":1,"isUsernameExists":true,"isEmailEmpty":false,"isEmailLegal":true,"isEmailExists":true,"isPasswordEmpty":false,"isPasswordLegal":true,"isUserGroupLegal":false}';
+
+                                    $('#get-register-sample > pre').html(JSON.stringify(JSON.parse(sampleJson), null, 4));
+                                });
+                            </script>
+                        </div> <!-- #get-register-sample -->
+                    </div> <!-- .tab-content -->
+                </div> <!-- .api-detail -->
+            </section> <!-- #accounts -->
+            <section id="others">
                 <h1 class="page-header">其他API</h1>
-            </section>
+                <h2>获取所有课程类别</h2>
+                <div class="api-overview">
+                    <ul>
+                        <li>描述: 获取全部课程分类的信息.</li>
+                        <li>URL: <?php echo $this->serverUrl(); ?><?php echo $this->basePath(); ?>/training/getCourseTypes</li>
+                        <li>数据格式: JSON</li>
+                        <li>方法: HTTP GET</li>
+                    </ul>
+                </div> <!-- .api-overview -->
+                <div class="api-detail">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#get-course-types-params">请求参数</a></li>
+                        <li><a href="#get-course-types-result">返回结果</a></li>
+                        <li><a href="#get-course-types-sample">样例结果</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="get-course-types-params">
+                            <p>该API不需要参数</p>
+                        </div> <!-- #get-course-types-params -->
+                        <div class="tab-pane" id="get-course-types-result">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-20">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-65">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>isSuccessful</td>
+                                        <td>Boolean</td>
+                                        <td>查询是否成功, 若查询失败或结果为空, 则为false.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>courseTypes</td>
+                                        <td>Array</td>
+                                        <td>一个包含若干<a href="#course-type-model">CourseType(课程类别)</a>对象的数组.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-course-types-result -->
+                        <div class="tab-pane" id="get-course-types-sample">
+                            <pre></pre>
+                            <script type="text/javascript">
+                                $(function() {
+                                    var sampleJson = '{"isSuccessful":true,"courseTypes":[{"courseTypeId":"1","courseTypeSlug":"web-development","courseTypeName":"Web开发"},{"courseTypeId":"2","courseTypeSlug":"ios-development","courseTypeName":"iOS开发"}]}';
+
+                                    $('#get-course-types-sample > pre').html(JSON.stringify(JSON.parse(sampleJson), null, 4));
+                                });
+                            </script>
+                        </div> <!-- #get-course-types-sample -->
+                    </div> <!-- .tab-content -->
+                </div> <!-- .api-detail -->
+                <h2>获取所有培训动态分类</h2>
+                <div class="api-overview">
+                    <ul>
+                        <li>描述: 获取全部培训动态分类的信息.</li>
+                        <li>URL: <?php echo $this->serverUrl(); ?><?php echo $this->basePath(); ?>/training/getPostCategories</li>
+                        <li>数据格式: JSON</li>
+                        <li>方法: HTTP GET</li>
+                    </ul>
+                </div> <!-- .api-overview -->
+                <div class="api-detail">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#get-post-categories-params">请求参数</a></li>
+                        <li><a href="#get-post-categories-result">返回结果</a></li>
+                        <li><a href="#get-post-categories-sample">样例结果</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="get-post-categories-params">
+                            <p>该API不需要参数</p>
+                        </div> <!-- #get-post-categories-params -->
+                        <div class="tab-pane" id="get-post-categories-result">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="width-20">名称</th>
+                                        <th class="width-15">类型</th>
+                                        <th class="width-65">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>isSuccessful</td>
+                                        <td>Boolean</td>
+                                        <td>查询是否成功, 若查询失败或结果为空, 则为false.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>postCategories</td>
+                                        <td>Array</td>
+                                        <td>一个包含若干<a href="#post-category-model">PostCategory(培训动态分类)</a>对象的数组.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- #get-post-categories-result -->
+                        <div class="tab-pane" id="get-post-categories-sample">
+                            <pre></pre>
+                            <script type="text/javascript">
+                                $(function() {
+                                    var sampleJson = '{"isSuccessful":true,"postCategories":[{"postCategoryId":"1","postCategorySlug":"uncatalogued","postCategoryName":"未分类"}]}';
+
+                                    $('#get-post-categories-sample > pre').html(JSON.stringify(JSON.parse(sampleJson), null, 4));
+                                });
+                            </script>
+                        </div> <!-- #get-post-categories-sample -->
+                    </div> <!-- .tab-content -->
+                </div> <!-- .api-detail -->
+            </section> <!-- #others -->
         </div> <!-- .span9 -->
     </div> <!-- .row-fluid -->
 </div> <!-- #container -->

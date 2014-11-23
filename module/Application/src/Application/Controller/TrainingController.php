@@ -549,6 +549,28 @@ class TrainingController extends AbstractActionController
         return $response;
     }
 
+
+    /**
+     * 获取培训动态分类的分类信息.
+     * @return 一个包含培训动态分类信息的JSON数组
+     */
+    public function getPostCategoriesAction()
+    {
+        $serviceManager     = $this->getServiceLocator();
+        $postCategoryTable  = $serviceManager->get('Application\Model\PostCategoryTable');
+        $postCategories     = $postCategoryTable->getAllPostCategories();
+
+        $result   = array(
+            'isSuccessful'      => $postCategories != null && $postCategories->count() != 0,
+            'postCategories'    => $this->getResultSetArray($postCategories),
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+
     /**
      * 通过培训动态分类的唯一英文缩写查找培训动态分类的唯一标识符.
      * @param  String $catelogySlug - 培训动态分类的唯一英文缩写

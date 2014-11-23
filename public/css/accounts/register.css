@@ -1,6 +1,7 @@
 div#container div#content {
     background-image: url('../../img/accounts/login-background.jpg');
     background-repeat: no-repeat;
+    background-position: center;
     height: 600px;
     margin: 0;
     overflow: hidden;
