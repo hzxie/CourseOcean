@@ -245,7 +245,7 @@ class TrainingController extends AbstractActionController
         );
         $uid                    = $this->getLoginUserUid();
         $lectureId              = $this->params()->fromQuery('lectureId');
-        $participants           = $this->params()->fromQuery('participants');
+        $participants           = $this->params()->fromQuery('participants', 1);
 
         if ( $uid != 0 ) {
             $serviceManager         = $this->getServiceLocator();

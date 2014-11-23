@@ -169,6 +169,11 @@ class AdministrationController extends AbstractActionController
         
     }
 
+    private function getPostsPageData()
+    {
+        
+    }
+
     private function getSettingsPageData()
     {
         

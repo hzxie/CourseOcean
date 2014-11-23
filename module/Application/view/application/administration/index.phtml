@@ -16,7 +16,7 @@
             <li><a href="#courses"><i class="fa fa-book"></i> <span>课程管理</span></a></li>
             <li><a href="#lectures"><i class="fa fa-tasks"></i> <span>培训管理</span></a></li>
             <li><a href="#requirements"><i class="fa fa-desktop"></i> <span>需求管理</span></a></li>
-            <li><a href="#requirements"><i class="fa fa-desktop"></i> <span>培训动态管理</span></a></li>
+            <li><a href="#posts"><i class="fa fa-newspaper-o"></i> <span>培训动态管理</span></a></li>
             <li><a href="#settings"><i class="fa fa-cogs"></i> <span>系统设置</span></a></li>
         </ul>
     </div> <!-- #navigation -->
@@ -28,19 +28,19 @@
 	    </a> <!-- #navbar-toggle -->
         <form id="search" action="<?php echo $this->basePath(); ?>/home/search">
             <input name="keyword" type="text" placeholder="请输入搜索关键词" />
-            <i class="icon icon-search"></i>
+            <i class="fa fa-search"></i>
         </form>
         <ul class="inline">
             <li>
                 <a class="toggle" href="javascript:void(0)">
-                    <i class="icon icon-user"></i>
+                    <i class="fa fa-user"></i>
                 <?php if ( $this->uncheckUsers != 0 ): ?>
                     <span class="badge badge-important"><?php echo $this->uncheckUsers; ?></span>
                 <?php endif; ?>
                 </a>
             </li>
-            <li><a class="toggle" href="javascript:void(0)"><i class="icon icon-bell-alt"></i></a></li>
-            <li><a class="toggle" href="javascript:void(0)"><i class="icon icon-envelope"></i></a></li>
+            <li><a class="toggle" href="javascript:void(0)"><i class="fa fa-bell"></i></a></li>
+            <li><a class="toggle" href="javascript:void(0)"><i class="fa fa-envelope"></i></a></li>
             <li id="profile">
                 <a href="javascript:void(0)">
                     <span><?php echo $profile['username']; ?></span>
