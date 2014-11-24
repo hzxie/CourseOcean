@@ -192,4 +192,8 @@ div#footer div.span4 {
     div.container {
         width: 320px;
     }
+
+    div#container div#sub-header img {
+    	display: none;
+    }
 }
