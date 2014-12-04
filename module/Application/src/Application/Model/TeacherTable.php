@@ -46,7 +46,7 @@ class TeacherTable
                               'itp_teachers.uid = itp_teaching_fields.teacher_id');
                 $select->where->equalTo('course_type_id', $categoryId);
             }
-            $select->where->equalTo('teacher_is_approved', true);
+            $select->where->equalTo('is_approved', true);
         });
         return $resultSet->count();
     }
@@ -58,7 +58,7 @@ class TeacherTable
     public function getUncheckedCount()
     {
         $resultSet = $this->tableGateway->select(array(
-            'teacher_is_approved'   => false,
+            'is_approved'   => false,
         ));
         return $resultSet->count();
     }
@@ -101,7 +101,7 @@ class TeacherTable
         $rowSet = $this->tableGateway->select(function (Select $select) use ($uid) {
             $select->columns(array(
                 'uid'                   => 'uid', 
-                'teacher_is_approved'   => 'teacher_is_approved',
+                'is_approved'           => 'is_approved',
                 'teacher_name'          => 'teacher_name', 
                 'teacher_brief'         => 'teacher_brief',
                 'teacher_avatar'        => 'teacher_avatar',
@@ -147,7 +147,7 @@ class TeacherTable
             if ( $categoryId != 0 ) {
                 $select->where->equalTo('itp_teaching_fields.course_type_id', $categoryId);
             }
-            $select->where->equalTo('teacher_is_approved', true);
+            $select->where->equalTo('is_approved', true);
 
             $select->order(new Expression('CONVERT(teacher_name USING GBK)'));
             $select->group('itp_teachers.uid');

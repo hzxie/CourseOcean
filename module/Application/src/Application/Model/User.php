@@ -21,6 +21,7 @@ class User {
         $this->username                     = (!empty($data['username']))                   ? $data['username']                     : null;
         $this->email                        = (!empty($data['email']))                      ? $data['email']                        : null;
         $this->password                     = (!empty($data['password']))                   ? $data['password']                     : null;
+        $this->isApproved                   = (!empty($data['is_approved']))                ? $data['is_approved']                  : null;
         $this->userGroupId                  = (!empty($data['user_group_id']))              ? $data['user_group_id']                : null;
         $this->userGroupSlug                = (!empty($data['user_group_slug']))            ? $data['user_group_slug']              : null;
         $this->userGroupName                = (!empty($data['user_group_name']))            ? $data['user_group_name']              : null;
@@ -50,6 +51,12 @@ class User {
      * @var String
      */
     public $password;
+
+    /**
+     * 账号是否已通过审核.
+     * @var Boolean
+     */
+    public $isApproved;
 
     /**
      * 用户组的唯一标识符.

@@ -17,18 +17,18 @@ class Teacher {
      */
     public function exchangeArray($data)
     {
-        $this->uid           = (!empty($data['uid']))                    ? $data['uid']                  : null;
-        $this->teacherName   = (!empty($data['teacher_name']))           ? $data['teacher_name']         : null;
-        $this->isApproved    = (!empty($data['teacher_is_approved']))    ? $data['teacher_is_approved']  : null;
-        $this->brief         = (!empty($data['teacher_brief']))          ? $data['teacher_brief']        : null;
-        $this->avatar        = (!empty($data['teacher_avatar']))         ? $data['teacher_avatar']       : null;
-        $this->teachingField = (!empty($data['teaching_field']))         ? $data['teaching_field']       : null;
-        $this->region        = (!empty($data['teacher_region']))         ? $data['teacher_region']       : null;
-        $this->province      = (!empty($data['teacher_province']))       ? $data['teacher_province']     : null;
-        $this->city          = (!empty($data['teacher_city']))           ? $data['teacher_city']         : null;
-        $this->company       = (!empty($data['teacher_company']))        ? $data['teacher_company']      : null;
-        $this->phone         = (!empty($data['teacher_phone']))          ? $data['teacher_phone']        : null;
-        $this->weibo         = (!empty($data['teacher_weibo']))          ? $data['teacher_weibo']        : null;
+        $this->uid           = (!empty($data['uid']))                   ? $data['uid']                  : null;
+        $this->isApproved    = (!empty($data['is_approved']))           ? $data['is_approved']          : null;
+        $this->teacherName   = (!empty($data['teacher_name']))          ? $data['teacher_name']         : null;
+        $this->brief         = (!empty($data['teacher_brief']))         ? $data['teacher_brief']        : null;
+        $this->avatar        = (!empty($data['teacher_avatar']))        ? $data['teacher_avatar']       : null;
+        $this->teachingField = (!empty($data['teaching_field']))        ? $data['teaching_field']       : null;
+        $this->region        = (!empty($data['teacher_region']))        ? $data['teacher_region']       : null;
+        $this->province      = (!empty($data['teacher_province']))      ? $data['teacher_province']     : null;
+        $this->city          = (!empty($data['teacher_city']))          ? $data['teacher_city']         : null;
+        $this->company       = (!empty($data['teacher_company']))       ? $data['teacher_company']      : null;
+        $this->phone         = (!empty($data['teacher_phone']))         ? $data['teacher_phone']        : null;
+        $this->weibo         = (!empty($data['teacher_weibo']))         ? $data['teacher_weibo']        : null;
     }
 
     /**
@@ -38,16 +38,16 @@ class Teacher {
     public $uid;
 
     /**
-     * 讲师的真实姓名.
-     * @var String
-     */
-    public $teacherName;
-
-    /**
      * 讲师的资料是否通过审核
      * @var bool
      */
     public $isApproved;
+
+    /**
+     * 讲师的真实姓名.
+     * @var String
+     */
+    public $teacherName;
 
     /**
      * 讲师的简介.

@@ -18,6 +18,7 @@ class Company {
     public function exchangeArray($data)
     {
         $this->uid          = (!empty($data['uid']))                ? $data['uid']                  : null;
+        $this->isApproved   = (!empty($data['is_approved']))        ? $data['is_approved']          : null;
         $this->companyName  = (!empty($data['company_name']))       ? $data['company_name']         : null;
         $this->region       = (!empty($data['company_region']))     ? $data['company_region']       : null;
         $this->province     = (!empty($data['company_province']))   ? $data['company_province']     : null;
@@ -35,6 +36,12 @@ class Company {
      * @var int 
      */
     public $uid;
+
+    /**
+     * 企业的资料是否通过审核
+     * @var bool
+     */
+    public $isApproved;
 
     /**
      * 企业用户的公司名称.

@@ -78,7 +78,7 @@
         for ( var i = 0; i < totalUsers; ++ i ) {
             $('#users tbody').append('<tr>'
                                   + '    <td>' + users[i]['uid'] + '</td>'
-                                  + '    <td>N/a</td>'
+                                  + '    <td>' + (users[i]['userGroupSlug'] != 'teacher' ? '无需审核' : (users[i]['isApproved'] == null ? '未审核' : (users[i]['isApproved'] ? '审核通过' : '审核未通过'))) + '</td>'
                                   + '    <td>' + users[i]['username'] + '</td>'
                                   + '    <td>' + users[i]['email'] + '</td>'
                                   + '    <td>' + users[i]['userGroupName'] + '</td>'

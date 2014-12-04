@@ -53,6 +53,10 @@ class UserTable
         $resultSet = $this->tableGateway->select(function (Select $select) use ($offset, $limit) {
             $select->join('itp_user_groups', 
                           'itp_users.user_group_id = itp_user_groups.user_group_id');
+            $select->join('itp_teachers', 
+                          'itp_users.uid = itp_teachers.uid',
+                          array('is_approved'),
+                          $select::JOIN_LEFT);
             $select->offset($offset);
             $select->limit($limit);
             $select->order('uid DESC');

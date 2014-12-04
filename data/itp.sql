@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: 2014-11-19 00:14:25
+-- Generation Time: 2014-12-04 21:27:58
 -- 服务器版本： 5.6.16
 -- PHP Version: 5.5.9
 
@@ -52,6 +52,7 @@ INSERT INTO `itp_comments` (`comment_id`, `lecture_id`, `reviewer_uid`, `comment
 
 CREATE TABLE IF NOT EXISTS `itp_companies` (
 `uid` bigint(20) NOT NULL,
+  `is_approved` tinyint(1) DEFAULT NULL,
   `company_name` varchar(64) NOT NULL,
   `company_region` varchar(16) NOT NULL,
   `company_province` varchar(16) NOT NULL,
@@ -66,8 +67,8 @@ CREATE TABLE IF NOT EXISTS `itp_companies` (
 -- 转存表中的数据 `itp_companies`
 --
 
-INSERT INTO `itp_companies` (`uid`, `company_name`, `company_region`, `company_province`, `company_city`, `company_address`, `company_field_id`, `company_scale`, `company_phone`) VALUES
-(1004, '合肥网迅软件有限公司', '华东地区', '安徽省', '合肥市', '合肥市高新区香樟大道308号网迅大厦IFC金融中心项目', 1, 100, '0551-62368898');
+INSERT INTO `itp_companies` (`uid`, `is_approved`, `company_name`, `company_region`, `company_province`, `company_city`, `company_address`, `company_field_id`, `company_scale`, `company_phone`) VALUES
+(1004, 1, '合肥网迅软件有限公司', '华东地区', '安徽省', '合肥市', '合肥市高新区香樟大道308号网迅大厦IFC金融中心项目', 1, 100, '0551-62368898');
 
 -- --------------------------------------------------------
 
@@ -548,7 +549,7 @@ INSERT INTO `itp_requirements` (`requirement_id`, `requirement_is_accepted`, `re
 
 CREATE TABLE IF NOT EXISTS `itp_teachers` (
   `uid` bigint(20) NOT NULL,
-  `teacher_is_approved` tinyint(1) NOT NULL DEFAULT '0',
+  `is_approved` tinyint(1) DEFAULT NULL,
   `teacher_name` varchar(16) NOT NULL,
   `teacher_brief` varchar(640) NOT NULL,
   `teacher_avatar` varchar(64) NOT NULL,
@@ -564,7 +565,7 @@ CREATE TABLE IF NOT EXISTS `itp_teachers` (
 -- 转存表中的数据 `itp_teachers`
 --
 
-INSERT INTO `itp_teachers` (`uid`, `teacher_is_approved`, `teacher_name`, `teacher_brief`, `teacher_avatar`, `teacher_region`, `teacher_province`, `teacher_city`, `teacher_company`, `teacher_phone`, `teacher_weibo`) VALUES
+INSERT INTO `itp_teachers` (`uid`, `is_approved`, `teacher_name`, `teacher_brief`, `teacher_avatar`, `teacher_region`, `teacher_province`, `teacher_city`, `teacher_company`, `teacher_phone`, `teacher_weibo`) VALUES
 (100, 1, '杨锋镝', '杨锋镝是一位有着十余年从业经验的软件工程专家、资深技术管理者、培训师、咨询师. 他先后在UTStarcom、华为等企业从事过软件研发过程中涉及的大部分岗位：需求、设计、开发、测试、实施、维护、项目管理、团队管理、敏捷教练、人力资源管理, 同时还是多项技术专利的发明人. 丰富的职业跨界经历使他深刻体会各岗位的痛点, 能贴合客户需求提供务实的咨询服务. 近年来, 他研发了敏捷软件开发、从技术到管理等系列课程, 曾为三星电子、招商信诺、风行网和拓维信息等企业提供咨询服务, 辅导客户实施敏捷组织转型, 并曾为顺丰航空、国航、中国移动、Oracle、东软集团、普华永道等数十家企业提供培训服务. 此外, 他还受邀担任中国过程改进大会、敏捷中国大会、Scrum Gathering等大会的评委和主持人, 并经常在全球软件案例研究峰会、亚太软件研发管理峰会、中国软件工程大会、中国软件技术大会、中国过程改进大会、CSDN CTO俱乐部、QClub、敏捷之旅等发表演讲. ', '', '', '上海市', '', '麦思博有限公司资深敏捷咨询顾问', '', ''),
 (101, 1, '王剑', '毕业后加盟微软雷德蒙总部。1999年1月-2000年5月在Windows CE组工作。2000年5月-2001年5月在NetDocs组工作。2001年5月-2003年6月 在Windows RTC 组工作。2001年7月加入微软亚洲研究院筹备微软亚洲工程院。2001年11月微软亚洲工程院成立他是20多创始人之一。工程院成立后他领导多个团队成功的发布多个产品，包括网络模拟器（Network Emulator），Office Communicator Web Access, Live Meeting Recording。', '', '', '北京市', '', '微软技术资深专家 微软亚洲院创始人之一', '', ''),
 (102, 1, '刘大双', '清华大学国际工程项目管理研究院特聘教授，国家职业技能鉴定专家委员会委员。\r\n微软项目管理顾问及Microsoft MVP，PMP（PMI，2003年）。\r\n北京大学理学士，美国Fordham 大学商学院工商管理硕士。\r\n1989年8月至1992年8月于北京大学任教。1992年8月加入IT行业，先后服务于美国SAS软件研究所、中国惠普有限公司等全球著名的IT企业。2001年10月至2004年9月担任微软（中国）有限公司Microsoft Project产品经理。', '', '', '北京市', '', 'Microsoft MVP, PMP', '', ''),

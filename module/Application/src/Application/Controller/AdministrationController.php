@@ -203,9 +203,15 @@ class AdministrationController extends AbstractActionController
         return $teacherTable->getUncheckedCount();
     }
 
+    /**
+     * 根据筛选条件获取用户列表.
+     * @return 一个包含用户信息的JSON数组
+     */
     public function getUsersAction()
     {
         $NUMBER_OF_USERS_PER_PAGE   = 10;
+        $userGroupSlug              = $this->params()->fromQuery('userGroup');
+        $isApproved                 = $this->params()->fromQuery('isApproved');
         $pageNumber                 = $this->params()->fromQuery('page', 1);
         $offset                     = ($pageNumber - 1) * $NUMBER_OF_USERS_PER_PAGE;
 
