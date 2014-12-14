@@ -33,30 +33,53 @@ class UserTable
 	}
 
     /**
+     * [此方法仅供管理员使用]
      * 获取所有用户的数量.
-     * @return 所有用户的数量
+     * @param  int $userGroupId - 用户组的唯一标识符
+     * @param  int $isInspected - 用户是否已审核(-1表示不启用此筛选项)
+     * @param  int $isApproved  - 用户是否已通过审核(-1表示不启用此筛选项)
+     * @return 符合筛选条件用户的数量
      */
-    public function getCount()
+    public function getCountUsingFilters($userGroupId = 0, $isInspected = -1, $isApproved = -1)
     {
-        $resultSet = $this->tableGateway->select();
+        $resultSet = $this->tableGateway->select(function(Select $select) use ($userGroupId, $isInspected, $isApproved) {
+            if ( $userGroupId != 0 ) {
+                $select->where->equalTo('user_group_id', $userGroupId);
+            }
+            if ( $isInspected != -1 ) {
+                $select->where->equalTo('is_inspected', $isInspected);
+            }
+            if ( $isApproved != -1 ) {
+                $select->where->equalTo('is_approved', $isApproved);
+            }
+        });
         return $resultSet->count();
     }
 
     /**
-     * 获取所有用户的信息.
-     * @param  int $offset - 查询结果的Offset
-     * @param  int $limit  - 查询返回的记录数
+     * [此方法仅供管理员使用]
+     * 根据筛选条件获取用户的信息.
+     * @param  int $userGroupId - 用户组的唯一标识符
+     * @param  int $isInspected - 用户是否已审核(-1表示不启用此筛选项)
+     * @param  int $isApproved  - 用户是否已通过审核(-1表示不启用此筛选项)
+     * @param  int $offset      - 查询结果的Offset
+     * @param  int $limit       - 查询返回的记录数
      * @return 一个ResultSet对象, 包含若干个User对象.
      */
-    public function getAllUsers($offset, $limit)
+    public function getUsersUsingFilters($userGroupId, $isInspected, $isApproved, $offset, $limit)
     {
-        $resultSet = $this->tableGateway->select(function (Select $select) use ($offset, $limit) {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($userGroupId, $isInspected, $isApproved, $offset, $limit) {
             $select->join('itp_user_groups', 
                           'itp_users.user_group_id = itp_user_groups.user_group_id');
-            $select->join('itp_teachers', 
-                          'itp_users.uid = itp_teachers.uid',
-                          array('is_approved'),
-                          $select::JOIN_LEFT);
+            if ( $userGroupId != 0 ) {
+                $select->where->equalTo('itp_users.user_group_id', $userGroupId);
+            }
+            if ( $isInspected != -1 ) {
+                $select->where->equalTo('is_inspected', $isInspected);
+            }
+            if ( $isApproved != -1 ) {
+                $select->where->equalTo('is_approved', $isApproved);
+            }
             $select->offset($offset);
             $select->limit($limit);
             $select->order('uid DESC');
@@ -127,6 +150,25 @@ class UserTable
      */
     public function updateUser($user)
     {
+        $this->tableGateway->update($user, array(
+            'uid'   => $user['uid'],
+        ));
+        return true;
+    }
+
+    /**
+     * 将用户的审核状态设置为待审核.
+     * @param  int $uid - 用户的唯一标识符
+     * @return 操作是否成功完成
+     */
+    public function pendingUser($uid)
+    {
+        $user       = array(
+            'uid'           => $uid,
+            'is_inspected'  => false,
+            'is_approved'   => false,
+        );
+
         $this->tableGateway->update($user, array(
             'uid'   => $user['uid'],
         ));

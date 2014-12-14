@@ -46,20 +46,10 @@ class TeacherTable
                               'itp_teachers.uid = itp_teaching_fields.teacher_id');
                 $select->where->equalTo('course_type_id', $categoryId);
             }
+            $select->join('itp_users', 
+                          'itp_users.uid = itp_teachers.uid');
             $select->where->equalTo('is_approved', true);
         });
-        return $resultSet->count();
-    }
-
-    /**
-     * 获取未审核的讲师用户的数量.
-     * @return 未审核的讲师用户的数量
-     */
-    public function getUncheckedCount()
-    {
-        $resultSet = $this->tableGateway->select(array(
-            'is_approved'   => false,
-        ));
         return $resultSet->count();
     }
 
@@ -79,6 +69,8 @@ class TeacherTable
                 'teacher_company'   => 'teacher_company',
                 'teaching_field'    => new Expression("GROUP_CONCAT(`course_type_name` SEPARATOR ', ')"),
             ));
+            $select->join('itp_users', 
+                          'itp_users.uid = itp_teachers.uid');
             $select->join('itp_teaching_fields', 
                           'itp_teachers.uid = itp_teaching_fields.teacher_id');
             $select->join('itp_course_types', 
@@ -101,7 +93,6 @@ class TeacherTable
         $rowSet = $this->tableGateway->select(function (Select $select) use ($uid) {
             $select->columns(array(
                 'uid'                   => 'uid', 
-                'is_approved'           => 'is_approved',
                 'teacher_name'          => 'teacher_name', 
                 'teacher_brief'         => 'teacher_brief',
                 'teacher_avatar'        => 'teacher_avatar',
@@ -147,6 +138,8 @@ class TeacherTable
             if ( $categoryId != 0 ) {
                 $select->where->equalTo('itp_teaching_fields.course_type_id', $categoryId);
             }
+            $select->join('itp_users', 
+                          'itp_users.uid = itp_teachers.uid');
             $select->where->equalTo('is_approved', true);
 
             $select->order(new Expression('CONVERT(teacher_name USING GBK)'));

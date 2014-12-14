@@ -188,19 +188,22 @@ class AdministrationController extends AbstractActionController
         $serviceManager = $this->getServiceLocator();
         $userTable      = $serviceManager->get('Application\Model\UserTable');
 
-        return $userTable->getCount();
+        return $userTable->getCountUsingFilters();
     }
 
     /**
-     * 获取未审核的讲师用户的数量.
-     * @return 未审核的讲师用户的数量
+     * 获取未审核的用户的数量.
+     * @return 未审核的用户的数量
      */
     private function getUncheckUsers()
     {
-        $serviceManager = $this->getServiceLocator();
-        $teacherTable   = $serviceManager->get('Application\Model\TeacherTable');
+        $userGroupId    = 0;
+        $isInspected    = 0;
 
-        return $teacherTable->getUncheckedCount();
+        $serviceManager = $this->getServiceLocator();
+        $userTable      = $serviceManager->get('Application\Model\UserTable');
+
+        return $userTable->getCountUsingFilters($userGroupId, $isInspected);
     }
 
     /**
@@ -211,17 +214,58 @@ class AdministrationController extends AbstractActionController
     {
         $NUMBER_OF_USERS_PER_PAGE   = 10;
         $userGroupSlug              = $this->params()->fromQuery('userGroup');
-        $isApproved                 = $this->params()->fromQuery('isApproved');
+        $isInspected                = $this->params()->fromQuery('isInspected', -1);
+        $isApproved                 = $this->params()->fromQuery('isApproved', -1);
         $pageNumber                 = $this->params()->fromQuery('page', 1);
         $offset                     = ($pageNumber - 1) * $NUMBER_OF_USERS_PER_PAGE;
+        $userGroupId                = $this->getUserGroupId($userGroupSlug);
 
         $serviceManager = $this->getServiceLocator();
         $userTable      = $serviceManager->get('Application\Model\UserTable');
-        $users          = $userTable->getAllUsers($offset, $NUMBER_OF_USERS_PER_PAGE);
+        $users          = $userTable->getUsersUsingFilters($userGroupId, $isInspected, $isApproved, $offset, $NUMBER_OF_USERS_PER_PAGE);
 
         $result   = array(
             'isSuccessful'  => $users != null && $users->count() != 0,
             'users'         => $this->getResultSetArray($users),
+        );
+
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 通过用户组的唯一标识符获取用户组的唯一英文缩写.
+     * @param  String $userGroupSlug - 用户组的唯一英文缩写
+     * @return 用户组的唯一标识符
+     */
+    private function getUserGroupId($userGroupSlug)
+    {
+        $serviceManager = $this->getServiceLocator();
+        $userGroupTable = $serviceManager->get('Application\Model\UserGroupTable');
+        $userGroup      = $userGroupTable->getUserGroupUsingSlug($userGroupSlug);
+
+        if ( $userGroup != null ) {
+            return $userGroup->userGroupId;
+        } 
+        return 0;
+    }
+
+    public function getUserTotalPagesAction()
+    {
+        $NUMBER_OF_USERS_PER_PAGE   = 10;
+        $userGroupSlug              = $this->params()->fromQuery('userGroup');
+        $isApproved                 = $this->params()->fromQuery('isApproved', -1);
+        $userGroupId                = $this->getUserGroupId($userGroupSlug);
+
+        $serviceManager = $this->getServiceLocator();
+        $userTable      = $serviceManager->get('Application\Model\UserTable');
+        $totalPages     = ceil($userTable->getCountUsingFilters($userGroupId, $isApproved) / $NUMBER_OF_USERS_PER_PAGE);
+
+        $result   = array(
+            'isSuccessful'  => $totalPages != 0,
+            'totalPages'    => $totalPages,
         );
         $response = $this->getResponse();
         $response->setStatusCode(200);

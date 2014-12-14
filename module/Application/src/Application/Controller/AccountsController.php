@@ -966,7 +966,6 @@ class AccountsController extends AbstractActionController
         $uid            = $profile['uid'];
         $teacher        = array(
             'uid'                   => $uid,
-            'teacher_is_approved'   => false,
             'teacher_name'          => $name,
             'teacher_company'       => $company,
             'teacher_region'        => $region,
@@ -980,6 +979,7 @@ class AccountsController extends AbstractActionController
 
         if ( $result['isSuccessful'] ) {
             $serviceManager     = $this->getServiceLocator();
+            $userTable          = $serviceManager->get('Application\Model\UserTable');
             $teacherTable       = $serviceManager->get('Application\Model\TeacherTable');
             $teachingFieldTable = $serviceManager->get('Application\Model\TeachingFieldTable');
             $courseTypeTable    = $serviceManager->get('Application\Model\CourseTypeTable');
@@ -992,6 +992,7 @@ class AccountsController extends AbstractActionController
                 $teacherTable->createTeacher($teacher);
             }
             $teachingFieldTable->updateTeachingField($uid, $teachingFields, $courseTypes);
+            $userTable->pendingUser($uid);
         }
         return $result;
     }

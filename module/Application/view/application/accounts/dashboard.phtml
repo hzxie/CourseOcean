@@ -140,6 +140,9 @@
         $('.active').removeClass('active');
 
         var navObject = $('a[href=#' + pageName + ']');
+
+        console.log(navObject);
+
         if ( navObject.length != 0 ) {
             $(navObject.parent()).addClass('active');
         }

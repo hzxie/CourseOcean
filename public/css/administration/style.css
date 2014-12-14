@@ -113,7 +113,7 @@ div#container div#header form#search input {
 			border-radius: 0;
 }
 
-div#container div#header form#search i.icon-search {
+div#container div#header form#search i.fa-search {
 	position: absolute;
 	top: 15px;
 	right: 15px;
