@@ -125,9 +125,9 @@ class AdministrationController extends AbstractActionController
     }
 
     /**
-     * [getPageData description]
-     * @param  [type] $pageName [description]
-     * @return [type]           [description]
+     * 加载页面所需数据.
+     * @param  String $pageName - 获取页面的名称
+     * @return 一个包含页面所需数据的数组
      */
     private function getPageData($pageName)
     {
@@ -152,31 +152,6 @@ class AdministrationController extends AbstractActionController
             'totalUsers'        => $this->getTotalUsers(),
             'uncheckUsers'      => $this->getUncheckUsers(),
         );
-    }
-
-    private function getCoursesPageData()
-    {
-
-    }
-
-    private function getLecturesPageData()
-    {
-        
-    }
-
-    private function getRequirementsPageData()
-    {
-        
-    }
-
-    private function getPostsPageData()
-    {
-        
-    }
-
-    private function getSettingsPageData()
-    {
-        
     }
 
     /**
@@ -207,12 +182,29 @@ class AdministrationController extends AbstractActionController
     }
 
     /**
+     * 通过用户组的唯一标识符获取用户组的唯一英文缩写.
+     * @param  String $userGroupSlug - 用户组的唯一英文缩写
+     * @return 用户组的唯一标识符
+     */
+    private function getUserGroupId($userGroupSlug)
+    {
+        $serviceManager = $this->getServiceLocator();
+        $userGroupTable = $serviceManager->get('Application\Model\UserGroupTable');
+        $userGroup      = $userGroupTable->getUserGroupUsingSlug($userGroupSlug);
+
+        if ( $userGroup != null ) {
+            return $userGroup->userGroupId;
+        } 
+        return 0;
+    }
+
+    /**
      * 根据筛选条件获取用户列表.
      * @return 一个包含用户信息的JSON数组
      */
     public function getUsersAction()
     {
-        $NUMBER_OF_USERS_PER_PAGE   = 10;
+        $NUMBER_OF_USERS_PER_PAGE   = 25;
         $userGroupSlug              = $this->params()->fromQuery('userGroup');
         $isInspected                = $this->params()->fromQuery('isInspected', -1);
         $isApproved                 = $this->params()->fromQuery('isApproved', -1);
@@ -236,25 +228,12 @@ class AdministrationController extends AbstractActionController
     }
 
     /**
-     * 通过用户组的唯一标识符获取用户组的唯一英文缩写.
-     * @param  String $userGroupSlug - 用户组的唯一英文缩写
-     * @return 用户组的唯一标识符
+     * 根据筛选条件获取用户列表分页总数.
+     * @return 用户列表分页总数
      */
-    private function getUserGroupId($userGroupSlug)
-    {
-        $serviceManager = $this->getServiceLocator();
-        $userGroupTable = $serviceManager->get('Application\Model\UserGroupTable');
-        $userGroup      = $userGroupTable->getUserGroupUsingSlug($userGroupSlug);
-
-        if ( $userGroup != null ) {
-            return $userGroup->userGroupId;
-        } 
-        return 0;
-    }
-
     public function getUserTotalPagesAction()
     {
-        $NUMBER_OF_USERS_PER_PAGE   = 10;
+        $NUMBER_OF_USERS_PER_PAGE   = 25;
         $userGroupSlug              = $this->params()->fromQuery('userGroup');
         $isApproved                 = $this->params()->fromQuery('isApproved', -1);
         $userGroupId                = $this->getUserGroupId($userGroupSlug);
@@ -271,5 +250,53 @@ class AdministrationController extends AbstractActionController
         $response->setStatusCode(200);
         $response->setContent( Json::encode($result) );
         return $response;
+    }
+
+    /**
+     * 使用关键字搜索用户.
+     * @return 一个包含用户信息的JSON数组
+     */
+    public function getUsersUsingKeywordAction()
+    {
+        $keyword        = $this->params()->fromQuery('keyword');
+
+        $serviceManager = $this->getServiceLocator();
+        $userTable      = $serviceManager->get('Application\Model\UserTable');
+        $users          = $userTable->getUserUsingKeyword($keyword);
+
+        $result   = array(
+            'isSuccessful'  => $users != null && $users->count() != 0,
+            'users'         => $this->getResultSetArray($users),
+        );
+
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    private function getCoursesPageData()
+    {
+
+    }
+
+    private function getLecturesPageData()
+    {
+        
+    }
+
+    private function getRequirementsPageData()
+    {
+        
+    }
+
+    private function getPostsPageData()
+    {
+        
+    }
+
+    private function getSettingsPageData()
+    {
+        
     }
 }

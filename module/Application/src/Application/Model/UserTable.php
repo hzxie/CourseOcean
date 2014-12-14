@@ -132,6 +132,15 @@ class UserTable
         return $rowSet->current();
     }
 
+    public function getUserUsingKeyword($keyword)
+    {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($keyword) {
+            $select->where->OR->like('itp_users.username', "%$keyword%");
+            $select->where->OR->like('itp_users.email', "%$keyword%");
+        });
+        return $resultSet;
+    }
+
     /**
      * 创建一个新用户.
      * @param  Array $user - 一个包含用户信息的数组
