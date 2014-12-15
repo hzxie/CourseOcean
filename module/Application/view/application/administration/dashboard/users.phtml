@@ -3,8 +3,8 @@
 <div class="row-fluid">
     <div class="span6">
         <ul id="filter" class="inline">
-            <li><a href="#users">全部用户</a>(<?php echo $this->totalUsers; ?>)</li>
-            <li><a href="#users?isInspected=0">未审核用户</a>(<?php echo $this->uncheckUsers; ?>)</li>
+            <li><a id="all-users-filter" href="javascript:void(0);">全部用户</a>(<?php echo $this->totalUsers; ?>)</li>
+            <li><a id="unchecked-users-filter" href="javascript:void(0);">未审核用户</a>(<?php echo $this->uncheckUsers; ?>)</li>
         </ul>
     </div> <!-- .span6 -->
     <div class="span6 text-right">
@@ -156,6 +156,22 @@
 </script>
 <script type="text/javascript">
     $(document).ready(function() {
+        return getFilters(1);
+    });
+</script>
+<script type="text/javascript">
+    $('#all-users-filter').click(function() {
+        $('select[name=user-group]').val('all');
+        $('select[name=user-status]').val('all');
+
+        return getFilters(1);
+    });
+</script>
+<script type="text/javascript">
+    $('#unchecked-users-filter').click(function() {
+        $('select[name=user-group]').val('all');
+        $('select[name=user-status]').val('unchecked');
+
         return getFilters(1);
     });
 </script>

@@ -1,1 +1,14 @@
-<h1>Courses</h1>
+<link href="<?php echo $this->basePath(); ?>/css/administration/courses.css" media="screen" rel="stylesheet" type="text/css" />
+<h3>课程管理</h3>
+<div class="row-fluid">
+    <div class="span6">
+        <ul id="filter" class="inline">
+        </ul>
+    </div> <!-- .span6 -->
+    <div class="span6 text-right">
+        <form onSubmit="return false;">
+            <input id="keyword" type="text" />
+            <button class="btn">搜索课程</button>
+        </form>
+    </div> <!-- .span6 -->
+</div> <!-- .row-fluid -->
