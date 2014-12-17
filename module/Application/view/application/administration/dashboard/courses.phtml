@@ -1,8 +1,8 @@
-<link href="<?php echo $this->basePath(); ?>/css/administration/courses.css" media="screen" rel="stylesheet" type="text/css" />
 <h3>课程管理</h3>
 <div class="row-fluid">
     <div class="span6">
         <ul id="filter" class="inline">
+            <li><a id="all-courses-filter" href="javascript:void(0);">全部课程</a>(<?php echo $this->totalCourses; ?>)</li>
         </ul>
     </div> <!-- .span6 -->
     <div class="span6 text-right">
@@ -12,3 +12,127 @@
         </form>
     </div> <!-- .span6 -->
 </div> <!-- .row-fluid -->
+<div class="row-fluid">
+    <div class="span6">
+        <form class="row-fluid" onSubmit="getFilters(1); return false;">
+            <select name="course-type" class="span4">
+                <option value="all">全部课程类别</option>
+            <?php foreach ( $courseTypes as $courseType ): ?>
+                <option value="<?php echo $courseType->courseTypeSlug; ?>"><?php echo $courseType->courseTypeName; ?></option>
+            <?php endforeach; ?>
+            </select>
+            <button class="btn" type="submit">筛选</button>
+        </form>
+    </div> <!-- .span6 -->
+    <div id="pagination" class="span6 text-right">
+        <div class="pagination">
+            <ul></ul>
+        </div> <!-- .pagination -->
+    </div> <!-- #pagination -->
+</div> <!-- .row-fluid -->
+<table id="courses" class="table table-striped">
+    <thead>
+        <th>#</th>
+        <th>课程名称</th>
+        <th>课程类别</th>
+        <th>讲师</th>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<!-- Java Script -->
+<script type="text/javascript">
+    function getFilters(pageNumber) {
+        var courseType  = $('select[name=course-type]').val();
+
+        getCourses(pageNumber, courseType);
+        getCourseTotalPages(pageNumber, courseType);
+    }
+</script>
+<script type="text/javascript">
+    function getCourses(pageNumber, courseType) {
+        $.ajax({
+            type: 'GET',
+            url: '<?php echo $this->basePath(); ?>/administration/getCourses?page=' + pageNumber + '&category=' + courseType,
+            dataType: 'JSON',
+            success: function(result) {
+                console.log(result);
+
+                $('#courses tbody').empty();
+
+                if ( result['isSuccessful'] ) {
+                    displayCourses(result['courses']);
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function displayCourses(courses) {
+        var totalCourses = courses.length;
+        for ( var i = 0; i < totalCourses; ++ i ) {
+            $('#courses tbody').append('<tr>'
+                                  + '    <td>' + courses[i]['courseId'] + '</td>'
+                                  + '    <td>' + courses[i]['courseName'] + '</td>'
+                                  + '    <td>' + courses[i]['courseTypeName'] + '</td>'
+                                  + '    <td><a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=' + courses[i]['teacherId'] + '" target="_blank">' + courses[i]['teacherName'] + '</a></td>'
+                                  + '</tr>');
+        }
+    }
+</script>
+<script type="text/javascript">
+    function getCourseTotalPages(pageNumber, courseType) {
+        $.ajax({
+            type: 'GET',
+            url: '<?php echo $this->basePath(); ?>/administration/getCourseTotalPages?category=' + courseType,
+            dataType: 'JSON',
+            success: function(result) {
+                $('div.pagination > ul').empty();
+                if ( result['isSuccessful'] ) {
+                    $('div.pagination').removeClass('hide');
+                    displayPagination(pageNumber, result['totalPages']);
+                } else {
+                    $('div.pagination').addClass('hide');
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function displayPagination(currentPage, totalPages, filterUrl) {
+        var lowerBound = ( currentPage - 3 > 0 ? currentPage - 3 : 1 ),
+            upperBound = ( currentPage + 3 < totalPages ? currentPage + 3 : totalPages );
+        var paginationString  = '<li' + ( currentPage > 1 ? '>' : ' class="disabled">') + '<a href="#">&lt;</a></li>';
+
+        for ( var i = lowerBound; i <= upperBound; ++ i ) {
+            paginationString += '<li' + ( currentPage == i ? ' class="active"' : '' ) + '><a href="#">' + i + '</a></li>';
+        }
+        paginationString     += '<li' + ( currentPage < totalPages ? '>' : ' class="disabled">') + '<a href="#">&gt;</a></li>';
+        $('.pagination > ul').append(paginationString);
+    }
+</script>
+<script type="text/javascript">
+    $('.pagination > ul').delegate('li', 'click', function(e) {
+        e.preventDefault();
+        if ( $(this).hasClass('disabled') ) {
+            return;
+        }
+        var currentPage = parseInt($('li.active > a', '.pagination').html(), 10),
+            pageNumber  = $('a', this).html();
+        
+        $('.pagination > li.active').removeClass('active');
+        $(this).addClass('active');
+
+        if ( pageNumber === '&lt;' ) {
+            pageNumber  = currentPage - 1;
+        } else if ( pageNumber === '&gt;' ) {
+            pageNumber  = currentPage + 1;
+        }
+        return getFilters(pageNumber);
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        return getFilters(1);
+    });
+</script>

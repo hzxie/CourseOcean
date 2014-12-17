@@ -132,9 +132,16 @@ class UserTable
         return $rowSet->current();
     }
 
+    /**
+     * [此方法仅供管理员使用]
+     * 根据关键字获取用户的信息.
+     * @param  String $keyword - 关键字
+     * @return 一个ResultSet对象, 包含若干个User对象.
+     */
     public function getUserUsingKeyword($keyword)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($keyword) {
+            $select->where->OR->equalTo('itp_users.uid', "$keyword");
             $select->where->OR->like('itp_users.username', "%$keyword%");
             $select->where->OR->like('itp_users.email', "%$keyword%");
         });

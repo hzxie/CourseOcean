@@ -275,9 +275,89 @@ class AdministrationController extends AbstractActionController
         return $response;
     }
 
+    /**
+     * 获取课程管理页面所需数据.
+     * @return 一个包含课程管理页面所需数据的数组
+     */
     private function getCoursesPageData()
     {
+        $serviceManager     = $this->getServiceLocator();
+        $courseTable        = $serviceManager->get('Application\Model\CourseTable');
+        $totalCourses       = $courseTable->getCountUsingCategory();
+        $courseTypeTable    = $serviceManager->get('Application\Model\CourseTypeTable');
+        $courseTypes        = $courseTypeTable->getAllCourseTypes();
 
+        return array(
+            'totalCourses'  => $totalCourses,
+            'courseTypes'   => $courseTypes,
+        );
+    }
+
+    /**
+     * 获取课程列表.
+     * @return 一个包含课程信息的JSON数组
+     */
+    public function getCoursesAction()
+    {
+        $NUMBER_OF_COURSES_PER_PAGE     = 25;
+        $courseTypeSlug                 = $this->params()->fromQuery('category');
+        $pageNumber                     = $this->params()->fromQuery('page', 1);
+        $courseTypeId                   = $this->getCourseTypeId($courseTypeSlug);
+        $offset                         = ($pageNumber - 1) * $NUMBER_OF_COURSES_PER_PAGE;
+
+        $serviceManager = $this->getServiceLocator();
+        $courseTable    = $serviceManager->get('Application\Model\CourseTable');
+        $courses        = $courseTable->getCoursesUsingCategory($courseTypeId, $offset, $NUMBER_OF_COURSES_PER_PAGE, false);
+
+        $result   = array(
+            'isSuccessful'  => $courses != null && $courses->count() != 0,
+            'courses'       => $this->getResultSetArray($courses),
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 获取课程页面数量.
+     * @return 一个包含课程页面数量的JSON数组.
+     */
+    public function getCourseTotalPagesAction()
+    {
+        $NUMBER_OF_COURSES_PER_PAGE     = 25;
+        $courseTypeSlug                 = $this->params()->fromQuery('category');
+        $courseTypeId                   = $this->getCourseTypeId($courseTypeSlug, false);
+
+        $serviceManager = $this->getServiceLocator();
+        $courseTable    = $serviceManager->get('Application\Model\CourseTable');
+        $totalPages     = ceil($courseTable->getCountUsingCategory($courseTypeId) / $NUMBER_OF_COURSES_PER_PAGE);
+
+        $result   = array(
+            'isSuccessful'  => $totalPages != 0,
+            'totalPages'    => $totalPages,
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 通过课程类型的唯一英文缩写查找课程类型的唯一标识符.
+     * @param  String $catelogySlug - 课程类型的唯一英文缩写
+     * @return 课程类型的唯一标识符
+     */
+    private function getCourseTypeId($catelogySlug)
+    {
+        $serviceManager     = $this->getServiceLocator();
+        $courseTypeTable    = $serviceManager->get('Application\Model\CourseTypeTable');
+        $courseType         = $courseTypeTable->getCatelogyUsingSlug($catelogySlug);
+
+        if ( $courseType != null ) {
+            return $courseType->courseTypeId;
+        } 
+        return 0;
     }
 
     private function getLecturesPageData()

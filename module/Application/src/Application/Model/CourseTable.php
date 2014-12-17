@@ -37,11 +37,16 @@ class CourseTable
      * @param  int $categoryId - 课程类别的唯一标识符
      * @return 课程数量
      */
-    public function getCountUsingCategory($categoryId)
+    public function getCountUsingCategory($categoryId = 0, $hideUnchecked = true)
     {
-        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId) {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $hideUnchecked) {
             if ( $categoryId != 0 ) {
                 $select->where->equalTo('course_type_id', $categoryId);
+            }
+            if ( $hideUnchecked ) {
+                $select->join('itp_users', 
+                              'itp_users.uid = itp_courses.teacher_id');
+                $select->where->equalTo('is_approved', true);
             }
         });
         return $resultSet->count();
@@ -58,26 +63,6 @@ class CourseTable
             'teacher_id'    => $teacherId,
         ));
         return $resultSet->count();
-    }
-
-    /**
-     * 获取所有课程的信息.
-     * @param  int $offset - 查询结果的Offset
-     * @param  int $limit  - 查询返回的记录数
-     * @return 一个ResultSet对象, 包含若干个Course对象
-     */
-    public function getAllCourses($offset, $limit)
-    {
-        $resultSet = $this->tableGateway->select(function (Select $select) use ($offset, $limit) {
-            $select->join('itp_course_types', 
-                          'itp_courses.course_type_id = itp_course_types.course_type_id');
-            $select->join('itp_teachers', 
-                          'itp_courses.teacher_id = itp_teachers.uid');
-            $select->order('course_id DESC');
-            $select->offset($offset);
-            $select->limit($limit);
-        });
-        return $resultSet;
     }
 
     /**
@@ -103,15 +88,20 @@ class CourseTable
      * @param  int $limit  - 查询返回的记录数
      * @return 一个ResultSet对象, 包含若干个Course对象
      */
-    public function getCoursesUsingCategory($categoryId, $offset, $limit)
+    public function getCoursesUsingCategory($categoryId, $offset, $limit, $hideUnchecked = true)
     {
-        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $offset, $limit) {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $offset, $limit, $hideUnchecked) {
             $select->join('itp_course_types', 
                           'itp_courses.course_type_id = itp_course_types.course_type_id');
             $select->join('itp_teachers', 
                           'itp_courses.teacher_id = itp_teachers.uid');
             if ( $categoryId != 0 ) {
                 $select->where->equalTo('itp_courses.course_type_id', $categoryId);
+            }
+            if ( $hideUnchecked ) {
+                $select->join('itp_users', 
+                              'itp_users.uid = itp_courses.teacher_id');
+                $select->where->equalTo('is_approved', true);
             }
             $select->order('course_id DESC');
             $select->offset($offset);
