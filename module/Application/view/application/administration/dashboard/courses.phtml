@@ -6,7 +6,7 @@
         </ul>
     </div> <!-- .span6 -->
     <div class="span6 text-right">
-        <form onSubmit="return false;">
+        <form onSubmit="getCourseUsingKeyword(); return false;">
             <input id="keyword" type="text" />
             <button class="btn">搜索课程</button>
         </form>
@@ -135,4 +135,28 @@
     $(document).ready(function() {
         return getFilters(1);
     });
+</script>
+<script type="text/javascript">
+    function getCourseUsingKeyword() {
+        var keyword = $('#keyword').val().trim();
+
+        if ( keyword.length == 0 ) {
+            alert('请输入搜索关键词');
+            return;
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: "<?php echo $this->basePath(); ?>/administration/getCourseUsingKeyword?keyword=" + keyword,
+            dataType: 'JSON',
+            success: function(result) {
+                $('#courses tbody').empty();
+                $('div.pagination').addClass('hide');
+
+                if ( result['isSuccessful'] ) {
+                    displayCourses(result['courses']);
+                }
+            }
+        });
+    }
 </script>

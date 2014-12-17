@@ -37,13 +37,13 @@ class CourseTable
      * @param  int $categoryId - 课程类别的唯一标识符
      * @return 课程数量
      */
-    public function getCountUsingCategory($categoryId = 0, $hideUnchecked = true)
+    public function getCountUsingCategory($categoryId = 0, $isAdministrator = false)
     {
-        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $hideUnchecked) {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $isAdministrator) {
             if ( $categoryId != 0 ) {
                 $select->where->equalTo('course_type_id', $categoryId);
             }
-            if ( $hideUnchecked ) {
+            if ( !$isAdministrator ) {
                 $select->join('itp_users', 
                               'itp_users.uid = itp_courses.teacher_id');
                 $select->where->equalTo('is_approved', true);
@@ -88,9 +88,9 @@ class CourseTable
      * @param  int $limit  - 查询返回的记录数
      * @return 一个ResultSet对象, 包含若干个Course对象
      */
-    public function getCoursesUsingCategory($categoryId, $offset, $limit, $hideUnchecked = true)
+    public function getCoursesUsingCategory($categoryId, $offset, $limit, $isAdministrator = false)
     {
-        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $offset, $limit, $hideUnchecked) {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $offset, $limit, $isAdministrator) {
             $select->join('itp_course_types', 
                           'itp_courses.course_type_id = itp_course_types.course_type_id');
             $select->join('itp_teachers', 
@@ -98,7 +98,7 @@ class CourseTable
             if ( $categoryId != 0 ) {
                 $select->where->equalTo('itp_courses.course_type_id', $categoryId);
             }
-            if ( $hideUnchecked ) {
+            if ( !$isAdministrator ) {
                 $select->join('itp_users', 
                               'itp_users.uid = itp_courses.teacher_id');
                 $select->where->equalTo('is_approved', true);
@@ -144,8 +144,12 @@ class CourseTable
                           'itp_courses.course_type_id = itp_course_types.course_type_id');
             $select->join('itp_teachers', 
                           'itp_courses.teacher_id = itp_teachers.uid');
-            $select->where->like('itp_courses.course_name', "%$keyword%");
+
+            $select->where->OR->equalTo('itp_courses.course_id', $keyword);
+            $select->where->OR->like('itp_courses.course_name', "%$keyword%");
+            $select->where->OR->like('itp_teachers.teacher_name', "%$keyword%");
             $select->order('course_id DESC');
+            
             $select->offset($offset);
             $select->limit($limit);
         });

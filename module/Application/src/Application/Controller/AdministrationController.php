@@ -360,6 +360,32 @@ class AdministrationController extends AbstractActionController
         return 0;
     }
 
+    /**
+     * [getCourseUsingKeyword description]
+     * @return [type] [description]
+     */
+    public function getCourseUsingKeywordAction()
+    {
+        $NUMBER_OF_COURSES_PER_PAGE = 10;
+        $keyword                    = $this->params()->fromQuery('keyword');
+        $pageNumber                 = $this->params()->fromQuery('page', 1);
+        $offset                     = ($pageNumber - 1) * $NUMBER_OF_COURSES_PER_PAGE;
+
+        $serviceManager = $this->getServiceLocator();
+        $courseTable    = $serviceManager->get('Application\Model\CourseTable');
+        $courses        = $courseTable->getCourseUsingKeyword($keyword, $offset, $NUMBER_OF_COURSES_PER_PAGE);
+
+        $result   = array(
+            'isSuccessful'  => $courses != null && $courses->count() != 0,
+            'courses'       => $this->getResultSetArray($courses),
+        );
+
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
     private function getLecturesPageData()
     {
         

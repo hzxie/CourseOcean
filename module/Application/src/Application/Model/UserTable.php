@@ -141,6 +141,8 @@ class UserTable
     public function getUserUsingKeyword($keyword)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($keyword) {
+            $select->join('itp_user_groups', 
+                          'itp_users.user_group_id = itp_user_groups.user_group_id');
             $select->where->OR->equalTo('itp_users.uid', "$keyword");
             $select->where->OR->like('itp_users.username', "%$keyword%");
             $select->where->OR->like('itp_users.email', "%$keyword%");
