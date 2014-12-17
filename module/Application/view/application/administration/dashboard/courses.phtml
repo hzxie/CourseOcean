@@ -3,6 +3,8 @@
     <div class="span6">
         <ul id="filter" class="inline">
             <li><a id="all-courses-filter" href="javascript:void(0);">全部课程</a>(<?php echo $this->totalCourses; ?>)</li>
+            <li><a id="public-courses-filter" href="javascript:void(0);">公开课</a>(<?php echo $this->publicCourses; ?>)</li>
+            <li><a id="non-public-courses-filter" href="javascript:void(0);">非公开课</a>(<?php echo $this->nonPublicCourses; ?>)</li>
         </ul>
     </div> <!-- .span6 -->
     <div class="span6 text-right">
@@ -15,11 +17,21 @@
 <div class="row-fluid">
     <div class="span6">
         <form class="row-fluid" onSubmit="getFilters(1); return false;">
-            <select name="course-type" class="span4">
+            <select name="course-type" class="span3">
                 <option value="all">全部课程类别</option>
             <?php foreach ( $courseTypes as $courseType ): ?>
                 <option value="<?php echo $courseType->courseTypeSlug; ?>"><?php echo $courseType->courseTypeName; ?></option>
             <?php endforeach; ?>
+            </select>
+            <select name="is-public" class="span3">
+                <option value="-1">全部课程</option>
+                <option value="1">公开课</option>
+                <option value="0">非公开课</option>
+            </select>
+            <select name="is-user-checked" class="span3">
+                <option value="1">全部课程</option>
+                <option value="1">审核通过讲师的课程</option>
+                <option value="0">未审核讲师的课程</option>
             </select>
             <button class="btn" type="submit">筛选</button>
         </form>
@@ -36,6 +48,7 @@
         <th>课程名称</th>
         <th>课程类别</th>
         <th>讲师</th>
+        <th>备注</th>
     </thead>
     <tbody></tbody>
 </table>
@@ -43,17 +56,19 @@
 <!-- Java Script -->
 <script type="text/javascript">
     function getFilters(pageNumber) {
-        var courseType  = $('select[name=course-type]').val();
+        var courseType    = $('select[name=course-type]').val(),
+            isPublic      = $('select[name=is-public]').val(),
+            isUserChecked = $('select[name=is-user-checked]').val();
 
-        getCourses(pageNumber, courseType);
-        getCourseTotalPages(pageNumber, courseType);
+        getCourses(pageNumber, courseType, isPublic, isUserChecked);
+        getCourseTotalPages(pageNumber, courseType, isPublic, isUserChecked);
     }
 </script>
 <script type="text/javascript">
-    function getCourses(pageNumber, courseType) {
+    function getCourses(pageNumber, courseType, isPublic, isUserChecked) {
         $.ajax({
             type: 'GET',
-            url: '<?php echo $this->basePath(); ?>/administration/getCourses?page=' + pageNumber + '&category=' + courseType,
+            url: '<?php echo $this->basePath(); ?>/administration/getCourses?page=' + pageNumber + '&category=' + courseType + '&isPublic=' + isPublic + '&isUserChecked=' + isUserChecked,
             dataType: 'JSON',
             success: function(result) {
                 console.log(result);
@@ -76,15 +91,16 @@
                                   + '    <td>' + courses[i]['courseName'] + '</td>'
                                   + '    <td>' + courses[i]['courseTypeName'] + '</td>'
                                   + '    <td><a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=' + courses[i]['teacherId'] + '" target="_blank">' + courses[i]['teacherName'] + '</a></td>'
+                                  + '    <td>' + (courses[i]['isPublic'] ? '' : '非公开课') + '</td>'
                                   + '</tr>');
         }
     }
 </script>
 <script type="text/javascript">
-    function getCourseTotalPages(pageNumber, courseType) {
+    function getCourseTotalPages(pageNumber, courseType, isPublic, isUserChecked) {
         $.ajax({
             type: 'GET',
-            url: '<?php echo $this->basePath(); ?>/administration/getCourseTotalPages?category=' + courseType,
+            url: '<?php echo $this->basePath(); ?>/administration/getCourseTotalPages?category=' + courseType + '&isPublic=' + isPublic + '&isUserChecked=' + isUserChecked,
             dataType: 'JSON',
             success: function(result) {
                 $('div.pagination > ul').empty();

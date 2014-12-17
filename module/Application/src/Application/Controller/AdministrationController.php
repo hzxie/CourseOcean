@@ -258,11 +258,14 @@ class AdministrationController extends AbstractActionController
      */
     public function getUsersUsingKeywordAction()
     {
-        $keyword        = $this->params()->fromQuery('keyword');
+        $NUMBER_OF_USERS_PER_PAGE   = 10;
+        $keyword                    = $this->params()->fromQuery('keyword');
+        $pageNumber                 = $this->params()->fromQuery('page', 1);
+        $offset                     = ($pageNumber - 1) * $NUMBER_OF_USERS_PER_PAGE;
 
         $serviceManager = $this->getServiceLocator();
         $userTable      = $serviceManager->get('Application\Model\UserTable');
-        $users          = $userTable->getUserUsingKeyword($keyword);
+        $users          = $userTable->getUserUsingKeyword($keyword, $offset, $NUMBER_OF_USERS_PER_PAGE);
 
         $result   = array(
             'isSuccessful'  => $users != null && $users->count() != 0,
@@ -282,15 +285,51 @@ class AdministrationController extends AbstractActionController
     private function getCoursesPageData()
     {
         $serviceManager     = $this->getServiceLocator();
-        $courseTable        = $serviceManager->get('Application\Model\CourseTable');
-        $totalCourses       = $courseTable->getCountUsingCategory();
         $courseTypeTable    = $serviceManager->get('Application\Model\CourseTypeTable');
         $courseTypes        = $courseTypeTable->getAllCourseTypes();
+        $totalCourses       = $this->getTotalCourses();
+        $publicCourses      = $this->getPublicCourses();
 
         return array(
-            'totalCourses'  => $totalCourses,
-            'courseTypes'   => $courseTypes,
+            'totalCourses'      => $totalCourses,
+            'publicCourses'     => $publicCourses,
+            'nonPublicCourses'  => $totalCourses - $publicCourses,
+            'courseTypes'       => $courseTypes,
         );
+    }
+
+    /**
+     * 获取课程的总数量.
+     * @return 课程的总数量
+     */
+    private function getTotalCourses()
+    {
+        $courseTypeId       = 0;
+        $isPublic           = -1;
+        $isUserChecked      = -1;
+
+        $serviceManager     = $this->getServiceLocator();
+        $courseTable        = $serviceManager->get('Application\Model\CourseTable');
+        $totalCourses       = $courseTable->getCountUsingFilters($courseTypeId, $isPublic, $isUserChecked);
+
+        return $totalCourses;
+    }
+
+    /**
+     * 获取公开课的数量.
+     * @return 公开课的数量
+     */
+    private function getPublicCourses()
+    {
+        $courseTypeId       = 0;
+        $isPublic           = 1;
+        $isUserChecked      = -1;
+
+        $serviceManager     = $this->getServiceLocator();
+        $courseTable        = $serviceManager->get('Application\Model\CourseTable');
+        $publicCourses      = $courseTable->getCountUsingFilters($courseTypeId, $isPublic, $isUserChecked);
+
+        return $publicCourses;
     }
 
     /**
@@ -301,13 +340,15 @@ class AdministrationController extends AbstractActionController
     {
         $NUMBER_OF_COURSES_PER_PAGE     = 25;
         $courseTypeSlug                 = $this->params()->fromQuery('category');
+        $isPublic                       = $this->params()->fromQuery('isPublic', -1);
+        $isUserChecked                  = $this->params()->fromQuery('isUserChecked', -1);
         $pageNumber                     = $this->params()->fromQuery('page', 1);
         $courseTypeId                   = $this->getCourseTypeId($courseTypeSlug);
         $offset                         = ($pageNumber - 1) * $NUMBER_OF_COURSES_PER_PAGE;
 
         $serviceManager = $this->getServiceLocator();
         $courseTable    = $serviceManager->get('Application\Model\CourseTable');
-        $courses        = $courseTable->getCoursesUsingCategory($courseTypeId, $offset, $NUMBER_OF_COURSES_PER_PAGE, false);
+        $courses        = $courseTable->getCoursesUsingFilters($courseTypeId, $isPublic, $isUserChecked, $offset, $NUMBER_OF_COURSES_PER_PAGE);
 
         $result   = array(
             'isSuccessful'  => $courses != null && $courses->count() != 0,
@@ -321,17 +362,19 @@ class AdministrationController extends AbstractActionController
 
     /**
      * 获取课程页面数量.
-     * @return 一个包含课程页面数量的JSON数组.
+     * @return 一个包含课程页面数量的JSON数组
      */
     public function getCourseTotalPagesAction()
     {
         $NUMBER_OF_COURSES_PER_PAGE     = 25;
         $courseTypeSlug                 = $this->params()->fromQuery('category');
-        $courseTypeId                   = $this->getCourseTypeId($courseTypeSlug, false);
+        $isPublic                       = $this->params()->fromQuery('isPublic', -1);
+        $isUserChecked                  = $this->params()->fromQuery('isUserChecked', -1);
+        $courseTypeId                   = $this->getCourseTypeId($courseTypeSlug);
 
         $serviceManager = $this->getServiceLocator();
         $courseTable    = $serviceManager->get('Application\Model\CourseTable');
-        $totalPages     = ceil($courseTable->getCountUsingCategory($courseTypeId) / $NUMBER_OF_COURSES_PER_PAGE);
+        $totalPages     = ceil($courseTable->getCountUsingFilters($courseTypeId, $isPublic, $isUserChecked) / $NUMBER_OF_COURSES_PER_PAGE);
 
         $result   = array(
             'isSuccessful'  => $totalPages != 0,
@@ -361,8 +404,8 @@ class AdministrationController extends AbstractActionController
     }
 
     /**
-     * [getCourseUsingKeyword description]
-     * @return [type] [description]
+     * 根据关键字筛选课程.
+     * @return 一个包含课程页面数量的JSON数组
      */
     public function getCourseUsingKeywordAction()
     {

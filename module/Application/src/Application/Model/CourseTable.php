@@ -33,21 +33,47 @@ class CourseTable
     }
 
     /**
-     * 获取某个类别中课程的数量.
-     * @param  int $categoryId - 课程类别的唯一标识符
-     * @return 课程数量
+     * [此方法仅供管理员使用]
+     * 根据筛选条件获取某个分类下课程的数量.
+     * @param  int  $categoryId    - 课程类别的唯一标识符
+     * @param  bool $isPublic      - 是否为公开课(-1表示不启用此筛选项)
+     * @param  bool $isUserChecked - 是否显示未审核用户的课程(-1表示不启用此筛选项)
+     * @return 获取某个分类下课程的数量
      */
-    public function getCountUsingCategory($categoryId = 0, $isAdministrator = false)
+    public function getCountUsingFilters($categoryId, $isPublic, $isUserChecked)
     {
-        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $isAdministrator) {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $isPublic, $isUserChecked) {
             if ( $categoryId != 0 ) {
                 $select->where->equalTo('course_type_id', $categoryId);
             }
-            if ( !$isAdministrator ) {
+            if ( $isPublic != -1 ) {
+                $select->where->equalTo('course_is_public', $isPublic);
+            }
+            if ( $isUserChecked != -1 ) {
                 $select->join('itp_users', 
                               'itp_users.uid = itp_courses.teacher_id');
-                $select->where->equalTo('is_approved', true);
+                $select->where->equalTo('is_approved', $isUserChecked);
             }
+        });
+        return $resultSet->count();
+    }
+
+    /**
+     * 获取某个类别中公开课程的数量.
+     * @param  int $categoryId - 课程类别的唯一标识符
+     * @return 课程数量
+     */
+    public function getCountUsingCategory($categoryId = 0)
+    {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId) {
+            $select->join('itp_users', 
+                          'itp_users.uid = itp_courses.teacher_id');
+            
+            if ( $categoryId != 0 ) {
+                $select->where->equalTo('course_type_id', $categoryId);
+            }
+            $select->where->equalTo('is_approved', true);
+            $select->where->equalTo('course_is_public', true);
         });
         return $resultSet->count();
     }
@@ -82,27 +108,65 @@ class CourseTable
     }
 
     /**
-     * 使用课程的课程类别获取课程对象.
+     * [此方法仅供管理员使用]
+     * 使用筛选条件获取课程对象.
+     * @param  int  $categoryId    - 课程类别的唯一标识符
+     * @param  bool $isPublic      - 是否为公开课(-1表示不启用此筛选项)
+     * @param  bool $isUserChecked - 是否显示未审核用户的课程(-1表示不启用此筛选项)
+     * @param  int $offset         - 查询结果的Offset
+     * @param  int $limit          - 查询返回的记录数
+     * @return 一个ResultSet对象, 包含若干个Course对象
+     */
+    public function getCoursesUsingFilters($categoryId, $isPublic, $isUserChecked, $offset, $limit)
+    {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $isPublic, $isUserChecked, $offset, $limit) {
+            $select->join('itp_course_types', 
+                          'itp_courses.course_type_id = itp_course_types.course_type_id');
+            $select->join('itp_teachers', 
+                          'itp_courses.teacher_id = itp_teachers.uid');
+
+            if ( $categoryId != 0 ) {
+                $select->where->equalTo('itp_courses.course_type_id', $categoryId);
+            }
+            if ( $isPublic != -1 ) {
+                $select->where->equalTo('course_is_public', $isPublic);
+            }
+            if ( $isUserChecked != -1 ) {
+                $select->join('itp_users', 
+                              'itp_users.uid = itp_courses.teacher_id');
+                $select->where->equalTo('is_approved', $isUserChecked);
+            }
+
+            $select->order('course_id DESC');
+            $select->offset($offset);
+            $select->limit($limit);
+        });
+        return $resultSet;
+    }
+
+    /**
+     * 使用课程的课程类别获取公开课程对象.
      * @param  int $categoryId - 课程类别的唯一标识符
      * @param  int $offset - 查询结果的Offset
      * @param  int $limit  - 查询返回的记录数
      * @return 一个ResultSet对象, 包含若干个Course对象
      */
-    public function getCoursesUsingCategory($categoryId, $offset, $limit, $isAdministrator = false)
+    public function getCoursesUsingCategory($categoryId, $offset, $limit)
     {
-        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $offset, $limit, $isAdministrator) {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $offset, $limit) {
             $select->join('itp_course_types', 
                           'itp_courses.course_type_id = itp_course_types.course_type_id');
             $select->join('itp_teachers', 
                           'itp_courses.teacher_id = itp_teachers.uid');
+            $select->join('itp_users', 
+                          'itp_users.uid = itp_courses.teacher_id');
+
             if ( $categoryId != 0 ) {
                 $select->where->equalTo('itp_courses.course_type_id', $categoryId);
             }
-            if ( !$isAdministrator ) {
-                $select->join('itp_users', 
-                              'itp_users.uid = itp_courses.teacher_id');
-                $select->where->equalTo('is_approved', true);
-            }
+            $select->where->equalTo('is_approved', true);
+            $select->where->equalTo('course_is_public', true);
+
             $select->order('course_id DESC');
             $select->offset($offset);
             $select->limit($limit);

@@ -138,9 +138,9 @@ class UserTable
      * @param  String $keyword - 关键字
      * @return 一个ResultSet对象, 包含若干个User对象.
      */
-    public function getUserUsingKeyword($keyword)
+    public function getUserUsingKeyword($keyword, $offset, $limit)
     {
-        $resultSet = $this->tableGateway->select(function (Select $select) use ($keyword) {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($keyword, $offset, $limit) {
             $select->join('itp_user_groups', 
                           'itp_users.user_group_id = itp_user_groups.user_group_id');
             $select->where->OR->equalTo('itp_users.uid', "$keyword");
