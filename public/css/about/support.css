@@ -1,0 +1,8 @@
+div#content div.accordion div.accordion-heading a {
+	color: #333;
+	text-decoration: none;
+}
+
+div#content div.accordion div.accordion-body {
+	color: #666;
+}

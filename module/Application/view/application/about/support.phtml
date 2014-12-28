@@ -1,6 +1,7 @@
 <?php 
     echo $this->headTitle('帮助中心 | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/about/style.css');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/about/style.css')
+                          ->appendStylesheet($this->basePath().'/css/about/support.css');
 ?>
 
 <div id="header" class="container">
@@ -34,7 +35,7 @@
 <div id="hero">
     <div class="container">
         <h1>帮助中心</h1>
-        <p>我们非常乐意解答您在使用过程中遇到的问题.</p>
+        <p>答疑解惑, 只为更优质的服务.</p>
     </div> <!-- #container -->
 </div> <!-- #hero -->
 <div id="container" class="container">
@@ -50,7 +51,18 @@
             </ul>
         </div> <!-- .span3 -->
         <div id="content" class="span9">
-            
+            <div class="accordion">
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent=".accordion" href="#collapse-item">Collapsible Group Item</a>
+                    </div> <!-- .accordion-heading -->
+                    <div id="collapse-item" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            Anim pariatur cliche...
+                        </div> <!-- .accordion-inner -->
+                    </div> <!-- .accordion-body -->
+                </div> <!-- .accordion-group -->
+            </div> <!-- .accordion -->
         </div> <!-- .span9 -->
     </div> <!-- .row-fluid -->
 </div> <!-- #container -->

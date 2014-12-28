@@ -1,0 +1,8 @@
+div#content h2 {
+	padding-bottom: 8px;
+	border-bottom: 1px dotted #ccc;
+}
+
+div#content p {
+	color: #666;
+}

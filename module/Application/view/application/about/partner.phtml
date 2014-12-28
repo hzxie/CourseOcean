@@ -1,6 +1,7 @@
 <?php 
     echo $this->headTitle('合作伙伴 | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/about/style.css');
+    echo $this->headLink()->appendStylesheet($this->basePath().'/css/about/style.css')
+                          ->appendStylesheet($this->basePath().'/css/about/partner.css');
 ?>
 
 <div id="header" class="container">
@@ -50,7 +51,23 @@
             </ul>
         </div> <!-- .span3 -->
         <div id="content" class="span9">
-            
+            <h2>开发者服务战略合作伙伴</h2>
+            <ul class="inline">
+                <li><a href="http://www.aliyun.com"><img src="<?php echo $this->basePath(); ?>/img/about/partners/aliyun.png" alt="Aliyun"></a></li>
+                <li><a href="https://github.com"><img src="<?php echo $this->basePath(); ?>/img/about/partners/github.png" alt="GitHub"></a></li>
+                <li><a href="https://travis-ci.org"><img src="<?php echo $this->basePath(); ?>/img/about/partners/travis-ci.png" alt="TravisCI"></a></li>
+                <li><a href="https://www.alipay.com"><img src="<?php echo $this->basePath(); ?>/img/about/partners/alipay.png" alt="Alipay"></a></li>
+                <li><a href="http://team.oschina.net"><img src="<?php echo $this->basePath(); ?>/img/about/partners/team-osc.png" alt="Team@OSC"></a></li>
+            </ul>
+            <h2>社区媒体合作伙伴</h2>
+            <div class="row-fluid">
+                <div class="span4">
+                </div> <!-- .span4 -->
+                <div class="span4">
+                </div> <!-- .span4 -->
+                <div class="span4">
+                </div> <!-- .span4 -->
+            </div> <!-- .row-fluid -->
         </div> <!-- .span9 -->
     </div> <!-- .row-fluid -->
 </div> <!-- #container -->
