@@ -4,6 +4,7 @@ namespace Application\Model;
 
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Select;
 use Zend\Db\TableGateway\TableGateway;
 
@@ -33,11 +34,34 @@ class PostTable
     }
 
     /**
+     * [此方法仅供管理员使用]
+     * 使用筛选条件获取满足筛选条件的培训动态.
+     * @param  int $categoryId - 培训动态分类的唯一标识符
+     * @param  $publishTime    - 培训动态的发布时间(-1表示不启用此筛选项)
+     * @return 培训动态的数量
+     */
+    public function getCountUsingFilters($categoryId, $publishMonth)
+    {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $publishMonth) {
+            $select->join('itp_post_categories', 
+                          'itp_posts.post_category_id = itp_post_categories.post_category_id');
+
+            if ( $categoryId != 0 ) {
+                $select->where->equalTo('itp_posts.post_category_id', $categoryId);
+            }
+            if ( $publishMonth != 'all' ) {
+                $select->where->like('itp_posts.post_date', "%$publishMonth%");
+            }
+        });
+        return $resultSet->count();
+    }
+
+    /**
      * 获取某个分类中培训动态的数量.
      * @param  int $categoryId - 培训动态分类的唯一标识符
      * @return 培训动态的数量
      */
-    public function getCount($categoryId)
+    public function getCountUsingCategory($categoryId = 0)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId) {
             if ( $categoryId != 0 ) {
@@ -50,16 +74,27 @@ class PostTable
     }
 
     /**
+     * [此方法仅供管理员使用]
      * 获取所有培训动态的信息.
-     * @param  int $offset - 查询结果的Offset
-     * @param  int $limit  - 查询返回的记录数
+     * @param  int    $categoryId   - 培训动态分类的唯一标识符
+     * @param  String $publishMonth - 培训动态的发布月份
+     * @param  int    $offset       - 查询结果的Offset
+     * @param  int    $limit        - 查询返回的记录数
      * @return 一个ResultSet对象, 包含若干个Post对象.
      */
-    public function getAllPosts($offset, $limit)
+    public function getPostsUsingFilters($categoryId, $publishMonth, $offset, $limit)
     {
-        $resultSet = $this->tableGateway->select(function (Select $select) use ($offset, $limit) {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($categoryId, $publishMonth, $offset, $limit) {
             $select->join('itp_post_categories', 
                           'itp_posts.post_category_id = itp_post_categories.post_category_id');
+            
+            if ( $categoryId != 0 ) {
+                $select->where->equalTo('itp_posts.post_category_id', $categoryId);
+            }
+            if ( $publishMonth != 'all' ) {
+                $select->where->like('itp_posts.post_date', "%$publishMonth%");
+            }
+
             $select->order('post_id DESC');
             $select->offset($offset);
             $select->limit($limit);
@@ -101,6 +136,18 @@ class PostTable
             $select->offset($offset);
             $select->limit($limit);
             $select->order('post_id DESC');
+        });
+        return $resultSet;
+    }
+
+    /**
+     * 获取培训动态发布时间的列表.
+     * @return 一个ResultSet对象, 包含培训动态发布时间的信息
+     */
+    public function getPushlishMonths()
+    {
+        $resultSet = $this->tableGateway->select(function (Select $select) {
+            $select->columns(array(new Expression("DISTINCT(CONCAT(YEAR(post_date), ', ',MONTH(post_date))) as post_date")));
         });
         return $resultSet;
     }

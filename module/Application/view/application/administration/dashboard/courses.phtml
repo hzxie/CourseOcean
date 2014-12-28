@@ -71,8 +71,6 @@
             url: '<?php echo $this->basePath(); ?>/administration/getCourses?page=' + pageNumber + '&category=' + courseType + '&isPublic=' + isPublic + '&isUserChecked=' + isUserChecked,
             dataType: 'JSON',
             success: function(result) {
-                console.log(result);
-
                 $('#courses tbody').empty();
 
                 if ( result['isSuccessful'] ) {

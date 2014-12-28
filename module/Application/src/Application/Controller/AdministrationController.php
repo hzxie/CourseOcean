@@ -439,9 +439,87 @@ class AdministrationController extends AbstractActionController
         
     }
 
+    /**
+     * 获取培训动态管理页面所需数据.
+     * @return 一个包含培训动态管理页面所需数据的数组
+     */
     private function getPostsPageData()
     {
-        
+        $serviceManager         = $this->getServiceLocator();
+        $postCategoryTable      = $serviceManager->get('Application\Model\PostCategoryTable');
+        $postCategories         = $postCategoryTable->getAllPostCategories();
+        $postTable              = $serviceManager->get('Application\Model\PostTable');
+        $publishMonths          = $postTable->getPushlishMonths();
+
+        return array(
+            'postCategories'    => $postCategories,
+            'publishMonths'     => $publishMonths,
+        );
+    }
+
+    /**
+     * 根据培训动态的筛选条件获取培训动态的信息.
+     * @return 一个包含培训动态信息的JSON数组
+     */
+    public function getPostsAction()
+    {
+        $NUMBER_OF_POSTS_PER_PAGE       = 25;
+        $postCategorySlug               = $this->params()->fromQuery('category');
+        $publishMonth                   = $this->params()->fromQuery('publishMonth');
+        $pageNumber                     = $this->params()->fromQuery('page', 1);
+        $postCategoryId                 = $this->getPostCategoryId($postCategorySlug);
+        $offset                         = ($pageNumber - 1) * $NUMBER_OF_POSTS_PER_PAGE;
+
+        $serviceManager = $this->getServiceLocator();
+        $postTable      = $serviceManager->get('Application\Model\PostTable');
+        $posts          = $postTable->getPostsUsingFilters($postCategoryId, $publishMonth, $offset, $NUMBER_OF_POSTS_PER_PAGE);
+
+        $result   = array(
+            'isSuccessful'  => $posts != null && $posts->count() != 0,
+            'posts'         => $this->getResultSetArray($posts),
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    public function getPostTotalPagesAction()
+    {
+        $NUMBER_OF_POSTS_PER_PAGE       = 25;
+        $postCategorySlug               = $this->params()->fromQuery('category');
+        $publishMonth                   = $this->params()->fromQuery('publishMonth');
+        $postCategoryId                 = $this->getPostCategoryId($postCategorySlug);
+
+        $serviceManager = $this->getServiceLocator();
+        $postTable      = $serviceManager->get('Application\Model\PostTable');
+        $totalPages     = ceil($postTable->getCountUsingFilters($postCategoryId, $publishMonth) / $NUMBER_OF_POSTS_PER_PAGE);
+
+        $result   = array(
+            'isSuccessful'  => $totalPages != 0,
+            'totalPages'    => $totalPages,
+        );
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
+    }
+
+    /**
+     * 通过培训动态分类的唯一英文缩写查找培训动态分类的唯一标识符.
+     * @param  String $catelogySlug - 培训动态分类的唯一英文缩写
+     * @return 培训动态分类的唯一标识符
+     */
+    private function getPostCategoryId($catelogySlug)
+    {
+        $serviceManager     = $this->getServiceLocator();
+        $postCategoryTable  = $serviceManager->get('Application\Model\PostCategoryTable');
+        $postCategory       = $postCategoryTable->getCatelogyUsingSlug($catelogySlug);
+
+        if ( $postCategory != null ) {
+            return $postCategory->postCategoryId;
+        } 
+        return 0;
     }
 
     private function getSettingsPageData()

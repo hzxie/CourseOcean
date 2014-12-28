@@ -1,1 +1,146 @@
-<h1>Posts</h1>
+<h3>培训动态管理</h3>
+<div class="row-fluid">
+    <div class="span6">
+        <form class="row-fluid" onSubmit="getFilters(1); return false;">
+            <select name="post-category" class="span3">
+                <option value="all">全部培训动态分类</option>
+            <?php foreach ( $postCategories as $postCategory ): ?>
+				<option value="<?php echo $postCategory->postCategorySlug; ?>"><?php echo $postCategory->postCategoryName; ?></option>
+        	<?php endforeach; ?>
+            </select>
+            <select name="publish-time" class="span3">
+                <option value="all">全部时间段</option>
+            <?php 
+                foreach ( $publishMonths as $publishMonth ): 
+                    $date  = split(', ', $publishMonth->postDate);
+                    $year  = $date[0];
+                    $month = $date[1];
+            ?>
+                <option value="<?php echo $year; ?>-<?php echo sprintf("%02d", $month); ?>"><?php echo $year ?>年<?php echo $month ?>月</option>
+            <?php endforeach; ?>
+            </select>
+            <button class="btn" type="submit">筛选</button>
+        </form>
+    </div> <!-- .span6 -->
+    <div class="span6 text-right">
+        <form onSubmit="getUserUsingKeyword(); return false;">
+            <input id="keyword" type="text" />
+            <button class="btn">搜索培训动态</button>
+        </form>
+    </div> <!-- .span6 -->
+</div> <!-- .row-fluid -->
+<div class="row-fluid">
+    <div class="span6">
+        
+    </div> <!-- .span6 -->
+    <div id="pagination" class="span6 text-right">
+        <div class="pagination">
+            <ul></ul>
+        </div> <!-- .pagination -->
+    </div> <!-- #pagination -->
+</div> <!-- .row-fluid -->
+<table id="posts" class="table table-striped">
+    <thead>
+        <th>#</th>
+        <th>标题</th>
+        <th>分类</th>
+        <th>发布日期</th>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script type="text/javascript">
+    function getFilters(pageNumber) {
+        var category     = $('select[name=post-category]').val(),
+            publishMonth = $('select[name=publish-time]').val();
+
+        getPosts(pageNumber, category, publishMonth);
+        getPostTotalPages(pageNumber, category, publishMonth);
+    }
+</script>
+<script type="text/javascript">
+    function getPosts(pageNumber, category, publishMonth) {
+        $.ajax({
+            type: 'GET',
+            url: "<?php echo $this->basePath(); ?>/administration/getPosts?page=" + pageNumber + '&category=' + category + 
+                 '&publishMonth=' + publishMonth,
+            dataType: 'JSON',
+            success: function(result) {
+                $('#posts tbody').empty();
+
+                if ( result['isSuccessful'] ) {
+                    displayPosts(result['posts']);
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function displayPosts(posts) {
+        var totalPosts = posts.length;
+        for ( var i = 0; i < totalPosts; ++ i ) {
+            $('#posts tbody').append('<tr>'
+                                  + '    <td>' + posts[i]['postId'] + '</td>'
+                                  + '    <td>' + posts[i]['postTitle'] + '</td>'
+                                  + '    <td>' + posts[i]['postCategoryName'] + '</td>'
+                                  + '    <td>' + posts[i]['postDate'] + '</td>'
+                                  + '</tr>');
+        }
+    }
+</script>
+<script type="text/javascript">
+    function getPostTotalPages(pageNumber, category, publishMonth) {
+        $.ajax({
+            type: 'GET',
+            url: '<?php echo $this->basePath(); ?>/administration/getPostTotalPages?category=' + category + '&publishMonth=' + publishMonth,
+            dataType: 'JSON',
+            success: function(result) {
+                $('div.pagination > ul').empty();
+                if ( result['isSuccessful'] ) {
+                    $('div.pagination').removeClass('hide');
+                    displayPagination(pageNumber, result['totalPages']);
+                } else {
+                    $('div.pagination').addClass('hide');
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function displayPagination(currentPage, totalPages, filterUrl) {
+        var lowerBound = ( currentPage - 3 > 0 ? currentPage - 3 : 1 ),
+            upperBound = ( currentPage + 3 < totalPages ? currentPage + 3 : totalPages );
+        var paginationString  = '<li' + ( currentPage > 1 ? '>' : ' class="disabled">') + '<a href="#">&lt;</a></li>';
+
+        for ( var i = lowerBound; i <= upperBound; ++ i ) {
+            paginationString += '<li' + ( currentPage == i ? ' class="active"' : '' ) + '><a href="#">' + i + '</a></li>';
+        }
+        paginationString     += '<li' + ( currentPage < totalPages ? '>' : ' class="disabled">') + '<a href="#">&gt;</a></li>';
+        $('.pagination > ul').append(paginationString);
+    }
+</script>
+<script type="text/javascript">
+    $('.pagination > ul').delegate('li', 'click', function(e) {
+        e.preventDefault();
+        if ( $(this).hasClass('disabled') ) {
+            return;
+        }
+        var currentPage = parseInt($('li.active > a', '.pagination').html(), 10),
+            pageNumber  = $('a', this).html();
+        
+        $('.pagination > li.active').removeClass('active');
+        $(this).addClass('active');
+
+        if ( pageNumber === '&lt;' ) {
+            pageNumber  = currentPage - 1;
+        } else if ( pageNumber === '&gt;' ) {
+            pageNumber  = currentPage + 1;
+        }
+        return getFilters(pageNumber);
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        return getFilters(1);
+    });
+</script>

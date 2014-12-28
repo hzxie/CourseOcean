@@ -219,7 +219,7 @@ class CourseTable
         });
         return $resultSet;
     }
-    
+
     /**
      * 创建一个新课程.
      * @param  Array $course - 一个包含课程信息的数组

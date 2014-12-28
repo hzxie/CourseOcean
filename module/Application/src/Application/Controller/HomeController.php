@@ -121,9 +121,10 @@ class HomeController extends AbstractActionController
         $serviceManager = $this->getServiceLocator();
         $postTable      = $serviceManager->get('Application\Model\PostTable');
         
+        $categoryId     = 0;
         $offset         = 0;
         $limit          = 10;
-        $posts          = $postTable->getAllPosts($offset, $limit);
+        $posts          = $postTable->getPostsUsingCategory($categoryId, $offset, $limit);
 
         return $this->getResultSetArray($posts);
     }

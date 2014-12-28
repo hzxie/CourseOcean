@@ -641,7 +641,7 @@ class TrainingController extends AbstractActionController
 
         $serviceManager = $this->getServiceLocator();
         $postTable      = $serviceManager->get('Application\Model\PostTable');
-        $totalPages     = ceil($postTable->getCount($postCategoryId) / $NUMBER_OF_POSTS_PER_PAGE);
+        $totalPages     = ceil($postTable->getCountUsingCategory($postCategoryId) / $NUMBER_OF_POSTS_PER_PAGE);
 
         $result   = array(
             'isSuccessful'  => $totalPages != 0,
