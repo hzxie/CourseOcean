@@ -484,6 +484,10 @@ class AdministrationController extends AbstractActionController
         return $response;
     }
 
+    /**
+     * 获取培训动态页面数量.
+     * @return 一个包含培训动态页面数量的JSON数组
+     */
     public function getPostTotalPagesAction()
     {
         $NUMBER_OF_POSTS_PER_PAGE       = 25;
@@ -520,6 +524,25 @@ class AdministrationController extends AbstractActionController
             return $postCategory->postCategoryId;
         } 
         return 0;
+    }
+
+    /**
+     * 通过关键字筛选培训动态.
+     * @return 一个包含培训动态信息的JSON数组
+     */
+    public function getPostsUsingKeywordAction()
+    {
+
+    }
+
+    public function createPostAction()
+    {
+
+    }
+
+    public function editPostAction()
+    {
+        
     }
 
     private function getSettingsPageData()

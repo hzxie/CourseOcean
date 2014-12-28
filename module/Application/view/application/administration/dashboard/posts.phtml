@@ -144,3 +144,27 @@
         return getFilters(1);
     });
 </script>
+<script type="text/javascript">
+    function getPostUsingKeyword() {
+        var keyword = $('#keyword').val().trim();
+
+        if ( keyword.length == 0 ) {
+            alert('请输入搜索关键词');
+            return;
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: "<?php echo $this->basePath(); ?>/administration/getPostsUsingKeyword?keyword=" + keyword,
+            dataType: 'JSON',
+            success: function(result) {
+                $('#posts tbody').empty();
+                $('div.pagination').addClass('hide');
+
+                if ( result['isSuccessful'] ) {
+                    displayUsers(result['posts']);
+                }
+            }
+        });
+    }
+</script>

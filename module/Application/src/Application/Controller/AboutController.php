@@ -70,15 +70,6 @@ class AboutController extends AbstractActionController
     }
 
     /**
-     * 加载[隐私声明]页面.
-     * @return 一个包含页面所需信息的数组
-     */
-    public function privacyAction() 
-    {
-        return array();
-    }
-
-    /**
      * 加载[开放平台]页面.
      * @return 一个包含页面所需信息的数组
      */
