@@ -265,7 +265,7 @@ class AdministrationController extends AbstractActionController
 
         $serviceManager = $this->getServiceLocator();
         $userTable      = $serviceManager->get('Application\Model\UserTable');
-        $users          = $userTable->getUserUsingKeyword($keyword, $offset, $NUMBER_OF_USERS_PER_PAGE);
+        $users          = $userTable->getUsersUsingKeyword($keyword, $offset, $NUMBER_OF_USERS_PER_PAGE);
 
         $result   = array(
             'isSuccessful'  => $users != null && $users->count() != 0,
@@ -407,7 +407,7 @@ class AdministrationController extends AbstractActionController
      * 根据关键字筛选课程.
      * @return 一个包含课程页面数量的JSON数组
      */
-    public function getCourseUsingKeywordAction()
+    public function getCoursesUsingKeywordAction()
     {
         $NUMBER_OF_COURSES_PER_PAGE = 10;
         $keyword                    = $this->params()->fromQuery('keyword');
@@ -416,7 +416,7 @@ class AdministrationController extends AbstractActionController
 
         $serviceManager = $this->getServiceLocator();
         $courseTable    = $serviceManager->get('Application\Model\CourseTable');
-        $courses        = $courseTable->getCourseUsingKeyword($keyword, $offset, $NUMBER_OF_COURSES_PER_PAGE);
+        $courses        = $courseTable->getCoursesUsingKeyword($keyword, $offset, $NUMBER_OF_COURSES_PER_PAGE);
 
         $result   = array(
             'isSuccessful'  => $courses != null && $courses->count() != 0,
@@ -532,7 +532,24 @@ class AdministrationController extends AbstractActionController
      */
     public function getPostsUsingKeywordAction()
     {
+        $NUMBER_OF_POSTS_PER_PAGE = 10;
+        $keyword                    = $this->params()->fromQuery('keyword');
+        $pageNumber                 = $this->params()->fromQuery('page', 1);
+        $offset                     = ($pageNumber - 1) * $NUMBER_OF_POSTS_PER_PAGE;
 
+        $serviceManager = $this->getServiceLocator();
+        $postTable      = $serviceManager->get('Application\Model\PostTable');
+        $posts          = $postTable->getPostsUsingKeyword($keyword, $offset, $NUMBER_OF_POSTS_PER_PAGE);
+
+        $result   = array(
+            'isSuccessful'  => $posts != null && $posts->count() != 0,
+            'posts'         => $this->getResultSetArray($posts),
+        );
+
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
     }
 
     public function createPostAction()

@@ -23,7 +23,7 @@
         </form>
     </div> <!-- .span6 -->
     <div class="span6 text-right">
-        <form onSubmit="getUserUsingKeyword(); return false;">
+        <form onSubmit="getPostsUsingKeyword(); return false;">
             <input id="keyword" type="text" />
             <button class="btn">搜索培训动态</button>
         </form>
@@ -145,7 +145,7 @@
     });
 </script>
 <script type="text/javascript">
-    function getPostUsingKeyword() {
+    function getPostsUsingKeyword() {
         var keyword = $('#keyword').val().trim();
 
         if ( keyword.length == 0 ) {
@@ -162,7 +162,7 @@
                 $('div.pagination').addClass('hide');
 
                 if ( result['isSuccessful'] ) {
-                    displayUsers(result['posts']);
+                    displayPosts(result['posts']);
                 }
             }
         });

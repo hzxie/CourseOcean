@@ -203,7 +203,7 @@ class HomeController extends AbstractActionController
             if ( empty(trim($keyword)) ) {
                 continue;
             }
-            $teachers   = $teacherTable->getTeacherUsingKeyword($keyword, $offset, $limit);
+            $teachers   = $teacherTable->getTeachersUsingKeyword($keyword, $offset, $limit);
             $resultSet += $this->getSearchResultSetArray($teachers, 'teacher');
         }
         return $this->getSearchResultSetArray($resultSet);
@@ -228,7 +228,7 @@ class HomeController extends AbstractActionController
             if ( empty(trim($keyword)) ) {
                 continue;
             }
-            $courses    = $courseTable->getCourseUsingKeyword($keyword, $offset, $limit);
+            $courses    = $courseTable->getCoursesUsingKeyword($keyword, $offset, $limit);
             $resultSet += $this->getSearchResultSetArray($courses, 'course');
         }
         return $this->getSearchResultSetArray($resultSet);

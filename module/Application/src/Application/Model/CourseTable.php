@@ -201,7 +201,7 @@ class CourseTable
      * @param  int    $limit   - 查询返回的记录数
      * @return 一个ResultSet对象, 包含若干个Course对象
      */
-    public function getCourseUsingKeyword($keyword, $offset, $limit)
+    public function getCoursesUsingKeyword($keyword, $offset, $limit)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($keyword, $offset, $limit) {
             $select->join('itp_course_types', 

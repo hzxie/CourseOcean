@@ -157,7 +157,7 @@ class TeacherTable
      * @param  int $limit  - 查询返回的记录数
      * @return 一个ResultSet对象, 包含若干个Teacher对象
      */
-    public function getTeacherUsingKeyword($keyword, $offset, $limit)
+    public function getTeachersUsingKeyword($keyword, $offset, $limit)
     {
         $resultSet = $this->tableGateway->select(function (Select $select) use ($keyword, $offset, $limit) {
             $select->columns(array(

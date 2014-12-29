@@ -7,7 +7,7 @@
         </ul>
     </div> <!-- .span6 -->
     <div class="span6 text-right">
-        <form onSubmit="getUserUsingKeyword(); return false;">
+        <form onSubmit="getUsersUsingKeyword(); return false;">
             <input id="keyword" type="text" />
             <button class="btn">搜索用户</button>
         </form>
@@ -175,7 +175,7 @@
     });
 </script>
 <script type="text/javascript">
-    function getUserUsingKeyword() {
+    function getUsersUsingKeyword() {
         var keyword = $('#keyword').val().trim();
 
         if ( keyword.length == 0 ) {

@@ -151,6 +151,26 @@ class PostTable
         });
         return $resultSet;
     }
+
+    /**
+     * [此方法仅供管理员使用]
+     * 根据关键字筛选培训动态.
+     * @param  String $keyword - 关键词
+     * @param  int $offset     - 查询结果的Offset
+     * @param  int $limit      - 查询返回的记录数
+     * @return 一个ResultSet对象, 包含若干个Post对象
+     */
+    public function getPostsUsingKeyword($keyword, $offset, $limit)
+    {
+        $resultSet = $this->tableGateway->select(function (Select $select) use ($keyword, $offset, $limit) {
+            $select->join('itp_post_categories', 
+                          'itp_posts.post_category_id = itp_post_categories.post_category_id');
+            $select->where->OR->equalTo('itp_posts.post_id', "$keyword");
+            $select->where->OR->like('itp_posts.post_title', "%$keyword%");
+            $select->where->OR->like('itp_posts.post_content', "%$keyword%");
+        });
+        return $resultSet;
+    }
     
     /**
      * 创建一个新培训动态.
