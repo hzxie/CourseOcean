@@ -452,7 +452,7 @@ class AdministrationController extends AbstractActionController
         $publishMonths          = $postTable->getPushlishMonths();
 
         return array(
-            'postCategories'    => $postCategories,
+            'postCategories'    => $this->getResultSetArray($postCategories),
             'publishMonths'     => $publishMonths,
         );
     }
@@ -552,14 +552,68 @@ class AdministrationController extends AbstractActionController
         return $response;
     }
 
-    public function createPostAction()
+    /**
+     * 创建新的培训动态.
+     * @return 一个包含若干标志位的JSON数组
+     */
+    public function newPostAction()
     {
+        $postTitle          = strip_tags($this->getRequest()->getPost('postTitle'));
+        $postCategorySlug   = strip_tags($this->getRequest()->getPost('postCategory'));
+        $postContent        = strip_tags($this->getRequest()->getPost('postContent'));
+        $postCategoryId     = $this->getPostCategoryId($postCategorySlug);
 
+        $post               = array(
+            'post_title'        => $postTitle,
+            'post_category_id'  => $postCategoryId,
+            'post_content'      => $postContent,
+        );
+        $result = $this->isPostLegal($post);
+        
+        if ( $result['isSuccessful'] ) {
+            $serviceManager         = $this->getServiceLocator();
+            $postTable              = $serviceManager->get('Application\Model\PostTable');
+            $result['isSuccessful'] = $postTable->createPost($post);
+        }
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
     }
 
+    /**
+     * 编辑培训动态.
+     * @return 一个包含若干标志位的JSON数组
+     */
     public function editPostAction()
     {
+        $postId             = $this->getRequest()->getPost('postId');
+        $postTitle          = $this->getRequest()->getPost('postTitle');
+        $postCategorySlug   = $this->getRequest()->getPost('postCategory');
+        $postContent        = $this->getRequest()->getPost('postContent');
+        $postCategoryId     = $this->getPostCategoryId($postCategorySlug);
         
+    }
+
+    /**
+     * 检查培训动态的信息是否合法.
+     * @param  Array  $post - 一个包含培训动态信息的数组
+     * @return 一个包含若干标志位的数组
+     */
+    private function isPostLegal($post)
+    {
+        $result = array(
+            'isPostTitleEmpty'      => empty($post['post_title']),
+            'isPostTitleLegal'      => mb_strlen($post['post_title']) <= 128,
+            'isPostCategoryEmpty'   => empty($post['post_category_id']),
+            'isPostCategoryLegal'   => $post['post_category_id'] != 0,
+            'isPostContentEmpty'    => empty($post['post_content']),
+        );
+
+        $result['isSuccessful'] = !$result['isPostTitleEmpty']    && $result['isPostTitleLegal']    &&
+                                  !$result['isPostCategoryEmpty'] && $result['isPostCategoryLegal'] &&
+                                  !$result['isPostContentEmpty'];
+        return $result;
     }
 
     private function getSettingsPageData()

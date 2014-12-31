@@ -5,7 +5,7 @@
             <select name="post-category" class="span3">
                 <option value="all">全部培训动态分类</option>
             <?php foreach ( $postCategories as $postCategory ): ?>
-				<option value="<?php echo $postCategory->postCategorySlug; ?>"><?php echo $postCategory->postCategoryName; ?></option>
+				<option value="<?php echo $postCategory['postCategorySlug']; ?>"><?php echo $postCategory['postCategoryName']; ?></option>
         	<?php endforeach; ?>
             </select>
             <select name="publish-time" class="span3">
@@ -31,7 +31,9 @@
 </div> <!-- .row-fluid -->
 <div class="row-fluid">
     <div class="span6">
-        
+        <ul id="controls" class="inline">
+            <li><a href="javascript:newPost();"><i class="fa fa-plus"></i> 新培训动态</a></li>
+        </ul>
     </div> <!-- .span6 -->
     <div id="pagination" class="span6 text-right">
         <div class="pagination">
@@ -48,6 +50,49 @@
     </thead>
     <tbody></tbody>
 </table>
+
+<!-- Modals -->
+<div id="post-editor" class="modal hide fade">
+    <div class="modal-header">
+        <h4>新培训动态</h4>
+    </div> <!-- .modal-header -->
+    <div class="modal-body">
+        <div class="alert alert-error hide"></div> <!-- .alert-error -->
+        <div class="row-fluid">
+            <div class="span4">
+                <label for="post-title">培训动态标题</label>
+            </div> <!-- .span4 -->
+            <div class="span8">
+                <input id="post-id" type="hidden" />
+                <input id="post-title" class="span12" type="text" />
+            </div> <!-- .span8 -->
+        </div> <!-- .row-fluid -->
+        <div class="row-fluid">
+            <div class="span4">
+                <label for="post-category">培训动态分类</label>
+            </div> <!-- .span4 -->
+            <div class="span8">
+                <select id="post-category" class="span12">
+                <?php foreach ( $postCategories as $postCategory ): ?>
+                    <option value="<?php echo $postCategory['postCategorySlug']; ?>"><?php echo $postCategory['postCategoryName']; ?></option>
+                <?php endforeach; ?>
+                </select>
+            </div> <!-- .span8 -->
+        </div> <!-- .row-fluid -->
+        <div class="row-fluid">
+            <div class="span4">
+                <label for="post-content">培训动态内容</label>
+            </div> <!-- .span4 -->
+            <div class="span8">
+                <textarea id="post-content" class="span12" rows="10"></textarea>
+            </div> <!-- .span8 -->
+        </div> <!-- .row-fluid -->
+    </div> <!-- .modal-body -->
+    <div class="modal-footer">
+        <button class="btn btn-primary">确认</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+    </div> <!-- .modal-footer -->
+</div> <!-- modal -->
 
 <script type="text/javascript">
     function getFilters(pageNumber) {
@@ -166,5 +211,112 @@
                 }
             }
         });
+    }
+</script>
+<script type="text/javascript">
+    function newPost() {
+        $('#post-editor h4').html('新培训动态');
+        $('#post-editor input').val('');
+        $('#post-editor textarea').val('');
+
+        $('#post-editor').modal();
+    }
+</script>
+<script type="text/javascript">
+    $('#posts').delegate('tr', 'click', function() {
+        var postId = $(this).find('td:first').html();
+        return editPost(postId);
+    });
+</script>
+<script type="text/javascript">
+    function editPost(postId) {
+        $('#post-editor h4').html('编辑培训动态');
+        
+        $.ajax({
+            type: 'GET',
+            async: false,
+            url: "<?php echo $this->basePath(); ?>/training/getPost?postId=" + postId,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    $('#post-editor input#post-id').val(result['post']['postId']);
+                    $('#post-editor input#post-title').val(result['post']['postTitle']);
+                    $('#post-editor select#post-category').val(result['post']['postCategorySlug']);
+                    $('#post-editor textarea#post-content').val(result['post']['postContent']);
+                } else {
+                    alert('发生了未知错误, 请联系技术支持人员.');
+                }
+            }
+        });
+
+        $('#post-editor').modal();
+    }
+</script>
+<script type="text/javascript">
+    $('#post-editor button.btn-primary').click(function() {
+        var postId          = $('#post-editor input#post-id').val(),
+            postTitle       = $('#post-editor input#post-title').val(),
+            postCategory    = $('#post-editor select#post-category').val(),
+            postContent     = $('#post-editor textarea#post-content').val();            
+
+        if ( $('#post-editor input#post-id').val() == '' ) {
+            return newPostAction(postTitle, postCategory, postContent);
+        } else {
+            return editPostAction(postId, postTitle, postCategory, postContent);
+        }
+    });
+</script>
+<script type="text/javascript">
+    function newPostAction(postTitle, postCategory, postContent) {
+        var postData = {
+            'postTitle': postTitle,
+            'postCategory': postCategory,
+            'postContent': postContent
+        };
+
+        $('#post-editor button.btn-primary').html('正在处理...');
+        $('#post-editor button.btn-primary').attr('disabled', 'disabled');
+
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: "<?php echo $this->basePath(); ?>/administration/newPost",
+            data: postData,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    $('#post-editor').modal('hide');
+                    return getFilters(1);
+                } else {
+                    var errorMessage = '';
+
+                    if ( result['isPostTitleEmpty'] ) {
+                        errorMessage += '请填写培训动态的标题<br />';
+                    } else if ( !result['isPostTitleLegal'] ) {
+                        errorMessage += '培训动态的标题不得超过128个字符<br />';
+                    }
+                    if ( result['isPostCategoryEmpty'] ) {
+                        errorMessage += '请选择培训动态的分类<br />';
+                    } else if ( !result['isPostCategoryLegal'] ) {
+                        errorMessage += '请选择培训动态的分类<br />';
+                    }
+                    if ( result['isPostContentEmpty'] ) {
+                        errorMessage += '请填写培训动态的内容<br />';
+                    }
+
+
+                    $('#post-editor .alert-error').removeClass('hide');
+                    $('#post-editor .alert-error').html(errorMessage);
+                }
+
+                $('#post-editor button.btn-primary').html('确认');
+                $('#post-editor button.btn-primary').removeAttr('disabled');
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function editPostAction(postId, postTitle, postCategory, postContent) {
+
     }
 </script>

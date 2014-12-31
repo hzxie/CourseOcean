@@ -171,6 +171,7 @@ div#content div.section li.lecture {
 	padding: 15px;
 	-webkit-border-radius: 4px;
 	   -moz-border-radius: 4px;
+	   
 			border-radius: 4px;
 }
 
@@ -230,7 +231,7 @@ div#content div.section li.teacher div.field {
 
 div#content div.section li.post {
 	border: 1px solid #ccc;
-	margin-bottom: 20px;
+	margin: 0 10px 20px 0;
 	padding: 15px;
 	-webkit-border-radius: 4px;
 	   -moz-border-radius: 4px;

@@ -162,36 +162,64 @@ div#container div#content div.alert {
 	margin-bottom: 10px;
 }
 
-div#content div.row-fluid ul#filter {
+div#container div#content div.row-fluid ul#filter {
 	margin: 10px 0 0 0;
 }
 
-div#content div.row-fluid ul#filter > li {
+div#container div#content div.row-fluid ul#filter > li {
 	padding-left: 0;
 }
 
-div#content div.row-fluid ul#filter a {
+div#container div#content div.row-fluid ul#filter a {
 	text-decoration: none;
 }
 
-div#content div.row-fluid div.pagination {
+div#container div#content div.row-fluid div.pagination {
 	margin: 5px 0 0;
 }
 
-div#content table.table {
+div#container div#content table.table {
 	background-color: #fff;
 	box-shadow: 0 3px 0 rgba(12, 12, 12, 0.03);
 	color: #636e7b;
 	margin-top: 20px;
 }
 
-div#content table.table thead {
+div#container div#content table.table thead {
 	border-bottom: 2px solid #ddd;
 	color: #444;
 }
 
-div#content table.table tbody tr {
+div#container div#content table.table tbody tr {
 	cursor: pointer;
+}
+
+div#container div#content div.modal div.row-fluid {
+	margin-bottom: 10px;
+}
+
+div#container div#content div.modal label {
+	font-weight: bold;
+	margin-top: 2px;
+}
+
+div#container div#content div.modal input {
+	-webkit-border-radius: 4px;
+	   	-moz-border-radius: 4px;
+	        border-radius: 4px;
+}
+
+div#container div#content div.modal textarea {
+	resize: none;
+}
+
+/* Styles for Posts Page */
+div#container div#content ul#controls {
+	margin-top: 10px;
+}
+
+div#container div#content ul#controls a {
+	text-decoration: none;
 }
 
 div#footer {
