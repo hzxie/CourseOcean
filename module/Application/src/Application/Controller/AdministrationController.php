@@ -587,12 +587,34 @@ class AdministrationController extends AbstractActionController
      */
     public function editPostAction()
     {
-        $postId             = $this->getRequest()->getPost('postId');
-        $postTitle          = $this->getRequest()->getPost('postTitle');
-        $postCategorySlug   = $this->getRequest()->getPost('postCategory');
-        $postContent        = $this->getRequest()->getPost('postContent');
+        $postId             = strip_tags($this->getRequest()->getPost('postId'));
+        $postTitle          = strip_tags($this->getRequest()->getPost('postTitle'));
+        $postCategorySlug   = strip_tags($this->getRequest()->getPost('postCategory'));
+        $postContent        = strip_tags($this->getRequest()->getPost('postContent'));
         $postCategoryId     = $this->getPostCategoryId($postCategorySlug);
         
+        $post               = array(
+            'post_id'           => $postId,
+            'post_title'        => $postTitle,
+            'post_category_id'  => $postCategoryId,
+            'post_content'      => $postContent,
+        );
+        $result = $this->isPostLegal($post);
+        
+        if ( $result['isSuccessful'] ) {
+            $serviceManager         = $this->getServiceLocator();
+            $postTable              = $serviceManager->get('Application\Model\PostTable');
+
+            if ( $postId ) {
+                $result['isSuccessful'] = $postTable->updatePost($post);
+            } else {
+                $result['isSuccessful'] = $postTable->createPost($post);
+            }
+        }
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent( Json::encode($result) );
+        return $response;
     }
 
     /**

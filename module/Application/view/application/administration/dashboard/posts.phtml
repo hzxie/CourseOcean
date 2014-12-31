@@ -284,39 +284,62 @@
             data: postData,
             dataType: 'JSON',
             success: function(result) {
-                if ( result['isSuccessful'] ) {
-                    $('#post-editor').modal('hide');
-                    return getFilters(1);
-                } else {
-                    var errorMessage = '';
-
-                    if ( result['isPostTitleEmpty'] ) {
-                        errorMessage += '请填写培训动态的标题<br />';
-                    } else if ( !result['isPostTitleLegal'] ) {
-                        errorMessage += '培训动态的标题不得超过128个字符<br />';
-                    }
-                    if ( result['isPostCategoryEmpty'] ) {
-                        errorMessage += '请选择培训动态的分类<br />';
-                    } else if ( !result['isPostCategoryLegal'] ) {
-                        errorMessage += '请选择培训动态的分类<br />';
-                    }
-                    if ( result['isPostContentEmpty'] ) {
-                        errorMessage += '请填写培训动态的内容<br />';
-                    }
-
-
-                    $('#post-editor .alert-error').removeClass('hide');
-                    $('#post-editor .alert-error').html(errorMessage);
-                }
-
-                $('#post-editor button.btn-primary').html('确认');
-                $('#post-editor button.btn-primary').removeAttr('disabled');
+                return processResult(result);
             }
         });
     }
 </script>
 <script type="text/javascript">
     function editPostAction(postId, postTitle, postCategory, postContent) {
+        var postData = {
+            'postId': postId,
+            'postTitle': postTitle,
+            'postCategory': postCategory,
+            'postContent': postContent
+        };
 
+        $('#post-editor button.btn-primary').html('正在处理...');
+        $('#post-editor button.btn-primary').attr('disabled', 'disabled');
+
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: "<?php echo $this->basePath(); ?>/administration/editPost",
+            data: postData,
+            dataType: 'JSON',
+            success: function(result) {
+                return processResult(result);
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function processResult(result) {
+        if ( result['isSuccessful'] ) {
+            $('#post-editor').modal('hide');
+            getFilters(1);
+        } else {
+            var errorMessage = '';
+
+            if ( result['isPostTitleEmpty'] ) {
+                errorMessage += '请填写培训动态的标题<br />';
+            } else if ( !result['isPostTitleLegal'] ) {
+                errorMessage += '培训动态的标题不得超过128个字符<br />';
+            }
+            if ( result['isPostCategoryEmpty'] ) {
+                errorMessage += '请选择培训动态的分类<br />';
+            } else if ( !result['isPostCategoryLegal'] ) {
+                errorMessage += '请选择培训动态的分类<br />';
+            }
+            if ( result['isPostContentEmpty'] ) {
+                errorMessage += '请填写培训动态的内容<br />';
+            }
+
+            $('#post-editor .alert-error').removeClass('hide');
+            $('#post-editor .alert-error').html(errorMessage);
+        }
+
+        $('#post-editor button.btn-primary').html('确认');
+        $('#post-editor button.btn-primary').removeAttr('disabled');
     }
 </script>
