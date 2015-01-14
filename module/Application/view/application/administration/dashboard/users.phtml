@@ -93,13 +93,28 @@
         for ( var i = 0; i < totalUsers; ++ i ) {
             $('#users tbody').append('<tr>'
                                   + '    <td>' + users[i]['uid'] + '</td>'
-                                  + '    <td>' + (users[i]['isInspected'] == null ? '未审核' : (users[i]['isApproved'] ? '审核通过' : '审核未通过')) + '</td>'
+                                  + '    <td>' + getUserStatusSelector(users[i]['isInspected'], users[i]['isApproved']) + '</td>'
                                   + '    <td>' + users[i]['username'] + '</td>'
                                   + '    <td>' + users[i]['email'] + '</td>'
                                   + '    <td>' + users[i]['userGroupName'] + '</td>'
                                   + '</tr>');
         }
     }
+</script>
+<script type="text/javascript">
+    function getUserStatusSelector(isInspected, isApproved) {
+        return '<select class="user-status">' + 
+               '    <option value="-1" ' + (isInspected ? '' : 'selected') + '>未审核</option>' + 
+               '    <option value="0"  ' + (isInspected ? (isApproved ? '' : 'selected') : '') + '>审核未通过</option>' + 
+               '    <option value="1"  ' + (isInspected ? (isApproved ? 'selected' : '') : '') + '>审核通过</option>' + 
+               '</select>';
+    }
+</script>
+<script type="text/javascript">
+    $('#users').delegate('.user-status', 'change', function() {
+        var uid        = $('td:first-child', $(this).parent().parent()).html(),
+            userStatus = $(this).val();
+    });
 </script>
 <script type="text/javascript">
     function getUserTotalPages(pageNumber, userGroup, isInspected, isApproved) {
