@@ -319,12 +319,14 @@ class AccountsController extends AbstractActionController
         $bodyPart->setParts(array($bodyMessage));
 
         $message        = new \Zend\Mail\Message();
-        $message->addFrom('noreply@zjhzxhz.com', 'IT培训平台')
+        $message->addFrom('noreply@zjhzxhz.com', 'CourseOcean')
                 ->addTo($email)
                 ->setSubject('重置您的账户密码')
                 ->setBody($bodyPart)
                 ->setEncoding('UTF-8');
-        $transport  = new \Zend\Mail\Transport\Sendmail();
+        
+        $serviceManager = $this->getServiceLocator();
+        $transport      = $serviceManager->get('Application\Mail\Transport');
         $transport->send($message);
     }
 

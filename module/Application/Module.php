@@ -10,6 +10,8 @@ namespace Application;
 
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
+use Zend\Mail\Transport\Smtp;
+use Zend\Mail\Transport\SmtpOptions;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -109,6 +111,7 @@ class Module
     {
         return array(
             'factories' => array(
+                /* Database and Models */
                 'Application\Model\UserTable' => function($sm) {
                     $tableGateway   = $sm->get('UserTableGateway');
                     $userTable      = new UserTable($tableGateway);
@@ -339,6 +342,13 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Option());
                     return new TableGateway('itp_options', $dbAdapter, null, $resultSetPrototype);
+                },
+                /* Mail Transport */
+                'Application\Mail\Transport' => function ($sm) {
+                    $config    = $sm->get('Config'); 
+                    $transport = new Smtp();                
+                    $transport->setOptions(new SmtpOptions($config['mail']));
+                    return $transport;
                 },
             ),
         );

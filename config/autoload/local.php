@@ -12,8 +12,15 @@
  */
 
 return array(
-	'db' => array(
-		'username' => 'root',
-		'password' => '',
-	),
+    'db'    => array(
+        'username'      => 'root',
+        'password'      => '',
+    ),
+    'mail'  => array(
+        'host'          => 'smtp.mailgun.org',
+        'connection_config' => array(
+            'username'  => 'postmaster@courseocean.com',
+            'password'  => '',
+        ),
+    ),
 );
