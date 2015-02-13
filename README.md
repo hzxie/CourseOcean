@@ -1,4 +1,4 @@
-![IT Training Platform](http://itp.zjhzxhz.com/img/logo.png)
+![CourseOcean Logo](http://www.courseocean.com/img/logo.png)
 ===================
 
 
@@ -6,4 +6,4 @@
 
 ----------
 
-![Build Status](https://magnum.travis-ci.com/zjhzxhz/itp.svg?token=ngQSu6kYWuG5K9shK4PF)
+[![Build Status](https://magnum.travis-ci.com/zjhzxhz/itp.svg?token=ngQSu6kYWuG5K9shK4PF)](https://magnum.travis-ci.com/zjhzxhz/itp)
