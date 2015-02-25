@@ -1,13 +1,14 @@
 <?php 
     echo $this->headTitle('诚招英才 | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/about/style.css');
+    echo $this->headLink()->appendStylesheet($this->cdn('/css/about/style.css'))
+                          ->appendStylesheet($this->cdn('/css/about/join.css'));
 ?>
 
 <div id="header" class="container">
     <div class="row-fluid">
         <div id="logo" class="span3">
             <a href="<?php echo $this->basePath('/'); ?>">
-                <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+                <img src="<?php echo $this->cdn('/img/logo.png'); ?>" alt="Logo" />
             </a>
         </div> <!-- #logo -->
         <div class="span9">

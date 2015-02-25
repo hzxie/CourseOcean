@@ -1,12 +1,12 @@
 <?php 
     echo $this->headTitle('仪表盘 | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/administration/style.css');
+    echo $this->headLink()->appendStylesheet($this->cdn('/css/administration/style.css'));
 ?>
 
 <div id="sidebar">
     <div id="logo">
         <a href="<?php echo $this->basePath('/'); ?>">
-        	<img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="logo" />
+        	<img src="<?php echo $this->cdn('/img/logo.png'); ?>" alt="logo" />
         </a>
     </div> <!-- #logo -->
     <div id="sidebar-collapse">
@@ -44,7 +44,7 @@
             <li id="profile">
                 <a href="javascript:void(0)">
                     <span><?php echo $profile['username']; ?></span>
-                    <img class="img-circle" src="<?php echo $this->basePath(); ?>/img/avatars/avatar.jpg" alt="avatar" />
+                    <img class="img-circle" src="<?php echo $this->basePath('/img/avatars/avatar.jpg'); ?>" alt="avatar" />
                 </a>
             </li>
         </ul>
@@ -72,7 +72,7 @@
     });
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-    $(document).ready(function() {
+    $(function() {
         var pageName = window.location.href.match(/#.*$/);
         if ( pageName != null ) {
             getPageContent(window.location.href.match(/#.*$/)[0].substr(1));

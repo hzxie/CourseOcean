@@ -13,6 +13,8 @@ use Zend\Db\TableGateway\TableGateway;
 use Zend\Mail\Transport\Smtp;
 use Zend\Mail\Transport\SmtpOptions;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
+use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
@@ -59,9 +61,15 @@ use Application\Model\EmailValidationTable;
 use Application\Model\Option;
 use Application\Model\OptionTable;
 
+use Application\View\Helper\CdnHelper;
 
-class Module
-{
+
+class Module implements ConfigProviderInterface, 
+        AutoloaderProviderInterface, ViewHelperProviderInterface {
+    /**
+     * 初始化应用程序.
+     * @param  MvcEvent $e - MvcEvent对象
+     */
     public function onBootstrap(MvcEvent $e)
     {
         $eventManager        = $e->getApplication()->getEventManager();
@@ -87,6 +95,10 @@ class Module
         return $returnArray;
     }
 
+    /**
+     * 获取应用模块的配置.
+     * @return 包含应用模块的配置信息的数组
+     */
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
@@ -104,8 +116,25 @@ class Module
     }
 
     /**
-     * @return an array of factories that are all merged together by the 
-     *         ModuleManager before passing to the ServiceManager
+     * 获取ViewHelper的配置信息.
+     * @return 一个包含ViewHelper信息的数组
+     */
+    public function getViewHelperConfig() {
+        return array(
+            'factories' => array(
+                /* CDN Service */
+                'cdn' => function($sm) {
+                    $request   = $sm->getServiceLocator()->get('Request');
+                    $serviceLocator = $sm->getServiceLocator();
+                    return new CdnHelper($request, $serviceLocator);
+                },
+            ),
+        );
+    }
+
+    /**
+     * 获取服务配置信息.
+     * @return  包含服务配置信息的数组
      */
     public function getServiceConfig()
     {
@@ -345,7 +374,7 @@ class Module
                 },
                 /* Mail Transport */
                 'Application\Mail\Transport' => function ($sm) {
-                    $config    = $sm->get('Config'); 
+                    $config    = $sm->get('Config');
                     $transport = new Smtp();                
                     $transport->setOptions(new SmtpOptions($config['mail']));
                     return $transport;

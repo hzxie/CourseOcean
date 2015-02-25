@@ -1,15 +1,15 @@
 <?php 
     echo $this->headTitle('培训动态 | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/style.css')
-                          ->appendStylesheet($this->basePath().'/css/training/posts.css');
-?>
+    echo $this->headLink()->appendStylesheet($this->cdn('/css/training/style.css'))
+                          ->appendStylesheet($this->cdn('/css/training/posts.css'))
+;?>
 
 <div class="border-top"></div> <!-- .border-top -->
 <div id="header">
     <div class="container row-fluid">
         <div id="logo" class="span4">
             <a href="<?php echo $this->basePath('/'); ?>">
-                <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+                <img src="<?php echo $this->cdn('/img/logo.png'); ?>" alt="Logo" />
             </a>
         </div> <!-- #logo -->
         <div id="navigation" class="span8">
@@ -43,7 +43,7 @@
             <h2>培训动态</h2>
             <p>最及时的培训资讯, 让您了解行业风向标!</p>
             <button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/lectures'">查看近期培训</button>
-            <img src="<?php echo $this->basePath(); ?>/img/training/news-header.jpg" alt="Header Image">
+            <img src="<?php echo $this->cdn('/img/training/news-header.jpg'); ?>" alt="Header Image">
             <div class="border-bottom"></div> <!-- .border-bottom -->
         </div> <!-- #sub-header -->
         <div id="content" class="row-fluid">
@@ -69,9 +69,9 @@
 
 <?php $this->inlineScript()->captureStart(); ?>
     $('ul#category > li').click(function() {
-        var category = $('a', this).attr('href').substring(1);
-        getPosts(category, 1);
-        getTotalPages(category, 1);
+        var category   = $('a', this).attr('href').substring(1),
+            pageNumber = 1;
+        getPosts(category, pageNumber);
     });
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
@@ -83,11 +83,15 @@
             dataType: 'JSON',
             success: function(result) {
                 $('#posts').empty();
+                $('div#pagination > ul').empty();
                 if ( result['isSuccessful'] ) {
                     $('.alert-warning').addClass('hide');
+                    $('div#pagination').removeClass('hide');
                     displayPosts(result['posts']);
+                    displayPagination(pageNumber, result['totalPages']);
                 } else {
                     $('.alert-warning').removeClass('hide');
+                    $('div#pagination').addClass('hide');
                 }
             }
         });
@@ -99,7 +103,7 @@
         for ( var i = 0; i < numberOfPosts; ++ i ) {
             $('#posts').append('<li class="post row-fluid">'
                                 + '    <div class="span2">'
-                                + '        <img src="<?php echo $this->basePath(); ?>/img/training/icon-news.png" alt="Icon News" />'
+                                + '        <img src="<?php echo $this->cdn('/img/training/icon-news.png'); ?>" alt="Icon News" />'
                                 + '    </div>'
                                 + '    <div class="span10">'
                                 + '        <h4><a href="<?php echo $this->basePath(); ?>/training/post?postId=' + posts[i]['postId'] + '">' + posts[i]['postTitle'] + '</a></h4>'
@@ -141,28 +145,8 @@
         } else if ( pageNumber === '&gt;' ) {
             pageNumber  = currentPage + 1;
         }
-        getTeachers(category, pageNumber);
-        getTotalPages(category, pageNumber);
+        getPosts(category, pageNumber);
     });
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
-    function getTotalPages(category, pageNumber) {
-        $.ajax({
-            type: 'GET',
-            async: true,
-            url: '<?php echo $this->basePath(); ?>/training/getPostTotalPages?category=' + category,
-            dataType: 'JSON',
-            success: function(result) {
-                $('div#pagination > ul').empty();
-                if ( result['isSuccessful'] ) {
-                    $('div#pagination').removeClass('hide');
-                    displayPagination(pageNumber, result['totalPages']);
-                } else {
-                    $('div#pagination').addClass('hide');
-                }
-            }
-        });
-    }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
     function displayPagination(currentPage, totalPages) {
@@ -178,8 +162,8 @@
     }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-    $(document).ready(function() {
-        getPosts('all', 1);
-        getTotalPages('all', 1);
+    $(function() {
+        var pageNumber = 1;
+        getPosts('all', pageNumber);
     });
 <?php $this->inlineScript()->captureEnd(); ?>

@@ -1,14 +1,14 @@
 <?php 
     echo $this->headTitle('合作伙伴 | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/about/style.css')
-                          ->appendStylesheet($this->basePath().'/css/about/partner.css');
+    echo $this->headLink()->appendStylesheet($this->cdn('/css/about/style.css'))
+                          ->appendStylesheet($this->cdn('/css/about/partner.css'));
 ?>
 
 <div id="header" class="container">
     <div class="row-fluid">
         <div id="logo" class="span3">
             <a href="<?php echo $this->basePath('/'); ?>">
-                <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+                <img src="<?php echo $this->cdn('/img/logo.png'); ?>" alt="Logo" />
             </a>
         </div> <!-- #logo -->
         <div class="span9">
@@ -53,11 +53,12 @@
         <div id="content" class="span9">
             <h2>开发者服务战略合作伙伴</h2>
             <ul class="inline">
-                <li><a href="http://www.aliyun.com"><img src="<?php echo $this->basePath(); ?>/img/about/partners/aliyun.png" alt="Aliyun"></a></li>
-                <li><a href="https://github.com"><img src="<?php echo $this->basePath(); ?>/img/about/partners/github.png" alt="GitHub"></a></li>
-                <li><a href="https://travis-ci.org"><img src="<?php echo $this->basePath(); ?>/img/about/partners/travis-ci.png" alt="TravisCI"></a></li>
-                <li><a href="https://www.alipay.com"><img src="<?php echo $this->basePath(); ?>/img/about/partners/alipay.png" alt="Alipay"></a></li>
-                <li><a href="http://team.oschina.net"><img src="<?php echo $this->basePath(); ?>/img/about/partners/team-osc.png" alt="Team@OSC"></a></li>
+                <li><a href="http://www.aliyun.com"><img src="<?php echo $this->cdn('/img/about/partners/aliyun.png'); ?>" alt="Aliyun"></a></li>
+                <li><a href="https://github.com"><img src="<?php echo $this->cdn('/img/about/partners/github.png'); ?>" alt="GitHub"></a></li>
+                <li><a href="https://travis-ci.org"><img src="<?php echo $this->cdn('/img/about/partners/travis-ci.png'); ?>" alt="TravisCI"></a></li>
+                <li><a href="https://www.alipay.com"><img src="<?php echo $this->cdn('/img/about/partners/alipay.png'); ?>" alt="Alipay"></a></li>
+                <li><a href="http://www.coding.net"><img src="<?php echo $this->cdn('/img/about/partners/coding-net.png'); ?>" alt="Coding.net"></a></li>
+                <li><a href="http://www.upaiyun.com"><img src="<?php echo $this->cdn('/img/about/partners/upyun.png'); ?>" alt="UPYun"></a></li>
             </ul>
             <h2>社区媒体合作伙伴</h2>
             <div class="row-fluid">

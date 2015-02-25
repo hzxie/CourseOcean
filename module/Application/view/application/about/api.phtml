@@ -1,16 +1,16 @@
 <?php 
     echo $this->headTitle('开放平台 | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/about/style.css')
-                          ->appendStylesheet($this->basePath().'/css/about/api.css')
-                          ->appendStylesheet($this->basePath().'/css/about/highlight.css');
-    echo $this->headScript()->appendFile($this->basePath().'/js/highlight.js');
+    echo $this->headLink()->appendStylesheet($this->cdn('/css/about/style.css'))
+                          ->appendStylesheet($this->cdn('/css/about/api.css'))
+                          ->appendStylesheet($this->cdn('/css/about/highlight.css'));
+    echo $this->headScript()->appendFile($this->cdn('/js/highlight.js'));
 ?>
 
 <div id="header" class="container">
     <div class="row-fluid">
         <div id="logo" class="span3">
             <a href="<?php echo $this->basePath('/'); ?>">
-                <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+                <img src="<?php echo $this->cdn('/img/logo.png'); ?>" alt="Logo" />
             </a>
         </div> <!-- #logo -->
         <div class="span9">
@@ -1813,7 +1813,7 @@
 </div> <!-- #container -->
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(function() {
         // Initialize Sidebar
         $('#sidebar > .nav').affix({
             'offset': 200

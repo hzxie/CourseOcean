@@ -12,6 +12,11 @@
  */
 
 return array(
+    /* View Helpers */
+    'cdn'                   => array(
+        'default'           => 'courseocean.b0.upaiyun.com',
+    ),
+    /* Services */
     'db'                    => array(
         'driver'            => 'Pdo',
         'dsn'               => 'mysql:dbname=itp;host=localhost',

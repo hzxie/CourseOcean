@@ -1,11 +1,11 @@
 <?php 
     echo $this->headTitle('近期培训 | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/style.css')
-                          ->appendStylesheet($this->basePath().'/css/training/courses.css')
-                          ->appendStylesheet($this->basePath().'/css/bootstrap.datetimepicker.min.css');
-    echo $this->headScript()->appendFile($this->basePath().'/js/bootstrap.datetimepicker.min.js')
-                            ->appendFile($this->basePath().'/js/bootstrap.datetimepicker.zh-CN.js')
-                            ->appendFile($this->basePath().'/js/jquery.citypicker.js');
+    echo $this->headLink()->appendStylesheet($this->cdn('/css/training/style.css'))
+                          ->appendStylesheet($this->cdn('/css/training/courses.css'))
+                          ->appendStylesheet($this->cdn('/css/bootstrap.datetimepicker.min.css'));
+    echo $this->headScript()->appendFile($this->cdn('/js/bootstrap.datetimepicker.min.js'))
+                            ->appendFile($this->cdn('/js/bootstrap.datetimepicker.zh-CN.js'))
+                            ->appendFile($this->cdn('/js/jquery.citypicker.js'));
 ?>
 
 <div class="border-top"></div> <!-- .border-top -->
@@ -13,7 +13,7 @@
     <div class="container row-fluid">
         <div id="logo" class="span4">
             <a href="<?php echo $this->basePath('/'); ?>">
-                <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+                <img src="<?php echo $this->cdn('/img/logo.png'); ?>" alt="Logo" />
             </a>
         </div> <!-- #logo -->
         <div id="navigation" class="span8">
@@ -47,7 +47,7 @@
             <h2>近期培训</h2>
             <p>海量课程供您选择! 选择适合您的培训课程.</p>
             <button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/courses'">查看课程库</button>
-            <img src="<?php echo $this->basePath(); ?>/img/training/lecture-header.jpg" alt="Header Image">
+            <img src="<?php echo $this->cdn('/img/training/lecture-header.jpg'); ?>" alt="Header Image">
             <div class="border-bottom"></div> <!-- .border-bottom -->
         </div> <!-- #sub-header -->
         <div id="content" class="row-fluid">
@@ -103,7 +103,6 @@
             city        = $('select.city').val() || '';
 
         getCourses(category, startTime, endTime, region, province, city, pageNumber);
-        getTotalPages(category, startTime, endTime, region, province, city, pageNumber);
     }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
@@ -148,11 +147,15 @@
             dataType: 'JSON',
             success: function(result) {
                 $('#courses').empty();
+                $('div#pagination > ul').empty();
                 if ( result['isSuccessful'] ) {
                     $('.alert-warning').addClass('hide');
+                    $('div#pagination').removeClass('hide');
                     displayCourses(result['lectures']);
+                    displayPagination(pageNumber, result['totalPages']);
                 } else {
                     $('.alert-warning').removeClass('hide');
+                    $('div#pagination').addClass('hide');
                 }
             }
         });
@@ -164,7 +167,7 @@
         for ( var i = 0; i < numberOfCourses; ++ i ) {
             $('#courses').append('<li class="course row-fluid">'
                                 + '    <div class="span3">'
-                                + '        <img src="<?php echo $this->basePath(); ?>/img/categories/' + lectures[i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />'
+                                + '        <img src="<?php echo $this->cdn('/img/categories/'); ?>' + lectures[i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />'
                                 + '    </div>'
                                 + '    <div class="span9">'
                                 + '        <h4><a href="<?php echo $this->basePath(); ?>/training/lecture?lectureId=' + lectures[i]['lectureId'] + '">' + lectures[i]['courseName'] + '</a></h4>'
@@ -212,25 +215,6 @@
     });
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-    function getTotalPages(category, startTime, endTime, region, province, city, pageNumber) {
-        $.ajax({
-            type: 'GET',
-            async: true,
-            url: '<?php echo $this->basePath(); ?>/training/getLectureTotalPages?category=' + category + '&startTime=' + startTime + '&endTime=' + endTime + '&region=' + region + '&province=' + province + '&city=' + city,
-            dataType: 'JSON',
-            success: function(result) {
-                $('div#pagination > ul').empty();
-                if ( result['isSuccessful'] ) {
-                    $('div#pagination').removeClass('hide');
-                    displayPagination(pageNumber, result['totalPages']);
-                } else {
-                    $('div#pagination').addClass('hide');
-                }
-            }
-        });
-    }
-<?php $this->inlineScript()->captureEnd(); ?>
-<?php $this->inlineScript()->captureStart(); ?>
     function displayPagination(currentPage, totalPages) {
         var lowerBound = ( currentPage - 5 > 0 ? currentPage - 5 : 1 ),
             upperBound = ( currentPage + 5 < totalPages ? currentPage + 5 : totalPages );
@@ -260,7 +244,7 @@
     }
 <?php $this->inlineScript()->captureEnd(); ?>
 <?php $this->inlineScript()->captureStart(); ?>
-    $(document).ready(function() {
+    $(function() {
         initializeDateTimePicker();
         $('.city-picker').cityPicker({
             required: false

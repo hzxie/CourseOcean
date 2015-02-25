@@ -67,7 +67,7 @@ class TrainingController extends AbstractActionController
         );
         $response = $this->getResponse();
         $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
+        $response->setContent(Json::encode($result));
         return $response;
     }
 
@@ -108,48 +108,20 @@ class TrainingController extends AbstractActionController
         $lectureTable   = $serviceManager->get('Application\Model\LectureTable');
         $lectures       = $lectureTable->getLecturesUsingFilters($courseTypeId, $startTime, $endTime, 
                                          $region, $province, $city, $offset, $NUMBER_OF_COURSES_PER_PAGE);
-
-        $result   = array(
-            'isSuccessful'  => $lectures != null && $lectures->count() != 0,
-            'lectures'      => $this->getResultSetArray($lectures),
-        );
-        $response = $this->getResponse();
-        $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
-        return $response;
-    }
-
-    /**
-     * 获取近期开课课程页面数量.
-     * @return 一个包含课程页面数量的JSON数组.
-     */
-    public function getLectureTotalPagesAction()
-    {
-        $NUMBER_OF_COURSES_PER_PAGE     = 10;
-        $courseTypeSlug                 = $this->params()->fromQuery('category');
-        $startTime                      = $this->params()->fromQuery('startTime');
-        $startTime                      = ( $startTime ? $startTime : date('Y-m-d H:i:s') );
-        $endTime                        = $this->params()->fromQuery('endTime');
-        $region                         = $this->params()->fromQuery('region');
-        $province                       = $this->params()->fromQuery('province');
-        $city                           = $this->params()->fromQuery('city');
-        $courseTypeId                   = $this->getCourseTypeId($courseTypeSlug);
-
-        $serviceManager = $this->getServiceLocator();
-        $lectureTable   = $serviceManager->get('Application\Model\LectureTable');
         $totalPages     = ceil($lectureTable->getCountUsingFilters($courseTypeId, $startTime, $endTime, 
                                               $region, $province, $city) / $NUMBER_OF_COURSES_PER_PAGE);
 
         $result   = array(
-            'isSuccessful'  => $totalPages != 0,
+            'isSuccessful'  => $lectures != null && $lectures->count() != 0,
+            'lectures'      => $this->getResultSetArray($lectures),
             'totalPages'    => $totalPages,
         );
         $response = $this->getResponse();
         $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
+        $response->setContent(Json::encode($result));
         return $response;
     }
-    
+
     /**
      * 显示课程会话的详细信息页面.
      * @return 一个包含页面所需参数的数组
@@ -197,7 +169,7 @@ class TrainingController extends AbstractActionController
         );
         $response = $this->getResponse();
         $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
+        $response->setContent(Json::encode($result));
         return $response;
     }
 
@@ -268,7 +240,7 @@ class TrainingController extends AbstractActionController
         }
         $response = $this->getResponse();
         $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
+        $response->setContent(Json::encode($result));
         return $response;
     }
 
@@ -313,38 +285,16 @@ class TrainingController extends AbstractActionController
         $serviceManager = $this->getServiceLocator();
         $courseTable    = $serviceManager->get('Application\Model\CourseTable');
         $courses        = $courseTable->getCoursesUsingCategory($courseTypeId, $offset, $NUMBER_OF_COURSES_PER_PAGE);
+        $totalPages     = ceil($courseTable->getCountUsingCategory($courseTypeId) / $NUMBER_OF_COURSES_PER_PAGE);
 
         $result   = array(
             'isSuccessful'  => $courses != null && $courses->count() != 0,
             'courses'       => $this->getResultSetArray($courses),
-        );
-        $response = $this->getResponse();
-        $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
-        return $response;
-    }
-
-    /**
-     * 获取课程页面数量.
-     * @return 一个包含课程页面数量的JSON数组.
-     */
-    public function getCourseTotalPagesAction()
-    {
-        $NUMBER_OF_COURSES_PER_PAGE     = 10;
-        $courseTypeSlug                 = $this->params()->fromQuery('category');
-        $courseTypeId                   = $this->getCourseTypeId($courseTypeSlug);
-
-        $serviceManager = $this->getServiceLocator();
-        $courseTable    = $serviceManager->get('Application\Model\CourseTable');
-        $totalPages     = ceil($courseTable->getCountUsingCategory($courseTypeId) / $NUMBER_OF_COURSES_PER_PAGE);
-
-        $result   = array(
-            'isSuccessful'  => $totalPages != 0,
             'totalPages'    => $totalPages,
         );
         $response = $this->getResponse();
         $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
+        $response->setContent(Json::encode($result));
         return $response;
     }
 
@@ -394,10 +344,14 @@ class TrainingController extends AbstractActionController
         );
         $response = $this->getResponse();
         $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
+        $response->setContent(Json::encode($result));
         return $response;
     }
 
+    /**
+     * 获取某个课程的评论.
+     * @return 一个包含课程评论信息的JSON对象
+     */
     public function getCommentsAction()
     {
         $NUMBER_OF_COMMENTS_PER_PAGE    = 20;
@@ -408,37 +362,16 @@ class TrainingController extends AbstractActionController
         $serviceManager                 = $this->getServiceLocator();
         $commentTable                   = $serviceManager->get('Application\Model\CommentTable');
         $comments                       = $commentTable->getCommentUsingCourseId($courseId, $offset, $NUMBER_OF_COMMENTS_PER_PAGE);
+        $totalPages                     = ceil($commentTable->getCountUsingCourseId($courseId) / $NUMBER_OF_COMMENTS_PER_PAGE);
 
         $result         = array(
             'isSuccessful'  => $comments != null && $comments->count() != 0,
             'comments'      => $this->getResultSetArray($comments),
-        );
-        $response = $this->getResponse();
-        $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
-        return $response;
-    }
-
-    /**
-     * 获取评论页面数量.
-     * @return 一个包含评论页面数量的JSON数组.
-     */
-    public function getCommentTotalPagesAction()
-    {
-        $NUMBER_OF_COMMENTS_PER_PAGE    = 20;
-        $courseId                       = $this->params()->fromQuery('courseId');
-
-        $serviceManager                 = $this->getServiceLocator();
-        $commentTable                   = $serviceManager->get('Application\Model\CommentTable');
-        $totalPages                     = ceil($commentTable->getCountUsingCourseId($courseId) / $NUMBER_OF_COMMENTS_PER_PAGE);
-
-        $result   = array(
-            'isSuccessful'  => $totalPages != 0,
             'totalPages'    => $totalPages,
         );
         $response = $this->getResponse();
         $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
+        $response->setContent(Json::encode($result));
         return $response;
     }
 
@@ -472,41 +405,19 @@ class TrainingController extends AbstractActionController
         $serviceManager = $this->getServiceLocator();
         $teacherTable   = $serviceManager->get('Application\Model\TeacherTable');
         $teachers       = $teacherTable->getTeachersUsingCategory($courseTypeId, $offset, $NUMBER_OF_TEACHERS_PER_PAGE);
+        $totalPages     = ceil($teacherTable->getCount($courseTypeId) / $NUMBER_OF_TEACHERS_PER_PAGE);
 
         $result         = array(
             'isSuccessful'  => $teachers != null && $teachers->count() != 0,
             'teachers'      => $this->getResultSetArray($teachers),
-        );
-        $response = $this->getResponse();
-        $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
-        return $response;
-    }
-    
-    /**
-     * 获取讲师页面数量.
-     * @return 一个包含讲师页面数量的JSON数组.
-     */
-    public function getTeacherTotalPagesAction()
-    {
-        $NUMBER_OF_TEACHERS_PER_PAGE    = 20;
-        $courseTypeSlug                 = $this->params()->fromQuery('category');
-        $courseTypeId                   = $this->getCourseTypeId($courseTypeSlug);
-
-        $serviceManager = $this->getServiceLocator();
-        $teacherTable   = $serviceManager->get('Application\Model\TeacherTable');
-        $totalPages     = ceil($teacherTable->getCount($courseTypeId) / $NUMBER_OF_TEACHERS_PER_PAGE);
-
-        $result   = array(
-            'isSuccessful'  => $totalPages != 0,
             'totalPages'    => $totalPages,
         );
         $response = $this->getResponse();
         $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
+        $response->setContent(Json::encode($result));
         return $response;
     }
-
+    
     /**
      * 显示讲师的详细信息.
      * @return 一个包含页面所需参数的数组
@@ -545,7 +456,7 @@ class TrainingController extends AbstractActionController
         );
         $response = $this->getResponse();
         $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
+        $response->setContent(Json::encode($result));
         return $response;
     }
 
@@ -566,7 +477,7 @@ class TrainingController extends AbstractActionController
         );
         $response = $this->getResponse();
         $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
+        $response->setContent(Json::encode($result));
         return $response;
     }
 
@@ -618,38 +529,16 @@ class TrainingController extends AbstractActionController
         $serviceManager = $this->getServiceLocator();
         $postTable      = $serviceManager->get('Application\Model\PostTable');
         $posts          = $postTable->getPostsUsingCategory($postCategoryId, $offset, $NUMBER_OF_POSTS_PER_PAGE);
+        $totalPages     = ceil($postTable->getCountUsingCategory($postCategoryId) / $NUMBER_OF_POSTS_PER_PAGE);
 
         $result   = array(
             'isSuccessful'  => $posts != null && $posts->count() != 0,
             'posts'         => $this->getResultSetArray($posts),
-        );
-        $response = $this->getResponse();
-        $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
-        return $response;
-    }
-
-    /**
-     * 获取培训动态的页面数量.
-     * @return 一个包含培训动态页面数量的JSON数组
-     */
-    public function getPostTotalPagesAction()
-    {
-        $NUMBER_OF_POSTS_PER_PAGE       = 10;
-        $postCategorySlug               = $this->params()->fromQuery('category');
-        $postCategoryId                 = $this->getPostCategoryId($postCategorySlug);
-
-        $serviceManager = $this->getServiceLocator();
-        $postTable      = $serviceManager->get('Application\Model\PostTable');
-        $totalPages     = ceil($postTable->getCountUsingCategory($postCategoryId) / $NUMBER_OF_POSTS_PER_PAGE);
-
-        $result   = array(
-            'isSuccessful'  => $totalPages != 0,
             'totalPages'    => $totalPages,
         );
         $response = $this->getResponse();
         $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
+        $response->setContent(Json::encode($result));
         return $response;
     }
 
@@ -690,7 +579,7 @@ class TrainingController extends AbstractActionController
         );
         $response = $this->getResponse();
         $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
+        $response->setContent(Json::encode($result));
         return $response;
     }
 }

@@ -41,7 +41,7 @@ class AccountsController extends AbstractActionController
     public function loginAction()
     {
         if ( $this->isEnableAutoLogin() ) {
-            return $this->sendRedirect('accounts/dashboard');
+            return self::sendRedirect('accounts/dashboard');
         }
         $this->destroySession();
 
@@ -71,7 +71,7 @@ class AccountsController extends AbstractActionController
     private function sendRedirect($redirectPath)
     {
         $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
-        $url = $renderer->basePath($redirectPath);
+        $url      = $renderer->basePath($redirectPath);
         $redirect = $this->plugin('redirect');
 
         return $redirect->toUrl($url);
@@ -1147,32 +1147,11 @@ class AccountsController extends AbstractActionController
         $serviceManager     = $this->getServiceLocator();
         $attendanceTable    = $serviceManager->get('Application\Model\LectureAttendanceTable');
         $attendanceRecords  = $attendanceTable->getLectureAttendanceUsingUid($profile['uid'], $offset, $NUMBER_OF_RECORDS_PER_PAGE);
+        $totalPages         = ceil($attendanceTable->getCountUsingUid($profile['uid']) / $NUMBER_OF_RECORDS_PER_PAGE);
 
         $result = array(
             'isSuccessful'  => $attendanceRecords != null && $attendanceRecords->count() != 0,
             'records'       => $this->getResultSetArray($attendanceRecords),
-        );
-        $response = $this->getResponse();
-        $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
-        return $response;
-    }
-
-    /**
-     * 获取某个用户参加培训的信息的页面数量.
-     * @return 一个包含某个用户参加培训的信息页面数量的JSON数组
-     */
-    public function getLectureAttendanceTotalPagesAction()
-    {
-        $profile                    = $this->getUserProfile();
-        $NUMBER_OF_RECORDS_PER_PAGE = 10;
-
-        $serviceManager     = $this->getServiceLocator();
-        $attendanceTable    = $serviceManager->get('Application\Model\LectureAttendanceTable');
-        $totalPages         = ceil($attendanceTable->getCountUsingUid($profile['uid']) / $NUMBER_OF_RECORDS_PER_PAGE);
-
-        $result = array(
-            'isSuccessful'  => $totalPages != 0,
             'totalPages'    => $totalPages,
         );
         $response = $this->getResponse();
@@ -1254,32 +1233,11 @@ class AccountsController extends AbstractActionController
         $serviceManager     = $this->getServiceLocator();
         $courseTable        = $serviceManager->get('Application\Model\CourseTable');
         $courses            = $courseTable->getCoursesUsingTeacherId($profile['uid'], $offset, $NUMBER_OF_COURSES_PER_PAGE);
+        $totalPages         = ceil($courseTable->getCountUsingTeacherId($profile['uid']) / $NUMBER_OF_COURSES_PER_PAGE);
 
         $result = array(
             'isSuccessful'  => $courses != null && $courses->count() != 0,
             'courses'       => $this->getResultSetArray($courses),
-        );
-        $response = $this->getResponse();
-        $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
-        return $response;
-    }
-
-    /**
-     * 获取某个讲师用户所开设课程的页面数量.
-     * @return 一个包含讲师用户所开设课程的页面数量的JSON数组
-     */
-    public function getOpeningCourseTotalPagesAction()
-    {
-        $profile                    = $this->getUserProfile();
-        $NUMBER_OF_COURSES_PER_PAGE = 10;
-
-        $serviceManager     = $this->getServiceLocator();
-        $courseTable        = $serviceManager->get('Application\Model\CourseTable');
-        $totalPages         = ceil($courseTable->getCountUsingTeacherId($profile['uid']) / $NUMBER_OF_COURSES_PER_PAGE);
-
-        $result = array(
-            'isSuccessful'  => $totalPages != 0,
             'totalPages'    => $totalPages,
         );
         $response = $this->getResponse();
@@ -1335,32 +1293,11 @@ class AccountsController extends AbstractActionController
         $serviceManager     = $this->getServiceLocator();
         $lectureTable       = $serviceManager->get('Application\Model\LectureTable');
         $lectures           = $lectureTable->getLecturesUsingTeacherId($profile['uid'], $offset, $NUMBER_OF_LECTURES_PER_PAGE);
+        $totalPages         = ceil($lectureTable->getCountUsingTeacherId($profile['uid']) / $NUMBER_OF_LECTURES_PER_PAGE);
 
         $result = array(
             'isSuccessful'  => $lectures != null && $lectures->count() != 0,
             'lectures'      => $this->getResultSetArray($lectures),
-        );
-        $response = $this->getResponse();
-        $response->setStatusCode(200);
-        $response->setContent( Json::encode($result) );
-        return $response;
-    }
-
-    /**
-     * 获取某个讲师开设培训课的页面数量
-     * @return 一个包含讲师开设培训课的页面数量的JSON数组
-     */
-    public function getOpeningLectureTotalPagesAction()
-    {
-        $profile                        = $this->getUserProfile();
-        $NUMBER_OF_LECTURES_PER_PAGE    = 10;
-
-        $serviceManager     = $this->getServiceLocator();
-        $lectureTable       = $serviceManager->get('Application\Model\LectureTable');
-        $totalPages         = ceil($lectureTable->getCountUsingTeacherId($profile['uid']) / $NUMBER_OF_LECTURES_PER_PAGE);
-
-        $result = array(
-            'isSuccessful'  => $totalPages != 0,
             'totalPages'    => $totalPages,
         );
         $response = $this->getResponse();

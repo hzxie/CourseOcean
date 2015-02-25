@@ -172,7 +172,7 @@
         </div> <!-- .modal-footer -->
     </div> <!-- #password-modal -->
     <!-- Java Script -->
-    <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/jquery.citypicker.js"></script>
+    <script type="text/javascript" src="<?php echo $this->cdn('/js/jquery.citypicker.js'); ?>"></script>
     <script type="text/javascript">
         $('.city-picker').cityPicker();
     </script>
@@ -235,7 +235,7 @@
         }
     </script>
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(function() {
             getPositions();
             getProfile();
         });
@@ -481,7 +481,7 @@
         }
     </script>
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(function() {
             getCourseTypes();
             getProfile();
         });
@@ -529,7 +529,7 @@
         }
     </script>
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(function() {
             getCompanyFields();
             getProfile();
         });

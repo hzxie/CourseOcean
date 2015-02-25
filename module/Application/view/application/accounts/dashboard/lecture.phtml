@@ -1,5 +1,12 @@
+<?php 
+    echo $this->headLink()->appendStylesheet($this->cdn('/css/bootstrap.datetimepicker.min.css'));
+    echo $this->headScript()->appendFile($this->cdn('/js/date-zh-CN.js'))
+                            ->appendFile($this->cdn('/js/jquery.citypicker.js'))
+                            ->appendFile($this->cdn('/js/bootstrap.datetimepicker.min.js'))
+                            ->appendFile($this->cdn('/js/bootstrap.datetimepicker.zh-CN.js'));
+?>
+
 <?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
-<link href="<?php echo $this->basePath(); ?>/css/bootstrap.datetimepicker.min.css" media="screen" rel="stylesheet" type="text/css">
 <ul class="nav nav-tabs">
     <li class="active"><a href="#courses" data-toggle="tab">我开设的课程</a></li>
     <li><a href="#lectures" data-toggle="tab">我开设的培训</a></li>
@@ -19,12 +26,18 @@
                     url: '<?php echo $this->basePath(); ?>/accounts/getOpeningCourses?&page=' + pageNumber,
                     dataType: 'JSON',
                     success: function(result) {
+                        var paginationObject = $('#courses-pagination');
+                        
                         $('#opening-courses').empty();
+                        $(paginationObject).empty();
                         if ( result['isSuccessful'] ) {
                             $('.no-opening-courses').addClass('hide');
+                            $(paginationObject).removeClass('hide');
                             displayOpeningCourses(result['courses']);
+                            displayPagination(pageNumber, result['totalPages'], paginationObject);
                         } else {
                             $('.no-opening-courses').removeClass('hide');
+                            $(paginationObject).addClass('hide');
                         }
                     }
                 });
@@ -36,7 +49,7 @@
                 for ( var i = 0; i < numberOfCourses; ++ i ) {
                     $('#opening-courses').append('<li id="course-' + courses[i]['courseId'] + '" class="course row-fluid">' 
                                                + '    <div class="span3">'
-                                               + '        <img src="<?php echo $this->basePath(); ?>/img/categories/' + courses[i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />'
+                                               + '        <img src="<?php echo $this->cdn('/img/categories/'); ?>' + courses[i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />'
                                                + '    </div>'
                                                + '    <div class="span9">'
                                                + '        <h4>'
@@ -53,27 +66,6 @@
             }
         </script>
         <script type="text/javascript">
-            function getOpeningCourseTotalPages(pageNumber) {
-                $.ajax({
-                    type: 'GET',
-                    async: true,
-                    url: '<?php echo $this->basePath(); ?>/accounts/getOpeningCourseTotalPages',
-                    dataType: 'JSON',
-                    success: function(result) {
-                        var paginationObject = $('#courses-pagination');
-
-                        $(paginationObject).empty();
-                        if ( result['isSuccessful'] ) {
-                            $(paginationObject).removeClass('hide');
-                            displayPagination(pageNumber, result['totalPages'], paginationObject);
-                        } else {
-                            $(paginationObject).addClass('hide');
-                        }
-                    }
-                });
-            }
-        </script>
-        <script type="text/javascript">
             $('#courses-pagination').delegate('li', 'click', function() {
                 var currentPage = parseInt($('li.active > a', '#courses-pagination').html(), 10),
                     pageNumber  = $('a', this).html();
@@ -84,7 +76,6 @@
                     pageNumber  = currentPage + 1;
                 }
                 getOpeningCourses(pageNumber);
-                getOpeningCourseTotalPages(pageNumber);
             });
         </script>
         <script type="text/javascript">
@@ -113,12 +104,18 @@
                     url: '<?php echo $this->basePath(); ?>/accounts/getOpeningLectures?&page=' + pageNumber,
                     dataType: 'JSON',
                     success: function(result) {
+                        var paginationObject = $('#lectures-pagination');
+
                         $('#opening-lectures').empty();
+                        $(paginationObject).empty();
                         if ( result['isSuccessful'] ) {
                             $('.no-opening-lectures').addClass('hide');
+                            $(paginationObject).removeClass('hide');
                             displayOpeningLectures(result['lectures']);
+                            displayPagination(pageNumber, result['totalPages'], paginationObject);
                         } else {
                             $('.no-opening-lectures').removeClass('hide');
+                            $(paginationObject).addClass('hide');
                         }
                     }
                 });
@@ -149,27 +146,6 @@
             }
         </script>
         <script type="text/javascript">
-            function getOpeningLectureTotalPages(pageNumber) {
-                $.ajax({
-                    type: 'GET',
-                    async: true,
-                    url: '<?php echo $this->basePath(); ?>/accounts/getOpeningLectureTotalPages',
-                    dataType: 'JSON',
-                    success: function(result) {
-                        var paginationObject = $('#lectures-pagination');
-
-                        $(paginationObject).empty();
-                        if ( result['isSuccessful'] ) {
-                            $(paginationObject).removeClass('hide');
-                            displayPagination(pageNumber, result['totalPages'], paginationObject);
-                        } else {
-                            $(paginationObject).addClass('hide');
-                        }
-                    }
-                });
-            }
-        </script>
-        <script type="text/javascript">
             $('.no-opening-lectures > a').click(function() {
                 $('.nav-tabs a[href=#courses]').tab('show');
             });
@@ -185,7 +161,6 @@
                     pageNumber  = currentPage + 1;
                 }
                 getOpeningLectures(pageNumber);
-                getOpeningLectureTotalPages(pageNumber);
             });
         </script>
     </div> <!-- #opening-lectures -->
@@ -205,12 +180,18 @@
                     url: '<?php echo $this->basePath(); ?>/accounts/getLectureAttendance?&page=' + pageNumber,
                     dataType: 'JSON',
                     success: function(result) {
+                        var paginationObject = $('#attendance-pagination');
+
                         $('#attendance-records').empty();
+                        $(paginationObject).empty();
                         if ( result['isSuccessful'] ) {
                             $('.no-courses').addClass('hide');
+                            $(paginationObject).removeClass('hide');
                             displayLectureAttendance(result['records']);
+                            displayPagination(pageNumber, result['totalPages'], paginationObject);
                         } else {
                             $('.no-courses').removeClass('hide');
+                            $(paginationObject).addClass('hide');
                         }
                     }
                 });
@@ -310,27 +291,6 @@
             }
         </script>
         <script type="text/javascript">
-            function getLectureAttendanceTotalPages(pageNumber) {
-                $.ajax({
-                    type: 'GET',
-                    async: true,
-                    url: '<?php echo $this->basePath(); ?>/accounts/getLectureAttendanceTotalPages',
-                    dataType: 'JSON',
-                    success: function(result) {
-                        var paginationObject = $('#attendance-pagination');
-
-                        $(paginationObject).empty();
-                        if ( result['isSuccessful'] ) {
-                            $(paginationObject).removeClass('hide');
-                            displayPagination(pageNumber, result['totalPages'], paginationObject);
-                        } else {
-                            $(paginationObject).addClass('hide');
-                        }
-                    }
-                });
-            }
-        </script>
-        <script type="text/javascript">
             $('#attendance-pagination').delegate('li', 'click', function() {
                 var currentPage = parseInt($('li.active > a', '#attendance-pagination').html(), 10),
                     pageNumber  = $('a', this).html();
@@ -341,7 +301,6 @@
                     pageNumber  = currentPage + 1;
                 }
                 getLectureAttendance(pageNumber);
-                getLectureAttendanceTotalPages(pageNumber);
             });
         </script>
         <script type="text/javascript">
@@ -490,13 +449,6 @@
         </div> <!-- .modal-footer -->
     </div> <!-- #new-lecture-modal-step-2 -->
     <!-- JavaScript -->
-    <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/date-zh-CN.js"></script>
-    <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/jquery.citypicker.js"></script>
-    <script type="text/javascript">
-        $('.city-picker').cityPicker();
-    </script>
-    <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/bootstrap.datetimepicker.min.js"></script>
-    <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/bootstrap.datetimepicker.zh-CN.js"></script>
     <script type="text/javascript">
         function initializeDateTimePicker(startTime, endTime) {
             if ( typeof(startTime) == 'undefined' ) {
@@ -520,14 +472,13 @@
         }
     </script>
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(function() {
             var pageNumber  = 1;
 
+            // $('.city-picker').cityPicker();
             initializeDateTimePicker();
             getOpeningCourses(pageNumber);
-            getOpeningCourseTotalPages(pageNumber);
             getLectureAttendance(pageNumber);
-            getLectureAttendanceTotalPages(pageNumber);
         });
     </script>
     <script type="text/javascript">
@@ -536,7 +487,6 @@
             var pageNumber = 1;
 
             getOpeningLectures(pageNumber);
-            getOpeningLectureTotalPages(pageNumber);
         })
     </script>
     <script type="text/javascript">
@@ -770,10 +720,9 @@
     </script>
 <?php else: ?>
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(function() {
             var pageNumber  = 1;
             getLectureAttendance(pageNumber);
-            getLectureAttendanceTotalPages(pageNumber);
         });
     </script>
 <?php endif; ?>
