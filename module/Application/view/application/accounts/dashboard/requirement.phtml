@@ -1,9 +1,6 @@
 <?php 
-    echo $this->headLink()->appendStylesheet($this->cdn('/css/bootstrap.datetimepicker.min.css'));
-    echo $this->headScript()->appendFile($this->cdn('/js/jquery.citypicker.js'))
-                            ->appendFile($this->cdn('/js/bootstrap.datetimepicker.min.js'))
-                            ->appendFile($this->cdn('/js/bootstrap.datetimepicker.zh-CN.js'));
-?>
+    echo $this->headLink()->appendStylesheet($this->cdn('/css/bootstrap.datetimepicker.min.css'))
+;?>
 
 <?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
     <h4>我收到的需求</h4>
@@ -77,8 +74,15 @@
                 region          = $('#requirement-modal .region').val(),
                 province        = $('#requirement-modal .province').val(),
                 city            = $('#requirement-modal .city').val() || '',
-                postData        = 'teacherId=' + teacherId + '&courseId=' + courseId + '&startTime=' + startTime + '&endTime=' + endTime + 
-                                    '&region=' + region + '&province=' + province + '&city=' + city;
+                postData        = {
+                    'teacherId': teacherId,
+                    'courseId': courseId,
+                    'startTime': startTime,
+                    'endTime': endTime,
+                    'region': region,
+                    'province': province,
+                    'city': city
+                };
         <?php endif; ?>
             return postData;
         }
@@ -290,11 +294,11 @@
                     $MAX_MONTH  = 12;
                 ?>
                 <?php for ( $i = $month; $i <= $MAX_MONTH; ++ $i ): ?>
-                    <option value="<?php echo "$year-$i"; ?>"><?php echo $year; ?>年<?php echo sprintf('%02d', $i); ?>月</option>
+                    <option value="<?php echo $year.'-'.sprintf('%02d', $i); ?>"><?php echo $year; ?>年<?php echo sprintf('%02d', $i); ?>月</option>
                 <?php endfor; ?>
                 <?php ++ $year;
                       for ( $i = $MIN_MONTH; $i < $month; ++ $i ): ?>
-                    <option value="<?php echo "$year-$i"; ?>"><?php echo $year; ?>年<?php echo sprintf('%02d', $i); ?>月</option>
+                    <option value="<?php echo $year.'-'.sprintf('%02d', $i); ?>"><?php echo $year; ?>年<?php echo sprintf('%02d', $i); ?>月</option>
                 <?php endfor; ?>
                 </select>
             </div> <!-- .span6 -->
@@ -492,6 +496,11 @@
     }
 </script>
 <script type="text/javascript">
+    function initializeCityPicker() {
+        $('.city-picker').cityPicker();
+    }
+</script>
+<script type="text/javascript">
     function initializeDateTimePicker(startTime, endTime) {
         $('.form_datetime').datetimepicker({
             language:  'zh-CN',
@@ -586,9 +595,21 @@
         
         var pageNumber = 1;
         getRequirements(pageNumber);
-<?php if ( $profile['userGroupSlug'] != 'person' ): ?>
-        initializeDateTimePicker();
-<?php endif; ?>
-        $('.city-picker').cityPicker();
+    });
+
+
+    /* Force to load the scripts synchronously */
+    $.when(
+        $.getScript('<?php echo $this->cdn('/js/date-zh-CN.js'); ?>'),
+        $.getScript('<?php echo $this->cdn('/js/jquery.citypicker.js'); ?>'),
+        $.getScript('<?php echo $this->cdn('/js/bootstrap.datetimepicker.min.js'); ?>'),
+        $.Deferred(function(deferred){
+            $(deferred.resolve);
+        })
+    ).done(function(){
+        initializeCityPicker();
+        $.getScript('<?php echo $this->cdn('/js/bootstrap.datetimepicker.zh-CN.js'); ?>', function() {
+            initializeDateTimePicker();
+        });
     });
 </script>

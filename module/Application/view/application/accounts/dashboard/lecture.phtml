@@ -1,10 +1,6 @@
 <?php 
-    echo $this->headLink()->appendStylesheet($this->cdn('/css/bootstrap.datetimepicker.min.css'));
-    echo $this->headScript()->appendFile($this->cdn('/js/date-zh-CN.js'))
-                            ->appendFile($this->cdn('/js/jquery.citypicker.js'))
-                            ->appendFile($this->cdn('/js/bootstrap.datetimepicker.min.js'))
-                            ->appendFile($this->cdn('/js/bootstrap.datetimepicker.zh-CN.js'));
-?>
+    echo $this->headLink()->appendStylesheet($this->cdn('/css/bootstrap.datetimepicker.min.css'))
+;?>
 
 <?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
 <ul class="nav nav-tabs">
@@ -450,6 +446,11 @@
     </div> <!-- #new-lecture-modal-step-2 -->
     <!-- JavaScript -->
     <script type="text/javascript">
+        function initializeCityPicker() {
+            $('.city-picker').cityPicker();
+        }
+    </script>
+    <script type="text/javascript">
         function initializeDateTimePicker(startTime, endTime) {
             if ( typeof(startTime) == 'undefined' ) {
                 startTime = '<?php echo date('Y-m-d H:i'); ?>';
@@ -475,17 +476,29 @@
         $(function() {
             var pageNumber  = 1;
 
-            // $('.city-picker').cityPicker();
-            initializeDateTimePicker();
             getOpeningCourses(pageNumber);
             getLectureAttendance(pageNumber);
+        });
+
+        /* Force to load the scripts synchronously */
+        $.when(
+            $.getScript('<?php echo $this->cdn('/js/date-zh-CN.js'); ?>'),
+            $.getScript('<?php echo $this->cdn('/js/jquery.citypicker.js'); ?>'),
+            $.getScript('<?php echo $this->cdn('/js/bootstrap.datetimepicker.min.js'); ?>'),
+            $.Deferred(function(deferred){
+                $(deferred.resolve);
+            })
+        ).done(function(){
+            initializeCityPicker();
+            $.getScript('<?php echo $this->cdn('/js/bootstrap.datetimepicker.zh-CN.js'); ?>', function() {
+                initializeDateTimePicker();
+            });
         });
     </script>
     <script type="text/javascript">
         /* Fix bug on IE 7 */
         $('.nav li:nth-child(2) > a').click(function() {
             var pageNumber = 1;
-
             getOpeningLectures(pageNumber);
         })
     </script>
