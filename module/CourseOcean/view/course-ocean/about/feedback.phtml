@@ -1,0 +1,94 @@
+<?php 
+    echo $this->headTitle('意见反馈 | ');
+    echo $this->headLink()->appendStylesheet($this->cdn('/css/about/style.css'))
+                          ->appendStylesheet($this->cdn('/css/about/feedback.css'));
+?>
+
+<div id="header" class="container">
+    <div class="row-fluid">
+        <div id="logo" class="span3">
+            <a href="<?php echo $this->basePath('/'); ?>">
+                <img src="<?php echo $this->cdn('/img/logo.png'); ?>" alt="Logo" />
+            </a>
+        </div> <!-- #logo -->
+        <div class="span9">
+            <ul class="inline">
+                <li><a href="<?php echo $this->basePath(); ?>/training/lectures">近期培训</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/training/courses">课程库</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/training/teachers">讲师团队</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard#requirement">需求定制</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/training/posts">培训动态</a></li>
+                <?php
+                    $session    = new Zend\Session\Container('co_session');
+                    if ( !$session->offsetExists('isLogined') ):
+                ?>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/login"><strong>登录</strong></a></li>
+                    <li><button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">创建账户</button></li>
+                <?php else: ?>
+                    <li>您好, <a href="<?php echo $this->basePath(); ?>/accounts/dashboard"><?php echo $session->offsetGet('username'); ?></a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/logout">注销</a></li>
+                <?php endif; ?>
+            </ul>
+        </div> <!-- .span9 -->
+    </div> <!-- #container -->
+</div> <!-- #header -->
+<div id="hero">
+    <div class="container">
+        <h1>意见反馈</h1>
+        <p>倾听您的声音, 一切都为您而设计.</p>
+    </div> <!-- #container -->
+</div> <!-- #hero -->
+<div id="container" class="container">
+    <div class="row-fluid">
+        <div id="sidebar" class="span3">
+            <ul class="nav nav-list">
+                <li><a href="<?php echo $this->basePath(); ?>/about">关于我们</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/about/partner">合作伙伴</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/about/join">诚招英才</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/about/support">帮助中心</a></li>
+                <li class="active"><a href="<?php echo $this->basePath(); ?>/about/feedback">意见反馈</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/about/term">服务条款</a></li>
+            </ul>
+        </div> <!-- .span3 -->
+        <div id="content" class="span9">
+            <form method="POST" onsubmit="return false;">
+                <h2>我们乐于倾听来自您的声音.</h2>
+                <div class="alert alert-error hide"></div>
+                <div class="alert alert-success hide">感谢您的反馈. 我们会努力做得更好!</div>
+                <div class="row-fluid">
+                    <div class="span6">
+                        <label for="name">姓名</label>
+                        <input id="name" type="text" />
+                    </div> <!-- .soan6 -->
+                    <div class="span6">
+                        <label for="appellation">称谓</label>
+                        <select id="appellation">
+                            <option value="male">先生</option>
+                            <option value="female">女士</option>
+                        </select>
+                    </div> <!-- .soan6 -->
+                </div> <!-- .row-fluid -->
+                <div class="row-fluid">
+                    <div class="span6">
+                        <label for="email">电子邮件</label>
+                        <input id="email" type="text" />
+                    </div> <!-- .soan6 -->
+                    <div class="span6">
+                        <label for="phone">联系电话</label>
+                        <input id="phone" type="text" />
+                    </div> <!-- .soan6 -->
+                </div> <!-- .row-fluid -->
+                <div class="row-fluid">
+                    <label for="description">您的建议</label>
+                    <textarea id="description" rows="10"></textarea>
+                </div> <!-- .row-fluid -->
+                <div class="row-fluid">
+                    <button type="submit" class="btn btn-primary">提交</button>
+                    <button class="btn">重置</button>
+                </div> <!-- .row-fluid -->
+            </form>
+        </div> <!-- .span9 -->
+    </div> <!-- .row-fluid -->
+</div> <!-- #container -->
+
+<script type="text/javascript" src='https://www.google.com/recaptcha/api.js'></script>

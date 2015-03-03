@@ -1,0 +1,59 @@
+<?php 
+    echo $this->headTitle('服务条款 | ');
+    echo $this->headLink()->appendStylesheet($this->cdn('/css/about/style.css'))
+                          ->appendStylesheet($this->cdn('/css/about/term.css'));
+?>
+
+<div id="header" class="container">
+    <div class="row-fluid">
+        <div id="logo" class="span3">
+            <a href="<?php echo $this->basePath('/'); ?>">
+                <img src="<?php echo $this->cdn('/img/logo.png'); ?>" alt="Logo" />
+            </a>
+        </div> <!-- #logo -->
+        <div class="span9">
+            <ul class="inline">
+                <li><a href="<?php echo $this->basePath(); ?>/training/lectures">近期培训</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/training/courses">课程库</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/training/teachers">讲师团队</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard#requirement">需求定制</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/training/posts">培训动态</a></li>
+                <?php
+                    $session    = new Zend\Session\Container('co_session');
+                    if ( !$session->offsetExists('isLogined') ):
+                ?>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/login"><strong>登录</strong></a></li>
+                    <li><button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">创建账户</button></li>
+                <?php else: ?>
+                    <li>您好, <a href="<?php echo $this->basePath(); ?>/accounts/dashboard"><?php echo $session->offsetGet('username'); ?></a></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/logout">注销</a></li>
+                <?php endif; ?>
+            </ul>
+        </div> <!-- .span9 -->
+    </div> <!-- #container -->
+</div> <!-- #header -->
+<div id="hero">
+    <div class="container">
+        <h1>服务条款</h1>
+        <p>免责声明和隐私政策.</p>
+    </div> <!-- #container -->
+</div> <!-- #hero -->
+<div id="container" class="container">
+    <div class="row-fluid">
+        <div id="sidebar" class="span3">
+            <ul class="nav nav-list">
+                <li><a href="<?php echo $this->basePath(); ?>/about">关于我们</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/about/partner">合作伙伴</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/about/join">诚招英才</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/about/support">帮助中心</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/about/feedback">意见反馈</a></li>
+                <li class="active"><a href="<?php echo $this->basePath(); ?>/about/term">服务条款</a></li>
+            </ul>
+        </div> <!-- .span3 -->
+        <div id="content" class="span9">
+            <h2>服务条款确认与接纳</h2>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+            <div class="alert alert-warning">如果您对此条款有任何疑问或建议，欢迎通过邮件联系我们： <a href="mailto:service@courseocean.com">service@courseocean.com</a></div>
+        </div> <!-- .span9 -->
+    </div> <!-- .row-fluid -->
+</div> <!-- #container -->

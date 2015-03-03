@@ -1,0 +1,290 @@
+<?php 
+    echo $this->headTitle('首页 | ');
+    echo $this->headLink()->appendStylesheet($this->cdn('/css/home/homepage.css'));
+?>
+
+<div id="header">
+    <ul class="inline">
+    <?php
+        $session    = new Zend\Session\Container('co_session');
+        if ( !$session->offsetExists('isLogined') ):
+    ?>
+        <li><a href="<?php echo $this->basePath(); ?>/accounts/register">注册</a></li>
+        <li>|</li>
+        <li><a href="<?php echo $this->basePath(); ?>/accounts/login">登录</a></li>
+    <?php else: ?>
+        <li>您好, <a href="<?php echo $this->basePath(); ?>/accounts/dashboard"><?php echo $session->OffsetGet('username'); ?></a></li>
+        <li>|</li>
+        <li><a href="<?php echo $this->basePath(); ?>/accounts/logout">注销</a></li>
+    <?php endif; ?>
+    </ul>
+</div> <!-- #header -->
+<div id="guide">
+    <div class="full-width">
+        <div id="introduction" class="container">
+            <div id="logo">
+                <img src="<?php echo $this->cdn('/img/logo.png'); ?>" alt="Logo" />
+            </div> <!-- #logo -->
+            <div id="slogan">
+                <h3>提供最及时、最便捷的IT培训服务!</h3>
+            </div> <!-- #slogan -->
+        </div> <!-- #introduction -->
+        <div id="selector-container" class="container">
+            <div id="selector">
+                <h4>选择课程或讲师</h4>
+                <div class="row-fluid">
+                    <div id="course" class="span6">
+                        <div class="block">
+                            <h4>我有心仪的<span>课程</span></h4>
+                            <p>在课程库中选择适合您的课程</p>
+                            <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/courses'">查看课程库</button>
+                        </div> <!-- .block -->
+                    </div> <!-- #course -->
+                    <div id="teacher" class="span6">
+                        <div class="block">
+                            <h4>我有心仪的<span>讲师</span></h4>
+                            <p>在讲师团队中选择适合您的讲师</p>
+                            <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/teachers'">查看讲师团队</button>
+                        </div> <!-- .block -->
+                    </div> <!-- #teacher -->
+                </div> <!-- .row-fluid -->
+            </div> <!-- #selector -->
+        </div> <!-- #selector-container -->
+    </div> <!-- .full-width -->
+    <div class="left-background"></div> <!-- .left-background -->
+    <div class="right-background"></div> <!-- .right-background -->
+</div> <!-- #guide -->
+<div id="navigation">
+    <div class="container">
+        <ul class="inline">
+            <li><a href="#lectures">近期培训</a></li>
+            <li><a href="#courses">热门课程</a></li>
+            <li><a href="#teachers">杰出讲师</a></li>
+            <li><a href="#posts">培训动态</a></li>
+            <li><a href="#manual">使用指南</a></li>
+        </ul>
+        <form id="search" class="form-search" action="<?php echo $this->basePath(); ?>/home/search">
+            <input name="keyword" type="text" placeholder="搜索课程或讲师" class="input-medium search-query" />
+            <button class="btn btn-success" type="submit">搜索</button>
+        </form>
+    </div> <!-- .container -->
+</div> <!-- #navigation -->
+<div id="content">
+    <div id="lectures" class="section light-background">
+        <div class="container">
+            <h3>近期培训 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/lectures'">查看全部培训</button></h3>
+            <div class="row-fluid">
+            <?php if ( $lectures ): ?>
+                <ul>
+                <?php foreach ( $lectures as $lecture ): ?>
+                    <li class="lecture span6">
+                        <h4><a href="<?php echo $this->basePath(); ?>/training/lecture?lectureId=<?php echo $lecture['lectureId']; ?>"><?php echo $lecture['courseName']; ?></a></h4>
+                        <ul class="inline">
+                            <li><i class="fa fa-user"></i> <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=<?php echo $lecture['teacherId']; ?>"><?php echo $lecture['teacherName']; ?></a></li>
+                            <li><i class="fa fa-calendar"></i> <?php echo date('Y年m月d日', strtotime($lecture['startTime'])); ?>~<?php echo date('Y年m月d日', strtotime($lecture['endTime'])); ?></li>
+                        </ul>
+                        <p class="introduction"><?php echo $lecture['brief']; ?></p>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+            </div> <!-- .row-fluid -->
+        </div> <!-- .container -->
+    </div> <!-- #lectures -->
+    <div id="courses" class="section">
+        <div class="container">
+            <h3>热门课程 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/courses'">查看全部课程</button></h3>
+            <div class="row-fluid">
+            <?php if ( $courses ): ?>
+                <ul>
+                <?php foreach ( $courses as $course ): ?>
+                    <li class="lecture span6">
+                        <h4><a href="<?php echo $this->basePath(); ?>/training/course?courseId=<?php echo $course['courseId']; ?>"><?php echo $course['courseName']; ?></a></h4>
+                        <ul class="inline">
+                            <li><i class="fa fa-user"></i> <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=<?php echo $course['teacherId']; ?>"><?php echo $course['teacherName']; ?></a></li>
+                            <li><i class="fa fa-tasks"></i> <?php echo $course['courseTypeName']; ?></li>
+                        </ul>
+                        <p class="introduction"><?php echo $course['brief']; ?></p>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+            </div> <!-- .row-fluid -->
+        </div> <!-- .container -->
+    </div> <!-- #courses -->
+    <div id="teachers" class="section light-background">
+        <div class="container">
+            <h3>杰出讲师 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/teachers'">查看全部讲师</button></h3>
+            <div class="row-fluid">
+            <?php if ( $teachers ): ?>
+                <ul>
+                <?php 
+                    $colors = array('#427fed', '#f4b400', '#53a93f', '#e94d20');
+                    foreach ( $teachers as $teacher ): ?>
+                    <li class="teacher">
+                        <div class="thumbnail">
+                            <div class="avatar" style="background-color: <?php echo $colors[rand(0, 3)]; ?>">
+                               <img data-src="holder.js/150x150" src="<?php echo $this->basePath(); ?>/img/avatars/<?php echo ( $teacher['avatar'] ? $teacher['avatar'] : 'silhouette.png' ); ?>" alt="Avatar" />
+                            </div>
+                            <a href="<?php echo $this->basePath(); ?>/training/teacher?teacherId=<?php echo $teacher['uid']; ?>">
+                                <h5><?php echo $teacher['teacherName']; ?></h5>
+                            </a>
+                            <div class="company"><?php echo $teacher['company']; ?></div>
+                            <div class="field"><?php echo $teacher['teachingField']; ?></div>
+                            <div class="reserve">
+                                <button class="btn btn-success btn-block" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/dashboard#requirement?teacherUid=<?php echo $teacher['uid']; ?>'">预约</button>
+                            </div>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+            </div> <!-- .row-fluid -->
+        </div> <!-- .container -->
+    </div> <!-- #teachers -->
+    <div id="posts" class="section">
+        <div class="container">
+            <h3>培训动态 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/posts'">查看全部动态</button></h3>
+            <div class="row-fluid">
+            <?php if ( $posts ): ?>
+                <ul>
+                <?php foreach ( $posts as $post ): ?>
+                    <li class="post span6">
+                        <h4><a href="<?php echo $this->basePath(); ?>/training/post?postId=<?php echo $post['postId']; ?>"><?php echo $post['postTitle']; ?></a></h4>
+                        <ul class="inline">
+                            <li><i class="fa fa-th-list"></i> <?php echo $post['postCategoryName']; ?></li>
+                            <li><i class="fa fa-calendar"></i> <?php echo date('Y年m月d日', strtotime($post['postDate'])); ?></li>
+                        </ul>
+                        <p class="introduction"><?php echo $post['postContent']; ?></p>
+                    </li>
+
+                <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+            </div> <!-- .row-fluid -->
+        </div> <!-- .container -->
+    </div> <!-- #posts -->
+    <div id="map-image" class="section">
+        <div id="slogan-container">
+            <div id="slogan">
+                <h1>截止目前, 我们已为100+家企业提供培训服务.</h1>
+                <h2>这些企业遍布中国18个省份.</h2>
+            </div> <!-- #slogan -->
+        </div> <!-- #slogan-container -->
+        <div class="left-background"></div> <!-- .left-background -->
+        <div class="right-background"></div> <!-- .right-background -->
+    </div> <!-- #map-image -->
+    <div id="manual" class="section light-background">
+        <div class="container">
+            <h3>使用指南</h3>
+            <div id="manual-content" class="row-fluid">
+                <div id="recipient-manual" class="span6">
+                    <h4>我需要接受 <span>培训</span></h4>
+                    <div class="row-fluid">
+                        <div class="span12 manual-block">
+                            <h5><i class="fa fa-laptop"></i> 注册 &amp; 登录</h5>
+                            <p>在开始培训之前, 请注册成为本站的会员.<br />注册仅需要30秒!</p>
+                        </div> <!-- .manual-block -->
+                    </div> <!-- .row-fluid -->
+                    <div class="row-fluid">
+                        <div class="span6 manual-block">
+                            <h5><i class="fa fa-database"></i> 查看近期培训</h5>
+                            <p>您可以在[<a href="<?php echo $this->basePath(); ?>/training/lectures">近期开课</a>]查看培训课.<br />
+                                或者在[<a href="<?php echo $this->basePath(); ?>/training/courses">课程库</a>]查看所有课程.</p>
+                        </div> <!-- .manual-block -->
+                        <div class="span6 manual-block">
+                            <h5><i class="fa fa-list-ul"></i> 提出培训需求</h5>
+                            <p>您可以深度定制您的培训需求.[*]<br />我们会为您提供最佳的培训服务.</p>
+                        </div> <!-- .manual-block -->
+                    </div> <!-- .row-fluid -->
+                    <div class="row-fluid">
+                        <div class="span6 manual-block">
+                            <h5><i class="fa fa-money"></i> 支付培训费用</h5>
+                            <p>报名后, 您必须缴纳培训费用.</p>
+                        </div> <!-- .manual-block -->
+                        <div class="span6 manual-block">
+                            <h5><i class="fa fa-dot-circle-o"></i> 等待需求确认</h5>
+                            <p>我们会尽快为您安排培训事宜.</p>
+                        </div> <!-- .manual-block -->
+                    </div> <!-- .row-fluid -->
+                    <div class="row-fluid">
+                        <div class="span12 manual-block">
+                            <h5><i class="fa fa-slideshare"></i> 参加培训</h5>
+                            <p>报名并缴费后, 您可以到指定地点参加培训.</p>
+                        </div> <!-- .manual-block -->
+                    </div> <!-- .row-fluid -->
+                    <div class="row-fluid">
+                        <div class="span12 manual-block">
+                            <h5><i class="fa fa-edit"></i> 评价培训</h5>
+                            <p>在培训完成后, 您可以对本次培训进行评价.</p>
+                        </div> <!-- .manual-block -->
+                    </div> <!-- .row-fluid -->
+                </div> <!-- .span6 -->
+                <div id="provider-manual"  class="span6">
+                    <h4>我可以提供 <span>培训</span></h4>
+                    <div class="row-fluid">
+                        <div class="span12 manual-block">
+                            <h5><i class="fa fa-laptop"></i> 注册 &amp; 登录</h5>
+                            <p>在开始培训之前, 请注册成为本站的会员.<br />注册仅需要30秒!</p>
+                        </div> <!-- .manual-block -->
+                    </div> <!-- .row-fluid -->
+                    <div class="row-fluid">
+                        <div class="span12 manual-block">
+                            <h5><i class="fa fa-user"></i> 创建个人资料</h5>
+                            <p>为了让用户对您有一定了解, 请完善自我介绍.<br />完成后, 我们会对您的资质进行审核.</p>
+                        </div> <!-- .manual-block -->
+                    </div> <!-- .row-fluid -->
+                    <div class="row-fluid">
+                        <div class="span12 manual-block">
+                            <h5><i class="fa fa-share-alt"></i> 创建课程</h5>
+                            <p>您可以创建课程和该课程所包含的课程模块.</p>
+                        </div> <!-- .manual-block -->
+                    </div> <!-- .row-fluid -->
+                    <div class="row-fluid">
+                        <div class="span12 manual-block">
+                            <h5><i class="fa fa-paper-plane"></i> 创建培训</h5>
+                            <p>您可以为所创建的课程开设培训课.</p>
+                        </div> <!-- .manual-block -->
+                    </div> <!-- .row-fluid -->
+                    <div class="row-fluid">
+                        <div class="span12 manual-block">
+                            <h5><i class="fa fa-graduation-cap"></i> 授课</h5>
+                            <p>期待您在培训课上的精彩表现.</p>
+                        </div> <!-- .manual-block -->
+                    </div> <!-- .row-fluid -->
+                </div> <!-- .span6 -->
+            </div> <!-- #manual-content -->
+            <div class="row-fluid">
+                <div id="responsive-ready" class="span12">
+                    <h4>全新的响应式设计, 为移动设备带来更好的用户体验!</h4>
+                    <img src="<?php echo $this->cdn('/img/homepage/responsive-ready.png'); ?>" alt="Responsive Ready">
+                </div> <!-- .span12 -->
+            </div> <!-- .row-fluid -->
+        </div> <!-- .container -->
+    </div> <!-- #manual -->
+    <div id="sign-up" class="section">
+        <div class="container row-fluid">
+            <div class="span8">
+                <h3>想现在开始您的IT培训之旅?</h3>
+            </div> <!-- .span8 -->
+            <div class="span4">
+                <ul class="inline">
+                    <li><button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">成为会员</button></li>
+                    <li><a href="<?php echo $this->basePath(); ?>/accounts/login">已有账号?</a></li>
+                </ul>
+            </div> <!-- .span4 -->
+        </div> <!-- .container -->
+    </div> <!-- #sign-up -->
+</div> <!-- #content -->
+
+<script type="text/javascript">
+    $(window).scroll(function() {
+        var offset = $('#content').offset().top - $('#navigation').outerHeight() - $(window).scrollTop();
+        
+        if ( offset <= 0 ) {
+            $('#navigation').css('position', 'fixed');
+        } else {
+            $('#navigation').css('position', 'relative');
+        }
+    });
+</script>
