@@ -1,6 +1,6 @@
 <?php
-namespace CourseOcean\Model;
-namespace CourseOceanTest\Module;
+
+namespace CourseOceanTest\Model;
 
 use PHPUnit_Framework_TestCase;
 
