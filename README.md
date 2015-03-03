@@ -6,4 +6,4 @@
 
 ----------
 
-[![Build Status](https://magnum.travis-ci.com/zjhzxhz/itp.svg?token=ngQSu6kYWuG5K9shK4PF)](https://magnum.travis-ci.com/zjhzxhz/itp)
+[![Build Status](https://magnum.travis-ci.com/zjhzxhz/CourseOcean.svg?token=ngQSu6kYWuG5K9shK4PF)](https://magnum.travis-ci.com/zjhzxhz/CourseOcean)
