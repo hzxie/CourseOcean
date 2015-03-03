@@ -7,13 +7,13 @@ php:
 services: mysql
 
 before_script:
-  - mysql -e 'CREATE DATABASE itp;'
-  - mysql itp < data/itp.sql
+  - mysql -e 'CREATE DATABASE courseocean;'
+  - mysql courseocean < data/courseocean.sql
 
 install:
   - composer install
 
-script: cd module/Application/tests/ && phpunit
+script: cd module/CourseOcean/tests/ && phpunit
 
 after_script:
-  - mysql -e 'DROP DATABASE itp;'
+  - mysql -e 'DROP DATABASE courseocean;'
