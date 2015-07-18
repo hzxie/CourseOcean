@@ -319,7 +319,7 @@ class AccountsController extends AbstractActionController
         $bodyPart->setParts(array($bodyMessage));
 
         $message        = new \Zend\Mail\Message();
-        $message->addFrom('noreply@zjhzxhz.com', 'CourseOcean')
+        $message->addFrom('noreply@courseocean.com', 'CourseOcean')
                 ->addTo($email)
                 ->setSubject('重置您的账户密码')
                 ->setBody($bodyPart)
