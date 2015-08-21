@@ -127,16 +127,16 @@
         if ( $(this).hasClass('disabled') ) {
             return;
         }
-        var currentPage = parseInt($('li.active > a', 'ul.pagination').html(), 10);
+        var currentPage = parseInt($('li.active > a', 'div#pagination > ul').html());
         
         $('#pagination > li.active').removeClass('active');
         $(this).addClass('active');
         var category    = $('ul#course-types > li.active > a').attr('href').substring(1),
             pageNumber  = $('a', this).html();
 
-        if ( pageNumber === '&lt;' ) {
+        if ( pageNumber == '&lt;' ) {
             pageNumber  = currentPage - 1;
-        } else if ( pageNumber === '&gt;' ) {
+        } else if ( pageNumber == '&gt;' ) {
             pageNumber  = currentPage + 1;
         }
         getCourses(category, pageNumber);

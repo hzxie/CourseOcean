@@ -133,7 +133,7 @@
         if ( $(this).hasClass('disabled') ) {
             return;
         }
-        var currentPage = parseInt($('li.active > a', 'ul.pagination').html(), 10);
+        var currentPage = parseInt($('li.active > a', 'div#pagination > ul').html());
         
         $('#pagination > li.active').removeClass('active');
         $(this).addClass('active');

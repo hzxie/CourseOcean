@@ -44,7 +44,7 @@ class CdnHelper extends AbstractHelper {
      */
     public function getCdnDomainUrl($filePath)  {
         $cdnDomain   = self::getCdnDomain($filePath);
-        return '//' . rtrim($cdnDomain, '/');
+        return rtrim($cdnDomain, '/');
     }
 
     /**
@@ -73,7 +73,7 @@ class CdnHelper extends AbstractHelper {
      * @return the url of assets file path
      */
     private function getCdnUrl($cdnDomain, $filePath) {
-        return  '//' . rtrim($cdnDomain, '/') . '/' . ltrim($filePath, '/');
+        return  rtrim($cdnDomain, '/') . '/' . ltrim($filePath, '/');
     }
 
     /**

@@ -14,7 +14,7 @@
 return array(
     /* View Helpers */
     'cdn'                   => array(
-        'default'           => 'courseocean.b0.upaiyun.com',
+        'default'           => '//localhost/CourseOcean/public',
     ),
     /* Services */
     'db'                    => array(
