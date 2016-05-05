@@ -172,9 +172,10 @@
         </div> <!-- .modal-footer -->
     </div> <!-- #password-modal -->
     <!-- Java Script -->
-    <script type="text/javascript" src="<?php echo $this->cdn('/js/jquery.citypicker.js'); ?>"></script>
     <script type="text/javascript">
-        $('.city-picker').cityPicker();
+        $.getScript('<?php echo $this->cdn('/js/jquery.citypicker.js'); ?>', function() {
+            $('.city-picker').cityPicker();
+        });
     </script>
     <script type="text/javascript">
         function getProfile() {
