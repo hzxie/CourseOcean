@@ -1,4 +1,4 @@
-![CourseOcean Logo](http://www.courseocean.com/img/logo.png)
+![CourseOcean Logo](https://github.com/hzxie/CourseOcean/raw/master/public/img/logo.png)
 ===================
 
 
@@ -6,4 +6,4 @@
 
 ----------
 
-[![Build Status](https://magnum.travis-ci.com/zjhzxhz/CourseOcean.svg?token=ngQSu6kYWuG5K9shK4PF)](https://magnum.travis-ci.com/zjhzxhz/CourseOcean)
+[![Build Status](https://travis-ci.org/hzxie/CourseOcean.svg)](https://travis-ci.org/hzxie/CourseOcean)
