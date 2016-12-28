@@ -1,7 +1,7 @@
 <?php 
     echo $this->headTitle('页面未找到 | ');
-    echo $this->headLink()->appendStylesheet($this->basePath().'/css/training/style.css')
-                          ->appendStylesheet($this->basePath().'/css/404.css');
+    echo $this->headLink()->appendStylesheet($this->cdn('/css/training/style.css'))
+                          ->appendStylesheet($this->cdn('/css/404.css'));
 ?>
 
 <div class="border-top"></div> <!-- .border-top -->
@@ -9,28 +9,28 @@
     <div class="container row-fluid">
         <div id="logo" class="span4">
             <a href="<?php echo $this->basePath('/'); ?>">
-                <img src="<?php echo $this->basePath(); ?>/img/logo.png" alt="Logo" />
+                <img src="<?php echo $this->cdn('/img/logo.png'); ?>" alt="Logo" />
             </a>
         </div>
         <div id="navigation" class="span8">
             <ul class="inline">
-                <li><a href="<?php echo $this->basePath(); ?>/training/lectures">近期培训</a></li>
-                <li><a href="<?php echo $this->basePath(); ?>/training/courses">课程库</a></li>
-                <li><a href="<?php echo $this->basePath(); ?>/training/teachers">讲师团队</a></li>
-                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard#requirements">需求定制</a></li>
-                <li><a href="<?php echo $this->basePath(); ?>/training/posts">培训动态</a></li>
+                <li><a href="<?php echo $this->basePath('/training/lectures'); ?>">近期培训</a></li>
+                <li><a href="<?php echo $this->basePath('/training/courses'); ?>">课程库</a></li>
+                <li><a href="<?php echo $this->basePath('/training/teachers'); ?>">讲师团队</a></li>
+                <li><a href="<?php echo $this->basePath('/accounts/dashboard#requirements'); ?>">需求定制</a></li>
+                <li><a href="<?php echo $this->basePath('/training/posts'); ?>">培训动态</a></li>
                 <?php
                     $session    = new Zend\Session\Container('co_session');
                     if ( !$session->offsetExists('isLogined') ):
                 ?>
                     <li><a href="<?php echo $this->basePath(); ?>/accounts/login"><strong>登录</strong></a></li>
-                    <li><button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">创建账户</button></li>
+                    <li><button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath('/accounts/register'); ?>'">创建账户</button></li>
                 <?php else: ?>
-                    <li>您好, <a href="<?php echo $this->basePath(); ?>/accounts/dashboard"><?php echo $session->offsetGet('username'); ?></a></li>
-                    <li><a href="<?php echo $this->basePath(); ?>/accounts/logout">注销</a></li>
+                    <li>您好, <a href="<?php echo $this->basePath('/accounts/dashboard'); ?>"><?php echo $session->offsetGet('username'); ?></a></li>
+                    <li><a href="<?php echo $this->basePath('/accounts/logout'); ?>">注销</a></li>
                 <?php endif; ?>
             </ul>
-            <form id="search" action="<?php echo $this->basePath(); ?>/home/search">
+            <form id="search" action="<?php echo $this->basePath('/home/search'); ?>">
                 <input name="keyword" type="text" placeholder="搜索课程或讲师" />
                 <button class="btn" type="submit">搜索</button>
             </form>
@@ -40,7 +40,7 @@
 <div id="container">
     <div class="container row-fluid">
         <div class="span6">
-            <img src="<?php echo $this->basePath(); ?>/img/404.png" alt="Header Image">
+            <img src="<?php echo $this->cdn('/img/404.png'); ?>" alt="Error Image">
         </div> <!-- .span6 -->
         <div class="span6">
             <h2>页面未找到</h2>

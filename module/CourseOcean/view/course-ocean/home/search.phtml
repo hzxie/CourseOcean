@@ -14,24 +14,24 @@
         </div> <!-- #logo -->
         <div id="navigation" class="span8">
             <ul class="inline">
-                <li><a href="<?php echo $this->basePath(); ?>/training/lectures">近期培训</a></li>
-                <li><a href="<?php echo $this->basePath(); ?>/training/courses">课程库</a></li>
-                <li><a href="<?php echo $this->basePath(); ?>/training/teachers">讲师团队</a></li>
-                <li><a href="<?php echo $this->basePath(); ?>/accounts/dashboard#requirement">需求定制</a></li>
-                <li><a href="<?php echo $this->basePath(); ?>/training/posts">培训动态</a></li>
+                <li><a href="<?php echo $this->basePath('/training/lectures'); ?>">近期培训</a></li>
+                <li><a href="<?php echo $this->basePath('/training/courses'); ?>">课程库</a></li>
+                <li><a href="<?php echo $this->basePath('/training/teachers'); ?>">讲师团队</a></li>
+                <li><a href="<?php echo $this->basePath('/accounts/dashboard#requirements'); ?>">需求定制</a></li>
+                <li><a href="<?php echo $this->basePath('/training/posts'); ?>">培训动态</a></li>
                 <?php
                     $session    = new Zend\Session\Container('co_session');
                     if ( !$session->offsetExists('isLogined') ):
                 ?>
                     <li><a href="<?php echo $this->basePath(); ?>/accounts/login"><strong>登录</strong></a></li>
-                    <li><button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">创建账户</button></li>
+                    <li><button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath('/accounts/register'); ?>'">创建账户</button></li>
                 <?php else: ?>
-                    <li>您好, <a href="<?php echo $this->basePath(); ?>/accounts/dashboard"><?php echo $session->offsetGet('username'); ?></a></li>
-                    <li><a href="<?php echo $this->basePath(); ?>/accounts/logout">注销</a></li>
+                    <li>您好, <a href="<?php echo $this->basePath('/accounts/dashboard'); ?>"><?php echo $session->offsetGet('username'); ?></a></li>
+                    <li><a href="<?php echo $this->basePath('/accounts/logout'); ?>">注销</a></li>
                 <?php endif; ?>
             </ul>
-            <form id="search" action="<?php echo $this->basePath(); ?>/home/search">
-                <input name="keyword" type="text" value="<?php echo $keyword; ?>" placeholder="搜索课程或讲师" />
+            <form id="search" action="<?php echo $this->basePath('/home/search'); ?>">
+                <input name="keyword" type="text" placeholder="搜索课程或讲师" />
                 <button class="btn" type="submit">搜索</button>
             </form>
         </div> <!-- #navigation -->
@@ -42,7 +42,7 @@
         <div id="sub-header">
             <h2>搜索结果: <?php echo $keyword; ?></h2>
             <p>使用搜索可以帮助您更快地查找您所需要的信息.</p>
-            <button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/courses'">查看课程库</button>
+            <button class="btn btn-orange" onclick="window.location.href='<?php echo $this->basePath('/training/courses'); ?>'">查看课程库</button>
             <img src="<?php echo $this->cdn('/img/training/search-header.jpg'); ?>" alt="Header Image">
             <div class="border-bottom"></div> <!-- .border-bottom -->
         </div> <!-- #sub-header -->

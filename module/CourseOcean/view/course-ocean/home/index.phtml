@@ -9,13 +9,13 @@
         $session    = new Zend\Session\Container('co_session');
         if ( !$session->offsetExists('isLogined') ):
     ?>
-        <li><a href="<?php echo $this->basePath(); ?>/accounts/register">注册</a></li>
+        <li><a href="<?php echo $this->basePath('/accounts/register'); ?>">注册</a></li>
         <li>|</li>
-        <li><a href="<?php echo $this->basePath(); ?>/accounts/login">登录</a></li>
+        <li><a href="<?php echo $this->basePath('/accounts/login'); ?>">登录</a></li>
     <?php else: ?>
-        <li>您好, <a href="<?php echo $this->basePath(); ?>/accounts/dashboard"><?php echo $session->OffsetGet('username'); ?></a></li>
+        <li>您好, <a href="<?php echo $this->basePath('/accounts/dashboard'); ?>"><?php echo $session->OffsetGet('username'); ?></a></li>
         <li>|</li>
-        <li><a href="<?php echo $this->basePath(); ?>/accounts/logout">注销</a></li>
+        <li><a href="<?php echo $this->basePath('/accounts/logout'); ?>">注销</a></li>
     <?php endif; ?>
     </ul>
 </div> <!-- #header -->
@@ -37,14 +37,14 @@
                         <div class="block">
                             <h4>我有心仪的<span>课程</span></h4>
                             <p>在课程库中选择适合您的课程</p>
-                            <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/courses'">查看课程库</button>
+                            <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath('/training/courses'); ?>'">查看课程库</button>
                         </div> <!-- .block -->
                     </div> <!-- #course -->
                     <div id="teacher" class="span6">
                         <div class="block">
                             <h4>我有心仪的<span>讲师</span></h4>
                             <p>在讲师团队中选择适合您的讲师</p>
-                            <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/teachers'">查看讲师团队</button>
+                            <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath('/training/teachers'); ?>'">查看讲师团队</button>
                         </div> <!-- .block -->
                     </div> <!-- #teacher -->
                 </div> <!-- .row-fluid -->
@@ -63,7 +63,7 @@
             <li><a href="#posts">培训动态</a></li>
             <li><a href="#manual">使用指南</a></li>
         </ul>
-        <form id="search" class="form-search" action="<?php echo $this->basePath(); ?>/home/search">
+        <form id="search" class="form-search" action="<?php echo $this->basePath('/home/search'); ?>">
             <input name="keyword" type="text" placeholder="搜索课程或讲师" class="input-medium search-query" />
             <button class="btn btn-success" type="submit">搜索</button>
         </form>
@@ -72,7 +72,7 @@
 <div id="content">
     <div id="lectures" class="section light-background">
         <div class="container">
-            <h3>近期培训 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/lectures'">查看全部培训</button></h3>
+            <h3>近期培训 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath('/training/lectures'); ?>'">查看全部培训</button></h3>
             <div class="row-fluid">
             <?php if ( $lectures ): ?>
                 <ul>
@@ -93,7 +93,7 @@
     </div> <!-- #lectures -->
     <div id="courses" class="section">
         <div class="container">
-            <h3>热门课程 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/courses'">查看全部课程</button></h3>
+            <h3>热门课程 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath('/training/courses'); ?>'">查看全部课程</button></h3>
             <div class="row-fluid">
             <?php if ( $courses ): ?>
                 <ul>
@@ -114,7 +114,7 @@
     </div> <!-- #courses -->
     <div id="teachers" class="section light-background">
         <div class="container">
-            <h3>杰出讲师 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/teachers'">查看全部讲师</button></h3>
+            <h3>杰出讲师 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath('/training/teachers'); ?>'">查看全部讲师</button></h3>
             <div class="row-fluid">
             <?php if ( $teachers ): ?>
                 <ul>
@@ -144,7 +144,7 @@
     </div> <!-- #teachers -->
     <div id="posts" class="section">
         <div class="container">
-            <h3>培训动态 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/training/posts'">查看全部动态</button></h3>
+            <h3>培训动态 <button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath('/training/posts'); ?>'">查看全部动态</button></h3>
             <div class="row-fluid">
             <?php if ( $posts ): ?>
                 <ul>
@@ -269,8 +269,8 @@
             </div> <!-- .span8 -->
             <div class="span4">
                 <ul class="inline">
-                    <li><button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath(); ?>/accounts/register'">成为会员</button></li>
-                    <li><a href="<?php echo $this->basePath(); ?>/accounts/login">已有账号?</a></li>
+                    <li><button class="btn btn-success" onclick="window.location.href='<?php echo $this->basePath('/accounts/register'); ?>'">成为会员</button></li>
+                    <li><a href="<?php echo $this->basePath('/accounts/login'); ?>">已有账号?</a></li>
                 </ul>
             </div> <!-- .span4 -->
         </div> <!-- .container -->
