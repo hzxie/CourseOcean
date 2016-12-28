@@ -11,7 +11,7 @@ use Zend\View\Model\ViewModel;
 /**
  * 账户的Controller, 用于完成账户的相关操作.
  * 
- * @author 谢浩哲 <zjhzxhz@gmail.com>
+ * @author 谢浩哲 <cshzxie@gmail.com>
  */
 class AccountsController extends AbstractActionController
 {

@@ -11,7 +11,7 @@ use Zend\View\Model\ViewModel;
 /**
  * 应用程序的Controller, 用于完成应用程序中的公共事务.
  * 
- * @author Xie Haozhe <zjhzxhz@gmail.com>
+ * @author Haozhe Xie <cshzxie@gmail.com>
  */
 class HomeController extends AbstractActionController
 {

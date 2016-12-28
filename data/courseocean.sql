@@ -289,7 +289,7 @@ CREATE TABLE IF NOT EXISTS `co_email_validation` (
 --
 
 INSERT INTO `co_email_validation` (`email`, `keycode`) VALUES
-('zjhzxhz@gmail.com', 'mAKIZUk8Lec95vQngz6BlYqXSx3Jw2oy');
+('cshzxie@gmail.com', 'mAKIZUk8Lec95vQngz6BlYqXSx3Jw2oy');
 
 -- --------------------------------------------------------
 
@@ -642,7 +642,7 @@ INSERT INTO `co_users` (`uid`, `username`, `email`, `password`, `is_inspected`, 
 (118, 'user-118', 'user-118@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 0, 0, 0, 2),
 (119, 'user-119', 'user-119@zjhzxhz.com', '25f9e794323b453885f5181f1b624d0b', 0, 0, 0, 2),
 (1000, 'Administrator', 'webmaster@zjhzxhz.com', '785ee107c11dfe36de668b1ae7baacbb', 0, 0, 0, 4),
-(1001, 'zjhzxhz', 'zjhzxhz@gmail.com', '785ee107c11dfe36de668b1ae7baacbb', 1, 1, 0, 1),
+(1001, 'zjhzxhz', 'cshzxie@gmail.com', '785ee107c11dfe36de668b1ae7baacbb', 1, 1, 0, 1),
 (1002, 'kelliany', 'a965526122@gmail.com', '785ee107c11dfe36de668b1ae7baacbb', 1, 1, 0, 1),
 (1003, 'kerryzhu', 'zhu.kerry@gmail.com', '785ee107c11dfe36de668b1ae7baacbb', 1, 1, 0, 2),
 (1004, 'cisco_webex', 'service@webex.com', '785ee107c11dfe36de668b1ae7baacbb', 0, 0, 0, 3);

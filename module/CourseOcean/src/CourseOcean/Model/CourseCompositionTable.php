@@ -10,7 +10,7 @@ use Zend\Db\TableGateway\TableGateway;
 /**
  * 课程组成类的DAO(Data Access Object).
  * 
- * @author 谢浩哲 <zjhzxhz@gmail.com>
+ * @author 谢浩哲 <cshzxie@gmail.com>
  */
 class CourseCompositionTable
 {

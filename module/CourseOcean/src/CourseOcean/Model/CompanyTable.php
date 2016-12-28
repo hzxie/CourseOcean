@@ -11,7 +11,7 @@ use Zend\Db\TableGateway\TableGateway;
 /**
  * 企业用户类的DAO(Data Access Object).
  * 
- * @author 谢浩哲 <zjhzxhz@gmail.com>
+ * @author 谢浩哲 <cshzxie@gmail.com>
  */
 class CompanyTable
 {

@@ -9,7 +9,7 @@ use Zend\Db\TableGateway\TableGateway;
 /**
  * 工作职位类的DAO(Data Access Object).
  * 
- * @author 谢浩哲 <zjhzxhz@gmail.com>
+ * @author 谢浩哲 <cshzxie@gmail.com>
  */
 class PositionTable
 {

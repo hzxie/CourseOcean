@@ -6,7 +6,7 @@ namespace CourseOcean\Model;
  * 课程组成类的Model.
  * 用于存储某个课程包含哪些课程模块.
  * 
- * @author 谢浩哲 <zjhzxhz@gmail.com>
+ * @author 谢浩哲 <cshzxie@gmail.com>
  */
 class CourseComposition {
     /**

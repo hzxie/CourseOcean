@@ -12,7 +12,7 @@ use CourseOceanTest\ServiceManagerGrabber;
 /**
  * 用户DAO的测试类.
  *
- * 谢浩哲 <zjhzxhz@gmail.com>
+ * 谢浩哲 <cshzxie@gmail.com>
  */
 class UserTableTest extends PHPUnit_Framework_TestCase
 {
@@ -48,7 +48,7 @@ class UserTableTest extends PHPUnit_Framework_TestCase
         $expectedUser->exchangeArray(array(
             'uid'               => 1001,
             'username'          => 'zjhzxhz',
-            'email'             => 'zjhzxhz@gmail.com',
+            'email'             => 'cshzxie@gmail.com',
             'password'          => md5('zjhzxhz'),
             'is_inspected'      => true,
             'is_approved'       => true,

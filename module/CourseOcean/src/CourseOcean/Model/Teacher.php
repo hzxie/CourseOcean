@@ -5,7 +5,7 @@ namespace CourseOcean\Model;
 /**
  * 讲师用户的Model.
  * 
- * @author 谢浩哲 <zjhzxhz@gmail.com>
+ * @author 谢浩哲 <cshzxie@gmail.com>
  */
 class Teacher {
     /**

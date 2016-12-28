@@ -2,7 +2,7 @@
  * city-picker.js 
  * Copyright 2014 HApPy Studio (http://www.zjhzxhz.com)
  *
- * @author: 谢浩哲 <zjhzxhz@gmail.com>
+ * @author: 谢浩哲 <cshzxie@gmail.com>
  * =========================================================
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

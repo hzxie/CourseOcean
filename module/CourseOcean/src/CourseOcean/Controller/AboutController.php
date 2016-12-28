@@ -11,7 +11,7 @@ use Zend\View\Model\ViewModel;
 /**
  * 文档的Controller, 用于显示网站相关的文档.
  * 
- * @author Xie Haozhe <zjhzxhz@gmail.com>
+ * @author Haozhe Xie <cshzxie@gmail.com>
  */
 class AboutController extends AbstractActionController
 {

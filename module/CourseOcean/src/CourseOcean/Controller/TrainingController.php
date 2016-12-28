@@ -11,7 +11,7 @@ use Zend\View\Model\ViewModel;
 /**
  * 课程的Controller, 用于完成课程的相关操作.
  * 
- * @author Xie Haozhe <zjhzxhz@gmail.com>
+ * @author Haozhe Xie <cshzxie@gmail.com>
  */
 class TrainingController extends AbstractActionController
 {

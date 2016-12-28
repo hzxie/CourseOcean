@@ -6,7 +6,7 @@ namespace CourseOcean\Model;
  * 课程会话计划类的Model.
  * 用于存储某个课程会话包含哪些课程模块以及具体时间.
  * 
- * @author 谢浩哲 <zjhzxhz@gmail.com>
+ * @author 谢浩哲 <cshzxie@gmail.com>
  */
 class LectureSchedule {
     /**

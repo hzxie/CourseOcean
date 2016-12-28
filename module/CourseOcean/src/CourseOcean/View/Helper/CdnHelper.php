@@ -8,7 +8,7 @@ use Zend\View\Helper\AbstractHelper;
 
 /**
  * 提供CDN服务的Helper.
- * @author  谢浩哲<zjhzxhz@gmail.com>
+ * @author  谢浩哲<cshzxie@gmail.com>
  */
 class CdnHelper extends AbstractHelper {
     /**

@@ -11,7 +11,7 @@ use Zend\View\Model\ViewModel;
 /**
  * 管理的Controller, 用于完成系统的监控和管理操作.
  * 
- * @author 谢浩哲 <zjhzxhz@gmail.com>
+ * @author 谢浩哲 <cshzxie@gmail.com>
  */
 class AdministrationController extends AbstractActionController
 {

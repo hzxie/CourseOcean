@@ -9,7 +9,7 @@ use CourseOcean\Model\User;
 /**
  * 用户Model的测试类.
  *
- * 谢浩哲 <zjhzxhz@gmail.com>
+ * 谢浩哲 <cshzxie@gmail.com>
  */
 class UserTest extends PHPUnit_Framework_TestCase
 {
@@ -42,7 +42,7 @@ class UserTest extends PHPUnit_Framework_TestCase
         $data   = array(
             'uid'               => 1,
             'username'          => 'zjhzxhz',
-            'email'             => 'zjhzxhz@gmail.com',
+            'email'             => 'cshzxie@gmail.com',
             'password'          => md5('zjhzxhz'),
             'user_group_id'     => 1,
             'user_group_slug'   => 'person',

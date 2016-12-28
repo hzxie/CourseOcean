@@ -2,7 +2,7 @@
 /**
  * 获取ZendFramework的项目配置.
  *
- * @author 谢浩哲 <zjhzxhz@gmail.com>
+ * @author 谢浩哲 <cshzxie@gmail.com>
  */
 
 namespace CourseOceanTest;
