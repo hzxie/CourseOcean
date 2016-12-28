@@ -10,6 +10,6 @@
     "require": {
         "php": ">=5.3.3",
         "phpunit/phpunit": "4.5.*",
-        "zendframework/zendframework": "2.3.*"
+        "zendframework/zendframework": "2.4.*"
     }
 }

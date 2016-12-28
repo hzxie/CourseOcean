@@ -175,6 +175,7 @@
     <script type="text/javascript">
         $.getScript('<?php echo $this->cdn('/js/jquery.citypicker.js'); ?>', function() {
             $('.city-picker').cityPicker();
+            getProfile();
         });
     </script>
     <script type="text/javascript">
@@ -221,8 +222,12 @@
             if ( profile != false ) {
                 $('#person-name').val(profile['personName']);
                 $('#person-name').attr('disabled', 'disabled');
+                console.log(profile['region']);
                 $('#person-region').val(profile['region']).change();
+                console.log($('#person-region').val());
+                console.log(profile['province']);
                 $('#person-province').val(profile['province']).change();
+                console.log($('#person-province').val());
                 if ( profile['city'] ) {
                     $('#person-city').val(profile['city']).change();
                 } else {
@@ -238,7 +243,6 @@
     <script type="text/javascript">
         $(function() {
             getPositions();
-            getProfile();
         });
     </script>
     <script type="text/javascript">
@@ -262,8 +266,16 @@
     </script>
     <script type="text/javascript">
         function editProfile(name, region, province, city, company, position, phone, email) {
-            var postData = 'name=' + name + '&region=' + region + '&province=' + province + '&city=' + city + 
-                          '&company=' + company + '&position=' + position + '&phone=' + phone + '&email=' + email;
+            var postData = {
+                'name': name,
+                'region': region,
+                'province': province,
+                'city': city,
+                'company': company,
+                'position': position,
+                'phone': phone,
+                'email': email
+            };
             $.ajax({
                 type: 'POST',
                 async: false,
@@ -421,9 +433,18 @@
     </script>
     <script type="text/javascript">
         function editProfile(name, company, region, province, city, phone, email, weibo, brief, teachingFields) {
-            var postData = 'name=' + name + '&company=' + company + '&region=' + region + '&province=' + province + 
-                          '&city=' + city + '&phone=' + phone + '&email=' + email + '&weibo=' + weibo + 
-                          '&brief=' + brief + '&teachingFields=' + teachingFields;
+            var postData = {
+                'name': name,
+                'company': company,
+                'region': region,
+                'province': province,
+                'city': city,
+                'phone': phone,
+                'email': email,
+                'weibo': weibo,
+                'brief': brief,
+                'teachingFields': teachingFields
+            };
             $.ajax({
                 type: 'POST',
                 async: false,
@@ -484,7 +505,6 @@
     <script type="text/javascript">
         $(function() {
             getCourseTypes();
-            getProfile();
         });
     </script>
 <?php elseif ( $profile['userGroupSlug'] == 'company'  ): ?>
@@ -532,7 +552,6 @@
     <script type="text/javascript">
         $(function() {
             getCompanyFields();
-            getProfile();
         });
     </script>
     <script type="text/javascript">
@@ -557,9 +576,17 @@
     </script>
     <script type="text/javascript">
         function editProfile(name, region, province, city, address, companyField, scale, phone, email) {
-            var postData = 'name=' + name + '&region=' + region + '&province=' + province + '&city=' + city + 
-                          '&address=' + address + '&companyField=' + companyField + '&scale=' + scale + 
-                          '&phone=' + phone + '&email=' + email;
+            var postData = {
+                'name': name,
+                'region': region,
+                'province': province,
+                'city': city,
+                'address': address,
+                'companyField': companyField,
+                'scale': scale,
+                'phone': phone,
+                'email': email
+            };
             $.ajax({
                 type: 'POST',
                 async: false,
@@ -632,8 +659,11 @@
 </script>
 <script type="text/javascript">
     function changePassword(oldPassword, newPassword, confirmPassword) {
-        var postData = 'oldPassword=' + oldPassword + '&newPassword=' + newPassword + 
-                      '&confirmPassword=' + confirmPassword;
+        var postData = {
+            'oldPassword': oldPassword,
+            'newPassword': newPassword,
+            'confirmPassword': confirmPassword
+        };
         $.ajax({
             type: 'POST',
             async: false,
