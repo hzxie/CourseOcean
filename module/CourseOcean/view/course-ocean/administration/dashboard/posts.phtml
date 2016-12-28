@@ -12,7 +12,7 @@
                 <option value="all">全部时间段</option>
             <?php 
                 foreach ( $publishMonths as $publishMonth ): 
-                    $date  = split(', ', $publishMonth->postDate);
+                    $date  = explode(', ', $publishMonth->postDate);
                     $year  = $date[0];
                     $month = $date[1];
             ?>

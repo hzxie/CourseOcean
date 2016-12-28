@@ -3,7 +3,7 @@ LICENSE.txt
 README.txt
 demos/
 extras/documentation
-*/.DS_Store
+.DS_Store
 
 # Vendor
 vendor/*

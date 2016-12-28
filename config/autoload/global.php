@@ -14,7 +14,7 @@
 return array(
     /* View Helpers */
     'cdn'                   => array(
-        'default'           => '//localhost/CourseOcean/public',
+        'default'           => '//localhost/CourseOcean/',
     ),
     /* Services */
     'db'                    => array(

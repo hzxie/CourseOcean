@@ -40,7 +40,7 @@ class CourseCompositionTable
      */
     public function updateCourseComposition($courseId, $courseModuleIds)
     {
-        $courseModuleIdArray = split(',', $courseModuleIds);
+        $courseModuleIdArray = explode(',', $courseModuleIds);
         if ( !$this->deleteCourseComposition($courseId) ) {
             return false;
         }

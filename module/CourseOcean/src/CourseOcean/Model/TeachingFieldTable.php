@@ -56,7 +56,7 @@ class TeachingFieldTable
      */
     public function updateTeachingField($teacherId, $courseTypeSlugs, $courseTypes)
     {
-        $courseTypeSlugArray = split(',', $courseTypeSlugs);
+        $courseTypeSlugArray = explode(',', $courseTypeSlugs);
         if ( !$this->deleteTeachingField($teacherId) ) {
             return false;
         }

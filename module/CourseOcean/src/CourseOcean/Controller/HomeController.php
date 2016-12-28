@@ -193,7 +193,7 @@ class HomeController extends AbstractActionController
      */
     private function getSearchResultOfTeacher($keyword, $offset, $limit)
     {
-        $keywords       = split(' ', $keyword);
+        $keywords       = explode(' ', $keyword);
 
         $serviceManager = $this->getServiceLocator();
         $teacherTable   = $serviceManager->get('CourseOcean\Model\TeacherTable');
@@ -218,7 +218,7 @@ class HomeController extends AbstractActionController
      */
     private function getSearchResultOfCourse($keyword, $offset, $limit)
     {
-        $keywords       = split(' ', $keyword);
+        $keywords       = explode(' ', $keyword);
 
         $serviceManager = $this->getServiceLocator();
         $courseTable    = $serviceManager->get('CourseOcean\Model\CourseTable');
