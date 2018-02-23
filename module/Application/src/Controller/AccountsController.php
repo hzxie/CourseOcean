@@ -745,10 +745,11 @@ class AccountsController extends BaseController {
         $profile    = $this->getUserProfile();
         $uid        = $profile['uid'];
         $userGroup  = ucfirst($profile['userGroupSlug']);
-        $function   = 'edit'.$userGroup.'Profile';
-
-        $result   = $this->$function($uid);
-        $response = $this->getResponse();
+        $function   = "edit{$userGroup}Profile";
+        
+        $result     = $this->editEmailAddress();
+        $result    += $this->$function($uid);
+        $response   = $this->getResponse();
         $response->setStatusCode(200);
         $response->setContent(Json::encode($result));
         return $response;
@@ -758,19 +759,29 @@ class AccountsController extends BaseController {
      * 修改用户电子邮件地址.
      * @return 一个包含若干标志位的数组
      */
-    private function editEmailAddress($newEmailAddress) {
-        $profile            = $this->getUserProfile();
-        $oldEmailAddress    = $profile['email'];
+    private function editEmailAddress() {
+        $profile         = $this->getUserProfile();
+        $uid             = $profile['uid'];
+        $oldEmailAddress = $profile['email'];
+        $newEmailAddress = strip_tags($this->getRequest()->getPost('email'));
 
-        $result             = [
+        $result          = [
             'isEmailEmpty'  => empty($newEmailAddress),
             'isEmailLegal'  => $this->isEmailLegal($newEmailAddress),
         ];
-        $isSuccessful       = !$result['isEmailEmpty'] && $result['isEmailLegal'];
+        $isSuccessful    = !$result['isEmailEmpty'] && $result['isEmailLegal'];
 
         if ( $isSuccessful && $oldEmailAddress != $newEmailAddress ) {
-            $profile['email']   = $newEmailAddress;
-            $this->userTable->updateUser($profile);
+            $this->emailValidationTable->deleteConfidential($oldEmailAddress);
+            $this->userTable->updateUser([
+                'uid'                => $uid,
+                'email'              => $newEmailAddress,
+                'is_email_validated' => 0,
+            ]);
+
+            // Update Email in Session
+            $session = new Container('co_session');
+            $session->offsetSet('email', $newEmailAddress);
         }
         return $result;
     }
@@ -787,7 +798,6 @@ class AccountsController extends BaseController {
         $company        = strip_tags($this->getRequest()->getPost('company'));
         $positionSlug   = strip_tags($this->getRequest()->getPost('position'));
         $phone          = strip_tags($this->getRequest()->getPost('phone'));
-        $email          = strip_tags($this->getRequest()->getPost('email'));
         $positionId     = $this->getPositionId($positionSlug);
 
         $profile        = $this->getUserProfile();
@@ -867,7 +877,6 @@ class AccountsController extends BaseController {
         $province       = strip_tags($this->getRequest()->getPost('province'));
         $city           = strip_tags($this->getRequest()->getPost('city'));
         $phone          = strip_tags($this->getRequest()->getPost('phone'));
-        $email          = strip_tags($this->getRequest()->getPost('email'));
         $weibo          = strip_tags($this->getRequest()->getPost('weibo'));
         $brief          = strip_tags($this->getRequest()->getPost('brief'));
         $teachingFields = strip_tags($this->getRequest()->getPost('teachingFields'));
