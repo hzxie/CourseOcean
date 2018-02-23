@@ -7,20 +7,20 @@
  * .dist extension at the end and populate values as needed.
  *
  * @NOTE: This file is ignored from Git by default with the .gitignore included
- * in CourseOcean Application. This is a good practice, as it prevents sensitive
+ * in ZendSkeletonApplication. This is a good practice, as it prevents sensitive
  * credentials from accidentally being committed into version control.
  */
 
-return array(
-    'db'    => array(
+return [
+	'db'    => [
         'username'      => 'root',
         'password'      => '',
-    ),
-    'mail'  => array(
+    ],
+    'mail'  => [
         'host'          => 'smtp.mailgun.org',
-        'connection_config' => array(
-            'username'  => 'postmaster@courseocean.com',
+        'connection_config' => [
+            'username'  => 'postmaster@infinitescript.com',
             'password'  => '',
-        ),
-    ),
-);
+        ],
+    ],
+];

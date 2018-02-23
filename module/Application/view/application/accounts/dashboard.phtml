@@ -1,0 +1,145 @@
+<?= $this->headTitle('个人中心 | '); ?>
+<?= $this->headLink()->appendStylesheet($this->basePath('/css/accounts/style.css'))
+                     ->appendStylesheet($this->basePath('/css/accounts/dashboard.css')); ?>
+
+<div id="wrapper" class="container">
+    <div id="header" class="row-fluid">
+        <div id="logo" class="span4">
+            <a href="<?= $this->basePath('/'); ?>">
+                <img src="<?= $this->basePath('/img/logo.png'); ?>" alt="Logo" />
+            </a>
+        </div> <!-- #logo -->
+        <div id="accounts" class="offset4 span4">
+            <ul class="inline">
+            <?php
+                $session    = new Zend\Session\Container('co_session');
+                if ( !$session->offsetExists('isLogined') ):
+            ?>
+                <li><a href="<?= $this->basePath('/accounts/register'); ?>">注册</a></li>
+                <li>|</li>
+                <li><a href="<?= $this->basePath('/accounts/login'); ?>">登录</a></li>
+            <?php else: ?>
+                <li>您好, <?= $session->offsetGet('username'); ?></li>
+                <li>|</li>
+                <li><a href="<?= $this->basePath('/accounts/logout'); ?>">注销</a></li>
+            <?php endif; ?>
+            </ul>
+        </div> <!-- #accounts -->
+    </div> <!-- #header -->
+    <div id="container">
+        <div id="navigation">
+            <ul class="inline right">
+                <li><a href="<?= $this->basePath('/accounts/dashboard#mailbox'); ?>">收件箱</a></li>
+                <li><a href="<?= $this->basePath('/accounts/dashboard#profile'); ?>">个人信息</a></li>
+                <li><a href="<?= $this->basePath('/accounts/dashboard'); ?>">我的账户</a></li>
+            </ul>
+            <ul class="inline left">
+                <li><a href="<?= $this->basePath('/training/lectures'); ?>">近期培训</a></li>
+                <li><a href="<?= $this->basePath('/training/courses'); ?>">课程库</a></li>
+                <li><a href="<?= $this->basePath('/training/teachers'); ?>">讲师团队</a></li>
+                <li><a href="<?= $this->basePath('/accounts/dashboard#requirement'); ?>">需求定制</a></li>
+                <li><a href="<?= $this->basePath('/training/posts'); ?>">培训动态</a></li>
+            </ul>
+        </div> <!-- #navigation -->
+        <form id="search" action="<?= $this->basePath('/search'); ?>">
+            <input name="keyword" type="text" placeholder="搜索课程或讲师" />
+            <button class="btn btn-success" type="submit">搜索</button>
+        </form>
+        <div id="content" class="row-fluid">
+            <div id="sidebar" class="span3">
+                <div id="user-info">
+                <?php if ( $profile['userGroupSlug'] == 'teacher' ): ?>
+                    <a id="upload-avatar" href="javascript:void(0);" title="单击上传照片">
+                        <img src="<?= $this->basePath('/img/avatars/avatar.jpg'); ?>" alt="avatar" />
+                    </a>
+                <?php else: ?>
+                    <img src="https://secure.gravatar.com/avatar/<?=md5(strtolower($profile['email'])); ?>?s=200&d=mm" alt="avatar" />
+                <?php endif; ?>
+                </div> <!-- #user-info -->
+                <div id="sidebar-nav">
+                    <ul id="nav">
+                        <li><a href="#lecture">我的培训课</a></li>
+                        <?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
+                        <li><a href="#course">开设新课程</a></li>
+                        <?php endif; ?>
+                        <li><a href="#requirement">我的需求</a></li>
+                    </ul>
+                </div> <!-- #sidebar-nav -->
+            </div> <!-- #sidebar -->
+            <div id="main-content" class="span9"></div> <!-- .main-content -->
+        </div> <!-- #content -->
+    </div> <!-- #container -->
+</div> <!-- #wrapper -->
+
+<?php $this->inlineScript()->captureStart(); ?>
+    $(function() {
+        var pageName = window.location.href.match(/#.*$/);
+        if ( pageName != null ) {
+            getPageContent(window.location.href.match(/#.*$/)[0].substr(1));
+        } else {
+    <?php if ( $extra ): ?>
+        <?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
+            window.location.href = '#requirement';
+        <?php else: ?>
+            window.location.href = '#lecture';
+        <?php endif; ?>
+    <?php else: ?>
+            window.location.href = '#profile';
+    <?php endif; ?>
+        }    
+    });
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    if ( ("onhashchange" in window) && !navigator.userAgent.toLowerCase().match(/msie/) ) {
+        $(window).on('hashchange', function() {
+            getPageContent(window.location.href.match(/#.*$/)[0].substr(1));
+        });
+    } else {
+        var prevHash = window.location.hash;
+        window.setInterval(function () {
+           if (window.location.hash != prevHash) {
+              prevHash = window.location.hash;
+              getPageContent(window.location.href.match(/#.*$/)[0].substr(1));
+           }
+        }, 100);
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function getPageContent(pageName) {
+        var pageRequests = getPageRequests(pageName),
+            pageName     = pageRequests['pageName'],
+            pageRequest  = pageRequests['pageRequest'];
+
+        highlightNavObject(pageName);
+        $.ajax({
+            type: 'GET',
+            url: "<?= $this->basePath(); ?>/accounts/getPageContent?pageName=" + pageName + '&' + pageRequest,
+            cache: false,
+            async: false,
+            success: function(pageContent) {
+                if ( pageContent !== '' ) {
+                    $("#main-content").html(pageContent);
+                }
+            }
+        });
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function getPageRequests(pageName) {
+        var pageRequests = pageName.split('?');
+        return {
+            'pageName' : pageRequests[0],
+            'pageRequest' : pageRequests[1] || ''
+        };
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function highlightNavObject(pageName) {
+        $('.active').removeClass('active');
+
+        var navObject = $('a[href=#' + pageName + ']');
+        if ( navObject.length != 0 ) {
+            $(navObject.parent()).addClass('active');
+        }
+    }
+<?php $this->inlineScript()->captureEnd(); ?>

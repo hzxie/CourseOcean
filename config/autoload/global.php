@@ -1,4 +1,7 @@
 <?php
+
+use Zend\Db\Adapter\AdapterAbstractServiceFactory;
+
 /**
  * Global Configuration Override
  *
@@ -11,28 +14,18 @@
  * file.
  */
 
-return array(
-    /* View Helpers */
-    'cdn'                   => array(
-        'default'           => '//localhost/CourseOcean/',
-    ),
-    /* Services */
-    'db'                    => array(
+return [
+    'db'                    => [
         'driver'            => 'Pdo',
         'dsn'               => 'mysql:dbname=courseocean;host=localhost',
-        'driver_options'    => array(
+        'driver_options'    => [
             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
-        ),
-    ),
-    'mail'                  => array(
+        ],
+    ],
+    'mail'                  => [
         'connection_class'  => 'plain',
         'connection_config' => array(
             'ssl'       => 'tls'
         ),
-    ),
-    'service_manager'       => array(
-        'factories'         => array(
-            'Zend\Db\Adapter\Adapter'=> 'Zend\Db\Adapter\AdapterServiceFactory',
-        ),
-    ),
-);
+    ],
+];

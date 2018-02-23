@@ -1,0 +1,215 @@
+<h3>用户管理</h3>
+<div class="row-fluid">
+    <div class="span6">
+        <ul id="filter" class="inline">
+            <li><a id="all-users-filter" href="javascript:void(0);">全部用户</a>(<?= $this->totalUsers; ?>)</li>
+            <li><a id="unchecked-users-filter" href="javascript:void(0);">未审核用户</a>(<?= $this->uncheckUsers; ?>)</li>
+        </ul>
+    </div> <!-- .span6 -->
+    <div class="span6 text-right">
+        <form onSubmit="getUsersUsingKeyword(); return false;">
+            <input id="keyword" type="text" />
+            <button class="btn">搜索用户</button>
+        </form>
+    </div> <!-- .span6 -->
+</div> <!-- .row-fluid -->
+<div class="row-fluid">
+    <div class="span6">
+        <form class="row-fluid" onSubmit="getFilters(1); return false;">
+            <select name="user-group" class="span3">
+                <option value="all">全部用户组</option>
+                <option value="person">个人用户</option>
+                <option value="teacher">讲师用户</option>
+                <option value="company">企业用户</option>
+            </select>
+            <select name="user-status" class="span3">
+                <option value="all">全部用户</option>
+                <option value="unchecked">未审核用户</option>
+                <option value="approved">审核通过用户</option>
+                <option value="unapproved">审核未通过用户</option>
+            </select>
+            <button class="btn" type="submit">筛选</button>
+        </form>
+    </div> <!-- .span6 -->
+    <div id="pagination" class="span6 text-right">
+        <div class="pagination">
+            <ul></ul>
+        </div> <!-- .pagination -->
+    </div> <!-- #pagination -->
+</div> <!-- .row-fluid -->
+<table id="users" class="table table-striped">
+    <thead>
+        <th>#</th>
+        <th>用户状态</th>
+        <th>用户名</th>
+        <th>电子邮件</th>
+        <th>用户组</th>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<!-- Java Script -->
+<script type="text/javascript">
+    function getFilters(pageNumber) {
+        var userGroup       = $('select[name=user-group]').val(),
+            userStatus      = $('select[name=user-status]').val(),
+            isInspected     = -1,
+            isApproved      = -1;
+
+        if ( userStatus == 'unchecked' ) {
+            isInspected     = 0;
+        } else if ( userStatus == 'approved' ) {
+            isInspected     = 1;
+            isApproved      = 1;
+        } else if ( userStatus == 'unapproved' ) {
+            isInspected     = 1;
+            isApproved      = 0;
+        }
+
+        getUsers(pageNumber, userGroup, isInspected, isApproved);
+        getUserTotalPages(pageNumber, userGroup, isInspected, isApproved);
+    }
+</script>
+<script type="text/javascript">
+    function getUsers(pageNumber, userGroup, isInspected, isApproved) {
+        $.ajax({
+            type: 'GET',
+            url: "<?= $this->basePath(); ?>/administration/getUsers?page=" + pageNumber + '&userGroup=' + userGroup + 
+                 '&isInspected=' + isInspected + '&isApproved=' + isApproved,
+            dataType: 'JSON',
+            success: function(result) {
+                $('#users tbody').empty();
+
+                if ( result['isSuccessful'] ) {
+                    displayUsers(result['users']);
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function displayUsers(users) {
+        var totalUsers = users.length;
+        for ( var i = 0; i < totalUsers; ++ i ) {
+            $('#users tbody').append('<tr>'
+                                  + '    <td>' + users[i]['uid'] + '</td>'
+                                  + '    <td>' + getUserStatusSelector(users[i]['isInspected'], users[i]['isApproved']) + '</td>'
+                                  + '    <td>' + users[i]['username'] + '</td>'
+                                  + '    <td>' + users[i]['email'] + '</td>'
+                                  + '    <td>' + users[i]['userGroupName'] + '</td>'
+                                  + '</tr>');
+        }
+    }
+</script>
+<script type="text/javascript">
+    function getUserStatusSelector(isInspected, isApproved) {
+        return '<select class="user-status">' + 
+               '    <option value="-1" ' + (isInspected ? '' : 'selected') + '>未审核</option>' + 
+               '    <option value="0"  ' + (isInspected ? (isApproved ? '' : 'selected') : '') + '>审核未通过</option>' + 
+               '    <option value="1"  ' + (isInspected ? (isApproved ? 'selected' : '') : '') + '>审核通过</option>' + 
+               '</select>';
+    }
+</script>
+<script type="text/javascript">
+    $('#users').delegate('.user-status', 'change', function() {
+        var uid        = $('td:first-child', $(this).parent().parent()).html(),
+            userStatus = $(this).val();
+    });
+</script>
+<script type="text/javascript">
+    function getUserTotalPages(pageNumber, userGroup, isInspected, isApproved) {
+        $.ajax({
+            type: 'GET',
+            url: '<?= $this->basePath(); ?>/administration/getUserTotalPages?userGroup=' + userGroup + 
+                 '&isInspected=' + isInspected + '&isApproved=' + isApproved,
+            dataType: 'JSON',
+            success: function(result) {
+                $('div.pagination > ul').empty();
+                if ( result['isSuccessful'] ) {
+                    $('div.pagination').removeClass('hide');
+                    displayPagination(pageNumber, result['totalPages']);
+                } else {
+                    $('div.pagination').addClass('hide');
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function displayPagination(currentPage, totalPages, filterUrl) {
+        var lowerBound = ( currentPage - 3 > 0 ? currentPage - 3 : 1 ),
+            upperBound = ( currentPage + 3 < totalPages ? currentPage + 3 : totalPages );
+        var paginationString  = '<li' + ( currentPage > 1 ? '>' : ' class="disabled">') + '<a href="#">&lt;</a></li>';
+
+        for ( var i = lowerBound; i <= upperBound; ++ i ) {
+            paginationString += '<li' + ( currentPage == i ? ' class="active"' : '' ) + '><a href="#">' + i + '</a></li>';
+        }
+        paginationString     += '<li' + ( currentPage < totalPages ? '>' : ' class="disabled">') + '<a href="#">&gt;</a></li>';
+        $('.pagination > ul').append(paginationString);
+    }
+</script>
+<script type="text/javascript">
+    $('.pagination > ul').delegate('li', 'click', function(e) {
+        e.preventDefault();
+        if ( $(this).hasClass('disabled') ) {
+            return;
+        }
+        var currentPage = parseInt($('li.active > a', '.pagination').html(), 10),
+            pageNumber  = $('a', this).html();
+        
+        $('.pagination > li.active').removeClass('active');
+        $(this).addClass('active');
+
+        if ( pageNumber === '&lt;' ) {
+            pageNumber  = currentPage - 1;
+        } else if ( pageNumber === '&gt;' ) {
+            pageNumber  = currentPage + 1;
+        }
+        return getFilters(pageNumber);
+    });
+</script>
+<script type="text/javascript">
+    $(function() {
+        return getFilters(1);
+    });
+</script>
+<script type="text/javascript">
+    $('#all-users-filter').click(function() {
+        $('select[name=user-group]').val('all');
+        $('select[name=user-status]').val('all');
+
+        return getFilters(1);
+    });
+</script>
+<script type="text/javascript">
+    $('#unchecked-users-filter').click(function() {
+        $('select[name=user-group]').val('all');
+        $('select[name=user-status]').val('unchecked');
+
+        return getFilters(1);
+    });
+</script>
+<script type="text/javascript">
+    function getUsersUsingKeyword() {
+        var keyword = $('#keyword').val().trim();
+
+        if ( keyword.length == 0 ) {
+            alert('请输入搜索关键词');
+            return;
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: "<?= $this->basePath(); ?>/administration/getUsersUsingKeyword?keyword=" + keyword,
+            dataType: 'JSON',
+            success: function(result) {
+                $('#users tbody').empty();
+                $('div.pagination').addClass('hide');
+
+                if ( result['isSuccessful'] ) {
+                    displayUsers(result['users']);
+                }
+            }
+        });
+    }
+</script>

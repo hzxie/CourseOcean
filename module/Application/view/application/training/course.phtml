@@ -1,0 +1,256 @@
+<?= $this->headTitle($course->courseName.' | '); ?>
+<?= $this->headLink()->appendStylesheet($this->basePath('/css/training/style.css'))
+                     ->appendStylesheet($this->basePath('/css/training/course.css')); ?>
+
+<div class="border-top"></div> <!-- .border-top -->
+<div id="header">
+    <div class="container row-fluid">
+        <div id="logo" class="span4">
+            <a href="<?= $this->basePath('/'); ?>">
+                <img src="<?= $this->basePath('/img/logo.png'); ?>" alt="Logo" />
+            </a>
+        </div> <!-- #logo -->
+        <div id="navigation" class="span8">
+            <ul class="inline">
+                <li><a href="<?= $this->basePath('/training/lectures'); ?>">近期培训</a></li>
+                <li><a href="<?= $this->basePath('/training/courses'); ?>">课程库</a></li>
+                <li><a href="<?= $this->basePath('/training/teachers'); ?>">讲师团队</a></li>
+                <li><a href="<?= $this->basePath('/accounts/dashboard#requirements'); ?>">需求定制</a></li>
+                <li><a href="<?= $this->basePath('/training/posts'); ?>">培训动态</a></li>
+                <?php
+                    $session    = new Zend\Session\Container('co_session');
+                    if ( !$session->offsetExists('isLogined') ):
+                ?>
+                    <li><a href="<?= $this->basePath('/accounts/login'); ?>"><strong>登录</strong></a></li>
+                    <li><button class="btn btn-orange" onclick="window.location.href='<?= $this->basePath('/accounts/register'); ?>'">创建账户</button></li>
+                <?php else: ?>
+                    <li>您好, <a href="<?= $this->basePath('/accounts/dashboard'); ?>"><?= $session->offsetGet('username'); ?></a></li>
+                    <li><a href="<?= $this->basePath('/accounts/logout'); ?>">注销</a></li>
+                <?php endif; ?>
+            </ul>
+            <form id="search" action="<?= $this->basePath('/search'); ?>">
+                <input name="keyword" type="text" placeholder="搜索课程或讲师" />
+                <button class="btn" type="submit">搜索</button>
+            </form>
+        </div> <!-- #navigation -->
+    </div> <!-- .container -->
+</div> <!-- #header -->
+<div id="container">
+    <div class="container row-fluid">
+        <div class="span9">
+            <div id="overview">
+                <img src="<?= $this->basePath("/img/categories/{$course->courseTypeSlug}-large.jpg"); ?>" alt="Course Type Image" />
+                <h3><?= $course->courseName; ?></h3>
+            </div> <!-- #overview -->
+            <div id="detail">
+                <div class="section">
+                    <h4>课程概述</h4>
+                    <p><?= $course->brief; ?></p>
+                </div> <!-- .section -->
+                <div class="section">
+                    <h4>听众范围</h4>
+                    <p><?= $course->audience; ?></p>
+                </div> <!-- .section -->
+                <div class="section">
+                    <h4>课程目标</h4>
+                    <p><?= $course->objective; ?></p>
+                </div> <!-- .section -->
+                <div class="section">
+                    <h4>课程模块</h4>
+                    <ul class="outline">
+                    <?php foreach ( $courseModules as $courseModule ): ?>
+                    <li>
+                        <h5 class="heading">
+                            <?= $courseModule['courseModuleName']; ?>
+                            <span class="cycle">(<?= $courseModule['courseModuleCycle']; ?> 分钟)</span>
+                        </h5>
+                        <div class="detail">
+                            <h5>模块概述</h5>
+                            <p><?= $courseModule['courseModuleBrief']; ?></p>
+                            <h5>模块大纲</h5>
+                            <p><?= str_replace(array("\n"), '<br/>', $courseModule['courseModuleOutline']); ?></p>
+                        </div> <!-- .detail -->
+                    </li>
+                    <?php endforeach;?>
+                    </ul>
+                </div> <!-- .section -->
+                <div class="section">
+                    <h4>课程评价</h4>
+                    <p class="no-comments">暂无课程评价.</p>
+                    <ul id="comments"></ul>
+                    <ul class="inline pagination"></ul>
+                </div> <!-- .section -->
+            </div> <!-- #detail -->
+        </div> <!-- .span9 -->
+        <div class="span3">
+            <h4>讲师简介</h4>
+            <div id="teacher" class="row-fluid">
+                <div id="avatar" class="span4">
+                    <?php if ( $teacher->avatar == null ): ?>
+                        <img class="img-circle" src="<?= $this->basePath('/img/avatars/avatar.jpg'); ?>" alt="avatar">
+                    <?php else: ?>
+                        <img class="img-circle" src="<?= $this->basePath($teacher->avatar); ?>" alt="avatar" />
+                    <?php endif; ?>
+                </div> <!-- #avatar -->
+                <div id="teacher-introduction" class="span8">
+                    <h5><a href="<?= $this->basePath('/training/teacher'); ?>?teacherId=<?= $teacher->uid; ?>" target="_blank"><?= $teacher->teacherName; ?></a></h5>
+                    <p><?= $teacher->company; ?></p>
+                </div> <!-- #teacher-introduction -->
+            </div> <!-- #teacher -->
+            <div id="misc">
+                <div id="meta">
+                    <ul class="meta">
+                        <li><span class="heading">课程类别: </span><?= $course->courseTypeName; ?></li>
+                        <li><span class="heading">培训周期: </span><?= $course->courseCycle; ?> 天</li>
+                    </ul>
+                </div> <!-- #meta -->
+                <div id="lectures">
+                    <h5>即将开课</h5>
+                    <?php if ( count($lectures) == 0 || $lectures[0]['startTime'] <= date('Y-m-d H:i:s') ): ?>
+                        <p>暂无开课记录.</p>
+                    <?php else: ?>
+                        <ul class="lectures">
+                        <?php for ( $i = 0; $i < count($lectures); ++ $i ): ?>
+                            <?php if ( $lectures[$i]['startTime'] <= date('Y-m-d H:i:s') ): ?>
+                                <?php break; ?>
+                            <?php else: ?>
+                                <li><a href="<?= $this->basePath('/training/lecture'); ?>?lectureId=<?= $lectures[$i]['lectureId']; ?>"><?= date('Y年m月d日 H:i', strtotime($lectures[$i]['startTime'])); ?></a></li>
+                            <?php endif; ?>
+                        <?php endfor; ?>
+                        </ul>
+                    <?php endif; ?>
+                    <?php isset($i) ? $i : $i = 0 ; ?>
+                    <h5>历史开课 (<?= count($lectures) - $i; ?>次)
+                    <?php if ( $i == count($lectures) ): ?>
+                    </h5><p>暂无开课记录.</p>
+                    <?php else: ?>
+                    <a class="trigger" href="javascript:void(0)">展开</a></h5>
+                    <ul class="lectures history hide">
+                        <?php for ( ; $i < count($lectures); ++ $i ): ?>
+                            <li><a href="<?= $this->basePath('/training/lecture'); ?>?lectureId=<?= $lectures[$i]['lectureId']; ?>"><?= date('Y年m月d日 H:i', strtotime($lectures[$i]['startTime'])); ?></a></li>
+                        <?php endfor; ?>
+                    </ul>
+                    <?php endif; ?>
+                </div> <!-- #lectures -->
+                <div id="share">
+                    <ul class="inline">
+                        <li><a href="#" title="分享到微博"><img src="<?= $this->basePath('/img/social/weibo.png'); ?>" alt="Weibo"></a></li>
+                        <li><a href="#" title="分享到微信"><img src="<?= $this->basePath('/img/social/wechat.png'); ?>" alt="WeChat"></a></li>
+                    </ul>
+                </div> <!-- #share -->
+            </div> <!-- #misc -->
+            <button class="btn btn-orange btn-block" onclick="window.location.href='<?= $this->basePath('/accounts/dashboard'); ?>#requirement?courseId=<?= $course->courseId; ?>'">预约其他时间</button>
+        </div> <!-- .span3 -->
+    </div> <!-- .container -->
+</div> <!-- #container -->
+
+<?php $this->inlineScript()->captureStart(); ?>
+    $('a.trigger').click(function() {
+        if ( !$('ul.history').is(':visible') ) {
+            $(this).html('收起');
+            $('ul.history').removeClass('hide');
+        } else {
+            $(this).html('展开');
+            $('ul.history').addClass('hide');
+        }
+    })
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function getComments(courseId, pageNumber) {
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?= $this->basePath('/training/getComments'); ?>?courseId=' + courseId + '&page=' + pageNumber,
+            dataType: 'JSON',
+            success: function(result) {
+                $('#comments').empty();
+                $('ul.pagination').empty();
+                if ( result['isSuccessful'] ) {
+                    $('.no-comments').addClass('hide');
+                    $('ul.pagination').removeClass('hide');
+                    displayComments(result['comments']);
+                    displayPagination(pageNumber, result['totalPages']);
+                } else {
+                    $('.no-comments').removeClass('hide');
+                    $('ul.pagination').addClass('hide');
+                }
+            }
+        });
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function displayComments(comments) {
+        var numberOfComments = comments.length;
+        for ( var i = 0; i < numberOfComments; ++ i ) {
+            $('#comments').append('<li class="comment">'
+                                + '    <div class="avatar">'
+                                + '        <img src="<?= $this->basePath('/img/avatars/avatar.jpg'); ?>" alt="avatar" class="img-circle" />'
+                                + '    </div>'
+                                + '    <div class="content">'
+                                + '        <div class="meta">'
+                                + '            <span class="user"><i class="fa fa-user"></i> ' + comments[i]['reviewerUsername'] + '</span>'
+                                + '            <span><i class="fa fa-pencil"></i> ' + getDateTime(comments[i]['commentTime']) + '</span>'
+                                + '            <span class="ranking">' + getRanking(comments[i]['ranking']) + '</span>'
+                                + '        </div>'
+                                + '        <p>' + comments[i]['detail'] + '</p>'
+                                + '    </div>'
+                                + '</li>');
+        }
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function getDateTime(dateTimeString) {
+        var year    = dateTimeString.substring(0, 4),
+            month   = dateTimeString.substring(5, 7),
+            day     = dateTimeString.substring(8, 10),
+            time    = dateTimeString.substring(11, 16);
+
+        return year + '年' + month + '月' + day + '日 ' + time;
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function getRanking(rankingLevel) {
+        var rankingImageString  = '';
+        for ( var i = 0; i < rankingLevel; ++ i ) {
+            rankingImageString += '<img src="<?= $this->basePath('/img/ranking/full-star.png'); ?>" alt="Star" />';
+        }
+        for ( var i = rankingLevel; i < 5; ++ i ) {
+            rankingImageString += '<img src="<?= $this->basePath('/img/ranking/empty-star.png'); ?>" alt="Star" />';
+        }
+        return rankingImageString;
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    function displayPagination(currentPage, totalPages) {
+        var lowerBound = ( currentPage - 5 > 0 ? currentPage - 5 : 1 ),
+            upperBound = ( currentPage + 5 < totalPages ? currentPage + 5 : totalPages );
+        var paginationString  = '<li' + ( currentPage > 1 ? '>' : ' class="disabled">') + '<a href="#comments">&lt;</a></li>';
+
+        for ( var i = lowerBound; i <= upperBound; ++ i ) {
+            paginationString += '<li' + ( currentPage == i ? ' class="active"' : '' ) + '><a href="#comments">' + i + '</a></li>';
+        }
+        paginationString     += '<li' + ( currentPage < totalPages ? '>' : ' class="disabled">') + '<a href="#comments">&gt;</a></li>';
+        $('ul.pagination').append(paginationString);
+    }
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    $(function() {
+        var courseId    = <?= $course->courseId; ?>,
+            pageNumber  = 1;
+        getComments(courseId, pageNumber);
+    });
+<?php $this->inlineScript()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart(); ?>
+    $('ul.pagination').delegate('li', 'click', function() {
+        var currentPage = parseInt($('li.active > a', 'ul.pagination').html(), 10),
+            courseId    = <?= $course->courseId; ?>,
+            pageNumber  = $('a', this).html();
+        
+        if ( pageNumber === '&lt;' ) {
+            pageNumber  = currentPage - 1;
+        } else if ( pageNumber === '&gt;' ) {
+            pageNumber  = currentPage + 1;
+        }
+        getComments(courseId, pageNumber);
+    });
+<?php $this->inlineScript()->captureEnd(); ?>

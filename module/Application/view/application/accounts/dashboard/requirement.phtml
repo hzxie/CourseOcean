@@ -1,0 +1,612 @@
+<?= $this->headLink()->appendStylesheet($this->basePath('/css/bootstrap.datetimepicker.min.css')); ?>
+
+<?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
+    <h4>我收到的需求</h4>
+    <p class="no-requirements">暂无用户向您提出需求.</p>
+    <ul id="requirements"></ul>
+    <script type="text/javascript">
+        function displayRequirements(result) {
+            var numberOfRequirements = result['requirements'].length;
+            for ( var i = 0; i < numberOfRequirements; ++ i ) {
+                $('#requirements').append(
+                    '<li id="requirement-' + result['requirements'][i]['requirementId'] + '" class="requirement row-fluid">' + 
+                    '    <div class="span3">' +
+                    '        <img src="<?= $this->basePath('/img/categories/'); ?>' + result['requirements'][i]['courseTypeSlug'] + '-small.jpg" alt="Course Type Slug">' +
+                    '    </div> <!-- .span3 -->' +
+                    '    <div class="span9">' +
+                    '        <h4><a href="' + ( result['requirements'][i]['courseId'] ? ('<?= $this->basePath(); ?>/training/course?courseId=' + result['requirements'][i]['courseId']) : 'javascript:void(0);' ) + '">' + (result['requirements'][i]['courseName'] || '等待您开设相应课程') + '</a><span class="pull-right"><a href="javascript:void(0)">详细信息</a></span></h4>' +
+                    '        <ul class="inline meta">' +
+                    '            <li><i class="fa fa-user"></i> ' + result['requirements'][i]['companyName'] + '</li>' +
+                    '            <li><i class="fa fa-calendar"></i> ' + formatDateTime(result['requirements'][i]['startTime']) + '~' +  formatDateTime(result['requirements'][i]['endTime']) + '</li>' +
+                    '            <li><i class="fa fa-yen"></i> '+ (result['requirements'][i]['expense'] || 'N/a') + '元</li>' +
+                    '            <li><i class="fa fa-map-marker"></i> ' + result['requirements'][i]['province'] + (result['requirements'][i]['city'] || '') + (result['requirements'][i]['address'] || '') + '</li>' +
+                    '        </ul>' +
+                    '    </div> <!-- .span9 -->' +
+                    '</li>');
+            }
+        }
+    </script>
+<?php else: ?>
+    <h4>我的需求<span class="pull-right"><a id="new-requirement" href="javascript:void(0);"><i class="fa fa-plus"></i> 新需求</a></span></h4>
+    <p class="no-requirements">暂无需求定制记录.</p>
+    <ul id="requirements"></ul>
+    <!-- Java Script -->
+    <script type="text/javascript">
+        $('#new-requirement').click(function() {
+            $('#requirement-modal h4').html('创建新需求');
+            $('#requirement-modal input').val('');
+            $('#requirement-modal .alert-error').addClass('hide');
+            $('#requirement-modal').modal();
+        });
+    </script>
+    <script type="text/javascript">
+        function getPostData() {
+        <?php if ( $profile['userGroupSlug'] === 'company' ): ?>
+            var teacherId       = $('#requirement-modal #teacher-uid').val(),
+                courseId        = $('#requirement-modal #course-id').val(),
+                participants    = $('#requirement-modal #lecture-participants').val(),
+                startTime       = $('#requirement-modal #lecture-start-time').val(),
+                endTime         = $('#requirement-modal #lecture-end-time').val(),
+                region          = $('#requirement-modal .region').val(),
+                province        = $('#requirement-modal .province').val(),
+                city            = $('#requirement-modal .city').val() || '',
+                address         = $('#requirement-modal #lecture-address').val(),
+                detail          = $('#requirement-modal #requirement-detail').val(),
+                postData        = {
+                    'teacherId': teacherId,
+                    'courseId': courseId,
+                    'participants': participants,
+                    'startTime': startTime,
+                    'endTime': endTime,
+                    'region': region,
+                    'province': province,
+                    'city': city,
+                    'address': address,
+                    'detail': detail
+                };
+        <?php else: ?>
+            var teacherId       = $('#requirement-modal #teacher-uid').val(),
+                courseId        = $('#requirement-modal #course-id').val(),
+                startTime       = $('#requirement-modal #lecture-time').val() + '-' + getStartDayOfMonth($('#requirement-modal #lecture-time').val()) + ' 00:00',
+                endTime         = $('#requirement-modal #lecture-time').val() + '-' + getEndDayOfMonth($('#requirement-modal #lecture-time').val()) + ' 23:59',
+                region          = $('#requirement-modal .region').val(),
+                province        = $('#requirement-modal .province').val(),
+                city            = $('#requirement-modal .city').val() || '',
+                postData        = {
+                    'teacherId': teacherId,
+                    'courseId': courseId,
+                    'startTime': startTime,
+                    'endTime': endTime,
+                    'region': region,
+                    'province': province,
+                    'city': city
+                };
+        <?php endif; ?>
+            return postData;
+        }
+    </script>
+    <script type="text/javascript">
+        function getStartDayOfMonth(dateString) {
+            var dateArray = dateString.split('-'),
+                year      = dateArray[0],
+                month     = dateArray[1],
+                thisYear  = <?=date('Y'); ?>,
+                thisMonth = <?=date('m'); ?>,
+                thisDay   = <?=date('d'); ?>;
+            if ( year == thisYear && month == thisMonth ) {
+                return thisDay + 1;
+            } else {
+                return 1;
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function getEndDayOfMonth(dateString) {
+            var dateArray   = dateString.split('-'),
+                year        = dateArray[0],
+                month       = dateArray[1];
+
+            var monthOfDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            if ( year % 4 == 0 ) {
+                monthOfDays[1] = 29;
+            }
+            return monthOfDays[month - 1];
+        }
+    </script>
+    <script type="text/javascript">
+        $('#requirement-modal button.btn-primary').click(function() {
+            var requirementId = $('#requirement-id').val();
+
+            if ( requirementId > 0 ) {
+                $('#requirement-modal').modal('hide');
+            } else {
+                $(this).html('正在处理...');
+                $(this).attr('disabled', 'disabled');
+
+                $('#requirement-modal .alert-error').addClass('hide');
+                createNewRequirement(getPostData());
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        function createNewRequirement(postData) {
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '<?= $this->basePath('/accounts/createRequirement'); ?>',
+                data: postData,
+                dataType: 'JSON',
+                success: function(result) {
+                    if ( result['isSuccessful'] ) {
+                        var pageNumber = 1;
+                        $('#requirement-modal').modal('hide');
+                        getRequirements(pageNumber);
+                    } else {
+                        displayRequirementErrorMessage(result);
+                    }
+
+                    var buttonObject = $('#requirement-modal button.btn-primary');
+                    $(buttonObject).html('确认');
+                    $(buttonObject).removeAttr('disabled', 'disabled');
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function displayRequirementErrorMessage(result) {
+            var errorMessage  = '';
+        <?php if ( $profile['userGroupSlug'] === 'company' ): ?>
+            if ( !result['isTeacherExists'] ) {
+                errorMessage += '您所选择讲师的不存在.<br />';
+            }
+            if ( !result['isCourseExists'] ) {
+                errorMessage += '您所选择的课程不存在.<br />';
+            }
+            if ( result['isStartTimeEmpty'] || result['isEndTimeEmpty'] ) {
+                errorMessage += '请选择期望的开课时间.<br />';
+            }
+            if ( !result['isStartTimeLegal'] || !result['isEndTimeLegal'] ) {
+                errorMessage += '无法在所选择的开课时间开课.<br />';
+            }
+            if ( result['isParticipantsEmpty'] ) {
+                errorMessage += '请填写参课人数.<br />';
+            } else if ( !result['isParticipantsLegal'] ) {
+                errorMessage += '参课人数应该是一个大于0的整数.<br />';
+            }
+            if ( result['isRegionEmpty'] ) {
+                errorMessage += '请选择期望的开课地区.<br />';
+            }
+            if ( result['isProvinceEmpty'] ) {
+                errorMessage += '请选择期望的开课省份.<br />';
+            }
+            if ( result['isAddressEmpty'] ) {
+                errorMessage += '请选择期望的开课地址.<br />';
+            } else if ( !result['isAddressLegal'] ) {
+                errorMessage += '期望开课的地址长度不能超过128个字符.<br />';
+            }
+            if ( result['isDetailEmpty'] ) {
+                errorMessage += '请填写需求的详细描述.<br />';
+            }
+        <?php else: ?>
+            if ( result['isTeacherIdEmpty'] || !result['isTeacherExists'] ) {
+                errorMessage += '您所选择讲师的不存在.<br />';
+            }
+            if ( result['isCourseIdEmpty'] || !result['isCourseExists'] ) {
+                errorMessage += '您所选择的课程不存在.<br />';
+            }
+            if ( result['isStartTimeEmpty'] || result['isEndTimeEmpty'] ) {
+                errorMessage += '请选择期望的开课时间.<br />';
+            }
+            if ( !result['isStartTimeLegal'] || !result['isEndTimeLegal'] ) {
+                errorMessage += '无法在所选择的开课时间开课.<br />';
+            }
+            if ( result['isRegionEmpty'] ) {
+                errorMessage += '请选择期望的开课地区.<br />';
+            }
+            if ( result['isProvinceEmpty'] ) {
+                errorMessage += '请选择期望的开课省份.<br />';
+            }
+        <?php endif; ?>
+            $('#requirement-modal .alert-error').html(errorMessage);
+            $('#requirement-modal .alert-error').removeClass('hide');
+        }
+    </script>
+    <script type="text/javascript">
+        function displayRequirements(result) {
+            var numberOfRequirements = result['requirements'].length;
+            for ( var i = 0; i < numberOfRequirements; ++ i ) {
+                $('#requirements').append(
+                    '<li id="requirement-' + result['requirements'][i]['requirementId'] + '" class="requirement row-fluid">' + 
+                    '    <div class="span3">' +
+                    '        <img src="<?= $this->basePath('/img/categories/'); ?>' + result['requirements'][i]['courseTypeSlug'] + '-small.jpg" alt="Course Type Slug">' +
+                    '    </div> <!-- .span3 -->' +
+                    '    <div class="span9">' +
+                    '        <h4><a href="<?= $this->basePath('/training/course'); ?>?courseId=' + result['requirements'][i]['courseId'] + '">' + (result['requirements'][i]['courseName'] || '等待讲师开设相应课程') + '</a><span class="pull-right"><a href="javascript:void(0)">详细信息</a></span></h4>' +
+                    '        <ul class="inline meta">' +
+                    '            <li><i class="fa fa-user"></i> ' + result['requirements'][i]['teacherName'] + '</li>' +
+                    '            <li><i class="fa fa-calendar"></i> ' + formatDateTime(result['requirements'][i]['startTime']) + '~' +  formatDateTime(result['requirements'][i]['endTime']) + '</li>' +
+                    '            <li><i class="fa fa-yen"></i> '+ (result['requirements'][i]['expense'] || 'N/a') + '元</li>' +
+                    '            <li><i class="fa fa-map-marker"></i> ' + result['requirements'][i]['province'] + (result['requirements'][i]['city'] || '') + (result['requirements'][i]['address'] || '') + '</li>' +
+                    '        </ul>' +
+                    '    </div> <!-- .span9 -->' +
+                    '</li>');
+            }
+        }
+    </script>
+<?php endif; ?>
+
+<!-- Modals -->
+<div id="requirement-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <h4>创建新需求</h4>
+    </div> <!-- .modal-header -->
+    <div class="modal-body">
+        <div class="row-fluid">
+        <?php if ( $profile['userGroupSlug'] === 'person' ): ?>
+            <div class="alert alert-info">个人用户所提出的需求我们将在达到一定人数时受理.</div>
+        <?php endif; ?>
+            <div id="requirement-error" class="alert alert-error hide"></div>
+        </div> <!-- .row-fluid -->
+        <input id="requirement-id" type="hidden" />
+        <div class="row-fluid">
+            <div class="span6">
+                <label for="teacher-name">讲师</label>
+                <input id="teacher-name" type="text" />
+                <table id="teacher-hint" class="hint"></table>
+                <input id="teacher-uid" type="hidden" />
+            </div> <!-- .span6 -->
+            <div class="span6">
+                <label for="course-name">课程</label>
+                <input id="course-name" type="text" />
+                <table id="course-hint" class="hint"></table>
+                <input id="course-id" type="hidden" />
+            </div> <!-- .span6 -->
+        </div> <!-- .row-fluid -->
+        <?php if ( $profile['userGroupSlug'] != 'person' ): ?>
+        <div class="row-fluid">
+            <div class="span6">
+                <label for="participants">参课人数</label>
+                <div class="input-append">
+                    <input id="lecture-participants" type="text" />
+                    <span class="add-on">人</span>
+                </div> <!-- .input-append -->
+            </div> <!-- .span6 -->
+            <div class="span6">
+                <label for="lecture-expense">培训费用</label>
+                <div class="input-append">
+                    <input id="lecture-expense" type="text" <?=( $profile['userGroupSlug'] === 'company' ? 'disabled="disabled"' : '' ); ?> />
+                    <span class="add-on">元</span>
+                </div> <!-- .input-append -->
+            </div> <!-- .span6 -->
+        </div> <!-- .row-fluid -->
+        <?php endif; ?>
+        <div class="row-fluid">
+            <?php if ( $profile['userGroupSlug'] === 'person' ): ?>
+            <div class="span6">
+                <label for="lecture-time">开课时间</label>
+                <select id="lecture-time">
+                <?php 
+                    $year       = date('Y');
+                    $month      = date('m') + 1;
+                    $MIN_MONTH  = 1;
+                    $MAX_MONTH  = 12;
+                ?>
+                <?php for ( $i = $month; $i <= $MAX_MONTH; ++ $i ): ?>
+                    <option value="<?= $year.'-'.sprintf('%02d', $i); ?>"><?= $year; ?>年<?=sprintf('%02d', $i); ?>月</option>
+                <?php endfor; ?>
+                <?php ++ $year;
+                      for ( $i = $MIN_MONTH; $i < $month; ++ $i ): ?>
+                    <option value="<?= $year.'-'.sprintf('%02d', $i); ?>"><?= $year; ?>年<?=sprintf('%02d', $i); ?>月</option>
+                <?php endfor; ?>
+                </select>
+            </div> <!-- .span6 -->
+            <?php else: ?>
+            <div class="span6">
+                <label for="lecture-start-time">课程起始时间</label>
+                <div class="controls input-append date form_datetime" data-date-format="yyyy-mm-dd hh:ii">
+                    <input id="lecture-start-time" type="text" value="" readonly>
+                    <span class="add-on"><i class="icon-th"></i></span>
+                </div> <!-- .input-append -->
+            </div> <!-- .span6 -->
+            <div class="span6">
+                <label for="lecture-end-time">课程结束时间</label>
+                <div class="controls input-append date form_datetime" data-date-format="yyyy-mm-dd hh:ii">
+                    <input id="lecture-end-time" type="text" value="" readonly>
+                    <span class="add-on"><i class="icon-th"></i></span>
+                </div> <!-- .input-append -->
+            </div> <!-- .span6 -->
+            <?php endif; ?>
+        </div> <!-- .row-fluid -->
+        <div class="city-picker row-fluid">
+            <div class="span12">
+                <label for="lecture-place">开课地点</label>
+                <select class="region"></select>
+                <select class="province"></select>
+                <select class="city"></select>
+            <?php if ( $profile['userGroupSlug'] === 'company' ): ?>
+                <input id="lecture-address" type="text" placeholder="详细地址" />
+            <?php endif; ?>
+            </div> <!-- .span12 -->
+        </div> <!-- .row-fluid -->
+    <?php if ( $profile['userGroupSlug'] === 'company' ): ?>
+        <div class="row-fluid">
+            <div class="span12">
+                <label for="requirement-detail">详细需求</label>
+                <textarea id="requirement-detail" rows="6"></textarea>
+            </div> <!-- .span6 -->
+        </div> <!-- .row-fluid -->
+    <?php endif; ?>
+    </div> <!-- .modal-body -->
+    <div class="modal-footer">
+        <button class="btn btn-primary">确认</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+    </div> <!-- .modal-footer -->
+</div> <!-- #requirement-modal -->
+
+<!-- Java Script -->
+<script type="text/javascript">
+    $('#teacher-name').keyup(function() {
+        var keyword = $(this).val();
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?= $this->basePath('/getSearchResult'); ?>?keyword=' + keyword,
+            dataType: 'JSON',
+            success: function(result) {
+                $('#teacher-hint').empty();
+                if ( result['isSuccessful'] ) {
+                    return displayTeacherHint(result['searchResult']['teachers']);
+                } else {
+                    $('#teacher-hint').append('<tr><td>未找到相关的讲师.</td></tr>');
+                }
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    function displayTeacherHint(result) {
+        var numberOfTeachers = result.length;
+        for ( var i = 0; i < numberOfTeachers; ++ i ) {
+            $('#teacher-hint').append('<tr>' +
+                                      '    <td class="span4"><img src="' + ( result[i]['avatar'] || '<?= $this->basePath('/img/avatars/avatar.jpg'); ?>' ) + '" alt="avatar" /></td>' + 
+                                      '    <td class="hide">' + result[i]['uid'] + '</td>' + 
+                                      '    <td>' + result[i]['teacherName'] + '</td>' + 
+                                      '</tr>');
+        }
+        $('#teacher-hint').css('display', 'table');
+    }
+</script>
+<script type="text/javascript">
+    $('#teacher-hint').delegate('tr', 'click', function() {
+        var teacherId   = $('td:eq(1)', this).html(),
+            teacherName = $('td:eq(2)', this).html();
+        
+        $('#teacher-uid').val(teacherId);
+        $('#teacher-name').val(teacherName);
+        $('#teacher-hint').css('display', 'none');
+    });
+</script>
+<script type="text/javascript">
+    $('#course-name').keyup(function() {
+        var keyword = $(this).val();
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?= $this->basePath('/getSearchResult'); ?>?keyword=' + keyword,
+            dataType: 'JSON',
+            success: function(result) {
+                $('#course-hint').empty();
+                if ( result['isSuccessful'] ) {
+                    return displayCourseHint(result['searchResult']['courses']);
+                } else {
+                    $('#course-hint').append('<tr><td>未找到相关的课程.</td></tr>');
+                }
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    function displayCourseHint(result) {
+        var numberOfCourses = result.length;
+        for ( var i = 0; i < numberOfCourses; ++ i ) {
+            $('#course-hint').append('<tr>' +
+                                     '    <td class="hide">' + result[i]['courseId'] + '</td>' +
+                                     '    <td>' + result[i]['courseName'] + '(' + result[i]['teacherName'] + ')</td>' +
+                                     '    <td class="hide">' + result[i]['teacherId'] + '</td>' +
+                                     '    <td class="hide">' + result[i]['teacherName'] + '</td>' +
+                                     '</tr>');
+        }
+        $('#course-hint').css('display', 'table');
+    }
+</script>
+<script type="text/javascript">
+    $('#course-hint').delegate('tr', 'click', function() {
+        var courseId    = $('td:eq(0)', this).html(),
+            courseName  = $('td:eq(1)', this).html(),
+            teacherId   = $('td:eq(2)', this).html(),
+            teacherName = $('td:eq(3)', this).html();
+        
+        $('#course-id').val(courseId);
+        $('#course-name').val(courseName);
+        $('#teacher-uid').val(teacherId);
+        $('#teacher-name').val(teacherName);
+        $('#course-hint').css('display', 'none');
+    });
+</script>
+<script type="text/javascript">
+    $('ul#requirements').delegate('li.requirement span.pull-right > a', 'click', function() {
+        var requirementId = $(this).parent().parent().parent().parent().attr('id').substr(12);
+        $('#requirement-modal h4').html('查看需求详细信息');
+        $('#requirement-modal input').val('');
+        $('#requirement-modal .alert-error').addClass('hide');
+
+        getRequirement(requirementId);
+        $('#requirement-modal').modal();
+    });
+</script>
+<script type="text/javascript">
+    function getRequirement(requirementId) {
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?= $this->basePath('/accounts/getRequirement'); ?>?requirementId=' + requirementId,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    displayRequirement(result['requirement']);
+                } else {
+                    alert('发生了内部错误, 无法加载需求详细信息.');
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function displayRequirement(requirement) {
+        $('#requirement-modal input#requirement-id').val(requirement['requirementId']);
+        $('#requirement-modal input#teacher-uid').val(requirement['toUid']);
+        $('#requirement-modal input#teacher-name').val(requirement['teacherName']);
+        $('#requirement-modal input#course-id').val(requirement['courseId']);
+        $('#requirement-modal input#course-name').val(requirement['courseName']);
+        $('#requirement-modal input#lecture-participants').val(requirement['participants']);
+        $('#requirement-modal input#lecture-expense').val(requirement['expense']);
+    <?php if ( $profile['userGroupSlug'] === 'person' ): ?>
+        $('#requirement-modal select#lecture-time').val(getParsedMonth(requirement['startTime']));
+    <?php else: ?>
+        $('#requirement-modal input#lecture-start-time').val(requirement['startTime']);
+        $('#requirement-modal input#lecture-end-time').val(requirement['endTime']);
+    <?php endif; ?>
+        $('#requirement-modal select.region').val(requirement['region']).change();;
+        $('#requirement-modal select.province').val(requirement['province']).change();;
+        if ( requirement['city'] ) {
+            $('#requirement-modal select.city').val(requirement['city']).change();
+        } else {
+            $('#requirement-modal select.city').val(requirement['city']);
+            $('#requirement-modal select.city').attr('disabled', 'disabled');
+        }
+        $('#requirement-modal input#lecture-address').val(requirement['address']);
+        $('#requirement-modal textarea#requirement-detail').val(requirement['detail']);
+    }
+</script>
+<script type="text/javascript">
+    function getParsedMonth(dateTimeString) {
+        return dateTimeString.substr(0, 7);
+    }
+</script>
+<script type="text/javascript">
+    function initializeCityPicker() {
+        $('.city-picker').cityPicker();
+    }
+</script>
+<script type="text/javascript">
+    function initializeDateTimePicker(startTime, endTime) {
+        $('.form_datetime').datetimepicker({
+            language:  'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            startDate: '<?=date('Y-m-d H:i'); ?>',
+            endDate: null,
+            forceParse: 0,
+            showMeridian: 1
+        });
+    }
+</script>
+<script type="text/javascript">
+    function formatDateTime(dateTimeString) {
+        var year    = dateTimeString.substring(0, 4),
+            month   = dateTimeString.substring(5, 7),
+            day     = dateTimeString.substring(8, 10),
+            time    = dateTimeString.substring(11, 16);
+        return year + '年' + month + '月' + day + '日 ' + time;
+    }
+</script>
+<script type="text/javascript">
+    function getTeacher(teacherId) {
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?= $this->basePath('/training/getTeacher'); ?>?teacherId=' + teacherId,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    $('#teacher-uid').val(result['teacher']['uid']);
+                    $('#teacher-name').val(result['teacher']['teacherName']);
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function getCourse(courseId) {
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?= $this->basePath('/training/getCourse'); ?>?courseId=' + courseId,
+            dataType: 'JSON',
+            success: function(result) {
+                if ( result['isSuccessful'] ) {
+                    $('#course-id').val(result['course']['courseId']);
+                    $('#course-name').val(result['course']['courseName']);
+                    $('#teacher-uid').val(result['teacher']['uid']);
+                    $('#teacher-name').val(result['teacher']['teacherName']);
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function getRequirements(pageNumber) {
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '<?= $this->basePath('/accounts/getRequirements'); ?>?pageNumber=' + pageNumber,
+            dataType: 'JSON',
+            success: function(result) {
+                $('#requirements').empty();
+                if ( result['isSuccessful'] ) {
+                    $('p.no-requirements').addClass('hide');
+                    displayRequirements(result);
+                } else {
+                    $('p.no-requirements').removeClass('hide');
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    $(function() {
+        var parameter       = window.location.href.match(/\?.*$/);
+        if ( parameter != null ) {
+            var parameters  = parameter[0].substring(1).split('=');
+                key         = parameters[0],
+                value       = parameters[1];
+            if ( key == 'courseId' ) {
+                getCourse(value);
+            } else if ( key == 'teacherUid' ) {
+                getTeacher(value);
+            }
+            $('#requirement-modal').modal();
+        }
+        
+        var pageNumber = 1;
+        getRequirements(pageNumber);
+    });
+
+    /* Force to load the scripts synchronously */
+    $.when(
+        $.getScript('<?= $this->basePath('/js/date-zh-CN.js'); ?>'),
+        $.getScript('<?= $this->basePath('/js/jquery.citypicker.js'); ?>'),
+        $.getScript('<?= $this->basePath('/js/bootstrap.datetimepicker.min.js'); ?>'),
+        $.Deferred(function(deferred){
+            $(deferred.resolve);
+        })
+    ).done(function(){
+        initializeCityPicker();
+        $.getScript('<?= $this->basePath('/js/bootstrap.datetimepicker.zh-CN.js'); ?>', function() {
+            initializeDateTimePicker();
+        });
+    });
+</script>
