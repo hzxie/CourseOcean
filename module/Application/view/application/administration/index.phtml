@@ -1,10 +1,10 @@
 <?= $this->headTitle('仪表盘 | '); ?>
-<?= $this->headLink()->appendStylesheet($this->basePath('/css/administration/style.css')); ?>
+<?= $this->headLink()->appendStylesheet($this->cdn('/css/administration/style.css')); ?>
 
 <div id="sidebar">
     <div id="logo">
         <a href="<?= $this->basePath('/'); ?>">
-        	<img src="<?= $this->basePath('/img/logo.png'); ?>" alt="logo" />
+        	<img src="<?= $this->cdn('/img/logo.png'); ?>" alt="logo" />
         </a>
     </div> <!-- #logo -->
     <div id="sidebar-collapse">
@@ -42,7 +42,7 @@
             <li id="profile">
                 <a href="javascript:void(0)">
                     <span><?= $profile['username']; ?></span>
-                    <img class="img-circle" src="<?= $this->basePath('/img/avatars/avatar.jpg'); ?>" alt="avatar" />
+                    <img class="img-circle" src="<?= $this->cdn('/img/avatars/avatar.jpg'); ?>" alt="avatar" />
                 </a>
             </li>
         </ul>

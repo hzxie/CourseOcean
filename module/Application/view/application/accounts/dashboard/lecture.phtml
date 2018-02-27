@@ -1,4 +1,4 @@
-<?= $this->headLink()->appendStylesheet($this->basePath('/css/bootstrap.datetimepicker.min.css')); ?>
+<?= $this->headLink()->appendStylesheet($this->cdn('/css/bootstrap.datetimepicker.min.css')); ?>
 
 <?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
 <ul class="nav nav-tabs">
@@ -43,7 +43,7 @@
                 for ( var i = 0; i < numberOfCourses; ++ i ) {
                     $('#opening-courses').append('<li id="course-' + courses[i]['courseId'] + '" class="course row-fluid">' 
                                                + '    <div class="span3">'
-                                               + '        <img src="<?= $this->basePath('/img/categories/'); ?>' + courses[i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />'
+                                               + '        <img src="<?= $this->cdn('/img/categories/'); ?>' + courses[i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />'
                                                + '    </div>'
                                                + '    <div class="span9">'
                                                + '        <h4>'
@@ -121,7 +121,7 @@
                 for ( var i = 0; i < numberOfLectures; ++ i ) {
                     $('#opening-lectures').append('<li id="lectures-' + lectures[i]['lectureId'] + '" class="course row-fluid">' 
                                                 + '    <div class="span3">'
-                                                + '        <img src="<?= $this->basePath('/img/categories/'); ?>' + lectures[i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />'
+                                                + '        <img src="<?= $this->cdn('/img/categories/'); ?>' + lectures[i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />'
                                                 + '    </div>'
                                                 + '    <div class="span9">'
                                                 + '        <h4>'
@@ -200,7 +200,7 @@
 
                     lectureString   = '<li class="course row-fluid">'
                                     + '    <div class="span3">'
-                                    + '        <img src="<?= $this->basePath('/img/categories/'); ?>' + records[i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />'
+                                    + '        <img src="<?= $this->cdn('/img/categories/'); ?>' + records[i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />'
                                     + '    </div>'
                                     + '    <div class="span9">'
                                     + '        <h4>'
@@ -256,10 +256,10 @@
             function getRankingString(rankingLevel) {
                 var rankingImageString  = '';
                 for ( var i = 0; i < rankingLevel; ++ i ) {
-                    rankingImageString += '<img src="<?= $this->basePath('/img/ranking/full-star.png'); ?>" alt="Star" />';
+                    rankingImageString += '<img src="<?= $this->cdn('/img/ranking/full-star.png'); ?>" alt="Star" />';
                 }
                 for ( var i = rankingLevel; i < 5; ++ i ) {
-                    rankingImageString += '<img src="<?= $this->basePath('/img/ranking/empty-star.png'); ?>" alt="Star" />';
+                    rankingImageString += '<img src="<?= $this->cdn('/img/ranking/empty-star.png'); ?>" alt="Star" />';
                 }
                 return rankingImageString;
             }
@@ -436,7 +436,7 @@
         </div> <!-- .modal-header -->
         <div class="modal-body">
             <div class="loading">
-                <img src="<?= $this->basePath('/img/loading.gif'); ?>" alt="Loading">
+                <img src="<?= $this->cdn('/img/loading.gif'); ?>" alt="Loading">
             </div> <!-- .loading -->
             <div id="schedule-error" class="alert alert-error hide"></div> <!-- #schedule-error -->
             <ul id="lecture-modules"></ul>
@@ -485,15 +485,15 @@
 
         /* Force to load the scripts synchronously */
         $.when(
-            $.getScript('<?= $this->basePath('/js/date-zh-CN.js'); ?>'),
-            $.getScript('<?= $this->basePath('/js/jquery.citypicker.js'); ?>'),
-            $.getScript('<?= $this->basePath('/js/bootstrap.datetimepicker.min.js'); ?>'),
+            $.getScript('<?= $this->cdn('/js/date-zh-CN.js'); ?>'),
+            $.getScript('<?= $this->cdn('/js/jquery.citypicker.js'); ?>'),
+            $.getScript('<?= $this->cdn('/js/bootstrap.datetimepicker.min.js'); ?>'),
             $.Deferred(function(deferred){
                 $(deferred.resolve);
             })
         ).done(function(){
             initializeCityPicker();
-            $.getScript('<?= $this->basePath('/js/bootstrap.datetimepicker.zh-CN.js'); ?>', function() {
+            $.getScript('<?= $this->cdn('/js/bootstrap.datetimepicker.zh-CN.js'); ?>', function() {
                 initializeDateTimePicker();
             });
         });

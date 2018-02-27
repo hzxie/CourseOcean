@@ -1,7 +1,7 @@
 <?php 
     echo $this->headTitle('搜索结果 | ');
-    echo $this->headLink()->appendStylesheet($this->basePath('/css/training/style.css'))
-                          ->appendStylesheet($this->basePath('/css/search.css'));
+    echo $this->headLink()->appendStylesheet($this->cdn('/css/training/style.css'))
+                          ->appendStylesheet($this->cdn('/css/search.css'));
 ?>
 
 <div class="border-top"></div> <!-- .border-top -->
@@ -9,7 +9,7 @@
     <div class="container row-fluid">
         <div id="logo" class="span4">
             <a href="<?= $this->basePath('/'); ?>">
-                <img src="<?= $this->basePath('/img/logo.png'); ?>" alt="Logo" />
+                <img src="<?= $this->cdn('/img/logo.png'); ?>" alt="Logo" />
             </a>
         </div> <!-- #logo -->
         <div id="navigation" class="span8">
@@ -43,7 +43,7 @@
             <h2>搜索结果: <?= $keyword; ?></h2>
             <p>使用搜索可以帮助您更快地查找您所需要的信息.</p>
             <button class="btn btn-orange" onclick="window.location.href='<?= $this->basePath('/training/courses'); ?>'">查看课程库</button>
-            <img src="<?= $this->basePath('/img/training/search-header.jpg'); ?>" alt="Header Image">
+            <img src="<?= $this->cdn('/img/training/search-header.jpg'); ?>" alt="Header Image">
             <div class="border-bottom"></div> <!-- .border-bottom -->
         </div> <!-- #sub-header -->
         <div id="content" class="row-fluid">
@@ -97,7 +97,7 @@
         for ( var i = 0; i < numberOfTeachers; ++ i ) {
             $('ul#results').append('<li class="teacher row-fluid">' +
                                    '    <div class="span3">' + 
-                                   '        <img src="<?= $this->basePath('/img/avatars/'); ?>' + 
+                                   '        <img src="<?= $this->cdn('/img/avatars/'); ?>' + 
                                                 ( result['teachers'][i]['avatar'] === null ? 'avatar-wide.jpg' : result['teachers'][i]['avatar'] ) + '" alt="avatar" />' +
                                    '    </div>' +
                                    '    <div class="span9">' + 
@@ -113,7 +113,7 @@
         for ( var i = 0; i < numberOfCourses; ++ i ) {
             $('ul#results').append('<li class="course row-fluid">' +
                                    '    <div class="span3">' + 
-                                   '        <img src="<?= $this->basePath('/img/categories/'); ?>' + result['courses'][i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />' +
+                                   '        <img src="<?= $this->cdn('/img/categories/'); ?>' + result['courses'][i]['courseTypeSlug'] + '-small.jpg" alt="Course Image" />' +
                                    '    </div>' +
                                    '    <div class="span9">' + 
                                    '        <h4>[课程] <a href="<?= $this->basePath('/training/course')?>?courseId=' + result['courses'][i]['courseId'] + '">' + result['courses'][i]['courseName'] + '</a></h4>' +

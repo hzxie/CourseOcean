@@ -66,7 +66,17 @@ return [
             ],
         ],
     ],
-    'view_manager' => [
+    'view_helpers'  => [
+        'factories' => [
+            View\Helper\CdnHelper::class => function() {
+                return new View\Helper\CdnHelper();
+            },
+        ],
+        'aliases'   => [
+            'cdn'   => View\Helper\CdnHelper::class,
+        ],
+    ],
+    'view_manager'  => [
         'display_not_found_reason' => false,
         'display_exceptions'       => false,
         'doctype'                  => 'HTML5',

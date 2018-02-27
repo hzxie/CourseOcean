@@ -15,6 +15,9 @@ use Zend\Db\Adapter\AdapterAbstractServiceFactory;
  */
 
 return [
+    'cdn'                   => [
+        'default'           => '//localhost/CourseOcean/'
+    ],
     'db'                    => [
         'driver'            => 'Pdo',
         'dsn'               => 'mysql:dbname=courseocean;host=localhost',

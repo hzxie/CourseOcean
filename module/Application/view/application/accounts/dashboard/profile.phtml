@@ -174,7 +174,7 @@
     </div> <!-- #password-modal -->
     <!-- Java Script -->
     <script type="text/javascript">
-        $.getScript('<?= $this->basePath('/js/jquery.citypicker.js'); ?>', function() {
+        $.getScript('<?= $this->cdn('/js/jquery.citypicker.js'); ?>', function() {
             $('.city-picker').cityPicker();
             getProfile();
         });

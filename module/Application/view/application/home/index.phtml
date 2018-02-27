@@ -1,5 +1,5 @@
 <?= $this->headTitle('首页 | '); ?>
-<?= $this->headLink()->appendStylesheet($this->basePath('/css/home/homepage.css')); ?>
+<?= $this->headLink()->appendStylesheet($this->cdn('/css/home/homepage.css')); ?>
 
 <div id="header">
     <ul class="inline">
@@ -21,7 +21,7 @@
     <div class="full-width">
         <div id="introduction" class="container">
             <div id="logo">
-                <img src="<?= $this->basePath('/img/logo.png'); ?>" alt="Logo" />
+                <img src="<?= $this->cdn('/img/logo.png'); ?>" alt="Logo" />
             </div> <!-- #logo -->
             <div id="slogan">
                 <h3>提供最及时、最便捷的IT培训服务!</h3>
@@ -255,7 +255,7 @@
             <div class="row-fluid">
                 <div id="responsive-ready" class="span12">
                     <h4>全新的响应式设计, 为移动设备带来更好的用户体验!</h4>
-                    <img src="<?= $this->basePath('/img/homepage/responsive-ready.png'); ?>" alt="Responsive Ready">
+                    <img src="<?= $this->cdn('/img/homepage/responsive-ready.png'); ?>" alt="Responsive Ready">
                 </div> <!-- .span12 -->
             </div> <!-- .row-fluid -->
         </div> <!-- .container -->

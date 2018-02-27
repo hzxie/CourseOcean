@@ -1,14 +1,14 @@
 <?= $this->headTitle('开放平台 | '); ?>
-<?= $this->headLink()->appendStylesheet($this->basePath('/css/about/style.css'))
-                     ->appendStylesheet($this->basePath('/css/about/api.css'))
-                     ->appendStylesheet($this->basePath('/css/about/highlight.css')); ?>
-<?= $this->headScript()->appendFile($this->basePath('/js/highlight.js')); ?>
+<?= $this->headLink()->appendStylesheet($this->cdn('/css/about/style.css'))
+                     ->appendStylesheet($this->cdn('/css/about/api.css'))
+                     ->appendStylesheet($this->cdn('/css/about/highlight.css')); ?>
+<?= $this->headScript()->appendFile($this->cdn('/js/highlight.js')); ?>
 
 <div id="header" class="container">
     <div class="row-fluid">
         <div id="logo" class="span3">
             <a href="<?= $this->basePath('/'); ?>">
-                <img src="<?= $this->basePath('/img/logo.png'); ?>" alt="Logo" />
+                <img src="<?= $this->cdn('/img/logo.png'); ?>" alt="Logo" />
             </a>
         </div> <!-- #logo -->
         <div class="span9">

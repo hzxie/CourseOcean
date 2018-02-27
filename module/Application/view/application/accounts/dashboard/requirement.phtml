@@ -1,4 +1,4 @@
-<?= $this->headLink()->appendStylesheet($this->basePath('/css/bootstrap.datetimepicker.min.css')); ?>
+<?= $this->headLink()->appendStylesheet($this->cdn('/css/bootstrap.datetimepicker.min.css')); ?>
 
 <?php if ( $profile['userGroupSlug'] === 'teacher' ): ?>
     <h4>我收到的需求</h4>
@@ -11,7 +11,7 @@
                 $('#requirements').append(
                     '<li id="requirement-' + result['requirements'][i]['requirementId'] + '" class="requirement row-fluid">' + 
                     '    <div class="span3">' +
-                    '        <img src="<?= $this->basePath('/img/categories/'); ?>' + result['requirements'][i]['courseTypeSlug'] + '-small.jpg" alt="Course Type Slug">' +
+                    '        <img src="<?= $this->cdn('/img/categories/'); ?>' + result['requirements'][i]['courseTypeSlug'] + '-small.jpg" alt="Course Type Slug">' +
                     '    </div> <!-- .span3 -->' +
                     '    <div class="span9">' +
                     '        <h4><a href="' + ( result['requirements'][i]['courseId'] ? ('<?= $this->basePath(); ?>/training/course?courseId=' + result['requirements'][i]['courseId']) : 'javascript:void(0);' ) + '">' + (result['requirements'][i]['courseName'] || '等待您开设相应课程') + '</a><span class="pull-right"><a href="javascript:void(0)">详细信息</a></span></h4>' +
@@ -218,7 +218,7 @@
                 $('#requirements').append(
                     '<li id="requirement-' + result['requirements'][i]['requirementId'] + '" class="requirement row-fluid">' + 
                     '    <div class="span3">' +
-                    '        <img src="<?= $this->basePath('/img/categories/'); ?>' + result['requirements'][i]['courseTypeSlug'] + '-small.jpg" alt="Course Type Slug">' +
+                    '        <img src="<?= $this->cdn('/img/categories/'); ?>' + result['requirements'][i]['courseTypeSlug'] + '-small.jpg" alt="Course Type Slug">' +
                     '    </div> <!-- .span3 -->' +
                     '    <div class="span9">' +
                     '        <h4><a href="<?= $this->basePath('/training/course'); ?>?courseId=' + result['requirements'][i]['courseId'] + '">' + (result['requirements'][i]['courseName'] || '等待讲师开设相应课程') + '</a><span class="pull-right"><a href="javascript:void(0)">详细信息</a></span></h4>' +
@@ -368,7 +368,7 @@
         var numberOfTeachers = result.length;
         for ( var i = 0; i < numberOfTeachers; ++ i ) {
             $('#teacher-hint').append('<tr>' +
-                                      '    <td class="span4"><img src="' + ( result[i]['avatar'] || '<?= $this->basePath('/img/avatars/avatar.jpg'); ?>' ) + '" alt="avatar" /></td>' + 
+                                      '    <td class="span4"><img src="' + ( result[i]['avatar'] || '<?= $this->cdn('/img/avatars/avatar.jpg'); ?>' ) + '" alt="avatar" /></td>' + 
                                       '    <td class="hide">' + result[i]['uid'] + '</td>' + 
                                       '    <td>' + result[i]['teacherName'] + '</td>' + 
                                       '</tr>');
@@ -597,15 +597,15 @@
 
     /* Force to load the scripts synchronously */
     $.when(
-        $.getScript('<?= $this->basePath('/js/date-zh-CN.js'); ?>'),
-        $.getScript('<?= $this->basePath('/js/jquery.citypicker.js'); ?>'),
-        $.getScript('<?= $this->basePath('/js/bootstrap.datetimepicker.min.js'); ?>'),
+        $.getScript('<?= $this->cdn('/js/date-zh-CN.js'); ?>'),
+        $.getScript('<?= $this->cdn('/js/jquery.citypicker.js'); ?>'),
+        $.getScript('<?= $this->cdn('/js/bootstrap.datetimepicker.min.js'); ?>'),
         $.Deferred(function(deferred){
             $(deferred.resolve);
         })
     ).done(function(){
         initializeCityPicker();
-        $.getScript('<?= $this->basePath('/js/bootstrap.datetimepicker.zh-CN.js'); ?>', function() {
+        $.getScript('<?= $this->cdn('/js/bootstrap.datetimepicker.zh-CN.js'); ?>', function() {
             initializeDateTimePicker();
         });
     });

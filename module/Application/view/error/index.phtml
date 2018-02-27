@@ -2,15 +2,15 @@
 use Zend\Mvc\Application;
 ?>
 <?= $this->headTitle('页面未找到 | '); ?>
-<?= $this->headLink()->appendStylesheet($this->basePath('/css/training/style.css'))
-                          ->appendStylesheet($this->basePath('/css/404.css')); ?>
+<?= $this->headLink()->appendStylesheet($this->cdn('/css/training/style.css'))
+                          ->appendStylesheet($this->cdn('/css/404.css')); ?>
 
 <div class="border-top"></div> <!-- .border-top -->
 <div id="header">
     <div class="container row-fluid">
         <div id="logo" class="span4">
             <a href="<?= $this->basePath('/'); ?>">
-                <img src="<?= $this->basePath('/img/logo.png'); ?>" alt="Logo" />
+                <img src="<?= $this->cdn('/img/logo.png'); ?>" alt="Logo" />
             </a>
         </div>
         <div id="navigation" class="span8">
@@ -41,7 +41,7 @@ use Zend\Mvc\Application;
 <div id="container">
     <div class="container row-fluid">
         <div class="span6">
-            <img src="<?= $this->basePath('/img/404.png'); ?>" alt="Error Image">
+            <img src="<?= $this->cdn('/img/404.png'); ?>" alt="Error Image">
         </div> <!-- .span6 -->
         <div class="span6">
             <h2>页面未找到</h2>
