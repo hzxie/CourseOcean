@@ -10,7 +10,6 @@ namespace Application;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
-use Zend\Http\Request;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\Mvc\MvcEvent;
 
@@ -48,8 +47,7 @@ class Module {
                         $container->get(Model\TeacherTable::class),
                         $container->get(Model\TeachingFieldTable::class),
                         $container->get(Model\UserTable::class),
-                        $container->get(Model\UserGroupTable::class),
-                        $container->get(Helper\MailSender::class)
+                        $container->get(Model\UserGroupTable::class)
                     );
                 },
                 Controller\AdministrationController::class => function($container) {

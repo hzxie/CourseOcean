@@ -8,7 +8,6 @@ use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
 use Application\Controller\BaseController;
-use Application\Helper\MailSender;
 use Application\Model\CommentTable;
 use Application\Model\CompanyTable;
 use Application\Model\CompanyFieldTable;
