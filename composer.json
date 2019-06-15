@@ -6,7 +6,7 @@
         "ZendFramework-3",
         "CourseOcean"
     ],
-    "homepage": "https://lab.haozhexie.com/CourseOcean",
+    "homepage": "https://courseocean.infinitescript.com",
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
